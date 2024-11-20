@@ -8,12 +8,35 @@ const activateMiningButton = document.getElementById("activate-mining");
 const progressCircle = document.getElementById("progress-circle");
 const minedBalanceDisplay = document.getElementById("mined-balance");
 const userNameDisplay = document.getElementById("user-name");
+const menuIcon = document.getElementById("menu-icon"); // Icon for dropdown
+const userInfoDropdown = document.getElementById("user-info-dropdown"); // Dropdown container
+const logoutButton = document.getElementById("logout-button"); // Logout button
 
 // State Variables
 let isMiningActive = false;
 let miningProgress = 0;
 let minedBalance = 0;
 let miningInterval;
+
+// Persistent Login Check
+function checkPersistentLogin() {
+  const token = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
+  const savedBalance = localStorage.getItem("minedBalance");
+
+  if (token && username) {
+    // User is logged in, load dashboard
+    userNameDisplay.textContent = username;
+    minedBalance = parseFloat(savedBalance) || 0;
+    minedBalanceDisplay.textContent = `${minedBalance} MAI`;
+
+    formContainer.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+  }
+}
+
+// Call persistent login check on page load
+checkPersistentLogin();
 
 // Event Listeners
 
@@ -69,15 +92,23 @@ authForm.addEventListener("submit", async (e) => {
     if (response.ok) {
       // On successful login or registration
       if (isRegistering) {
-        alert("Registration successful! You can now log in."); // Feedback for registration
+        alert("Registration successful! You can now log in.");
+      } else {
+        alert("Logged in successfully!");
+
+        // Store user data in localStorage for persistent login
+        localStorage.setItem("token", data.token); // Save JWT token
+        localStorage.setItem("username", data.username); // Save username
+        localStorage.setItem("minedBalance", data.balance || 0); // Save balance
+
+        // Update the dashboard
+        userNameDisplay.textContent = data.username;
+        minedBalance = data.balance || 0;
+        minedBalanceDisplay.textContent = `${minedBalance} MAI`;
+
+        formContainer.classList.add("hidden");
+        dashboard.classList.remove("hidden");
       }
-
-      userNameDisplay.textContent = data.username;
-      minedBalance = data.balance || 0;
-      minedBalanceDisplay.textContent = `${minedBalance} MAI`;
-
-      formContainer.classList.add("hidden");
-      dashboard.classList.remove("hidden");
     } else {
       alert(data.message || "Something went wrong!");
     }
@@ -86,6 +117,13 @@ authForm.addEventListener("submit", async (e) => {
     alert("Something went wrong!");
   }
 });
+
+localStorage.removeItem("token");
+localStorage.removeItem("username");
+alert("Logged out successfully!");
+window.location.href = "home.html"; // Redirect
+
+document.getElementById("dropdown-username").textContent = localStorage.getItem("username");
 
 // Activate Mining
 activateMiningButton.addEventListener("click", () => {
@@ -107,6 +145,10 @@ activateMiningButton.addEventListener("click", () => {
       miningProgress += 10; // 10% every minute
       minedBalance += 2; // 2 MAI every 10 minutes
       minedBalanceDisplay.textContent = `${minedBalance} MAI`;
+
+      // Persist balance in localStorage
+      localStorage.setItem("minedBalance", minedBalance);
+
       progressCircle.style.background = `conic-gradient(#0f0 ${miningProgress}%, #f00 ${miningProgress}%)`;
     }
   }, 60000); // Update every minute
@@ -115,4 +157,16 @@ activateMiningButton.addEventListener("click", () => {
     isMiningActive = false;
     clearInterval(miningInterval);
   }, 3 * 60 * 60 * 1000); // Deactivate after 3 hours
+});
+
+// Toggle user info dropdown
+menuIcon.addEventListener("click", () => {
+  userInfoDropdown.classList.toggle("hidden"); // Show/hide the dropdown
+});
+
+// Logout user
+logoutButton.addEventListener("click", () => {
+  localStorage.clear(); // Clear all stored data
+  alert("Logged out successfully!");
+  window.location.reload(); // Reload the page
 });
