@@ -68,6 +68,10 @@ authForm.addEventListener("submit", async (e) => {
 
     if (response.ok) {
       // On successful login or registration
+      if (isRegistering) {
+        alert("Registration successful! You can now log in."); // Feedback for registration
+      }
+
       userNameDisplay.textContent = data.username;
       minedBalance = data.balance || 0;
       minedBalanceDisplay.textContent = `${minedBalance} MAI`;
@@ -75,7 +79,7 @@ authForm.addEventListener("submit", async (e) => {
       formContainer.classList.add("hidden");
       dashboard.classList.remove("hidden");
     } else {
-      alert(data.message);
+      alert(data.message || "Something went wrong!");
     }
   } catch (error) {
     console.error("Error:", error);

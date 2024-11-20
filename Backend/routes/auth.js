@@ -11,7 +11,9 @@ router.post("/register", async (req, res) => {
 
   try {
     // Check if email or username already exists
-    if (await User.findOne({ email }) || await User.findOne({ username })) {
+    const emailExists = await User.findOne({ email });
+    const usernameExists = await User.findOne({ username });
+    if (emailExists || usernameExists) {
       return res.status(400).json({ message: "Email or username already exists." });
     }
 
@@ -49,11 +51,15 @@ router.post("/login", async (req, res) => {
   try {
     // Find user
     const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
     // Generate JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
