@@ -15,14 +15,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const cors = require("cors");
-
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));
-
-const cors = require("cors");
 
 // Allow specific origins
 app.use(cors({
