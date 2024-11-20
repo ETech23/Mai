@@ -58,7 +58,7 @@ authForm.addEventListener("submit", async (e) => {
   const isRegistering = !document.getElementById("name").classList.contains("hidden");
 
   try {
-    const response = await fetch(`http://localhost:3000/api/auth/${isRegistering ? "register" : "login"}`, {
+    const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, username, password }),

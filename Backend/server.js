@@ -26,7 +26,7 @@ const cors = require("cors");
 
 // Allow specific origins
 app.use(cors({
-  origin: "https://yourfrontenddomain.com", // Replace with your frontend domain
+  origin: "https://mai-psi.vercel.app/", // Replace with your frontend domain
   methods: "GET,POST",
   credentials: true,
 }));
