@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", () => {
+  // Your entire JavaScript code goes here
+});
+
 // DOM Elements
 const getStartedButton = document.getElementById("get-started");
 const formContainer = document.getElementById("form-container");
@@ -43,13 +47,13 @@ async function checkPersistentLogin() {
       } else {
         alert("Session expired. Please log in again.");
         localStorage.clear();
-        window.location.href = "home.html";
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error:", error);
       alert("Failed to fetch balance. Please log in again.");
       localStorage.clear();
-      window.location.href = "home.html";
+      window.location.reload();
     }
   }
 }
@@ -74,14 +78,12 @@ if (toggleFormText) {
     const authSubmit = document.getElementById("auth-submit");
 
     if (nameInput.classList.contains("hidden")) {
-      // Switch to Registration Form
       nameInput.classList.remove("hidden");
       nameLabel.classList.remove("hidden");
       formTitle.textContent = "Register";
       authSubmit.textContent = "Register";
       toggleFormText.innerHTML = 'Already have an account? <span>Login here</span>';
     } else {
-      // Switch to Login Form
       nameInput.classList.add("hidden");
       nameLabel.classList.add("hidden");
       formTitle.textContent = "Login";
@@ -112,18 +114,14 @@ if (authForm) {
       const data = await response.json();
 
       if (response.ok) {
-        // On successful login or registration
         if (isRegistering) {
           alert("Registration successful! You can now log in.");
         } else {
           alert("Logged in successfully!");
-
-          // Store user data in localStorage for persistent login
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
           localStorage.setItem("minedBalance", data.balance || 0);
 
-          // Update the dashboard
           userNameDisplay.textContent = data.username;
           minedBalance = data.balance || 0;
           minedBalanceDisplay.textContent = `${minedBalance} MAI`;
@@ -145,14 +143,12 @@ if (authForm) {
 if (activateMiningButton) {
   activateMiningButton.addEventListener("click", () => {
     if (isMiningActive) {
-      alert("Mining already active!");
+      alert("Mining is already active!");
       return;
     }
 
     isMiningActive = true;
     miningProgress = 0;
-
-    // Disable the button and change its style
     activateMiningButton.disabled = true;
     activateMiningButton.style.opacity = 0.5;
 
@@ -160,18 +156,15 @@ if (activateMiningButton) {
       if (miningProgress >= 100) {
         clearInterval(miningInterval);
         isMiningActive = false;
-
-        // Re-enable the button
         activateMiningButton.disabled = false;
         activateMiningButton.style.opacity = 1;
 
-        alert("Mining session completed! Activate again to continue.");
+        alert("Mining session completed!");
       } else {
-        miningProgress += 10; // 10% every minute
-        minedBalance += 2; // 2 MAI every 10 minutes
+        miningProgress += 10;
+        minedBalance += 2;
         minedBalanceDisplay.textContent = `${minedBalance} MAI`;
 
-        // Update balance in localStorage and backend
         localStorage.setItem("minedBalance", minedBalance);
         try {
           const token = localStorage.getItem("token");
@@ -187,17 +180,69 @@ if (activateMiningButton) {
           console.error("Error updating balance:", error);
         }
 
-        // Update progress bar
-        progressCircle.style.background = `conic-gradient(#0f0 ${miningProgress}%, #f00 ${miningProgress}%)`;
+        progressCircle.style.background = `conic-gradient(#4caf50 ${miningProgress}%, #ddd ${miningProgress}%)`;
       }
-    }, 60000); // Update every minute
+    }, 60000);
   });
 }
 
-// Toggle user info dropdown
+// Toggle User Info Dropdown (Hamburger Menu)
 if (menuIcon) {
-  menuIcon.addEventListener("click", () => {
+  menuIcon.addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    const email = localStorage.getItem("email");
+    const minedBalance = localStorage.getItem("minedBalance");
+    const referrals = localStorage.getItem("referrals") || 0;
+    const referralLink = `https://mai.fly.dev/register?ref=${username}`;
+
+    if (token) {
+      try {
+        // Fetch updated user details from the backend
+        const response = await fetch("https://mai.fly.dev/api/user/details", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Update localStorage with latest user data
+          localStorage.setItem("referrals", data.referrals || 0);
+
+          // Populate dropdown with user details
+          userInfoDropdown.innerHTML = `
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Username:</strong> ${username}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Mined Balance:</strong> ${minedBalance || 0} MAI</p>
+            <p><strong>Referrals:</strong> ${data.referrals || 0}</p>
+            <p><strong>Referral Link:</strong></p>
+            <p><small><a href="${referralLink}" target="_blank">${referralLink}</a></small></p>
+            <button id="logout-button">Log Out</button>
+          `;
+        } else {
+          alert("Failed to fetch user details. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    }
+
+    // Toggle dropdown visibility
     userInfoDropdown.classList.toggle("active");
+
+    // Attach logout button event listener
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", () => {
+        localStorage.clear();
+        alert("Logged out successfully!");
+        window.location.href = "home.html";
+      });
+    }
   });
 }
 
@@ -206,6 +251,6 @@ if (logoutButton) {
   logoutButton.addEventListener("click", () => {
     localStorage.clear();
     alert("Logged out successfully!");
-    window.location.href = "home.html";
+    window.location.reload();
   });
-});
+}

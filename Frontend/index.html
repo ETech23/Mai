@@ -3,24 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAI Crypto Mining</title>
+  <title>MAI Mining Platform</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Landing Page -->
   <div class="landing-page" id="landing-page">
     <header>
-      <h1>Welcome to MAI Mining Platform</h1><br>
+      <h1>Welcome to MAI Mining Platform</h1>
       <p>The future of decentralized cryptocurrency mining.</p>
     </header>
     <main>
-      <article>
-        <h2>What is MAI?</h2>
-        <p>
-          MAI is a revolutionary cryptocurrency powered by AI. By joining our mining platform, you can contribute
-          to the network and earn rewards directly into your wallet.
-        </p>
-      </article>
       <button id="get-started">Get Started</button>
     </main>
   </div>
@@ -42,26 +35,21 @@
     </form>
   </div>
 
-  <!-- Dashboard -->
+  <!-- Mining Dashboard -->
   <div class="dashboard hidden" id="dashboard">
     <header>
-      <div class="menu-icon" id="menu-icon">&#9776;</div>
+      <div id="menu-icon">☰</div>
       <div id="user-info-dropdown" class="hidden">
         <p>Welcome, <span id="user-name">User</span></p>
+        <p>Balance: <span id="mining-balance">0 MAI</span></p>
         <button id="logout-button">Log Out</button>
       </div>
-      <h1>Welcome to your dashboard</h1>
     </header>
-    <main>
-      <div class="mining-container">
-        <div class="mining-sphere">
-          <div class="progress-circle" id="progress-circle"></div>
-          <div class="balance-display">
-            <p id="mined-balance">0 MAI</p>
-          </div>
-        </div>
-        <button id="activate-mining">Activate Mining</button>
+    <main class="mining-container">
+      <div id="progress-circle" class="mining-sphere">
+        <p id="mined-balance">0 MAI</p>
       </div>
+      <button id="activate-mining">Activate Mining</button>
     </main>
   </div>
 
