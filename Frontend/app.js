@@ -19,19 +19,38 @@ let minedBalance = 0;
 let miningInterval;
 
 // Persistent Login Check
-function checkPersistentLogin() {
+async function checkPersistentLogin() {
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
-  const savedBalance = localStorage.getItem("minedBalance");
 
   if (token && username) {
-    // User is logged in, load dashboard
-    userNameDisplay.textContent = username;
-    minedBalance = parseFloat(savedBalance) || 0;
-    minedBalanceDisplay.textContent = `${minedBalance} MAI`;
+    try {
+      const response = await fetch("https://mai.fly.dev/api/user/balance", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    formContainer.classList.add("hidden");
-    dashboard.classList.remove("hidden");
+      const data = await response.json();
+
+      if (response.ok) {
+        // User is logged in, load dashboard
+        userNameDisplay.textContent = username;
+        minedBalance = data.balance || 0;
+        minedBalanceDisplay.textContent = `${minedBalance} MAI`;
+
+        formContainer.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+      } else {
+        alert("Session expired. Please log in again.");
+        localStorage.clear();
+        window.location.href = "home.html";
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to fetch balance. Please log in again.");
+      localStorage.clear();
+      window.location.href = "home.html";
+    }
   }
 }
 
@@ -137,7 +156,7 @@ if (activateMiningButton) {
     activateMiningButton.disabled = true;
     activateMiningButton.style.opacity = 0.5;
 
-    miningInterval = setInterval(() => {
+    miningInterval = setInterval(async () => {
       if (miningProgress >= 100) {
         clearInterval(miningInterval);
         isMiningActive = false;
@@ -152,22 +171,26 @@ if (activateMiningButton) {
         minedBalance += 2; // 2 MAI every 10 minutes
         minedBalanceDisplay.textContent = `${minedBalance} MAI`;
 
-        // Persist balance in localStorage
+        // Update balance in localStorage and backend
         localStorage.setItem("minedBalance", minedBalance);
+        try {
+          const token = localStorage.getItem("token");
+          await fetch("https://mai.fly.dev/api/user/update-balance", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ balance: minedBalance }),
+          });
+        } catch (error) {
+          console.error("Error updating balance:", error);
+        }
 
         // Update progress bar
         progressCircle.style.background = `conic-gradient(#0f0 ${miningProgress}%, #f00 ${miningProgress}%)`;
       }
     }, 60000); // Update every minute
-
-    setTimeout(() => {
-      isMiningActive = false;
-      clearInterval(miningInterval);
-
-      // Re-enable the button
-      activateMiningButton.disabled = false;
-      activateMiningButton.style.opacity = 1;
-    }, 3 * 60 * 60 * 1000); // Deactivate after 3 hours
   });
 }
 

@@ -11,53 +11,6 @@ body {
   display: none;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-}
-
-header h1 {
-  font-size: 2rem;
-  color: #4caf50;
-}
-
-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-/* Profile Dropdown */
-#menu-icon {
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-#user-info-dropdown {
-  position: absolute;
-  top: 4rem;
-  right: 1rem;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: none;
-}
-
-#user-info-dropdown.active {
-  display: block;
-}
-
 header {
   background: linear-gradient(to right, #4caf50, #3b8e40);
   color: white;
@@ -74,55 +27,26 @@ header h1 {
   margin: 0;
 }
 
-main {
-  text-align: center;
-  padding: 2rem;
-}
-
-/* Button Styles */
-button {
-  background: #4caf50;
-  color: white;
-  border: none;
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 30px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-button:hover {
-  background: #45a049;
-  transform: translateY(-3px);
-}
-
-/* Get Started Button for Home */
-#home-get-started {
-  margin-top: 2rem;
-  font-size: 1.5rem;
-}
-
-/* User Profile Dropdown */
 #menu-icon {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  font-size: 2rem;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
   color: white;
 }
 
 #user-info-dropdown {
   position: absolute;
-  top: 5rem;
-  right: 1.5rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  top: 4rem;
+  right: 1rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1rem;
   display: none;
-  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 #user-info-dropdown.active {
@@ -131,7 +55,7 @@ button:hover {
 
 #user-info-dropdown p {
   margin: 0;
-  padding: 1rem;
+  padding: 0.5rem;
   font-size: 1rem;
   color: #333;
   font-weight: bold;
@@ -139,31 +63,57 @@ button:hover {
 }
 
 #logout-button {
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
   background: #f44336;
   color: white;
-  border-radius: 0 0 8px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #logout-button:hover {
   background: #d32f2f;
 }
 
-/* Home Page Styling */
-.home-container {
+/* Button Styles */
+button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+button:hover {
+  background: #45a049;
+  transform: translateY(-3px);
+}
+
+/* Index/Home Page Styling */
+.home-container, .index-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 2rem auto;
   text-align: center;
 }
 
-.home-container h2 {
+.home-container h2, .index-container h2 {
   font-size: 2.5rem;
   color: #333;
   margin-bottom: 1rem;
 }
 
-.home-container p {
+.home-container p, .index-container p {
   font-size: 1.2rem;
   color: #666;
   line-height: 1.8;
@@ -174,20 +124,26 @@ button:hover {
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 2rem;
+  padding: 2rem;
 }
 
 .mining-sphere {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: conic-gradient(#0f0 0%, #f00 0%);
+  background: conic-gradient(#4caf50 0%, #ddd 0%);
   margin: 2rem auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mining-sphere p {
+  position: absolute;
   font-size: 1.5rem;
   font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  color: white;
+  z-index: 1;
 }
