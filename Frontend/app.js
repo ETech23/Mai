@@ -197,7 +197,7 @@ if (activateMiningButton) {
 // Toggle user info dropdown
 if (menuIcon) {
   menuIcon.addEventListener("click", () => {
-    userInfoDropdown.classList.toggle("hidden");
+    userInfoDropdown.classList.toggle("active");
   });
 }
 
@@ -208,4 +208,4 @@ if (logoutButton) {
     alert("Logged out successfully!");
     window.location.href = "home.html";
   });
-}
+});
