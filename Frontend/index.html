@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- Landing Page -->
-  <div class="landing-page">
+  <div class="landing-page" id="landing-page">
     <header>
       <h1>Welcome to MAI Mining Platform</h1><br>
       <p>The future of decentralized cryptocurrency mining.</p>
@@ -46,7 +46,11 @@
   <div class="dashboard hidden" id="dashboard">
     <header>
       <div class="menu-icon" id="menu-icon">&#9776;</div>
-      <h1>Welcome, <span id="user-name">User</span></h1>
+      <div id="user-info-dropdown" class="hidden">
+        <p>Welcome, <span id="user-name">User</span></p>
+        <button id="logout-button">Log Out</button>
+      </div>
+      <h1>Welcome to your dashboard</h1>
     </header>
     <main>
       <div class="mining-container">
@@ -62,6 +66,5 @@
   </div>
 
   <script src="app.js"></script>
-  <script src="mining.js"></script>
 </body>
 </html>

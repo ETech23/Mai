@@ -7,6 +7,57 @@ body {
   background-color: #f4f4f4;
 }
 
+.hidden {
+  display: none;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #4caf50;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Profile Dropdown */
+#menu-icon {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+#user-info-dropdown {
+  position: absolute;
+  top: 4rem;
+  right: 1rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+
+#user-info-dropdown.active {
+  display: block;
+}
+
 header {
   background: linear-gradient(to right, #4caf50, #3b8e40);
   color: white;
