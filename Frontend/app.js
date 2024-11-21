@@ -12,6 +12,34 @@ const menuIcon = document.getElementById("menu-icon"); // Icon for dropdown
 const userInfoDropdown = document.getElementById("user-info-dropdown"); // Dropdown container
 const logoutButton = document.getElementById("logout-button"); // Logout button
 
+// Profile dropdown toggle
+const menuIcon = document.getElementById("menu-icon");
+const userInfoDropdown = document.getElementById("user-info-dropdown");
+const logoutButton = document.getElementById("logout-button");
+
+if (menuIcon) {
+  menuIcon.addEventListener("click", () => {
+    userInfoDropdown.classList.toggle("active"); // Toggle dropdown visibility
+  });
+}
+
+// Logout functionality
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    localStorage.clear();
+    alert("Logged out successfully!");
+    window.location.href = "home.html"; // Redirect to home page
+  });
+}
+
+// Get Started Button on Home Page
+const getStartedButton = document.getElementById("home-get-started");
+if (getStartedButton) {
+  getStartedButton.addEventListener("click", () => {
+    window.location.href = "mining.html"; // Redirect to mining page
+  });
+}
+
 // State Variables
 let isMiningActive = false;
 let miningProgress = 0;

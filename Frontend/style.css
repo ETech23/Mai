@@ -1,157 +1,142 @@
 /* General Styles */
 body {
+  font-family: 'Poppins', sans-serif;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+  padding: 0;
   color: #333;
-}
-
-.hidden {
-  display: none;
-}
-
-/* Landing Page */
-.landing-page {
-  text-align: center;
-  padding: 20px;
-  background: linear-gradient(to bottom, #141e30, #243b55);
-  color: white;
-  height: 100vh;
-}
-
-.landing-page header h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
-
-.landing-page main article h2 {
-  margin: 20px 0;
-  font-size: 1.5em;
-}
-
-.landing-page button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.2em;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.landing-page button:hover {
-  background: #0056b3;
-}
-
-/* Form Styles */
-.form-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-form {
-  background: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-  text-align: center;
-}
-
-form h2 {
-  margin-bottom: 20px;
-}
-
-form input {
-  width: 90%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-form button {
-  width: 100%;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-form button:hover {
-  background: #0056b3;
-}
-
-form p span {
-  color: #007bff;
-  cursor: pointer;
-}
-
-/* Dashboard */
-.dashboard {
-  padding: 20px;
+  background-color: #f4f4f4;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.menu-icon {
-  font-size: 1.5em;
-  cursor: pointer;
-}
-
-.mining-container {
+  background: linear-gradient(to right, #4caf50, #3b8e40);
+  color: white;
+  padding: 1.5rem;
   text-align: center;
-  margin-top: 50px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+main {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Button Styles */
+button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  background: #45a049;
+  transform: translateY(-3px);
+}
+
+/* Get Started Button for Home */
+#home-get-started {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+
+/* User Profile Dropdown */
+#menu-icon {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: white;
+}
+
+#user-info-dropdown {
+  position: absolute;
+  top: 5rem;
+  right: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1000;
+}
+
+#user-info-dropdown.active {
+  display: block;
+}
+
+#user-info-dropdown p {
+  margin: 0;
+  padding: 1rem;
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#logout-button {
+  padding: 1rem;
+  font-size: 1rem;
+  background: #f44336;
+  color: white;
+  border-radius: 0 0 8px 8px;
+}
+
+#logout-button:hover {
+  background: #d32f2f;
+}
+
+/* Home Page Styling */
+.home-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-container h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.home-container p {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.8;
+}
+
+/* Mining Page Styling */
+.mining-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 2rem;
 }
 
 .mining-sphere {
-  position: relative;
   width: 200px;
   height: 200px;
-  margin: 0 auto;
-  background: #007bff;
   border-radius: 50%;
-  overflow: hidden;
-}
-
-.progress-circle {
-  width: 100%;
-  height: 100%;
   background: conic-gradient(#0f0 0%, #f00 0%);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.balance-display {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: white;
-  font-size: 1.5em;
-}
-
-button#activate-mining {
-  background: #28a745;
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: 0.3s;
-}
-
-button#activate-mining:hover {
-  background: #218838;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
