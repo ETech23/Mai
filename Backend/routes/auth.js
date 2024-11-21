@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
 username: user.username,
 email: user.email,
 balance: user.balance,
-referrals: user.referrals.length || 0, token });
+referrals: user.referrals.length, token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server error" });
