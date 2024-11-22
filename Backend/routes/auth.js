@@ -45,12 +45,16 @@ router.post("/register", async (req, res) => {
 });
 
 // Login a user
+// Login a user
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { identifier, password } = req.body;
 
   try {
-    // Find user
-    const user = await User.findOne({ username });
+    // Determine if the identifier is an email or username
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -70,7 +74,7 @@ router.post("/login", async (req, res) => {
       username: user.username,
       email: user.email,
       balance: user.balance,
-      referrals: user.referrals ? user.referrals.length : 0, // Safe check for referrals
+      referrals: user.referrals ? user.referrals.length : 0,
       token,
     });
   } catch (err) {

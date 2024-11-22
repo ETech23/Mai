@@ -94,21 +94,29 @@ if (toggleFormText) {
 }
 
 // Handle form submission for Login or Registration
+// Handle form submission for Login or Registration
 if (authForm) {
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const username = document.getElementById("username").value;
+    const identifier = document.getElementById("identifier").value; // New field
     const password = document.getElementById("password").value;
-    const isRegistering = !document.getElementById("name").classList.contains("hidden");
+    const isRegistering = document.getElementById("name") && !document.getElementById("name").classList.contains("hidden");
 
     try {
       const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, username, password }),
+        body: JSON.stringify(
+          isRegistering
+            ? {
+                name: document.getElementById("name").value,
+                email: identifier,
+                username: document.getElementById("username").value,
+                password,
+              }
+            : { identifier, password }
+        ),
       });
 
       const data = await response.json();
@@ -118,8 +126,11 @@ if (authForm) {
           alert("Registration successful! You can now log in.");
         } else {
           alert("Logged in successfully!");
+
+          // Save user data in localStorage for persistent login
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
           localStorage.setItem("minedBalance", data.balance || 0);
 
           userNameDisplay.textContent = data.username;
