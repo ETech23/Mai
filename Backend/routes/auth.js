@@ -65,18 +65,19 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     // Send success response
-    try {
     res.json({
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        balance: user.balance,
-        referrals: user.referrals ? user.referrals.length : 0, // Safe check
-        token
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      balance: user.balance,
+      referrals: user.referrals ? user.referrals.length : 0, // Safe check for referrals
+      token,
     });
-} catch (err) {
+  } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server error" });
-}
+  }
+});
 
-module.exports = router;
+// Export the router
+module.exports = router; // Add this line
