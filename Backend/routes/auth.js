@@ -33,18 +33,30 @@ router.post("/register", async (req, res) => {
       referredBy: referredBy || null,
     });
 
-    // Save to database
+    // If referredBy exists, update the referrer's referrals count
+    if (referredBy) {
+      const referrer = await User.findOne({ referralCode: referredBy });
+      if (referrer) {
+        referrer.referrals = (referrer.referrals || 0) + 1;
+        await referrer.save();
+      }
+    }
+
+    // Save new user to the database
     await newUser.save();
 
     // Send success response
-    res.status(201).json({ username: newUser.username, balance: newUser.balance });
+    res.status(201).json({
+      username: newUser.username,
+      balance: newUser.balance || 0,
+      message: "Registration successful",
+    });
   } catch (err) {
-    console.error(err.message);
+    console.error("Error in registration:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Login a user
 // Login a user
 router.post("/login", async (req, res) => {
   const { identifier, password } = req.body;
@@ -73,15 +85,45 @@ router.post("/login", async (req, res) => {
       name: user.name,
       username: user.username,
       email: user.email,
-      balance: user.balance,
-      referrals: user.referrals ? user.referrals.length : 0,
+      balance: user.balance || 0,
+      referrals: user.referrals || 0,
       token,
     });
   } catch (err) {
-    console.error(err.message);
+    console.error("Error in login:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Export the router
-module.exports = router; // Add this line
+// Get user details
+router.get("/details", async (req, res) => {
+  const token = req.header("Authorization")?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "No token, authorization denied" });
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Fetch user details
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      balance: user.balance || 0,
+      referrals: user.referrals || 0,
+    });
+  } catch (err) {
+    console.error("Error fetching user details:", err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+module.exports = router;

@@ -27,10 +27,11 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #4caf50, #388e3c);
+  background: linear-gradient(90deg, black, #998e5c);
   padding: 20px;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 header h1 {
@@ -88,6 +89,8 @@ header h1 {
 .landing-page {
   text-align: center;
   padding: 80px 20px;
+  background-image: url("images/portrait.webp");
+  background-size: cover;
 }
 
 .landing-page header {
@@ -114,7 +117,7 @@ header h1 {
   font-size: 1.2rem;
   font-weight: bold;
   color: #fff;
-  background-color: #4caf50;
+  background-color: black;
   border: none;
   border-radius: 50px;
   cursor: pointer;

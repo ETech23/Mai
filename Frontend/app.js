@@ -18,12 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let minedBalance = 0;
   let miningInterval;
 
-  // Persistent Login Check
+  // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
 
-    if (token && username) {
+    if (token) {
       try {
         const response = await fetch("https://mai.fly.dev/api/user/details", {
           method: "GET",
@@ -63,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Call persistent login check on page load
   checkPersistentLogin();
 
-  // Navigation: Landing to Login/Registration
+  // **Navigation: Landing to Login/Registration**
   if (getStartedButton) {
     getStartedButton.addEventListener("click", () => {
       document.querySelector(".landing-page").classList.add("hidden");
@@ -71,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Toggle between Login and Registration form
+  // **Toggle Between Login and Registration Form**
   if (toggleFormText) {
     toggleFormText.addEventListener("click", () => {
       const nameInput = document.getElementById("name");
@@ -79,13 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const formTitle = document.getElementById("form-title");
       const authSubmit = document.getElementById("auth-submit");
 
-      if (nameInput.classList.contains("hidden")) {
+      if (nameInput && nameInput.classList.contains("hidden")) {
         nameInput.classList.remove("hidden");
         nameLabel.classList.remove("hidden");
         formTitle.textContent = "Register";
         authSubmit.textContent = "Register";
         toggleFormText.innerHTML = 'Already have an account? <span>Login here</span>';
-      } else {
+      } else if (nameInput) {
         nameInput.classList.add("hidden");
         nameLabel.classList.add("hidden");
         formTitle.textContent = "Login";
@@ -95,65 +94,56 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Handle form submission for Login or Registration
+  // **Handle Form Submission for Login or Registration**
   if (authForm) {
-  authForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const identifier = document.getElementById("identifier").value; // New field
-    const password = document.getElementById("password").value;
-    const isRegistering = document.getElementById("name") && !document.getElementById("name").classList.contains("hidden");
+      const identifier = document.getElementById("identifier").value;
+      const password = document.getElementById("password").value;
+      const isRegistering = document.getElementById("name") && !document.getElementById("name").classList.contains("hidden");
 
-    try {
-      const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          isRegistering
-            ? {
-                name: document.getElementById("name").value,
-                email: identifier,
-                username: document.getElementById("username").value,
-                password,
-              }
-            : { identifier, password }
-        ),
-      });
+      const payload = isRegistering
+        ? { name: document.getElementById("name").value, email: identifier, username: document.getElementById("username").value, password }
+        : { identifier, password };
 
-      const data = await response.json();
+      try {
+        const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-      if (response.ok) {
-        if (isRegistering) {
-          alert("Registration successful! You can now log in.");
+        const data = await response.json();
+
+        if (response.ok) {
+          if (isRegistering) {
+            alert("Registration successful! You can now log in.");
+          } else {
+            alert("Logged in successfully!");
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("username", data.username);
+            localStorage.setItem("email", data.email);
+            localStorage.setItem("minedBalance", data.balance || 0);
+
+            userNameDisplay.textContent = data.username;
+            minedBalance = data.balance || 0;
+            minedBalanceDisplay.textContent = `${minedBalance} MAI`;
+
+            formContainer.classList.add("hidden");
+            dashboard.classList.remove("hidden");
+          }
         } else {
-          alert("Logged in successfully!");
-
-          // Save user data in localStorage for persistent login
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("email", data.email);
-          localStorage.setItem("minedBalance", data.balance || 0);
-
-          userNameDisplay.textContent = data.username;
-          minedBalance = data.balance || 0;
-          minedBalanceDisplay.textContent = `${minedBalance} MAI`;
-
-          formContainer.classList.add("hidden");
-          dashboard.classList.remove("hidden");
+          alert(data.message || "Something went wrong!");
         }
-      } else {
-        alert(data.message || "Something went wrong!");
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong!");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong!");
-    }
-  });
-}
+    });
+  }
 
-
-
-  // Activate Mining
+  // **Activate Mining**
   if (activateMiningButton) {
     activateMiningButton.addEventListener("click", () => {
       if (isMiningActive) {
@@ -182,12 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem("minedBalance", minedBalance);
           try {
             const token = localStorage.getItem("token");
-            await fetch("https://mai.fly.dev/api/user/update-balance", {
+            await fetch("https://mai.fly.dev/api/mining/activate", {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
+              headers: { Authorization: `Bearer ${token}` },
               body: JSON.stringify({ balance: minedBalance }),
             });
           } catch (error) {
@@ -200,9 +187,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Toggle User Info Dropdown (Hamburger Menu)
+  // **Toggle User Info Dropdown (Hamburger Menu)**
   if (menuIcon) {
-    menuIcon.addEventListener("click", async () => {
+    menuIcon.addEventListener("click", () => {
       const username = localStorage.getItem("username");
       const email = localStorage.getItem("email");
       const minedBalance = localStorage.getItem("minedBalance");
