@@ -7,33 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Landing Page -->
-  <div class="landing-page" id="landing-page">
-    <header>
-      <h1>Welcome to MAI Mining Platform</h1>
-      <p>The future of decentralized cryptocurrency mining.</p>
-    </header>
-    <main>
-      <button id="get-started">Get Started</button>
-    </main><br>
-    <p style="background-color: gray; color: black; border-radius: 10px; padding: 20px">
-      By mining MAI AI coin, you'll own a fraction of the MAI AI platform. Show your work!
-    </p>
-  </div>
-
+  
   <!-- Login/Registration Form -->
-  <div class="form-container hidden" id="form-container">
+  <div class="form-container" id="form-container">
     <form id="auth-form">
-  <h2 id="form-title">Login</h2>
-  <label for="identifier">Email or Username</label>
-  <input type="text" id="identifier" placeholder="Enter your email or username" required>
-  <label for="password">Password</label>
-  <input type="password" id="password" placeholder="Enter your password" required>
-  <button type="submit" id="auth-submit">Login</button>
-  <p id="toggle-form">Don’t have an account? <span>Register here</span></p>
-</form>
+      <h2 id="form-title">Login</h2>
+      <label for="identifier">Email or Username</label>
+      <input type="text" id="identifier" placeholder="Enter your email or username" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+      <button type="submit" id="auth-submit">Login</button>
+      <p id="toggle-form">Don’t have an account? <span>Register here</span></p>
+    </form>
   </div>
-
+  
   <!-- Mining Dashboard -->
   <div class="dashboard hidden" id="dashboard">
     <header>
@@ -44,8 +31,7 @@
         <button id="logout-button">Log Out</button>
       </div>
       
-      <p style="text-align: center"><strong>Welcome!</strong><br> 100MAI ≈ $1 </p>
-      
+      <p style="text-align: center"><strong>Welcome!</strong><br> 100 MAI ≈ $1 </p>
     </header>
     <main class="mining-container">
       <div id="progress-circle" class="mining-sphere">
@@ -53,6 +39,31 @@
       </div>
       <button id="activate-mining">Activate Mining</button>
     </main>
+  </div>
+
+  <!-- News & Articles Section -->
+ 
+      <!-- Articles will be added dynamically here -->
+      
+      <section class="news-section">
+  <h2>Latest News</h2>
+
+  <div class="news-article">
+    <h3>Exciting New Update Coming Soon</h3>
+    <p>Stay tuned for a new exciting feature release that will change the way you interact with the app...</p>
+    <a href="#">Read more</a>
+    <p class="news-date">November 22, 2024</p>
+  </div>
+
+  <div class="news-article">
+    <h3>New Partnership Announced</h3>
+    <p>We are thrilled to announce a new partnership with XYZ Corp, which will help us expand our services...</p>
+    <a href="#">Read more</a>
+    <p class="news-date">November 15, 2024</p>
+  </div>
+
+</section>
+    </div>
   </div>
 
   <script src="app.js"></script>
