@@ -99,4 +99,26 @@ router.get("/balance", authenticate, async (req, res) => {
   }
 });
 
+// Update user balance
+router.post("/update", authenticate, async (req, res) => {
+  try {
+    const { balance } = req.body;
+
+    if (typeof balance !== "number") {
+      return res.status(400).json({ message: "Invalid balance value" });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.balance = balance; // Update balance
+    await user.save();
+
+    res.json({ message: "Balance updated successfully", balance: user.balance });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
