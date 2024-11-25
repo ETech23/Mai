@@ -284,6 +284,7 @@ document.getElementById("referral-input").value.trim(),
     }
   });
 
+  /**
   const referralInput = document.getElementById("referral-input");
   
 
@@ -299,12 +300,61 @@ document.getElementById("referral-input").value.trim(),
   const referralCode = urlParams.get("ref");
   if (referralCode && referralInput) {
     referralInput.value = referralCode;
+    
   // Populate hidden input with referral code
     console.log("Referral Code:", referralCode);
   } else if (!referralInput) {
     console.warn("Referral input field not found. Ensure it's present in the registration form.");
 };
+**/
+  
+  // Get elements
+const referralInput = document.getElementById("referral-input");
+  
+/**const menuIcon = document.getElementById("menu-icon");**/ 
+ 
+ // Assuming this is for the dashboard UI
 
+// Log warnings if elements are missing
+  /**
+if (!referralInput) {
+  console.warn("Referral input field not found. Ensure it's present in the registration form.");
+}
+if (!menuIcon) {
+  console.warn("Menu icon not found. Ensure the dashboard UI is loaded.");
+}
+
+// Referral Handling
+const urlParams = new URLSearchParams(window.location.search);
+const referralCode = urlParams.get("ref");
+
+if (referralCode) {
+  if (referralInput) {
+    referralInput.value = referralCode; // Populate hidden input with referral code
+    console.log("Referral Code:", referralCode);
+  } else {
+    console.warn("Referral input field not found. Cannot populate referral code.");
+  }
+} **/
+  
+  const hash = window.location.hash;
+  const urlParams = new URLSearchParams(hash.split("?")[1]);
+  if (hash.includes("register")) {
+    formTitle.textContent = "Register";
+    registerFields.classList.remove("hidden");
+    loginFields.classList.add("hidden");
+
+    if (referralCode && referralInput) {
+      referralInput.value = referralCode;
+      console.log("Referral Code Set:", referralCode);
+    }
+  } else {
+    formTitle.textContent = "Login";
+    registerFields.classList.add("hidden");
+    loginFields.classList.remove("hidden");
+}
+  
+  
   // Menu Toggling
   menuIcon.addEventListener("click", () => {
     try {

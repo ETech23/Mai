@@ -18,13 +18,13 @@ app.use(bodyParser.json());
 app.get("/register", (req, res) => {
   const { ref } = req.query;
 
-  // Ensure referral logic redirects to the frontend
+  // Redirect to the frontend with the referral code (if provided)
   if (ref) {
-    return res.redirect(`https://mai.fly.dev/register?ref=${encodeURIComponent(ref)}`);
+    return res.redirect(`https://mai-psi.vercel.app/register?ref=${ref}`);
   }
 
-  // Redirect to frontend registration page if no referral code is provided
-  res.redirect("https://mai.fly.dev/register");
+  // If no referral code, redirect to the main registration page
+  return res.redirect("https://mai-psi.vercel.app/register");
 });
 
 // Routes
