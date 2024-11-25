@@ -39,7 +39,7 @@ app.get("/register", (req, res) => {
   const { ref } = req.query;
   if (ref) {
     // Handle referral query string if provided
-    res.sendFile(path.join(__dirname, "public/index.html")); // Serve registration frontend
+    res.sendFile(path.join(__dirname, "Frontend/index.html")); // Serve registration frontend
   } else {
     // If no referral code, redirect to the home page
     res.redirect("/");
