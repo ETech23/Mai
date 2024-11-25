@@ -15,6 +15,17 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+app.get("/register", (req, res) => {
+  const { ref } = req.query;
+
+  // Ensure referral logic redirects to the frontend
+  if (ref) {
+    return res.redirect(`https://mai.fly.dev/register?ref=${encodeURIComponent(ref)}`);
+  }
+
+  // Redirect to frontend registration page if no referral code is provided
+  res.redirect("https://mai.fly.dev/register");
+});
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));

@@ -282,6 +282,24 @@ function continueMining(savedProgress, remainingTime) {
     }
   });
 
+const urlParams = new URLSearchParams(window.location.search);
+const referralCode = urlParams.get("ref");
+
+if (referralCode) {
+  console.log("Referral Code:", referralCode);
+  // Pass the referral code to the backend when registering
+  document.getElementById("referral-input").value = referralCode;
+}
+
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "../Frontend")));
+
+// Redirect unhandled routes to the frontend
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./index.html"));
+});
+
   // **Toggle User Info Dropdown**
   // **Toggle User Info Dropdown**
   menuIcon.addEventListener("click", () => {
