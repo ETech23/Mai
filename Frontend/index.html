@@ -26,13 +26,13 @@
       <label for="name">Name</label>
       <input type="text" id="name" name="name" placeholder="Enter your name">
       <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="Enter your username">
+      <input type="text" id="username" name="username" placeholder="Enter your username" required />
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email">
+      <input type="email" id="email" name="email" placeholder="Enter your email" required/>
       <label for="password-register">Password</label>
-      <input type="password" id="password-register" name="password-register" placeholder="Enter your password">
+      <input type="password" id="password-register" name="password-register" placeholder="Enter your password" required/>
       <!-- Hidden Referral input -->
-<input type="hidden" id="referral-input" name="referralCode" />
+<input type="hidden" id="referral-input" name="referralCode"/>
     </div>
 
     <button type="submit" id="auth-submit">Login</button>
@@ -40,7 +40,8 @@
   </form>
 </div>
   
-  <script>
+  <!--
+        <script>
     // Capture referral code from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const referralCode = urlParams.get("ref");
@@ -79,7 +80,8 @@
         alert("Something went wrong!");
       }
     });
-  </script>
+  </script> 
+    ->
   
   <!-- Mining Dashboard -->
   <div class="dashboard hidden" id="dashboard">

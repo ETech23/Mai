@@ -336,7 +336,7 @@ if (referralCode) {
     console.warn("Referral input field not found. Cannot populate referral code.");
   }
 } **/
-  
+  /**
   const hash = window.location.hash;
   const urlParams = new URLSearchParams(hash.split("?")[1]);
   if (hash.includes("register")) {
@@ -353,7 +353,39 @@ if (referralCode) {
     registerFields.classList.add("hidden");
     loginFields.classList.remove("hidden");
 }
+  **/
   
+  // Check for referral code in URL
+const urlParams = new URLSearchParams(window.location.search);
+const referralCode = urlParams.get("ref");
+
+if (referralCode) {
+  console.log("Referral Code Detected:", referralCode);
+
+  // Ensure the form switches to registration
+  const formTitle = document.getElementById("form-title");
+  const toggleFormText = document.getElementById("toggle-form");
+  const registerFields = document.getElementById("register-fields");
+  const loginFields = document.getElementById("login-fields");
+  const authSubmit = document.getElementById("auth-submit");
+
+  // Switch to registration form
+  formTitle.textContent = "Register";
+  authSubmit.textContent = "Register";
+  registerFields.classList.remove("hidden");
+  loginFields.classList.add("hidden");
+
+  // Add referral code to hidden input
+  const referralInput = document.getElementById("referral-input");
+  if (referralInput) {
+    referralInput.value = referralCode;
+  } else {
+    console.warn("Referral input field not found in the registration form.");
+  }
+
+  // Update toggle form text
+  toggleFormText.innerHTML = 'Already have an account? <span>Login here</span>';
+}
   
   // Menu Toggling
   menuIcon.addEventListener("click", () => {
