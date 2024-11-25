@@ -191,10 +191,12 @@ function continueMining(savedProgress, remainingTime) {
     const isRegistering = formTitle.textContent === "Register";
     const payload = isRegistering
       ? {
-          name: nameInput.value,
-          email: emailInput.value,
-          username: usernameInput.value,
-          password: passwordRegisterInput.value,
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          username: usernameInput.value.trim(),
+          password: passwordRegisterInput.value.trim(),
+        referredBy:
+document.getElementById("referral-input").value.trim(),
         }
       : { identifier, password };
 
@@ -282,56 +284,63 @@ function continueMining(savedProgress, remainingTime) {
     }
   });
 
-const urlParams = new URLSearchParams(window.location.search);
-const referralCode = urlParams.get("ref");
+  const referralInput = document.getElementById("referral-input");
+  
 
-if (referralCode) {
-  console.log("Referral Code:", referralCode);
-  // Pass the referral code to the backend when registering
-  document.getElementById("referral-input").value = referralCode;
-}
+  if (!referralInput) {
+    console.warn("Referral input field not found. Ensure it's present in the registration form.");
+  }
+  if (!menuIcon) {
+    console.warn("Menu icon not found. Ensure the dashboard UI is loaded.");
+  }
 
-const path = require("path");
+  // Referral Handling
+  const urlParams = new URLSearchParams(window.location.search);
+  const referralCode = urlParams.get("ref");
+  if (referralCode && referralInput) {
+    referralInput.value = referralCode;
+  // Populate hidden input with referral code
+    console.log("Referral Code:", referralCode);
+  } else if (!referralInput) {
+    console.warn("Referral input field not found. Ensure it's present in the registration form.");
+};
 
-app.use(express.static(path.join(__dirname, "../Frontend")));
-
-// Redirect unhandled routes to the frontend
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./index.html"));
-});
-
-  // **Toggle User Info Dropdown**
-  // **Toggle User Info Dropdown**
+  // Menu Toggling
   menuIcon.addEventListener("click", () => {
-    const username = localStorage.getItem("username");
-    const email = localStorage.getItem("email");
-    const minedBalance = localStorage.getItem("minedBalance");
-    const referrals = localStorage.getItem("referrals") || 0;
-    const referralLink = `https://mai.fly.dev/register?ref=${username}`;
+    try {
+      const username = localStorage.getItem("username");
+      const email = localStorage.getItem("email");
+      const minedBalance = localStorage.getItem("minedBalance");
+      const referrals = localStorage.getItem("referrals") || 0;
+      const referralLink = `https://mai.fly.dev/register?ref=${username}`;
 
-    userInfoDropdown.innerHTML = `
-      <p><strong>Name:</strong> ${localStorage.getItem("name")}</p>
-      <p><strong>Username:</strong> ${username}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Mined Balance:</strong> ${minedBalance || "0.0000"} MAI</p>
-      <p><strong>Referrals:</strong> ${referrals}</p>
-      <p><strong>Referral Link:</strong></p>
-      <p><small><a href="${referralLink}" target="_blank">${referralLink}</a></small></p>
-      <button id="logout-button">Log Out</button>
-    `;
+      const userInfoDropdown = document.getElementById("user-info-dropdown");
+      userInfoDropdown.innerHTML = `
+        <p><strong>Name:</strong> ${localStorage.getItem("name")}</p>
+        <p><strong>Username:</strong> ${username}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Mined Balance:</strong> ${minedBalance || "0.0000"} MAI</p>
+        <p><strong>Referrals:</strong> ${referrals}</p>
+        <p><strong>Referral Link:</strong></p>
+        <p><small><a href="${referralLink}" target="_blank">${referralLink}</a></small></p>
+        <button id="logout-button">Log Out</button>
+      `;
 
-    userInfoDropdown.classList.toggle("active");
+      userInfoDropdown.classList.toggle("active");
 
-    const logoutButton = document.getElementById("logout-button");
-    if (logoutButton) {
-      logoutButton.addEventListener("click", () => {
-        localStorage.clear();
-        alert("Logged out successfully.");
-        window.location.reload();
-      });
+      const logoutButton = document.getElementById("logout-button");
+      if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
+          localStorage.clear();
+          alert("Logged out successfully.");
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling menu:", error);
     }
   });
+});
 
   // **Restore session on page load**
   checkPersistentLogin();
-});
