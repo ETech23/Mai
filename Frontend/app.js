@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningInterval;
   let countdownInterval;
 
-  // **Persistent Login Check**
+  // -------------------------
+  // Check Persistent Login
+  // -------------------------
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
     if (token) {
@@ -37,14 +39,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         const data = await response.json();
         if (response.ok) {
+          // Populate dashboard data
           userNameDisplay.textContent = data.username;
           minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
           localStorage.setItem("username", data.username);
           localStorage.setItem("email", data.email);
           localStorage.setItem("minedBalance", data.balance.toFixed(4));
           localStorage.setItem("name", data.name);
+
+          // Switch to dashboard
           formContainer.classList.add("hidden");
           dashboard.classList.remove("hidden");
+
+          // Restore any ongoing mining session
           restoreMiningSession();
         } else {
           alert("Session expired. Please log in again.");
@@ -59,16 +66,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // **Restore Mining Session**
+  // -------------------------
+  // Restore Mining Session
+  // -------------------------
   function restoreMiningSession() {
-    const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
+    const savedProgress = parseFloat(localStorage.getItem("miningProgress")) || 0;
     const miningEndTime = parseInt(localStorage.getItem("miningEndTime")) || 0;
     const now = Date.now();
 
     if (savedProgress < 100 && miningEndTime > now) {
+      // Continue session if still active
       continueMining(savedProgress, miningEndTime - now);
       startCountdown(miningEndTime - now);
     } else {
+      // Clear expired session data
       localStorage.removeItem("miningProgress");
       localStorage.removeItem("miningEndTime");
       activateMiningButton.textContent = "Activate Mining";
@@ -76,7 +87,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // **Start Countdown Timer**
+  // -------------------------
+  // Start Countdown Timer
+  // -------------------------
   function startCountdown(remainingTime) {
     if (countdownInterval) clearInterval(countdownInterval);
 
@@ -93,81 +106,90 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   }
 
-  // **Continue Mining**
- // Define the updateBalance function first
-async function updateBalance(newBalance) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.error("No token found. Cannot update balance.");
-    return;
-  }
-
-  try {
-    const response = await fetch("https://mai.fly.dev/api/mining/update", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Failed to update balance:", errorData.message || response.statusText);
+  // -------------------------
+  // Update Backend Balance
+  // -------------------------
+  async function updateBalance(newBalance) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found. Cannot update balance.");
+      return;
     }
-  } catch (error) {
-    console.error("Error updating balance:", error);
+
+    try {
+      const response = await fetch("https://mai.fly.dev/api/mining/update", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Failed to update balance:", errorData.message || response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating balance:", error);
+    }
   }
-}
 
-// Then, define other functions that call updateBalance
-function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
+  // -------------------------
+  // Continue Mining
+  // -------------------------
+  function continueMining(savedProgress, remainingTime) {
+    miningProgress = savedProgress;
+    isMiningActive = true;
+    activateMiningButton.disabled = true;
+    activateMiningButton.textContent = "Mining...";
 
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
+    const incrementInterval = 1000; // 1 second
+    const miningEndTime = Date.now() + remainingTime;
 
-  startCountdown(remainingTime);
+    startCountdown(remainingTime);
 
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
+    miningInterval = setInterval(async () => {
+      if (miningProgress >= 100) {
+        clearInterval(miningInterval);
+        isMiningActive = false;
+        activateMiningButton.disabled = false;
+        activateMiningButton.textContent = "Activate Mining";
+
+        alert("Mining session completed!");
+        localStorage.removeItem("miningProgress");
+        localStorage.removeItem("miningEndTime");
+      } else {
+        miningProgress += (1 / 3600) * 100; // Increment based on 1-hour session
+        const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+        const newBalance = currentBalance + 0.0010; // Add 0.0010 every second
+
+        localStorage.setItem("miningProgress", miningProgress);
+        localStorage.setItem("minedBalance", newBalance.toFixed(4));
+        minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+
+        progressCircle.style.background = `conic-gradient(#4caf50 ${miningProgress}%, #ddd ${miningProgress}%)`;
+
+        await updateBalance(newBalance);
+      }
+    }, incrementInterval);
+
+    // Stop mining after 1 hour
+    setTimeout(() => {
       clearInterval(miningInterval);
       isMiningActive = false;
-      miningProgress = 100;
       activateMiningButton.disabled = false;
       activateMiningButton.textContent = "Activate Mining";
 
       alert("Mining session completed!");
-
-      // Clear local storage for mining
       localStorage.removeItem("miningProgress");
       localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += (1 / 3600) * 100; // Increment based on 1-hour session
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-      const newBalance = currentBalance + 0.0010; // Add 0.0010 every second
+    }, remainingTime);
+  }
 
-      localStorage.setItem("miningProgress", miningProgress);
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-
-      progressCircle.style.background = `conic-gradient(#4caf50 ${miningProgress}%, #ddd ${miningProgress}%)`;
-
-      // Update backend balance
-      try {
-        await updateBalance(newBalance);
-      } catch (error) {
-        console.error("Failed to update balance to backend:", error);
-      }
-    }
-  }, incrementInterval);
-}
-
-  // **Activate Mining**
+  // -------------------------
+  // Activate Mining
+  // -------------------------
   activateMiningButton.addEventListener("click", () => {
     if (isMiningActive) {
       alert("Mining is already active!");
@@ -183,53 +205,9 @@ function continueMining(savedProgress, remainingTime) {
     startCountdown(miningDuration);
   });
 
-  // **Handle Form Submission**
-  authForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const identifier = document.getElementById("identifier").value;
-    const password = document.getElementById("password").value;
-    const isRegistering = formTitle.textContent === "Register";
-    const payload = isRegistering
-      ? {
-          name: nameInput.value,
-          email: emailInput.value,
-          username: usernameInput.value,
-          password: passwordRegisterInput.value,
-        }
-      : { identifier, password };
-
-    try {
-      const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        if (isRegistering) {
-          alert("Registration successful! You can now log in.");
-        } else {
-          alert("Logged in successfully!");
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("email", data.email);
-          localStorage.setItem("minedBalance", data.balance.toFixed(4));
-          userNameDisplay.textContent = data.username;
-          minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
-          formContainer.classList.add("hidden");
-          dashboard.classList.remove("hidden");
-          restoreMiningSession();
-        }
-      } else {
-        alert(data.message || "Something went wrong!");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong!");
-    }
-  });
-
-  // **Toggle Between Login and Registration Form**
+  // -------------------------
+  // Toggle Between Login and Registration
+  // -------------------------
   toggleFormText.addEventListener("click", () => {
     if (formTitle.textContent === "Login") {
       // Switch to Registration Form
@@ -239,10 +217,10 @@ function continueMining(savedProgress, remainingTime) {
       registerFields.classList.remove("hidden");
 
       // Add required attributes to registration fields
-      document.getElementById("name").setAttribute("required", true);
-      document.getElementById("username").setAttribute("required", true);
-      document.getElementById("email").setAttribute("required", true);
-      document.getElementById("password-register").setAttribute("required", true);
+      nameInput.setAttribute("required", true);
+      usernameInput.setAttribute("required", true);
+      emailInput.setAttribute("required", true);
+      passwordRegisterInput.setAttribute("required", true);
 
       // Remove required attributes from login fields
       document.getElementById("identifier").removeAttribute("required");
@@ -261,29 +239,70 @@ function continueMining(savedProgress, remainingTime) {
       document.getElementById("password").setAttribute("required", true);
 
       // Remove required attributes from registration fields
-      document.getElementById("name").removeAttribute("required");
-      document.getElementById("username").removeAttribute("required");
-      document.getElementById("email").removeAttribute("required");
-      document.getElementById("password-register").removeAttribute("required");
+      nameInput.removeAttribute("required");
+      usernameInput.removeAttribute("required");
+      emailInput.removeAttribute("required");
+      passwordRegisterInput.removeAttribute("required");
 
       toggleFormText.innerHTML = 'Don’t have an account? <span>Register here</span>';
     }
   });
 
-  // Form Submit Listener
-  authForm.addEventListener("submit", (e) => {
+  // -------------------------
+  // Handle Form Submission
+  // -------------------------
+  authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (formTitle.textContent === "Register") {
-      // Handle Registration
-      console.log("Registering user...");
-    } else {
-      // Handle Login
-      console.log("Logging in user...");
+    const identifier = document.getElementById("identifier").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const isRegistering = formTitle.textContent === "Register";
+    const payload = isRegistering
+      ? {
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          username: usernameInput.value.trim(),
+          password: passwordRegisterInput.value.trim(),
+        }
+      : { identifier, password };
+
+    try {
+      const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        if (isRegistering) {
+          alert("Registration successful! You can now log in.");
+          toggleFormText.click(); // Automatically switch to login after successful registration
+        } else {
+          alert("Logged in successfully!");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+          localStorage.setItem("minedBalance", data.balance.toFixed(4));
+
+          userNameDisplay.textContent = data.username;
+          minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
+
+          formContainer.classList.add("hidden");
+          dashboard.classList.remove("hidden");
+          restoreMiningSession();
+        }
+      } else {
+        alert(data.message || "Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong!");
     }
   });
 
-  // **Toggle User Info Dropdown**
-  // **Toggle User Info Dropdown**
+  // -------------------------
+  // Toggle User Info Dropdown
+  // -------------------------
   menuIcon.addEventListener("click", () => {
     const username = localStorage.getItem("username");
     const email = localStorage.getItem("email");
@@ -307,13 +326,20 @@ function continueMining(savedProgress, remainingTime) {
     const logoutButton = document.getElementById("logout-button");
     if (logoutButton) {
       logoutButton.addEventListener("click", () => {
-        localStorage.clear();
+        // Only clear session-specific data, not mining progress
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        localStorage.removeItem("name");
+
         alert("Logged out successfully.");
         window.location.reload();
       });
     }
   });
 
-  // **Restore session on page load**
+  // -------------------------
+  // Restore session on page load
+  // -------------------------
   checkPersistentLogin();
 });

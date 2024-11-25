@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path"); // Required to serve files
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
@@ -122,6 +123,30 @@ router.get("/details", async (req, res) => {
     });
   } catch (err) {
     console.error("Error fetching user details:", err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Handle GET /register for referral links
+router.get("/register", async (req, res) => {
+  const { ref } = req.query; // Extract the referral code from the query string
+
+  try {
+    // If a referral code exists, validate it
+    if (ref) {
+      const referrer = await User.findOne({ referralCode: ref });
+      if (!referrer) {
+        return res.status(400).json({ message: "Invalid referral code" });
+      }
+
+      // Send referrer username for frontend use
+      return res.status(200).json({ message: "Referral valid", referrer: referrer.username });
+    }
+
+    // If no referral code, serve the registration page
+    res.status(200).sendFile(path.join(__dirname, "../public/index.html")); // Update path to your frontend file
+  } catch (err) {
+    console.error("Error in referral check:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 });
