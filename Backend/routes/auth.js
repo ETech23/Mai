@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path"); // Required to serve files
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
@@ -31,7 +30,7 @@ router.post("/register", async (req, res) => {
       username,
       password: hashedPassword,
       referralCode,
-      referredBy: referredBy || null,
+      referredBy: referredBy || null, // Store referral code if provided
     });
 
     // If referredBy exists, update the referrer's referrals count
@@ -63,7 +62,7 @@ router.post("/login", async (req, res) => {
   const { identifier, password } = req.body;
 
   try {
-    // Determine if the identifier is an email or username
+    // Find user by email or username
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
@@ -127,26 +126,20 @@ router.get("/details", async (req, res) => {
   }
 });
 
-// Handle GET /register for referral links
-router.get("/register", async (req, res) => {
-  const { ref } = req.query; // Extract the referral code from the query string
+// Referral validation endpoint
+router.get("/validateReferral/:referralCode", async (req, res) => {
+  const { referralCode } = req.params;
 
   try {
-    // If a referral code exists, validate it
-    if (ref) {
-      const referrer = await User.findOne({ referralCode: ref });
-      if (!referrer) {
-        return res.status(400).json({ message: "Invalid referral code" });
-      }
+    const referrer = await User.findOne({ referralCode });
 
-      // Send referrer username for frontend use
-      return res.status(200).json({ message: "Referral valid", referrer: referrer.username });
+    if (!referrer) {
+      return res.status(404).json({ message: "Invalid referral code." });
     }
 
-    // If no referral code, serve the registration page
-    res.status(200).sendFile(path.join(__dirname, "../Frontend/index.html")); // Update path to your frontend file
+    res.json({ message: "Valid referral code.", referrer: referrer.username });
   } catch (err) {
-    console.error("Error in referral check:", err.message);
+    console.error("Error validating referral code:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 });
