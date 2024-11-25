@@ -144,7 +144,7 @@ router.get("/register", async (req, res) => {
     }
 
     // If no referral code, serve the registration page
-    res.status(200).sendFile(path.join(__dirname, "../public/index.html")); // Update path to your frontend file
+    res.status(200).sendFile(path.join(__dirname, "../Frontend/index.html")); // Update path to your frontend file
   } catch (err) {
     console.error("Error in referral check:", err.message);
     res.status(500).json({ message: "Server error" });

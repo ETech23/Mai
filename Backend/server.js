@@ -28,7 +28,7 @@ app.use(
 );
 
 // Serve static files for the frontend
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "Frontend")));
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
