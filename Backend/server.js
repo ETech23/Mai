@@ -15,6 +15,11 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Middleware to parse JSON
+app.use(express.json());
+// Middleware to parse URL-encoded form data
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/register", (req, res) => {
   const { ref } = req.query;
 
