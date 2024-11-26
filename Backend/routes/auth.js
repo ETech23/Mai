@@ -2,10 +2,14 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
 const router = express.Router();
 
-// Register a user
+// Utility function to generate tokens
+function generateToken(user) {
+  return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+}
+
+// User Registration
 router.post("/register", async (req, res) => {
   const { name, email, username, password, referredBy } = req.body;
 
@@ -14,10 +18,10 @@ router.post("/register", async (req, res) => {
     const emailExists = await User.findOne({ email });
     const usernameExists = await User.findOne({ username });
     if (emailExists || usernameExists) {
-      return res.status(400).json({ message: "Email or username already exists." });
+      return res.status(400).json({ message: "Email or username already exists" });
     }
 
-    // Hash password
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Generate a unique referral code
@@ -33,46 +37,37 @@ router.post("/register", async (req, res) => {
       referredBy: referredBy || null,
     });
 
-    // If referredBy exists, update the referrer's referrals count
+    // If referredBy is provided, update referrer details
     if (referredBy) {
-  const referrer = await User.findOne({ referralCode: referredBy });
-  if (referrer) {
-    console.log("Referrer found:", referrer.username); // Log referrer's username
-    referrer.referrals = referrer.referrals || [];
-    referrer.referrals.push(newUser._id);
-    console.log("Updated referrals array:", referrer.referrals); // Log the updated referrals array
-    await referrer.save();
-    console.log("Referrer saved successfully.");
-  } else {
-    console.log("No referrer found for referral code:", referredBy);
-  }
-}
+      const referrer = await User.findOne({ referralCode: referredBy });
+      if (referrer) {
+        referrer.referrals = (referrer.referrals || 0) + 1;
+        referrer.miningBoost = (referrer.miningBoost || 0) + 5; // Boost mining by 5%
+        await referrer.save();
+      }
+    }
 
-    // Save new user to the database
+    // Save the new user
     await newUser.save();
-
-    // Send success response
     res.status(201).json({
       username: newUser.username,
-      balance: newUser.balance || 0,
       message: "Registration successful",
     });
-  } catch (err) {
-    console.error("Error in registration:", err.message);
+  } catch (error) {
+    console.error("Error during registration:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Login a user
+// User Login
 router.post("/login", async (req, res) => {
   const { identifier, password } = req.body;
 
   try {
-    // Determine if the identifier is an email or username
+    // Find user by email or username
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -83,37 +78,31 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-    // Send success response
+    // Generate a token
+    const token = generateToken(user);
     res.json({
       name: user.name,
       username: user.username,
       email: user.email,
-      balance: user.balance || 0,
+      miningBoost: user.miningBoost || 0,
       referrals: user.referrals || 0,
       token,
     });
-  } catch (err) {
-    console.error("Error in login:", err.message);
+  } catch (error) {
+    console.error("Error during login:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Get user details
+// Get User Details
 router.get("/details", async (req, res) => {
   const token = req.header("Authorization")?.split(" ")[1];
-
   if (!token) {
     return res.status(401).json({ message: "No token, authorization denied" });
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Fetch user details
     const user = await User.findById(decoded.id).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -123,11 +112,11 @@ router.get("/details", async (req, res) => {
       name: user.name,
       username: user.username,
       email: user.email,
-      balance: user.balance || 0,
+      miningBoost: user.miningBoost || 0,
       referrals: user.referrals || 0,
     });
-  } catch (err) {
-    console.error("Error fetching user details:", err.message);
+  } catch (error) {
+    console.error("Error fetching user details:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
