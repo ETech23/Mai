@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
@@ -12,36 +11,38 @@ connectDB();
 
 // Initialize Express app
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
 
-// Middleware to parse JSON
+// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
-// Middleware to parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
+// Allow specific origins with proper CORS configuration
+app.use(cors({
+  origin: "https://mai-psi.vercel.app", // Use your frontend URL
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
+
+// Debugging: Log incoming requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+// Handle referral redirects
 app.get("/register", (req, res) => {
   const { ref } = req.query;
+  console.log("Referral Code Received:", ref); // Debugging
 
-  // Redirect to the frontend with the referral code (if provided)
   if (ref) {
     return res.redirect(`https://mai-psi.vercel.app/register?ref=${ref}`);
   }
-
-  // If no referral code, redirect to the main registration page
   return res.redirect("https://mai-psi.vercel.app/register");
 });
 
-// Routes
+// API Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));
-
-// Allow specific origins
-app.use(cors({
-  origin: "https://mai-psi.vercel.app/", // Replace with your frontend domain
-  methods: "GET,POST",
-  credentials: true,
-}));
 
 // Start the server
 const PORT = process.env.PORT || 8080;
