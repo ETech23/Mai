@@ -308,8 +308,8 @@ document.getElementById("referral-input").value.trim(),
 };
 **/
   
-  // Get elements
-const referralInput = document.getElementById("referral-input");
+  /** // Get elements
+const referralInput = document.getElementById("referral-input"); **/
   
 /**const menuIcon = document.getElementById("menu-icon");**/ 
  
