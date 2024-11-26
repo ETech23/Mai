@@ -35,12 +35,18 @@ router.post("/register", async (req, res) => {
 
     // If referredBy exists, update the referrer's referrals count
     if (referredBy) {
-      const referrer = await User.findOne({ referralCode: referredBy });
-      if (referrer) {
-        referrer.referrals = (referrer.referrals || 0) + 1;
-        await referrer.save();
-      }
-    }
+  const referrer = await User.findOne({ referralCode: referredBy });
+  if (referrer) {
+    console.log("Referrer found:", referrer.username); // Log referrer's username
+    referrer.referrals = referrer.referrals || [];
+    referrer.referrals.push(newUser._id);
+    console.log("Updated referrals array:", referrer.referrals); // Log the updated referrals array
+    await referrer.save();
+    console.log("Referrer saved successfully.");
+  } else {
+    console.log("No referrer found for referral code:", referredBy);
+  }
+}
 
     // Save new user to the database
     await newUser.save();
