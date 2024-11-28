@@ -17,33 +17,55 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Allow specific origins with proper CORS configuration
-app.use(cors({
-  origin: "https://mai-psi.vercel.app", // Use your frontend URL
-  methods: ["GET", "POST"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "https://mai-psi.vercel.app", // Ensure FRONTEND_URL is set in your environment variables
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
-// Debugging: Log incoming requests
+// Debugging: Log incoming requests with method, URL, and time
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
+  const now = new Date().toISOString();
+  console.log(`[${now}] ${req.method} ${req.url}`);
   next();
 });
 
 // Handle referral redirects
 app.get("/register", (req, res) => {
   const { ref } = req.query;
-  console.log("Referral Code Received:", ref); // Debugging
 
+  // Log the referral code for debugging purposes
   if (ref) {
-    return res.redirect(`https://mai-psi.vercel.app/register?ref=${ref}`);
+    console.log(`[Referral Redirect] Referral Code Received: ${ref}`);
+    return res.redirect(`${process.env.FRONTEND_URL || "https://mai-psi.vercel.app"}/register?ref=${ref}`);
   }
-  return res.redirect("https://mai-psi.vercel.app/register");
+
+  // Redirect to the generic registration page if no referral code is provided
+  console.log(`[Referral Redirect] No referral code provided.`);
+  return res.redirect(`${process.env.FRONTEND_URL || "https://mai-psi.vercel.app"}/register`);
 });
 
 // API Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));
 
+// Catch-all route for unmatched endpoints
+app.use((req, res) => {
+  console.error(`[404] Route not found: ${req.method} ${req.url}`);
+  res.status(404).json({ message: "Route not found" });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(`[Error] ${err.message}`);
+  res.status(500).json({ message: "Internal Server Error" });
+});
+
 // Start the server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Frontend URL: ${process.env.FRONTEND_URL || "https://mai-psi.vercel.app"}`);
+});

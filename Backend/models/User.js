@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
   referredBy: { type: String, default: null }, // Referral code of the referrer
   referrals: { type: [String], default: [] }, // Array of referred user IDs
   isMining: { type: Boolean, default: false }, // Whether mining is currently active
+  miningRate: { type: Number, default: 1 }, // Mining rate multiplier, boosted by referrals
+  referralBonusCount: { type: Number, default: 0 }, // Number of successful referrals
+}, {
+  timestamps: true, // Automatically add `createdAt` and `updatedAt` fields
 });
 
 module.exports = mongoose.model("User", userSchema);

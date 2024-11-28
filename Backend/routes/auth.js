@@ -33,33 +33,37 @@ router.post("/register", async (req, res) => {
       referredBy: referredBy || null,
     });
 
-    // If referredBy exists, update the referrer's referrals count
+    // Update referrer's profile
     if (referredBy) {
-  const referrer = await User.findOne({ referralCode: referredBy });
-  if (referrer) {
-    console.log("Referrer found:", referrer.username); // Log referrer's username
-    referrer.referrals = referrer.referrals || [];
-    referrer.referrals.push(newUser._id);
-    console.log("Updated referrals array:", referrer.referrals); // Log the updated referrals array
-    await referrer.save();
-    console.log("Referrer saved successfully.");
-  } else {
-    console.log("No referrer found for referral code:", referredBy);
-  }
-}
+      const referrer = await User.findOne({ referralCode: referredBy });
+      if (referrer) {
+        console.log("Referrer found:", referrer.username);
 
-    // Save new user to the database
+        // Add the new user to referrer's referrals list
+        referrer.referrals = referrer.referrals || [];
+        referrer.referrals.push(newUser._id);
+
+        // Boost mining rate by 5%
+        referrer.miningRate = (referrer.miningRate || 1) * 1.05;
+
+        await referrer.save();
+        console.log("Referrer updated successfully.");
+      } else {
+        console.log("Invalid referral code:", referredBy);
+      }
+    }
+
+    // Save the new user
     await newUser.save();
 
-    // Send success response
     res.status(201).json({
       username: newUser.username,
-      balance: newUser.balance || 0,
+      balance: newUser.balance,
       message: "Registration successful",
     });
   } catch (err) {
-    console.error("Error in registration:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error during registration:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
@@ -68,7 +72,7 @@ router.post("/login", async (req, res) => {
   const { identifier, password } = req.body;
 
   try {
-    // Determine if the identifier is an email or username
+    // Find user by email or username
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
@@ -77,7 +81,7 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Validate password
+    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -86,18 +90,18 @@ router.post("/login", async (req, res) => {
     // Generate JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-    // Send success response
     res.json({
       name: user.name,
       username: user.username,
       email: user.email,
-      balance: user.balance || 0,
-      referrals: user.referrals || 0,
+      balance: user.balance,
+      miningRate: user.miningRate,
+      referrals: user.referrals.length,
       token,
     });
   } catch (err) {
-    console.error("Error in login:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error during login:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
@@ -114,7 +118,10 @@ router.get("/details", async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Fetch user details
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.id)
+      .select("-password")
+      .populate("referrals", "username email"); // Populate referral details
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -123,12 +130,13 @@ router.get("/details", async (req, res) => {
       name: user.name,
       username: user.username,
       email: user.email,
-      balance: user.balance || 0,
-      referrals: user.referrals || 0,
+      balance: user.balance,
+      miningRate: user.miningRate,
+      referrals: user.referrals, // Send detailed referral information
     });
   } catch (err) {
     console.error("Error fetching user details:", err.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
