@@ -132,6 +132,7 @@ router.get("/details", async (req, res) => {
       balance: user.balance,
       miningRate: user.miningRate,
       referrals: user.referrals, // Send detailed referral information
+      user.referralCode, // Send referral code
     });
   } catch (err) {
     console.error("Error fetching user details:", err.message);
