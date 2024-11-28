@@ -186,8 +186,8 @@ function continueMining(savedProgress, remainingTime) {
   // **Handle Form Submission**
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const identifier = document.getElementById("identifier").value;
-    const password = document.getElementById("password").value;
+    const identifier = document.getElementById("identifier").value.trim();
+    const password = document.getElementById("password").value.trim();
     const isRegistering = formTitle.textContent === "Register";
     const payload = isRegistering
       ? {
@@ -388,7 +388,7 @@ if (referralCode) {
 }
   
   // Menu Toggling
-  menuIcon.addEventListener("click", () => {
+  /**menuIcon.addEventListener("click", () => {
     try {
       const username = localStorage.getItem("username");
       const email = localStorage.getItem("email");
@@ -422,7 +422,110 @@ if (referralCode) {
       console.error("Error toggling menu:", error);
     }
   });
-});
+});**/
 
-  // **Restore session on page load**
+
+  // DOM Elements
+
+  // Ensure DOM elements exist
+  if (!menuIcon || !userInfoDropdown) {
+    console.error("Required DOM elements are missing");
+    return;
+  }
+
+  // Add event listener for menu toggle
+  menuIcon.addEventListener("click", async () => {
+    try {
+      console.log("Menu icon clicked");
+
+      // Retrieve token from localStorage
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must log in to view your referral link.");
+        return;
+      }
+      console.log("Token retrieved:", token);
+
+      // Fetch user details from backend
+      const response = await fetch("https://mai.fly.dev/api/auth/details", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        alert("Failed to fetch user details. Please log in again.");
+        localStorage.clear();
+        window.location.reload();
+        return;
+      }
+
+      const user = await response.json();
+      console.log("User details fetched:", user);
+
+      const { username, email, balance, referrals, referralCode } = user;
+
+      // Update localStorage with latest user data
+      localStorage.setItem("username", username);
+      localStorage.setItem("email", email);
+      localStorage.setItem("minedBalance", balance.toFixed(4));
+      localStorage.setItem("referrals", referrals.length);
+      localStorage.setItem("referralCode", referralCode);
+
+      // Construct referral link
+      const referralLink = `https://mai.fly.dev/register?ref=${referralCode}`;
+      console.log("Referral link constructed:", referralLink);
+
+      // Update dropdown content
+      userInfoDropdown.innerHTML = `
+        <p><strong>Name:</strong> ${localStorage.getItem("name")}</p>
+        <p><strong>Username:</strong> ${username}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Mined Balance:</strong> ${balance.toFixed(4)} MAI</p>
+        <p><strong>Referrals:</strong> ${referrals.length}</p>
+        <p><strong>Referral Link:</strong></p>
+        <p>
+          <small>
+            <a href="${referralLink}" id="referral-link" target="_blank">${referralLink}</a>
+          </small>
+        </p>
+        <button id="logout-button">Log Out</button>
+      `;
+
+      userInfoDropdown.classList.toggle("active");
+
+      // Add long-press copy functionality for referral link
+      const referralLinkElement = document.getElementById("referral-link");
+      if (referralLinkElement) {
+        let timer;
+        referralLinkElement.addEventListener("mousedown", () => {
+          timer = setTimeout(() => {
+            navigator.clipboard.writeText(referralLink)
+              .then(() => alert("Referral link copied to clipboard!"))
+              .catch((err) => console.error("Failed to copy referral link:", err));
+          }, 1000);
+        });
+        referralLinkElement.addEventListener("mouseup", () => clearTimeout(timer));
+        referralLinkElement.addEventListener("mouseleave", () => clearTimeout(timer));
+      }
+
+      // Add logout functionality
+      const logoutButton = document.getElementById("logout-button");
+      if (logoutButton) {
+        logoutButton.addEventListener("click", () => {
+          localStorage.clear();
+          alert("Logged out successfully.");
+          window.location.reload();
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling menu:", error);
+      alert("An error occurred while fetching user details.");
+    }
+  });
+
+  // Restore session on page load
   checkPersistentLogin();
+  console.log("checkPersistentLogin called");
+});

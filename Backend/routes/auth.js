@@ -40,11 +40,10 @@ router.post("/register", async (req, res) => {
         console.log("Referrer found:", referrer.username);
 
         // Add the new user to referrer's referrals list
-        referrer.referrals = referrer.referrals || [];
         referrer.referrals.push(newUser._id);
 
         // Boost mining rate by 5%
-        referrer.miningRate = (referrer.miningRate || 1) * 1.05;
+        referrer.miningRate = parseFloat((referrer.miningRate || 1) * 1.05).toFixed(2);
 
         await referrer.save();
         console.log("Referrer updated successfully.");
@@ -96,7 +95,7 @@ router.post("/login", async (req, res) => {
       email: user.email,
       balance: user.balance,
       miningRate: user.miningRate,
-      referrals: user.referrals.length,
+      referralsCount: user.referrals.length,
       token,
     });
   } catch (err) {
@@ -120,7 +119,7 @@ router.get("/details", async (req, res) => {
     // Fetch user details
     const user = await User.findById(decoded.id)
       .select("-password")
-      .populate("referrals", "username email"); // Populate referral details
+      .populate("referrals", "username email balance"); // Populate referral details
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
