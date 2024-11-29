@@ -319,31 +319,35 @@ header h1 {
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background: #f9f9f9;
+  text-align: justify;
+  font-family: "Georgia", serif;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.news-article:last-child {
-  border-bottom: none;
+.news-article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
 }
 
+.news-article h4,
 .news-article h3 {
-  font-size: 1.6rem;
-  color: #4caf50;
+  color: #2c3e50;
   margin-bottom: 10px;
 }
 
 .news-article p {
-  font-size: 1rem;
-  color: #666;
   line-height: 1.6;
+  color: #555;
 }
 
 .news-article a {
-  font-size: 1.1rem;
-  color: #4caf50;
+  color: #3498db;
   text-decoration: none;
-  margin-top: 10px;
   font-weight: bold;
 }
 
@@ -351,8 +355,49 @@ header h1 {
   text-decoration: underline;
 }
 
-.news-article .news-date {
-  font-size: 0.9rem;
-  color: #999;
+.news-date {
+  font-size: 0.9em;
+  color: #888;
   margin-top: 10px;
+  text-align: right;
+}
+.reaction-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.reaction-buttons button {
+  border: none;
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 3px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.reaction-buttons button:hover {
+  background-color: #dcdcdc;
+  transform: scale(1.05);
+}
+
+.reaction-buttons button:active {
+  background-color: #bbb;
+}
+
+.reaction-buttons .like-btn {
+  color: green;
+}
+
+.reaction-buttons .dislike-btn {
+  color: red;
+}
+
+.view-count {
+  font-size: 0.9em;
+  color: #777;
+  margin-top: 10px;
+  font-style: italic;
 }

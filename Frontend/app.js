@@ -354,6 +354,104 @@ if (referralCode) {
     loginFields.classList.remove("hidden");
 }
   **/
+  async function fetchArticlesAndSetupViews() {
+  // Fetch articles and view counts
+  try {
+    const response = await fetch("https://mai.fly.dev/api/articles");
+    if (!response.ok) {
+      console.error("Failed to fetch articles");
+      return;
+    }
+
+    const articles = await response.json();
+
+    // Update view counts in the DOM
+    articles.forEach((article) => {
+      const articleElement = Array.from(document.querySelectorAll(".news-article h4"))
+        .find((h4) => h4.textContent === article.title)?.closest(".news-article");
+
+      if (articleElement) {
+        const viewsElement = articleElement.querySelector(".views");
+        if (viewsElement) {
+          viewsElement.textContent = article.views;
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+  }
+
+  // Increment view count on article click
+  const articleLinks = document.querySelectorAll(".news-article a");
+  articleLinks.forEach((link) => {
+    link.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const articleTitle = link.closest(".news-article").querySelector("h4").textContent;
+
+      try {
+        await fetch("https://mai.fly.dev/api/articles/view", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: articleTitle }),
+        });
+
+        // Optionally redirect or open the article
+        console.log(`View count incremented for ${articleTitle}`);
+      } catch (error) {
+        console.error("Error incrementing view count:", error);
+      }
+    });
+  });
+}
+
+// Call the async function on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+  fetchArticlesAndSetupViews();
+});
+  
+
+  // Reaction functionality
+  const reactionButtons = document.querySelectorAll(".reaction-buttons button");
+
+  reactionButtons.forEach((button) => {
+  
+    button.addEventListener("click", async (event) => {
+      if (!localStorage.getItem("token")) {
+  alert("Please log in to react to articles.");
+  return;
+}
+      const isLike = event.target.classList.contains("like-btn");
+      const countSpan = isLike
+        ? event.target.querySelector(".like-count")
+        : event.target.querySelector(".dislike-count");
+
+      let currentCount = parseInt(countSpan.textContent, 10);
+      currentCount++;
+      countSpan.textContent = currentCount;
+
+      // Optional: Save reaction to the backend
+      const articleTitle = event.target.closest(".news-article").querySelector("h4").textContent;
+
+      const reactionData = {
+        title: articleTitle,
+        reaction: isLike ? "like" : "dislike",
+      };
+
+      try {
+        const response = await fetch("https://mai.fly.dev/api/reactions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(reactionData),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to save reaction");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+  });
   
   // Check for referral code in URL
 const urlParams = new URLSearchParams(window.location.search);
