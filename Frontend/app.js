@@ -367,8 +367,8 @@ if (referralCode) {
 
     // Update view counts in the DOM
     articles.forEach((article) => {
-      const articleElement = Array.from(document.querySelectorAll(".news-article h4"))
-        .find((h4) => h4.textContent === article.title)?.closest(".news-article");
+  const articleElement = Array.from(document.querySelectorAll(".news-article"))
+    .find((element) => element.getAttribute("data-title") === article.title);
 
       if (articleElement) {
         const viewsElement = articleElement.querySelector(".views");
@@ -386,7 +386,7 @@ if (referralCode) {
   articleLinks.forEach((link) => {
     link.addEventListener("click", async (e) => {
       e.preventDefault();
-      const articleTitle = link.closest(".news-article").querySelector("h4").textContent;
+      const articleTitle = link.closest(".news-article").querySelector("data-title").textContent;
 
       try {
         await fetch("https://mai.fly.dev/api/articles/view", {
@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
       countSpan.textContent = currentCount;
 
       // Optional: Save reaction to the backend
-      const articleTitle = event.target.closest(".news-article").querySelector("h4").textContent;
+      const articleTitle = event.target.closest(".news-article").getAttribute("data-title");
 
       const reactionData = {
         title: articleTitle,
