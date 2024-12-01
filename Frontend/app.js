@@ -354,6 +354,35 @@ if (referralCode) {
     loginFields.classList.remove("hidden");
 }
   **/
+  
+  document.getElementById("add-article-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const title = document.getElementById("article-title").value;
+  const content = document.getElementById("article-content").value;
+
+  const articleData = { title, content };
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/articles/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(articleData),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("Article added successfully");
+    } else {
+      alert(`Failed to add article: ${result.message}`);
+    }
+  } catch (error) {
+    console.error("Error adding article:", error);
+    alert("An error occurred while adding the article.");
+  }
+});
+  
   async function fetchArticlesAndSetupViews() {
   // Fetch articles and view counts
   try {

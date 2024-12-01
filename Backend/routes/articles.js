@@ -69,4 +69,34 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Add a new article
+router.post("/add", async (req, res) => {
+  const { title, content } = req.body;
+
+  if (!title || !content) {
+    return res.status(400).json({ success: false, message: "Title and content are required" });
+  }
+
+  try {
+    const existingArticle = await Article.findOne({ title });
+    if (existingArticle) {
+      return res.status(400).json({ success: false, message: "Article with this title already exists" });
+    }
+
+    const newArticle = new Article({
+      title,
+      content,
+      views: 0,
+      likes: 0,
+      dislikes: 0,
+    });
+
+    await newArticle.save();
+    res.status(201).json({ success: true, message: "Article created successfully", article: newArticle });
+  } catch (error) {
+    console.error("Error creating article:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 module.exports = router;
