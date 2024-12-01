@@ -106,11 +106,20 @@
 
   <!-- News & Articles Section -->
   
+  <div id="articles-list">
+  <h2>Articles</h2>
+  <!-- Articles will be dynamically populated here -->
+</div>
+  
+  <div id="article-form">
+  <h2>Create New Article</h2>
   <form id="add-article-form">
-  <input type="text" id="article-title" placeholder="Enter article title" required />
-  <textarea id="article-content" placeholder="Enter article content" required></textarea>
-  <button type="submit">Add Article</button>
-</form>
+    <input type="text" id="article-title" placeholder="Enter article title" required />
+    <textarea id="article-content" placeholder="Enter article content" required></textarea>
+    <input type="file" id="article-image" accept="image/*" />
+    <button type="submit">Add Article</button>
+  </form>
+</div>
   
   <section class="news-section">
     <h2>Latest News</h2>

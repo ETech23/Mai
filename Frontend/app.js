@@ -355,32 +355,111 @@ if (referralCode) {
 }
   **/
   
-  document.getElementById("add-article-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
+  document.addEventListener("DOMContentLoaded", async () => {
+  const articlesList = document.getElementById("articles-list");
+  const form = document.getElementById("add-article-form");
 
-  const title = document.getElementById("article-title").value;
-  const content = document.getElementById("article-content").value;
+  // Fetch and display articles
+  async function fetchArticles() {
+    try {
+      const response = await fetch("https://mai.fly.dev/api/articles");
+      const articles = await response.json();
 
-  const articleData = { title, content };
-
-  try {
-    const response = await fetch("https://mai.fly.dev/api/articles/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(articleData),
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      alert("Article added successfully");
-    } else {
-      alert(`Failed to add article: ${result.message}`);
+      articlesList.innerHTML = articles
+        .map(
+          (article) => `
+        <div class="article" data-id="${article._id}">
+          <h3>${article.title}</h3>
+          <img src="${article.image || ""}" alt="${article.title}" />
+          <p>${article.content}</p>
+          <button class="edit-article">Edit</button>
+          <button class="delete-article">Delete</button>
+        </div>`
+        )
+        .join("");
+    } catch (error) {
+      console.error("Error fetching articles:", error);
     }
-  } catch (error) {
-    console.error("Error adding article:", error);
-    alert("An error occurred while adding the article.");
   }
+
+  // Handle form submission
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById("article-title").value;
+    const content = document.getElementById("article-content").value;
+    const imageFile = document.getElementById("article-image").files[0];
+
+    let image = null;
+    if (imageFile) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        image = reader.result;
+
+        // Submit article
+        try {
+          await fetch("https://mai.fly.dev/api/articles/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, content, image }),
+          });
+          alert("Article added successfully");
+          fetchArticles();
+        } catch (error) {
+          console.error("Error adding article:", error);
+        }
+      };
+      reader.readAsDataURL(imageFile);
+    } else {
+      // Submit article without image
+      try {
+        await fetch("https://mai.fly.dev/api/articles/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, content }),
+        });
+        alert("Article added successfully");
+        fetchArticles();
+      } catch (error) {
+        console.error("Error adding article:", error);
+      }
+    }
+  });
+
+  // Handle article updates and deletions
+  articlesList.addEventListener("click", async (e) => {
+    const articleId = e.target.closest(".article")?.dataset.id;
+
+    if (e.target.classList.contains("delete-article")) {
+      try {
+        await fetch(`https://mai.fly.dev/api/articles/delete/${articleId}`, { method: "DELETE" });
+        alert("Article deleted successfully");
+        fetchArticles();
+      } catch (error) {
+        console.error("Error deleting article:", error);
+      }
+    } else if (e.target.classList.contains("edit-article")) {
+      const newTitle = prompt("Enter new title:");
+      const newContent = prompt("Enter new content:");
+
+      if (newTitle && newContent) {
+        try {
+          await fetch(`https://mai.fly.dev/api/articles/update/${articleId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: newTitle, content: newContent }),
+          });
+          alert("Article updated successfully");
+          fetchArticles();
+        } catch (error) {
+          console.error("Error updating article:", error);
+        }
+      }
+    }
+  });
+
+  // Initial fetch
+  fetchArticles();
 });
   
   async function fetchArticlesAndSetupViews() {
