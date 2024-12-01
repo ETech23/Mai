@@ -50,7 +50,7 @@ app.get("/register", (req, res) => {
 // API Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));
-app.use("/api/articles", require("./routes/articles"));
+app.use("/api/articles", require("./routes/articles")); // Includes reactions
 
 // Catch-all route for unmatched endpoints
 app.use((req, res) => {
@@ -68,5 +68,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Frontend URL: ${process.env.FRONTEND_URL || "https://mai-psi.vercel.app" || localhost}`);
+  console.log(`Frontend URL: ${process.env.FRONTEND_URL || "https://mai-psi.vercel.app"}`);
 });
