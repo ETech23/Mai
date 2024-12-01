@@ -432,24 +432,31 @@ document.addEventListener("DOMContentLoaded", () => {
       // Optional: Save reaction to the backend
       const articleTitle = event.target.closest(".news-article").getAttribute("data-title");
 
-      const reactionData = {
-        title: articleTitle,
-        reaction: isLike ? "like" : "dislike",
-      };
+console.log("Article Title:", articleTitle);
+
+const reactionData = {
+  title: articleTitle,
+  reaction: isLike ? "like" : "dislike",
+};
+
+console.log("Reaction Data:", JSON.stringify(reactionData)); // Log as string
 
       try {
-        const response = await fetch("https://mai.fly.dev/api/reactions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(reactionData),
-        });
+  const response = await fetch("https://mai.fly.dev/api/reactions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(reactionData), // Ensure JSON formatting
+  });
 
-        if (!response.ok) {
-          console.error("Failed to save reaction");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error("Failed to save reaction:", errorData.message);
+  } else {
+    console.log("Reaction successfully saved!");
+  }
+} catch (error) {
+  console.error("Error:", error);
+}
     });
   });
   
