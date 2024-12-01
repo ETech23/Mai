@@ -401,3 +401,20 @@ header h1 {
   margin-top: 10px;
   font-style: italic;
 }
+
+.article {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+.article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 8px;
+}
+.article button {
+  margin-right: 8px;
+}

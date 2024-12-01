@@ -104,26 +104,28 @@
     </main>
   </div>
 
-  <!-- News & Articles Section -->
+  <!-- News & Articles Section --
   
-  <div id="articles-list">
-  <h2>Articles</h2>
-  <!-- Articles will be dynamically populated here -->
-</div>
-  
-  <div id="article-form">
-  <h2>Create New Article</h2>
   <form id="add-article-form">
-    <input type="text" id="article-title" placeholder="Enter article title" required />
-    <textarea id="article-content" placeholder="Enter article content" required></textarea>
-    <input type="file" id="article-image" accept="image/*" />
-    <button type="submit">Add Article</button>
-  </form>
+  <input type="text" id="article-title" placeholder="Title" required />
+  <textarea id="article-content" placeholder="Content" required></textarea>
+  <input type="file" id="article-image" accept="image/*" />
+  <button type="submit">Add Article</button>
+</form>
+<p class="view-count">Views: <span class="views">0</span></p>
+      
+      <-- Reaction Buttons --
+<div class="reaction-buttons">
+<button class="like-btn">👍<span class="like-count">0</span></button>
+<button class="dislike-btn">👎<span class="dislike-count">0</span></button>
 </div>
-  
+    </div>
+<div id="articles-list"></div>
+  -->
   <section class="news-section">
     <h2>Latest News</h2>
 
+    
     <div class="news-article" data-title="The Mai Project">
       <h4 style="text-align: left">The Mai Project: Rewarding Early Adoption Through AI-Powered Mining</h4>
       <img src="img/land.webp">
@@ -171,9 +173,8 @@ The Mai Project represents a bold step into the future of AI and blockchain inte
 
 Join Mai today and become part of a community that’s shaping the future of AI-powered solutions. Together, we can redefine how technology interacts with the world—one token at a time.
 
-
-     
-      <p class="news-date">November 29, 2024</p>
+      <p class="news-date">November 29, 2024</p> 
+    
       <!-- View Count -->
 <p class="view-count">Views: <span class="views">0</span></p>
       
@@ -183,7 +184,7 @@ Join Mai today and become part of a community that’s shaping the future of AI-
 <button class="dislike-btn">👎<span class="dislike-count">0</span></button>
 </div>
     </div>
-    
+    <!--
     <div class="news-article" data-title="The Mai Project">
   <h4 style="text-align: left">The Mai Project: Rewarding Early Adoption Through AI-Powered Mining</h4>
   <img src="img/land.webp" alt="Mai Project">
@@ -191,10 +192,10 @@ Join Mai today and become part of a community that’s shaping the future of AI-
 
   <p class="news-date">November 29, 2024</p>
 
-  <!-- View Count -->
+  !-- View Count --
   <p class="view-count">Views: <span class="views">0</span></p>
 
-  <!-- Reaction Buttons -->
+  -- Reaction Buttons --
   <div class="reaction-buttons">
     <button class="like-btn">👍 <span class="like-count">0</span></button>
     <button class="dislike-btn">👎 <span class="dislike-count">0</span></button>
@@ -208,10 +209,10 @@ Join Mai today and become part of a community that’s shaping the future of AI-
 
   <p class="news-date">November 29, 2024</p>
 
-  <!-- View Count -->
+  -- View Count --
   <p class="view-count">Views: <span class="views">0</span></p>
 
-  <!-- Reaction Buttons -->
+  <-- Reaction Buttons --
   <div class="reaction-buttons">
     <button class="like-btn">👍 <span class="like-count">0</span></button>
     <button class="dislike-btn">👎 <span class="dislike-count">0</span></button>
@@ -234,7 +235,7 @@ Join Mai today and become part of a community that’s shaping the future of AI-
       <p class="news-date">November 15, 2024</p>
     </div>
   </section>
-
+-->
   <script src="app.js"></script>
 </body>
 </html>

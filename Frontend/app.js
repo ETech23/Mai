@@ -355,25 +355,37 @@ if (referralCode) {
 }
   **/
   
-  document.addEventListener("DOMContentLoaded", async () => {
+  document.addEventListener("DOMContentLoaded", () => {
+  console.log("Document loaded and script running");
+
   const articlesList = document.getElementById("articles-list");
   const form = document.getElementById("add-article-form");
+
+  if (!form) {
+    console.error("Form element not found. Check your HTML structure.");
+    return;
+  }
 
   // Fetch and display articles
   async function fetchArticles() {
     try {
+      console.log("Fetching articles...");
       const response = await fetch("https://mai.fly.dev/api/articles");
+      if (!response.ok) throw new Error("Failed to fetch articles");
       const articles = await response.json();
+      console.log("Articles fetched successfully:", articles);
 
       articlesList.innerHTML = articles
         .map(
           (article) => `
         <div class="article" data-id="${article._id}">
           <h3>${article.title}</h3>
-          <img src="${article.image || ""}" alt="${article.title}" />
+          ${article.image ? `<img src="${article.image}" alt="${article.title}">` : ""}
           <p>${article.content}</p>
-          <button class="edit-article">Edit</button>
-          <button class="delete-article">Delete</button>
+          <div class="article-buttons">
+            <button class="edit-article">Edit</button>
+            <button class="delete-article">Delete</button>
+          </div>
         </div>`
         )
         .join("");
@@ -385,25 +397,39 @@ if (referralCode) {
   // Handle form submission
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    console.log("Form submission triggered");
 
-    const title = document.getElementById("article-title").value;
-    const content = document.getElementById("article-content").value;
+    const title = document.getElementById("article-title").value.trim();
+    const content = document.getElementById("article-content").value.trim();
     const imageFile = document.getElementById("article-image").files[0];
+
+    if (!title || !content) {
+      alert("Title and content are required.");
+      return;
+    }
+
+    console.log("Title:", title);
+    console.log("Content:", content);
+    console.log("Image file:", imageFile);
 
     let image = null;
     if (imageFile) {
       const reader = new FileReader();
       reader.onloadend = async () => {
         image = reader.result;
+        console.log("Image base64 data:", image);
 
         // Submit article
         try {
-          await fetch("https://mai.fly.dev/api/articles/add", {
+          const response = await fetch("https://mai.fly.dev/api/articles/add", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title, content, image }),
           });
+          if (!response.ok) throw new Error("Failed to add article");
+          console.log("Article added successfully");
           alert("Article added successfully");
+          form.reset();
           fetchArticles();
         } catch (error) {
           console.error("Error adding article:", error);
@@ -413,12 +439,15 @@ if (referralCode) {
     } else {
       // Submit article without image
       try {
-        await fetch("https://mai.fly.dev/api/articles/add", {
+        const response = await fetch("https://mai.fly.dev/api/articles/add", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ title, content }),
         });
+        if (!response.ok) throw new Error("Failed to add article");
+        console.log("Article added successfully");
         alert("Article added successfully");
+        form.reset();
         fetchArticles();
       } catch (error) {
         console.error("Error adding article:", error);
@@ -432,7 +461,10 @@ if (referralCode) {
 
     if (e.target.classList.contains("delete-article")) {
       try {
-        await fetch(`https://mai.fly.dev/api/articles/delete/${articleId}`, { method: "DELETE" });
+        const response = await fetch(`https://mai.fly.dev/api/articles/delete/${articleId}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) throw new Error("Failed to delete article");
         alert("Article deleted successfully");
         fetchArticles();
       } catch (error) {
@@ -444,11 +476,12 @@ if (referralCode) {
 
       if (newTitle && newContent) {
         try {
-          await fetch(`https://mai.fly.dev/api/articles/update/${articleId}`, {
+          const response = await fetch(`https://mai.fly.dev/api/articles/update/${articleId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title: newTitle, content: newContent }),
           });
+          if (!response.ok) throw new Error("Failed to update article");
           alert("Article updated successfully");
           fetchArticles();
         } catch (error) {
