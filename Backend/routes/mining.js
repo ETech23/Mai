@@ -1,92 +1,108 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const MiningSession = require("../models/MiningSession");
 const User = require("../models/User");
+const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
 
 // Middleware to verify JWT
 const authenticate = (req, res, next) => {
-  const token = req.header("Authorization")?.split(" ")[1]; // Ensure Bearer token format
+  const token = req.header("Authorization")?.split(" ")[1];
   if (!token) return res.status(401).json({ message: "No token provided" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach decoded user information
+    req.user = decoded;
     next();
   } catch (err) {
     res.status(403).json({ message: "Invalid token" });
   }
 };
 
-// Activate mining
-router.post("/activate", authenticate, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+/** ============================
+ * START/STOP MINING SESSION
+ ============================ */
 
-    // Check if mining is already active
-    if (user.isMining) {
-      return res.status(400).json({ message: "Mining is already active" });
+// Start a mining session
+router.post(
+  "/start",
+  authenticate,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      // Check if there's an active session
+      let session = await MiningSession.findOne({ userId, isActive: true });
+      if (session) {
+        return res.status(200).json({ success: true, session });
+      }
+
+      // Create a new mining session
+      session = new MiningSession({
+        userId,
+        startTime: Date.now(),
+        duration: 3600000, // 1 hour in milliseconds
+        isActive: true,
+      });
+
+      await session.save();
+      res.status(201).json({ success: true, session });
+    } catch (error) {
+      console.error("Error starting mining session:", error);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  }
+);
+
+// Stop mining session
+router.post("/end", authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const session = await MiningSession.findOne({ userId, isActive: true });
+    if (!session) {
+      return res.status(404).json({ success: false, message: "No active session found" });
     }
 
-    // Set mining as active
-    user.isMining = true;
-    await user.save();
+    session.isActive = false;
+    await session.save();
 
-    // Mining logic: Add 2 MAI every 10 minutes, adjusted by mining rate
-    const miningInterval = setInterval(async () => {
-      try {
-        const userToUpdate = await User.findById(req.user.id);
-        if (!userToUpdate || !userToUpdate.isMining) {
-          clearInterval(miningInterval);
-          return;
-        }
-
-        // Calculate the incremented balance based on the mining rate
-        const miningIncrement = 2 * (userToUpdate.miningRate || 1);
-        userToUpdate.balance += miningIncrement; // Increment balance
-        await userToUpdate.save();
-      } catch (err) {
-        console.error("Error during mining update:", err.message);
-      }
-    }, 10 * 60 * 1000); // Every 10 minutes
-
-    // Stop mining after 3 hours
-    setTimeout(async () => {
-      clearInterval(miningInterval);
-      const userToStop = await User.findById(req.user.id);
-      if (userToStop) {
-        userToStop.isMining = false;
-        await userToStop.save();
-      }
-    }, 3 * 60 * 60 * 1000); // 3 hours
-
-    res.json({ message: "Mining activated successfully" });
-  } catch (err) {
-    console.error("Error activating mining:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(200).json({ success: true, message: "Mining session ended" });
+  } catch (error) {
+    console.error("Error ending mining session:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Stop mining
-router.post("/stop", authenticate, async (req, res) => {
+// Get current mining session
+router.get("/status", authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const userId = req.user.id;
 
-    if (!user.isMining) {
-      return res.status(400).json({ message: "Mining is not currently active" });
+    const session = await MiningSession.findOne({ userId, isActive: true });
+    if (!session) {
+      return res.status(404).json({ success: false, message: "No active session found" });
     }
 
-    user.isMining = false;
-    await user.save();
+    // Check if the session has expired
+    const elapsedTime = Date.now() - session.startTime;
+    if (elapsedTime >= session.duration) {
+      session.isActive = false;
+      await session.save();
+      return res.status(200).json({ success: true, session: null });
+    }
 
-    res.json({ message: "Mining stopped successfully" });
-  } catch (err) {
-    console.error("Error stopping mining:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(200).json({ success: true, session });
+  } catch (error) {
+    console.error("Error fetching mining session:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
+/** ============================
+ * USER BALANCE
+ ============================ */
 
 // Get user balance
 router.get("/balance", authenticate, async (req, res) => {
@@ -101,39 +117,34 @@ router.get("/balance", authenticate, async (req, res) => {
   }
 });
 
-// Update user balance
-router.post("/update", authenticate, async (req, res) => {
-  try {
-    const { balance } = req.body;
-
-    if (typeof balance !== "number" || balance < 0) {
-      return res.status(400).json({ message: "Invalid balance value" });
+// Update user balance (Admin-only or secure route)
+router.post(
+  "/update",
+  [
+    authenticate,
+    body("balance").isNumeric().withMessage("Balance must be a valid number"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    try {
+      const { balance } = req.body;
 
-    user.balance = balance; // Update balance
-    await user.save();
+      const user = await User.findById(req.user.id);
+      if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json({ message: "Balance updated successfully", balance: user.balance });
-  } catch (err) {
-    console.error("Error updating balance:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
+      user.balance = balance;
+      await user.save();
+
+      res.json({ message: "Balance updated successfully", balance: user.balance });
+    } catch (err) {
+      console.error("Error updating balance:", err.message);
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
   }
-});
-
-// Get mining status
-router.get("/status", authenticate, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.json({ isMining: user.isMining, miningRate: user.miningRate });
-  } catch (err) {
-    console.error("Error fetching mining status:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
+);
 
 module.exports = router;

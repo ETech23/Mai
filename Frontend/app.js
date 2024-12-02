@@ -155,7 +155,7 @@ function continueMining(savedProgress, remainingTime) {
       localStorage.setItem("minedBalance", newBalance.toFixed(4));
       minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
 
-      progressCircle.style.background = `conic-gradient(#4caf50 ${miningProgress}%, #ddd ${miningProgress}%)`;
+      progressCircle.style.background = `conic-gradient(#aaa ${miningProgress}%, #ddd ${miningProgress}%)`;
 
       // Update backend balance
       try {
@@ -337,139 +337,186 @@ if (referralCode) {
   }
 } **/
   
-   document.addEventListener("DOMContentLoaded", () => {
+
   const articles = document.querySelectorAll(".news-article");
   const pushArticleButton = document.getElementById("push-article");
 
-  /**
-   * Increment view count for a specific article
-   */
-  function incrementViewCount(articleElement) {
-    const title = articleElement.getAttribute("data-title");
+  // Function to handle reaction (like/dislike)
+  async function handleReaction(event) {
+    console.log("Reaction button clicked.");
 
-    if (!title) {
-      console.error("Article title not found for view count.");
+    // Check if the user is logged in
+    if (!localStorage.getItem("token")) {
+      alert("Please log in to react to articles.");
       return;
     }
 
-    fetch("https://mai.fly.dev/api/articles/view", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log(`View count updated for "${title}": ${data.views}`);
-          const viewsElement = articleElement.querySelector(".views");
-          if (viewsElement) viewsElement.textContent = data.views;
-        } else {
-          console.error(`Failed to update view count for "${title}":`, data.message);
-        }
-      })
-      .catch((error) => console.error("Error updating view count:", error));
-  }
-
-  /**
-   * Handle reactions (like/dislike)
-   */
-  function handleReaction(event) {
     const button = event.target;
     const articleElement = button.closest(".news-article");
-    const title = articleElement.getAttribute("data-title");
+    const articleTitle = articleElement.getAttribute("data-title");
 
-    if (!title) {
-      console.error("Article title not found for reaction.");
+    if (!articleTitle) {
+      console.error("Article title not found.");
       return;
     }
 
-    const reaction = button.classList.contains("like-btn") ? "like" : "dislike";
+    const isLike = button.classList.contains("like-btn");
+    const reactionType = isLike ? "like" : "dislike";
 
-    fetch("https://mai.fly.dev/api/articles/reactions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, reaction }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log(`Reaction saved for "${title}":`, data);
+    console.log(`Article Title: ${articleTitle}, Reaction Type: ${reactionType}`);
 
-          if (reaction === "like") {
-            const likeCountElement = articleElement.querySelector(".like-count");
-            if (likeCountElement) likeCountElement.textContent = data.likes;
-          } else {
-            const dislikeCountElement = articleElement.querySelector(".dislike-count");
-            if (dislikeCountElement) dislikeCountElement.textContent = data.dislikes;
-          }
-        } else {
-          console.error(`Failed to save reaction for "${title}":`, data.message);
-        }
-      })
-      .catch((error) => console.error("Error saving reaction:", error));
+    const reactionData = { title: articleTitle, reaction: reactionType };
+
+    try {
+      const response = await fetch("https://mai.fly.dev/api/articles/reactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
+        },
+        body: JSON.stringify(reactionData),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log("Reaction saved successfully:", data);
+
+        // Update counts in the UI
+        const likeCountElement = articleElement.querySelector(".like-count");
+        const dislikeCountElement = articleElement.querySelector(".dislike-count");
+
+        likeCountElement.textContent = data.likes;
+        dislikeCountElement.textContent = data.dislikes;
+      } else {
+        console.error("Failed to save reaction:", data.message);
+      }
+    } catch (error) {
+      console.error("Error saving reaction:", error);
+    }
   }
 
-  /**
-   * Push article to backend
-   */
-  function pushArticleToBackend() {
+  // Function to increment view count
+  async function incrementViewCount(articleElement) {
+    console.log("Incrementing view count.");
+
+    const articleTitle = articleElement.getAttribute("data-title");
+
+    if (!articleTitle) {
+      console.error("Article title not found.");
+      return;
+    }
+
+    const viewData = { title: articleTitle };
+
+    console.log(`Sending View Data: ${JSON.stringify(viewData)}`);
+
+    try {
+      const response = await fetch("https://mai.fly.dev/api/articles/view", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(viewData),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log("View count updated successfully:", data);
+
+        // Update the view count in the UI
+        const viewCountElement = articleElement.querySelector(".views");
+        viewCountElement.textContent = data.views;
+      } else {
+        console.error("Failed to update view count:", data.message);
+      }
+    } catch (error) {
+      console.error("Error updating view count:", error);
+    }
+  }
+
+  // Fetch reactions and update UI
+  async function updateReactionCounts() {
+    console.log("Fetching reaction counts for all articles.");
+
+    try {
+      const response = await fetch("https://mai.fly.dev/api/articles");
+      const data = await response.json();
+
+      if (data.success) {
+        const articlesData = data.data;
+
+        articlesData.forEach((article) => {
+          const articleElement = Array.from(articles).find(
+            (el) => el.getAttribute("data-title") === article.title
+          );
+
+          if (articleElement) {
+            const likeCountElement = articleElement.querySelector(".like-count");
+            const dislikeCountElement = articleElement.querySelector(".dislike-count");
+
+            likeCountElement.textContent = article.likes || 0;
+            dislikeCountElement.textContent = article.dislikes || 0;
+          }
+        });
+      } else {
+        console.error("Failed to fetch articles:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching articles:", error);
+    }
+  }
+
+  // Function to handle pushing an article to the backend
+  async function handlePushArticle() {
+    console.log("Push Article button clicked.");
+
     const articleElement = pushArticleButton.closest(".news-article");
     const title = articleElement.getAttribute("data-title");
     const content = articleElement.querySelector("p").textContent;
     const image = articleElement.querySelector("img")?.getAttribute("src") || null;
 
-    if (!title || !content) {
-      console.error("Title or content missing for article push.");
-      alert("Please provide a title and content before pushing the article.");
-      return;
-    }
+    const articleData = { title, content, image };
 
-    fetch("https://mai.fly.dev/api/articles/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, content, image }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log("Article pushed successfully:", data);
-          alert("Article pushed successfully.");
-        } else {
-          console.error("Failed to push article:", data.message);
-          alert(`Failed to push article: ${data.message}`);
-        }
-      })
-      .catch((error) => {
-        console.error("Error pushing article:", error);
-        alert("An error occurred while pushing the article.");
+    console.log(`Sending Article Data: ${JSON.stringify(articleData)}`);
+
+    try {
+      const response = await fetch("https://mai.fly.dev/api/articles/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(articleData),
       });
-  }
 
-  /**
-   * Initialize event listeners
-   */
-  function initializeEventListeners() {
-    // Increment view count for all articles
-    articles.forEach((article) => {
-      incrementViewCount(article);
-
-      // Attach reaction event listeners
-      const likeButton = article.querySelector(".like-btn");
-      const dislikeButton = article.querySelector(".dislike-btn");
-
-      if (likeButton) likeButton.addEventListener("click", handleReaction);
-      if (dislikeButton) dislikeButton.addEventListener("click", handleReaction);
-    });
-
-    // Attach event listener to push article button
-    if (pushArticleButton) {
-      pushArticleButton.addEventListener("click", pushArticleToBackend);
+      const data = await response.json();
+      if (data.success) {
+        console.log("Article pushed successfully:", data);
+        alert("Article pushed successfully.");
+      } else {
+        console.error("Failed to push article:", data.message);
+      }
+    } catch (error) {
+      console.error("Error pushing article:", error);
     }
   }
 
-  // Initialize the app
-  initializeEventListeners();
-});
+  // Attach reaction handlers
+  articles.forEach((article) => {
+    const likeButton = article.querySelector(".like-btn");
+    const dislikeButton = article.querySelector(".dislike-btn");
+
+    likeButton.addEventListener("click", handleReaction);
+    dislikeButton.addEventListener("click", handleReaction);
+  });
+
+  // Attach push article handler
+  if (pushArticleButton) {
+    pushArticleButton.addEventListener("click", handlePushArticle);
+  }
+
+  // Update reaction counts on page load
+  updateReactionCounts();
+
+  // Increment view count for all articles on page load
+  articles.forEach((article) => incrementViewCount(article));
+
+  
   /**
   const hash = window.location.hash;
   const urlParams = new URLSearchParams(hash.split("?")[1]);
