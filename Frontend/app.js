@@ -232,57 +232,92 @@ document.getElementById("referral-input").value.trim(),
   });
 
   // **Toggle Between Login and Registration Form**
-  toggleFormText.addEventListener("click", () => {
-    if (formTitle.textContent === "Login") {
-      // Switch to Registration Form
-      formTitle.textContent = "Register";
-      authSubmit.textContent = "Register";
-      loginFields.classList.add("hidden");
-      registerFields.classList.remove("hidden");
+  
+   // Toggle Between Login and Register Forms
+toggleFormText.addEventListener("click", () => {
+  if (formTitle.textContent === "Login") {
+    // Switch to Registration Form
+    formTitle.textContent = "Register";
+    authSubmit.textContent = "Register";
+    loginFields.classList.add("hidden");
+    registerFields.classList.remove("hidden");
 
-      // Add required attributes to registration fields
-      document.getElementById("name").setAttribute("required", true);
-      document.getElementById("username").setAttribute("required", true);
-      document.getElementById("email").setAttribute("required", true);
-      document.getElementById("password-register").setAttribute("required", true);
+    // Add required attributes to registration fields
+    document.getElementById("name").setAttribute("required", true);
+    document.getElementById("username").setAttribute("required", true);
+    document.getElementById("email").setAttribute("required", true);
+    document.getElementById("password-register").setAttribute("required", true);
 
-      // Remove required attributes from login fields
-      document.getElementById("identifier").removeAttribute("required");
-      document.getElementById("password").removeAttribute("required");
+    // Remove required attributes from login fields
+    document.getElementById("identifier").removeAttribute("required");
+    document.getElementById("password").removeAttribute("required");
 
-      toggleFormText.innerHTML = 'Already have an account? <span>Login here</span>';
-    } else {
-      // Switch to Login Form
-      formTitle.textContent = "Login";
-      authSubmit.textContent = "Login";
-      loginFields.classList.remove("hidden");
-      registerFields.classList.add("hidden");
+    toggleFormText.innerHTML = 'Already have an account? <span>Login here</span>';
+  } else {
+    // Switch to Login Form
+    formTitle.textContent = "Login";
+    authSubmit.textContent = "Login";
+    loginFields.classList.remove("hidden");
+    registerFields.classList.add("hidden");
 
-      // Add required attributes to login fields
-      document.getElementById("identifier").setAttribute("required", true);
-      document.getElementById("password").setAttribute("required", true);
+    // Add required attributes to login fields
+    document.getElementById("identifier").setAttribute("required", true);
+    document.getElementById("password").setAttribute("required", true);
 
-      // Remove required attributes from registration fields
-      document.getElementById("name").removeAttribute("required");
-      document.getElementById("username").removeAttribute("required");
-      document.getElementById("email").removeAttribute("required");
-      document.getElementById("password-register").removeAttribute("required");
+    // Remove required attributes from registration fields
+    document.getElementById("name").removeAttribute("required");
+    document.getElementById("username").removeAttribute("required");
+    document.getElementById("email").removeAttribute("required");
+    document.getElementById("password-register").removeAttribute("required");
 
-      toggleFormText.innerHTML = 'Don’t have an account? <span>Register here</span>';
-    }
-  });
+    toggleFormText.innerHTML = 'Don’t have an account? <span>Register here</span>';
+  }
+});
 
-  // Form Submit Listener
-  authForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (formTitle.textContent === "Register") {
-      // Handle Registration
-      console.log("Registering user...");
-    } else {
-      // Handle Login
-      console.log("Logging in user...");
-    }
-  });
+// Automatically Switch to Registration Form if Referral Code Exists
+const urlParams = new URLSearchParams(window.location.search);
+const referralCode = urlParams.get("ref");
+
+if (referralCode) {
+  console.log("Referral Code Detected:", referralCode);
+
+  // Switch to Registration Form
+  formTitle.textContent = "Register";
+  authSubmit.textContent = "Register";
+  loginFields.classList.add("hidden");
+  registerFields.classList.remove("hidden");
+
+  // Add required attributes to registration fields
+  document.getElementById("name").setAttribute("required", true);
+  document.getElementById("username").setAttribute("required", true);
+  document.getElementById("email").setAttribute("required", true);
+  document.getElementById("password-register").setAttribute("required", true);
+
+  // Remove required attributes from login fields
+  document.getElementById("identifier").removeAttribute("required");
+  document.getElementById("password").removeAttribute("required");
+
+  // Prefill the referral code
+  const referralInput = document.getElementById("referral-input");
+  if (referralInput) {
+    referralInput.value = referralCode;
+  }
+}
+
+// Form Submit Listener
+authForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (formTitle.textContent === "Register") {
+    // Handle Registration
+    console.log("Registering user...");
+    // Add your registration logic here
+  } else {
+    // Handle Login
+    console.log("Logging in user...");
+    // Add your login logic here
+  }
+});
 
   /**
   const referralInput = document.getElementById("referral-input");
