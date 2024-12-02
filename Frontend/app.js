@@ -307,38 +307,7 @@ document.getElementById("referral-input").value.trim(),
     console.warn("Referral input field not found. Ensure it's present in the registration form.");
 };
 **/
-  document.getElementById("push-article").addEventListener("click", async () => {
-  try {
-    // Get the article from the HTML
-    const articleElement = document.querySelector(".news-article");
-    const title = articleElement.getAttribute("data-title");
-    const content = articleElement.querySelector("p").textContent;
-    const imageSrc = articleElement.querySelector("img")?.getAttribute("src") || null;
-
-    // Prepare the data to send
-    const articleData = { title, content, image: imageSrc };
-
-    // Send the data to your backend
-    const response = await fetch("https://mai.fly.dev/api/articles/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(articleData),
-    });
-
-    // Handle the response
-    const result = await response.json();
-    if (response.ok) {
-      console.log("Article added successfully:", result);
-      alert("Article pushed to the backend successfully!");
-    } else {
-      console.error("Failed to push article:", result);
-      alert(`Error: ${result.message}`);
-    }
-  } catch (error) {
-    console.error("Error pushing article:", error);
-    alert("An error occurred while pushing the article.");
-  }
-});
+  
   /** // Get elements
 const referralInput = document.getElementById("referral-input"); **/
   
@@ -367,6 +336,140 @@ if (referralCode) {
     console.warn("Referral input field not found. Cannot populate referral code.");
   }
 } **/
+  
+   document.addEventListener("DOMContentLoaded", () => {
+  const articles = document.querySelectorAll(".news-article");
+  const pushArticleButton = document.getElementById("push-article");
+
+  /**
+   * Increment view count for a specific article
+   */
+  function incrementViewCount(articleElement) {
+    const title = articleElement.getAttribute("data-title");
+
+    if (!title) {
+      console.error("Article title not found for view count.");
+      return;
+    }
+
+    fetch("https://mai.fly.dev/api/articles/view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          console.log(`View count updated for "${title}": ${data.views}`);
+          const viewsElement = articleElement.querySelector(".views");
+          if (viewsElement) viewsElement.textContent = data.views;
+        } else {
+          console.error(`Failed to update view count for "${title}":`, data.message);
+        }
+      })
+      .catch((error) => console.error("Error updating view count:", error));
+  }
+
+  /**
+   * Handle reactions (like/dislike)
+   */
+  function handleReaction(event) {
+    const button = event.target;
+    const articleElement = button.closest(".news-article");
+    const title = articleElement.getAttribute("data-title");
+
+    if (!title) {
+      console.error("Article title not found for reaction.");
+      return;
+    }
+
+    const reaction = button.classList.contains("like-btn") ? "like" : "dislike";
+
+    fetch("https://mai.fly.dev/api/articles/reactions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, reaction }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          console.log(`Reaction saved for "${title}":`, data);
+
+          if (reaction === "like") {
+            const likeCountElement = articleElement.querySelector(".like-count");
+            if (likeCountElement) likeCountElement.textContent = data.likes;
+          } else {
+            const dislikeCountElement = articleElement.querySelector(".dislike-count");
+            if (dislikeCountElement) dislikeCountElement.textContent = data.dislikes;
+          }
+        } else {
+          console.error(`Failed to save reaction for "${title}":`, data.message);
+        }
+      })
+      .catch((error) => console.error("Error saving reaction:", error));
+  }
+
+  /**
+   * Push article to backend
+   */
+  function pushArticleToBackend() {
+    const articleElement = pushArticleButton.closest(".news-article");
+    const title = articleElement.getAttribute("data-title");
+    const content = articleElement.querySelector("p").textContent;
+    const image = articleElement.querySelector("img")?.getAttribute("src") || null;
+
+    if (!title || !content) {
+      console.error("Title or content missing for article push.");
+      alert("Please provide a title and content before pushing the article.");
+      return;
+    }
+
+    fetch("https://mai.fly.dev/api/articles/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, content, image }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          console.log("Article pushed successfully:", data);
+          alert("Article pushed successfully.");
+        } else {
+          console.error("Failed to push article:", data.message);
+          alert(`Failed to push article: ${data.message}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error pushing article:", error);
+        alert("An error occurred while pushing the article.");
+      });
+  }
+
+  /**
+   * Initialize event listeners
+   */
+  function initializeEventListeners() {
+    // Increment view count for all articles
+    articles.forEach((article) => {
+      incrementViewCount(article);
+
+      // Attach reaction event listeners
+      const likeButton = article.querySelector(".like-btn");
+      const dislikeButton = article.querySelector(".dislike-btn");
+
+      if (likeButton) likeButton.addEventListener("click", handleReaction);
+      if (dislikeButton) dislikeButton.addEventListener("click", handleReaction);
+    });
+
+    // Attach event listener to push article button
+    if (pushArticleButton) {
+      pushArticleButton.addEventListener("click", pushArticleToBackend);
+    }
+  }
+
+  // Initialize the app
+  initializeEventListeners();
+});
   /**
   const hash = window.location.hash;
   const urlParams = new URLSearchParams(hash.split("?")[1]);
@@ -385,252 +488,6 @@ if (referralCode) {
     loginFields.classList.remove("hidden");
 }
   **/
-  
-  document.addEventListener("DOMContentLoaded", () => {
-  console.log("Document loaded and script running");
-
-  const articlesList = document.getElementById("articles-list");
-  const form = document.getElementById("add-article-form");
-
-  if (!form) {
-    console.error("Form element not found. Check your HTML structure.");
-    return;
-  }
-
-  // Fetch and display articles
-  async function fetchArticles() {
-    try {
-      console.log("Fetching articles...");
-      const response = await fetch("https://mai.fly.dev/api/articles");
-      if (!response.ok) throw new Error("Failed to fetch articles");
-      const articles = await response.json();
-      console.log("Articles fetched successfully:", articles);
-
-      articlesList.innerHTML = articles
-        .map(
-          (article) => `
-        <div class="article" data-id="${article._id}">
-          <h3>${article.title}</h3>
-          ${article.image ? `<img src="${article.image}" alt="${article.title}">` : ""}
-          <p>${article.content}</p>
-          <div class="article-buttons">
-            <button class="edit-article">Edit</button>
-            <button class="delete-article">Delete</button>
-          </div>
-        </div>`
-        )
-        .join("");
-    } catch (error) {
-      console.error("Error fetching articles:", error);
-    }
-  }
-
-  // Handle form submission
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    console.log("Form submission triggered");
-
-    const title = document.getElementById("article-title").value.trim();
-    const content = document.getElementById("article-content").value.trim();
-    const imageFile = document.getElementById("article-image").files[0];
-
-    if (!title || !content) {
-      alert("Title and content are required.");
-      return;
-    }
-
-    console.log("Title:", title);
-    console.log("Content:", content);
-    console.log("Image file:", imageFile);
-
-    let image = null;
-    if (imageFile) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        image = reader.result;
-        console.log("Image base64 data:", image);
-
-        // Submit article
-        try {
-          const response = await fetch("https://mai.fly.dev/api/articles/add", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, content, image }),
-          });
-          if (!response.ok) throw new Error("Failed to add article");
-          console.log("Article added successfully");
-          alert("Article added successfully");
-          form.reset();
-          fetchArticles();
-        } catch (error) {
-          console.error("Error adding article:", error);
-        }
-      };
-      reader.readAsDataURL(imageFile);
-    } else {
-      // Submit article without image
-      try {
-        const response = await fetch("https://mai.fly.dev/api/articles/add", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, content }),
-        });
-        if (!response.ok) throw new Error("Failed to add article");
-        console.log("Article added successfully");
-        alert("Article added successfully");
-        form.reset();
-        fetchArticles();
-      } catch (error) {
-        console.error("Error adding article:", error);
-      }
-    }
-  });
-
-  // Handle article updates and deletions
-  articlesList.addEventListener("click", async (e) => {
-    const articleId = e.target.closest(".article")?.dataset.id;
-
-    if (e.target.classList.contains("delete-article")) {
-      try {
-        const response = await fetch(`https://mai.fly.dev/api/articles/delete/${articleId}`, {
-          method: "DELETE",
-        });
-        if (!response.ok) throw new Error("Failed to delete article");
-        alert("Article deleted successfully");
-        fetchArticles();
-      } catch (error) {
-        console.error("Error deleting article:", error);
-      }
-    } else if (e.target.classList.contains("edit-article")) {
-      const newTitle = prompt("Enter new title:");
-      const newContent = prompt("Enter new content:");
-
-      if (newTitle && newContent) {
-        try {
-          const response = await fetch(`https://mai.fly.dev/api/articles/update/${articleId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: newTitle, content: newContent }),
-          });
-          if (!response.ok) throw new Error("Failed to update article");
-          alert("Article updated successfully");
-          fetchArticles();
-        } catch (error) {
-          console.error("Error updating article:", error);
-        }
-      }
-    }
-  });
-
-  // Initial fetch
-  fetchArticles();
-});
-  
-  async function fetchArticlesAndSetupViews() {
-  // Fetch articles and view counts
-  try {
-    const response = await fetch("https://mai.fly.dev/api/articles");
-    if (!response.ok) {
-      console.error("Failed to fetch articles");
-      return;
-    }
-
-    const articles = await response.json();
-
-    // Update view counts in the DOM
-    articles.forEach((article) => {
-  const articleElement = Array.from(document.querySelectorAll(".news-article"))
-    .find((element) => element.getAttribute("data-title") === article.title);
-
-      if (articleElement) {
-        const viewsElement = articleElement.querySelector(".views");
-        if (viewsElement) {
-          viewsElement.textContent = article.views;
-        }
-      }
-    });
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-  }
-
-  // Increment view count on article click
-  const articleLinks = document.querySelectorAll(".news-article a");
-  articleLinks.forEach((link) => {
-    link.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const articleTitle = link.closest(".news-article").querySelector("data-title").textContent;
-
-      try {
-        await fetch("https://mai.fly.dev/api/articles/view", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title: articleTitle }),
-        });
-
-        // Optionally redirect or open the article
-        console.log(`View count incremented for ${articleTitle}`);
-      } catch (error) {
-        console.error("Error incrementing view count:", error);
-      }
-    });
-  });
-}
-
-// Call the async function on DOMContentLoaded
-document.addEventListener("DOMContentLoaded", () => {
-  fetchArticlesAndSetupViews();
-});
-  
-
-  // Reaction functionality
-  const reactionButtons = document.querySelectorAll(".reaction-buttons button");
-
-  reactionButtons.forEach((button) => {
-  
-    button.addEventListener("click", async (event) => {
-      if (!localStorage.getItem("token")) {
-  alert("Please log in to react to articles.");
-  return;
-}
-      const isLike = event.target.classList.contains("like-btn");
-      const countSpan = isLike
-        ? event.target.querySelector(".like-count")
-        : event.target.querySelector(".dislike-count");
-
-      let currentCount = parseInt(countSpan.textContent, 10);
-      currentCount++;
-      countSpan.textContent = currentCount;
-
-      // Optional: Save reaction to the backend
-      const articleTitle = event.target.closest(".news-article").getAttribute("data-title");
-
-console.log("Article Title:", articleTitle);
-
-const reactionData = {
-  title: articleTitle,
-  reaction: isLike ? "like" : "dislike",
-};
-
-console.log("Reaction Data:", JSON.stringify(reactionData)); // Log as string
-
-      try {
-  const response = await fetch("https://mai.fly.dev/api/reactions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(reactionData), // Ensure JSON formatting
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    console.error("Failed to save reaction:", errorData.message);
-  } else {
-    console.log("Reaction successfully saved!");
-  }
-} catch (error) {
-  console.error("Error:", error);
-}
-    });
-  });
   
   // Check for referral code in URL
 const urlParams = new URLSearchParams(window.location.search);
