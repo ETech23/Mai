@@ -27,6 +27,26 @@ router.post("/view", async (req, res) => {
   }
 });
 
+router.post("/add", async (req, res) => {
+  try {
+    const { title, content, image } = req.body;
+
+    // Validation
+    if (!title || !content) {
+      return res.status(400).json({ success: false, message: "Title and content are required." });
+    }
+
+    // Create and save the article
+    const article = new Article({ title, content, image });
+    await article.save();
+
+    res.status(201).json({ success: true, message: "Article created successfully", article });
+  } catch (error) {
+    console.error("Error creating article:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 // Save reactions
 router.post("/reactions", async (req, res) => {
   const { title, reaction } = req.body;

@@ -307,7 +307,38 @@ document.getElementById("referral-input").value.trim(),
     console.warn("Referral input field not found. Ensure it's present in the registration form.");
 };
 **/
-  
+  document.getElementById("push-article").addEventListener("click", async () => {
+  try {
+    // Get the article from the HTML
+    const articleElement = document.querySelector(".news-article");
+    const title = articleElement.getAttribute("data-title");
+    const content = articleElement.querySelector("p").textContent;
+    const imageSrc = articleElement.querySelector("img")?.getAttribute("src") || null;
+
+    // Prepare the data to send
+    const articleData = { title, content, image: imageSrc };
+
+    // Send the data to your backend
+    const response = await fetch("https://mai.fly.dev/api/articles/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(articleData),
+    });
+
+    // Handle the response
+    const result = await response.json();
+    if (response.ok) {
+      console.log("Article added successfully:", result);
+      alert("Article pushed to the backend successfully!");
+    } else {
+      console.error("Failed to push article:", result);
+      alert(`Error: ${result.message}`);
+    }
+  } catch (error) {
+    console.error("Error pushing article:", error);
+    alert("An error occurred while pushing the article.");
+  }
+});
   /** // Get elements
 const referralInput = document.getElementById("referral-input"); **/
   
