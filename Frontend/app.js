@@ -155,7 +155,7 @@ function continueMining(savedProgress, remainingTime) {
       localStorage.setItem("minedBalance", newBalance.toFixed(4));
       minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
 
-      progressCircle.style.background = `conic-gradient(#aaa ${miningProgress}%, #ddd ${miningProgress}%)`;
+      progressCircle.style.background = `conic-gradient(#2C3E30 ${miningProgress}%, #718074 ${miningProgress}%)`;
 
       // Update backend balance
       try {
