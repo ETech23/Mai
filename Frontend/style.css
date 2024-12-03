@@ -7,7 +7,7 @@ body, h1, h2, h3, p, ul, ol, figure {
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #2C3E30;
-  color: solid black;
+  color: #8C9F92;
   margin: 0;
 }
 
@@ -29,7 +29,7 @@ header {
   align-items: center;
   background: linear-gradient(#2C3E30, black, #998e5c);
   padding: 20px;
-  color: #fff;
+  color: #8C9F92;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
@@ -131,10 +131,10 @@ header h1 {
 
 /* Login/Registration Form */
 .form-container {
-  max-width: 400px;
+  max-width: 300px;
   margin: 40px auto;
   padding: 20px;
-  background: #fff;
+  background: #998c5e;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -155,12 +155,13 @@ header h1 {
 }
 
 .form-container input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   margin-bottom: 15px;
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+  background-color: #998c5e;
 }
 
 .form-container button {
@@ -169,7 +170,7 @@ header h1 {
   font-size: 1.2rem;
   font-weight: bold;
   color: #fff;
-  background-color: #4caf50;
+  background-color: #2C3E30;
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -200,7 +201,7 @@ header h1 {
   height: 250px;
   border: 10px solid #998c5e;
   border-radius: 50%;
-  background: conic-gradient(#4caf50 0%, #ddd 0%);
+  background: conic-gradient(#4caf50 0%, #8C9F92 0%);
   margin: 30px auto;
   display: flex;
   justify-content: center;
@@ -213,7 +214,7 @@ header h1 {
   position: absolute;
   font-size: 1.8rem;
   font-weight: bold;
-  color: white;
+  color: #BFC9C3;
   z-index: 1;
 }
 
@@ -222,7 +223,7 @@ header h1 {
   padding: 15px 30px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #fff;
+  color: #BFC9C3;
   background-color: #4caf50;
   border: none;
   border-radius: 50px;
@@ -242,16 +243,16 @@ header h1 {
 /* User Info Dropdown */
 #user-info-dropdown {
   position: absolute;
-  top: 70px;
-  right: 20px;
+  top: 50px;
+  left: 20px;
   background-color: darkslategray;
-  border: 10px solid #ddd;
+  border: 5px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+  padding: 10px;
   display: none;
   z-index: 10;
-  width: 300px;
+  width: 200px;
   text-align: left;
 }
 
@@ -426,7 +427,7 @@ header h1 {
 
 footer{
     background-color: #998c5e;
-            color: white;
+            color: #BFC9C3;
             text-align: center;
             padding: 10px 0;
             position: fixed;
