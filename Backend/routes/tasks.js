@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 
 // Middleware for Authentication
-const authenticate = require("../middleware/authenticate");
+const authenticate = require('../middleware/auth');
 
 // Get Daily Tasks
 router.get("/daily", authenticate, async (req, res) => {
