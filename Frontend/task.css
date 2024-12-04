@@ -1,0 +1,39 @@
+#tasks-section {
+  text-align: center;
+  padding: 20px;
+}
+
+#tasks-container .task {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#tasks-container .task button {
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: none;
+  background: #4caf50;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#tasks-container .task button[disabled] {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+#reward-wheel-section {
+  margin-top: 20px;
+}
+
+#spin-wheel {
+  padding: 10px 20px;
+  border: none;
+  background: #ff9800;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}

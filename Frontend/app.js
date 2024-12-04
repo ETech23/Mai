@@ -155,7 +155,7 @@ function continueMining(savedProgress, remainingTime) {
       localStorage.setItem("minedBalance", newBalance.toFixed(4));
       minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
 
-      progressCircle.style.background = `conic-gradient(#2C3E30 ${miningProgress}%, #718074 ${miningProgress}%)`;
+      progressCircle.style.background = `conic-gradient( #2C3E30 ${miningProgress}%, #718074 ${miningProgress}%)`;
 
       // Update backend balance
       try {
@@ -318,6 +318,121 @@ authForm.addEventListener("submit", (e) => {
     // Add your login logic here
   }
 });
+
+  // Task functionality
+  const taskButton = document.getElementById("task-button");
+
+  // Function to check if the user is logged in
+  function isLoggedIn() {
+    const token = localStorage.getItem("token"); // Replace with your token storage method
+    return token ? true : false;
+  }
+
+  // Show the button only if the user is logged in
+  if (isLoggedIn()) {
+    taskButton.classList.remove("hidden");
+  }
+
+  // Handle button click
+  taskButton.addEventListener("click", () => {
+    // Redirect to task section
+    window.location.href = "task.html";
+  });
+
+  
+  const tasksContainer = document.getElementById("tasks-container");
+  const spinButton = document.getElementById("spin-wheel");
+  const rewardDisplay = document.getElementById("reward-display");
+
+  // Fetch Tasks from the API
+  async function fetchTasks() {
+    try {
+      const response = await fetch("/api/tasks/daily", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Populate the tasks container
+        tasksContainer.innerHTML = data.tasks
+          .map(
+            (task) => `
+              <div class="task">
+                <p>${task.description}</p>
+                <button class="complete-task" data-id="${task.id}" ${
+              task.completed ? "disabled" : ""
+            }>
+                  ${task.completed ? "Completed" : "Complete Task"}
+                </button>
+              </div>
+            `
+          )
+          .join("");
+        attachTaskListeners();
+      } else {
+        tasksContainer.innerHTML = `<p>Error loading tasks: ${data.message}</p>`;
+      }
+    } catch (error) {
+      tasksContainer.innerHTML = `<p>Error fetching tasks. Please try again later.</p>`;
+      console.error("Error fetching tasks:", error.message);
+    }
+  }
+
+  // Attach Listeners to Task Completion Buttons
+  function attachTaskListeners() {
+    const completeButtons = document.querySelectorAll(".complete-task");
+    completeButtons.forEach((button) =>
+      button.addEventListener("click", async (event) => {
+        const taskId = event.target.getAttribute("data-id");
+
+        try {
+          const response = await fetch("/api/tasks/complete", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ taskId }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            alert(data.message);
+            fetchTasks(); // Refresh tasks after completion
+          } else {
+            console.error("Error completing task:", data.message);
+          }
+        } catch (error) {
+          console.error("Error completing task:", error.message);
+        }
+      })
+    );
+  }
+
+  // Spin the Reward Wheel
+  spinButton.addEventListener("click", async () => {
+    try {
+      const response = await fetch("/api/tasks/spin", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        rewardDisplay.textContent = `You won ${data.reward} tokens!`;
+      } else {
+        console.error("Error spinning the wheel:", data.message);
+      }
+    } catch (error) {
+      console.error("Error spinning the wheel:", error.message);
+    }
+  });
+
+  // Fetch Tasks on Page Load
+  fetchTasks();
 
   /**
   const referralInput = document.getElementById("referral-input");

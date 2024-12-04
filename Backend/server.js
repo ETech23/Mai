@@ -48,6 +48,8 @@ app.get("/register", (req, res) => {
 });
 
 // API Routes
+// Import and use the tasks route
+app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));
 app.use("/api/articles", require("./routes/articles")); // Includes reactions
