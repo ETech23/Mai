@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const auth = require("../middleware/auth");
 
 // Middleware for Authentication
 const authenticate = require('../middleware/auth');
 
 // Get Daily Tasks
-router.get("/daily", authenticate, async (req, res) => {
+router.get("/daily", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     const dailyTasks = user.dailyTasks || [];
@@ -19,7 +20,7 @@ router.get("/daily", authenticate, async (req, res) => {
 });
 
 // Complete a Task
-router.post("/complete", authenticate, async (req, res) => {
+router.post("/complete", auth, async (req, res) => {
   const { taskId } = req.body;
 
   try {
@@ -46,7 +47,7 @@ router.post("/complete", authenticate, async (req, res) => {
 });
 
 // Spin the Reward Wheel
-router.post("/spin", authenticate, async (req, res) => {
+router.post("/spin", auth, async (req, res) => {
   const rewards = [5, 10, 15, 0]; // Example rewards in tokens
   const reward = rewards[Math.floor(Math.random() * rewards.length)];
 
