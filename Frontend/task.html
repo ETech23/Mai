@@ -7,21 +7,36 @@
   <link rel="stylesheet" href="task.css">
 </head>
 <body>
+  
   <section id="tasks-section">
-  <h2>Daily Challenges</h2>
+    <h2>Daily Challenges</h2>
+    <br>
+    <br>
 
-  <!-- Task List -->
-  <div id="tasks-container">
-    <p>Loading tasks...</p>
-  </div>
+    <!-- Task List -->
+    <div id="tasks-container">
+      <p>Loading tasks...</p>
+    </div>
+    <br>
+    <br>
+    <br>
 
-  <!-- Reward Spinner -->
-  <div id="reward-wheel-section">
-    <h3>Spin the Wheel</h3>
-    <button id="spin-wheel">Spin</button>
-    <p id="reward-display">Win exciting rewards here!</p>
-  </div>
-</section>
-  <script src="app.js"></script>
+    <!-- Reward Spinner -->
+    <div id="reward-wheel-section">
+      <h3>Spin the Wheel</h3>
+      <div class="spin-sphere">
+        <p>
+          <--||--></--||-->
+        </p>
+      </div>
+      <button id="spin-btn">Spin</button>
+      <div id="spin-result" class="hidden">
+        <p>Your reward is: <span id="reward"></span></p>
+      </div>
+    </div>
+  </section>
+
+  
+  <script src="task.js"></script>
 </body>
 </html>

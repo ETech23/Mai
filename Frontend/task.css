@@ -1,39 +1,111 @@
-#tasks-section {
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: 8C9F92;
+  background-color: #2C3E30;
+  color: #333;
+}
+
+
+
+
+h2, h3 {
   text-align: center;
-  padding: 20px;
+  color: #007BFF;
 }
 
-#tasks-container .task {
+p {
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
   margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-#tasks-container .task button {
-  margin-top: 5px;
-  padding: 5px 10px;
-  border: none;
-  background: #4caf50;
-  color: #fff;
-  border-radius: 5px;
-  cursor: pointer;
+/* Section Styling */
+#tasks-section {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: lavender;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  border: 5px solid gray;
+  width: 75%;
+  margin-top: 30px;
 }
 
-#tasks-container .task button[disabled] {
-  background: #ccc;
-  cursor: not-allowed;
+#tasks-container {
+  margin-bottom: 20px;
+  width: ;
 }
 
 #reward-wheel-section {
-  margin-top: 20px;
+  margin-top: 30px;
+  text-align: center;
 }
 
-#spin-wheel {
+/* Spin Sphere */
+/* Spin Sphere Styling */
+.spin-sphere {
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+  background: radial-gradient(circle, #aea500, #ff2a00);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  border: 3px solid #2C3E30;
+}
+
+.spin-sphere.rotating {
+  animation: rotateSphere 0.2s ease-in-out infinite;
+}
+
+@keyframes rotateSphere {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#spin-btn {
+  font-size: 18px;
   padding: 10px 20px;
-  border: none;
-  background: #ff9800;
   color: #fff;
+  background-color: #007BFF;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#spin-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Spin Result */
+#spin-result {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e7f3ff;
+  border: 1px solid #007BFF;
+  border-radius: 5px;
+  display: none;
+}
+
+#spin-result p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007BFF;
+}
+
+.hidden {
+  display: none;
 }
