@@ -333,6 +333,8 @@ const spinResult = document.getElementById("spin-result");
 // Base URL
 const BASE_URL = "https://mai.fly.dev";
 
+  console.log("Token in localStorage:", localStorage.getItem("token"));
+  
 // Check if the user is logged in
 function isLoggedIn() {
   const token = localStorage.getItem("token");
