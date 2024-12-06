@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   balance: { type: Number, default: 0 }, // Mining balance
+  isAdmin: { type: Boolean, default: false}, // Admin
   referralCode: { type: String, unique: true }, // Unique referral code
   referredBy: { type: String, default: null }, // Referral code of the referrer
   referrals: { type: [String], default: [] }, // Array of referred user IDs
