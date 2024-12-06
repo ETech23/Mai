@@ -1,139 +1,91 @@
- // Selectors
-const taskButton = document.getElementById("task-button");
-const tasksSection = document.getElementById("tasks-section");
-const closeTaskButton = document.getElementById("close-task-section");
-const tasksContainer = document.getElementById("tasks-container");
-const spinButton = document.getElementById("spin-btn");
-const rewardDisplay = document.getElementById("reward");
-const spinSphere = document.querySelector(".spin-sphere");
-const spinResult = document.getElementById("spin-result");
-
-// Base URL
-const BASE_URL = "https://mai.fly.dev";
-
-  console.log("Token in localStorage:", localStorage.getItem("token"));
-  
-// Check if the user is logged in
-function isLoggedIn() {
+document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
-  return token ? true : false;
-}
 
-// Show the Task button only if logged in
-if (isLoggedIn() && taskButton) {
-  taskButton.classList.remove("hidden");
-}
+  // Redirect to login if the token is missing
+  if (!token) {
+    alert("You must be logged in to access this page.");
+    window.location.href = "https://mai-psi.vercel.app";
+    return;
+  }
 
-// Show the Task section
-if (taskButton) {
-  taskButton.addEventListener("click", async () => {
-    if (isLoggedIn()) {
-      tasksSection.classList.remove("hidden");
-      await fetchTasks();
-    } else {
-      alert("Please log in to access tasks.");
-    }
-  });
-}
+  // Optionally verify the token with the backend
+  validateToken(token);
+});
 
-// Close the Task section
-if (closeTaskButton) {
-  closeTaskButton.addEventListener("click", () => {
-    tasksSection.classList.add("hidden");
-  });
-}
-
-// Fetch tasks from API
-async function fetchTasks() {
+// Function to validate the token (optional)
+async function validateToken(token) {
   try {
-    const response = await fetch(`${BASE_URL}/api/tasks/daily`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    const response = await fetch("https://mai.fly.dev/api/auth/validate", {
+      headers: { Authorization: `Bearer ${token}` },
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error("Invalid token");
+    }
 
-    if (data.success) {
-      tasksContainer.innerHTML = data.tasks
-        .map(
-          (task) => `
-          <div class="task">
-            <p>${task.description}</p>
-            <button class="complete-task" data-id="${task.id}" ${
-            task.completed ? "disabled" : ""
-          }>
-              ${task.completed ? "Completed" : "Complete Task"}
-            </button>
-          </div>
-        `
-        )
-        .join("");
-      attachTaskListeners();
-    } else {
-      tasksContainer.innerHTML = `<p>Error loading tasks: ${data.message}</p>`;
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.message);
     }
   } catch (error) {
-    tasksContainer.innerHTML = `<p>Error fetching tasks. Please try again later.</p>`;
-    console.error("Error fetching tasks:", error.message);
+    console.error("Token validation failed:", error.message);
+    alert("Your session has expired. Please log in again.");
+    localStorage.removeItem("token");
+    window.location.href = "https://mai-psi.vercel.app";
   }
 }
 
-// Attach listeners to complete task buttons
-function attachTaskListeners() {
-  const completeButtons = document.querySelectorAll(".complete-task");
-  completeButtons.forEach((button) =>
-    button.addEventListener("click", async (event) => {
-      const taskId = event.target.getAttribute("data-id");
+const contactForm = document.getElementById("contactForm");
+const messagesList = document.getElementById("messagesList");
+const token = localStorage.getItem("token");
 
-      try {
-        const response = await fetch(`${BASE_URL}/api/tasks/complete`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ taskId }),
-        });
+// Fetch user's chat history
+async function fetchMessages() {
+  try {
+    const response = await fetch("/api/messages", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
 
-        const data = await response.json();
-
-        if (data.success) {
-          alert(data.message);
-          fetchTasks(); // Refresh tasks
-        } else {
-          console.error("Error completing task:", data.message);
-        }
-      } catch (error) {
-        console.error("Error completing task:", error.message);
-      }
-    })
-  );
-}
-
-// Spin the reward wheel
-if (spinButton) {
-  spinButton.addEventListener("click", async () => {
-    spinSphere.classList.add("rotating");
-
-    try {
-      const response = await fetch(`${BASE_URL}/api/tasks/spin`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    if (data.success) {
+      messagesList.innerHTML = ""; // Clear current messages
+      data.messages.forEach((msg) => {
+        const li = document.createElement("li");
+        li.textContent = `${msg.sender}: ${msg.message} (${new Date(msg.timestamp).toLocaleString()})`;
+        messagesList.appendChild(li);
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setTimeout(() => {
-          spinSphere.classList.remove("rotating");
-          spinResult.classList.remove("hidden");
-          rewardDisplay.textContent = `${data.reward} tokens!`;
-        }, 2000);
-      } else {
-        console.error("Error spinning the wheel:", data.message);
-      }
-    } catch (error) {
-      console.error("Error spinning the wheel:", error.message);
-      spinSphere.classList.remove("rotating");
     }
-  });
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+  }
 }
+
+// Submit a new message
+contactForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const userMessage = document.getElementById("userMessage").value;
+
+  try {
+    const response = await fetch("/api/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ message: userMessage }),
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      document.getElementById("userMessage").value = ""; // Clear the textarea
+      fetchMessages(); // Refresh messages
+    } else {
+      alert("Error sending message. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+});
+
+// Fetch messages on page load
+fetchMessages();

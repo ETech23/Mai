@@ -307,6 +307,7 @@ if (referralCode) {
 // Form Submit Listener
 authForm.addEventListener("submit", (e) => {
   e.preventDefault();
+  
 
   if (formTitle.textContent === "Register") {
     // Handle Registration
@@ -315,12 +316,15 @@ authForm.addEventListener("submit", (e) => {
   } else {
     // Handle Login
     console.log("Logging in user...");
+    
     // Add your login logic here
   }
+  
 });
 
 
  // Selectors
+ 
 const taskButton = document.getElementById("task-button");
 const tasksSection = document.getElementById("tasks-section");
 const closeTaskButton = document.getElementById("close-task-section");
@@ -332,31 +336,59 @@ const spinResult = document.getElementById("spin-result");
 
 // Base URL
 const BASE_URL = "https://mai.fly.dev";
-
-  console.log("Token in localStorage:", localStorage.getItem("token"));
   
+ console.log("Token in localStorage:", localStorage.getItem("token"));
+
+console.log("Token in localStorage:", localStorage.getItem("token"));
+
+
 // Check if the user is logged in
 function isLoggedIn() {
   const token = localStorage.getItem("token");
   return token ? true : false;
 }
 
-// Show the Task button only if logged in
-if (isLoggedIn() && taskButton) {
-  taskButton.classList.remove("hidden");
+// Function to display the Task button
+function displayTaskButton() {
+  if (taskButton) {
+    taskButton.classList.remove("hidden");
+    console.log("Task button displayed.");
+  }
 }
 
-// Show the Task section
-if (taskButton) {
-  taskButton.addEventListener("click", async () => {
-    if (isLoggedIn()) {
-      tasksSection.classList.remove("hidden");
-      await fetchTasks();
-    } else {
-      alert("Please log in to access tasks.");
-    }
+// Immediately check if the user is logged in on page load
+if (isLoggedIn()) {
+  displayTaskButton();
+}
+
+// Simulated login function (replace with your actual login logic)
+function loginUser() {
+  const token = "sampleToken"; // Replace with the actual token from server
+  localStorage.setItem("token", token);
+
+  // Display the Task button dynamically after login
+  displayTaskButton();
+
+  // Optional: You can reload the page if other elements need to reset
+  // location.reload();
+}
+
+// Example: Login form event listener
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // Prevent the form's default submission
+    loginUser(); // Simulate login
   });
 }
+
+// Event listener for Task button navigation
+if (taskButton) {
+  taskButton.addEventListener("click", () => {
+    window.location.href = "task.html";
+  });
+}
+  
 
 // Close the Task section
 if (closeTaskButton) {

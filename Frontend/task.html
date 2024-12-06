@@ -3,52 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Task</title>
+  <title>Daily Challenges</title>
   <link rel="stylesheet" href="task.css">
 </head>
 <body>
-  
-  <section id="tasks-section">
-    <div id="close-task-section">
-       <button style="background-color: #28a745; /* Green background */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px; z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center; margin: 0 100%; ">X</button>
-         </div>
-    <h2>Daily Challenges</h2>
-    
+ <div id="writeUsSection">
+  <h2>Contact Us</h2>
+  <form id="contactForm">
+    <textarea id="userMessage" placeholder="Write your message here..." required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
 
-    <!-- Task List -->
-    <div id="tasks-container">
-     
-    </div>
-    <br>
-    <br>
-    <br>
+  <div id="chatHistory">
+    <h3>Your Messages</h3>
+    <ul id="messagesList"></ul>
+  </div>
+</div>
 
-    <!-- Reward Spinner -->
-    <div id="reward-wheel-section">
-      <h3>Spin the Wheel</h3>
-      <div class="spin-sphere">
-        <p>
-          <--||--></--||-->
-        </p>
-      </div>
-      <button id="spin-btn">Spin</button>
-      
-      <p>Your reward is: <span id="reward"></span></p>
-      <div id="spin-result" class="hidden">
-        <p>Your reward is: <span id="reward"></span></p>
-      </div>
-    </div>
-  </section>
-
-  
   <script src="task.js"></script>
 </body>
 </html>

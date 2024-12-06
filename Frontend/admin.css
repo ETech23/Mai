@@ -1,0 +1,103 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header Styles */
+.admin-header {
+  background-color: #0073e6;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+}
+
+/* Container */
+.admin-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Titles */
+.admin-container h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #0073e6;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: #f0f0f0;
+  color: #0073e6;
+}
+
+table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Button Styles */
+button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Action Buttons */
+button.send-message {
+  background-color: #4caf50;
+  color: white;
+}
+
+button.reset-password {
+  background-color: #ff9800;
+  color: white;
+}
+
+button.suspend {
+  background-color: #f44336;
+  color: white;
+}
+
+button.unsuspend {
+  background-color: #008cba;
+  color: white;
+}
+
+button.edit {
+  background-color: #673ab7;
+  color: white;
+}
