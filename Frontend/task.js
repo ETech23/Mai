@@ -1,86 +1,56 @@
-
-console.log("Stored Token:", localStorage.getItem("token"));
-
-function handleTokenExpiry(response) {
-  if (response.status === 403) {
-    alert("Your session has expired. Please log in again.");
-    localStorage.removeItem("token");
-    window.location.href = "https://mai.fly.dev/api/auth/login"; // Redirect to login
-  }
-}
-
-/**if (isLoggedIn()) {
-  taskButton.addEventListener("click", () => {
-    window.location.href = "https://mai.fly.dev/task.html"; // Absolute URL
-  });
-}**/
-
-// Base URL for API
-const BASE_URL = "https://mai.fly.dev";
-
-const token = localStorage.getItem("token");
-fetch(`${BASE_URL}/api/tasks/daily`, {
-  headers: { Authorization: `Bearer ${token}` },
-});
-
-// Task functionality
+ // Selectors
 const taskButton = document.getElementById("task-button");
+const tasksSection = document.getElementById("tasks-section");
+const closeTaskButton = document.getElementById("close-task-section");
 const tasksContainer = document.getElementById("tasks-container");
 const spinButton = document.getElementById("spin-btn");
 const rewardDisplay = document.getElementById("reward");
 const spinSphere = document.querySelector(".spin-sphere");
 const spinResult = document.getElementById("spin-result");
 
-// Function to check if the user is logged in
+// Base URL
+const BASE_URL = "https://mai.fly.dev";
+
+  console.log("Token in localStorage:", localStorage.getItem("token"));
+  
+// Check if the user is logged in
 function isLoggedIn() {
   const token = localStorage.getItem("token");
   return token ? true : false;
 }
 
-// Show the task button only if the user is logged in
-if (taskButton) {
-  if (isLoggedIn()) {
-    taskButton.classList.remove("hidden");
-  } else {
-    taskButton.classList.add("hidden");
-  }
+// Show the Task button only if logged in
+if (isLoggedIn() && taskButton) {
+  taskButton.classList.remove("hidden");
+}
 
-  // Handle button click to navigate to the tasks page
-  taskButton.addEventListener("click", () => {
-    window.location.href = "task.html";
+// Show the Task section
+if (taskButton) {
+  taskButton.addEventListener("click", async () => {
+    if (isLoggedIn()) {
+      tasksSection.classList.remove("hidden");
+      await fetchTasks();
+    } else {
+      alert("Please log in to access tasks.");
+    }
   });
 }
 
-// Fetch Tasks from the API
+// Close the Task section
+if (closeTaskButton) {
+  closeTaskButton.addEventListener("click", () => {
+    tasksSection.classList.add("hidden");
+  });
+}
+
+// Fetch tasks from API
 async function fetchTasks() {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    tasksContainer.innerHTML = `<p>Please log in to view your tasks.</p>`;
-    console.error("No token found in localStorage.");
-    return;
-  }
-
-  console.log("Fetching tasks with token:", token);
-
   try {
     const response = await fetch(`${BASE_URL}/api/tasks/daily`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
 
-    if (response.status === 403) {
-      tasksContainer.innerHTML = `<p>Invalid or expired token. Please log in again.</p>`;
-      console.error("Invalid or expired token. Redirecting to login...");
-      localStorage.removeItem("token"); // Clear invalid token
-      setTimeout(() => (window.location.href = "https://mai.fly.dev/api/auth/login"), 2000);
-      return;
-    }
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tasks. Status: ${response.status}`);
-    }
-
     const data = await response.json();
-    console.log("Task Data:", data);
 
     if (data.success) {
       tasksContainer.innerHTML = data.tasks
@@ -107,7 +77,7 @@ async function fetchTasks() {
   }
 }
 
-// Attach Listeners to Task Completion Buttons
+// Attach listeners to complete task buttons
 function attachTaskListeners() {
   const completeButtons = document.querySelectorAll(".complete-task");
   completeButtons.forEach((button) =>
@@ -124,15 +94,11 @@ function attachTaskListeners() {
           body: JSON.stringify({ taskId }),
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to complete task. Please try again.");
-        }
-
         const data = await response.json();
 
         if (data.success) {
           alert(data.message);
-          fetchTasks(); // Refresh tasks after completion
+          fetchTasks(); // Refresh tasks
         } else {
           console.error("Error completing task:", data.message);
         }
@@ -143,14 +109,9 @@ function attachTaskListeners() {
   );
 }
 
-// Spin the Reward Wheel
+// Spin the reward wheel
 if (spinButton) {
   spinButton.addEventListener("click", async () => {
-    if (!isLoggedIn()) {
-      alert("Please log in to spin the wheel.");
-      return;
-    }
-
     spinSphere.classList.add("rotating");
 
     try {
@@ -158,10 +119,6 @@ if (spinButton) {
         method: "POST",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to spin the wheel. Please try again.");
-      }
 
       const data = await response.json();
 
@@ -179,11 +136,4 @@ if (spinButton) {
       spinSphere.classList.remove("rotating");
     }
   });
-}
-
-// Fetch Tasks on Page Load
-if (isLoggedIn()) {
-  fetchTasks();
-} else {
-  tasksContainer.innerHTML = `<p>Please log in to view your tasks.</p>`;
 }

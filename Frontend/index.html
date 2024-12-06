@@ -117,17 +117,26 @@
   <br>
   
    <section id="tasks-section" class="hidden">
-    <h2>Daily Challenges</h2>
-    <br>
-    <br>
+    
+     <div id="close-task-section">
+       <button style="background-color: #28a745; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px; z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center; margin: 0 100%; ">X</button>
+         </div>
+     <h2 style="text-align: center">Daily Challenges</h2>
 
     <!-- Task List -->
+  
     <div id="tasks-container">
       <p>Loading tasks...</p>
     </div>
-    <br>
-    <br>
-    <br>
+  
 
     <!-- Reward Spinner -->
     <div id="reward-wheel-section">
@@ -137,11 +146,13 @@
           <--||--></--||-->
         </p>
       </div>
+      
       <button id="spin-btn">Spin</button>
       <div id="spin-result" class="hidden">
         <p>Your reward is: <span id="reward"></span></p>
       </div>
     </div>
+     
   </section>
 
 

@@ -9,13 +9,23 @@
 <body>
   
   <section id="tasks-section">
+    <div id="close-task-section">
+       <button style="background-color: #28a745; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px; z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center; margin: 0 100%; ">X</button>
+         </div>
     <h2>Daily Challenges</h2>
-    <br>
-    <br>
+    
 
     <!-- Task List -->
     <div id="tasks-container">
-      <p>Loading tasks...</p>
+     
     </div>
     <br>
     <br>
@@ -30,6 +40,8 @@
         </p>
       </div>
       <button id="spin-btn">Spin</button>
+      
+      <p>Your reward is: <span id="reward"></span></p>
       <div id="spin-result" class="hidden">
         <p>Your reward is: <span id="reward"></span></p>
       </div>
