@@ -14,6 +14,7 @@ const authenticate = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
+    console.log("Decoded token:", decoded); // Debugging: Log the token payload
     next();
   } catch (err) {
     console.error("Token verification failed:", err.message);
@@ -132,11 +133,12 @@ router.get("/admin/users", authenticate, async (req, res) => {
         },
       },
       {
-        $sort: sortBy === "referrals"
-          ? { referralCount: sortOrder }
-          : sortBy === "balance"
-          ? { balance: sortOrder }
-          : {}, // Default: no sorting
+        $sort:
+          sortBy === "referrals"
+            ? { referralCount: sortOrder }
+            : sortBy === "balance"
+            ? { balance: sortOrder }
+            : {}, // Default: no sorting
       },
     ]);
 
