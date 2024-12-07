@@ -21,7 +21,7 @@ const authenticate = (req, res, next) => {
 };
 
 // Fetch user messages with pagination
-router.get("/", authenticate, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
@@ -50,7 +50,7 @@ router.get("/", authenticate, async (req, res) => {
 });
 
 // Send a message (user to admin)
-router.post("/", authenticate, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { message } = req.body;
 
   if (!message) {

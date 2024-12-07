@@ -2,10 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const messagesRoutes = require("./routes/messages");
-const adminRoutes = require("./routes/admin");
-const express = require("express");
-const app = express();
 const userMessages = require("./routes/userMessages");
 const adminMessages = require("./routes/adminMessages");
 

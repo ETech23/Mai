@@ -55,7 +55,7 @@ router.get("/messages", adminAuth, async (req, res) => {
 
 // Fetch all users with referral count and total user count
 // Fetch all users with referral count and filtering/sorting
-router.get("/users", authenticate, async (req, res) => {
+router.get("/users", auth, async (req, res) => {
   const { isAdmin } = req.user;
   if (!isAdmin) {
     return res.status(403).json({ success: false, message: "Admin access only" });
@@ -108,7 +108,7 @@ router.get("/users", authenticate, async (req, res) => {
 });
 
 // Suspend or unsuspend a user
-router.post("/suspend", authenticate, async (req, res) => {
+router.post("/suspend", auth, async (req, res) => {
   const { isAdmin } = req.user;
   if (!isAdmin) {
     return res.status(403).json({ success: false, message: "Admin access only" });
@@ -140,7 +140,7 @@ router.post("/suspend", authenticate, async (req, res) => {
 });
 
 // Reset a user's password
-router.post("/reset-password", authenticate, async (req, res) => {
+router.post("/reset-password", auth, async (req, res) => {
   const { isAdmin } = req.user;
   if (!isAdmin) {
     return res.status(403).json({ success: false, message: "Admin access only" });
