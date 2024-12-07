@@ -1,24 +1,8 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const Message = require("../models/Message");
-
-// Inline Middleware for Authentication
-const authenticate = (req, res, next) => {
-  const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ success: false, message: "No token provided" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    console.error("Token verification failed:", err.message);
-    res.status(403).json({ success: false, message: "Invalid or expired token" });
-  }
-};
+const auth = require("../middleware/auth"); // Ensure this is correctly defined in your middleware
 
 // Fetch user messages with pagination
 router.get("/", auth, async (req, res) => {
@@ -27,7 +11,7 @@ router.get("/", auth, async (req, res) => {
 
   try {
     const messages = await Message.find({ userId: req.user.id })
-      .sort({ timestamp: -1 })
+      .sort({ timestamp: -1 }) // Most recent first
       .skip((page - 1) * limit)
       .limit(limit);
 
@@ -44,8 +28,8 @@ router.get("/", auth, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching messages:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error(`[GET /messages] Error fetching messages for user ${req.user.id}:`, error.message);
+    res.status(500).json({ success: false, message: "Error fetching messages. Please try again later." });
   }
 });
 
@@ -63,11 +47,13 @@ router.post("/", auth, async (req, res) => {
       userId: req.user.id,
       message,
     });
+
     await newMessage.save();
+
     res.json({ success: true, message: "Message sent successfully!" });
   } catch (error) {
-    console.error("Error sending message:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error(`[POST /messages] Error sending message for user ${req.user.id}:`, error.message);
+    res.status(500).json({ success: false, message: "Error sending message. Please try again later." });
   }
 });
 

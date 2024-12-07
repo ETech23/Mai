@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const Message = require("../models/Message");
 const User = require("../models/User");
+const auth = require("../middleware/auth");
 
 // Inline Middleware for Admin Authentication
 const adminAuth = (req, res, next) => {
