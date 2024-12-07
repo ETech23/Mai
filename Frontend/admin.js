@@ -13,7 +13,7 @@ const BASE_URL = "https://mai.fly.dev";
 if (!adminToken) {
   console.error("No token found in localStorage");
   alert("You need to log in as an admin to access this page.");
-  window.location.href = "/login.html"; // Redirect to login if no token is found
+  window.location.href = "https://mai-psi.vercel.app"; // Redirect to login if no token is found
 }
 
 console.log("Admin Token:", adminToken);
