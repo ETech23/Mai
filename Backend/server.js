@@ -4,6 +4,13 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const messagesRoutes = require("./routes/messages");
 const adminRoutes = require("./routes/admin");
+const express = require("express");
+const app = express();
+const userMessages = require("./routes/userMessages");
+const adminMessages = require("./routes/adminMessages");
+
+app.use("/api/messages", userMessages);
+app.use("/api/messages/admin", adminMessages);
 
 // Load environment variables
 dotenv.config();
