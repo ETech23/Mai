@@ -5,7 +5,6 @@ const connectDB = require("./config/db");
 const userMessages = require("./routes/userMessages");
 const adminMessages = require("./routes/adminMessages");
 
-
 // Load environment variables
 dotenv.config();
 
@@ -15,63 +14,60 @@ connectDB();
 // Initialize Express app
 const app = express();
 
-app.use("/api/messages", userMessages);                     app.use("/api/messages/admin", adminMessages);
-
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Allow specific origins with proper CORS configuration
+// CORS Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "https://mai-psi.vercel.app", // Ensure FRONTEND_URL is set in your environment variables
+    origin: process.env.FRONTEND_URL || "https://mai-psi.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
-// Debugging: Log incoming requests with method, URL, and time
+// Debugging Middleware
 app.use((req, res, next) => {
   const now = new Date().toISOString();
   console.log(`[${now}] ${req.method} ${req.url}`);
   next();
 });
 
-// Handle referral redirects
+// Referral Redirect Route
 app.get("/register", (req, res) => {
   const { ref } = req.query;
 
-  // Log the referral code for debugging purposes
   if (ref) {
     console.log(`[Referral Redirect] Referral Code Received: ${ref}`);
     return res.redirect(`${process.env.FRONTEND_URL || "https://mai-psi.vercel.app"}/register?ref=${ref}`);
   }
 
-  // Redirect to the generic registration page if no referral code is provided
   console.log(`[Referral Redirect] No referral code provided.`);
   return res.redirect(`${process.env.FRONTEND_URL || "https://mai-psi.vercel.app"}/register`);
 });
 
 // API Routes
-// Import and use the tasks route
-app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));
 app.use("/api/articles", require("./routes/articles")); // Includes reactions
+app.use("/api/tasks", require("./routes/tasks"));
+app.use("/api/messages", userMessages);
+app.use("/api/messages/admin", adminMessages);
 
-// Catch-all route for unmatched endpoints
+// Catch-all Route for Unmatched Endpoints
 app.use((req, res) => {
   console.error(`[404] Route not found: ${req.method} ${req.url}`);
   res.status(404).json({ message: "Route not found" });
 });
 
-// Global error handler
+// Global Error Handler
 app.use((err, req, res, next) => {
   console.error(`[Error] ${err.message}`);
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-// Start the server
+// Start the Server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
