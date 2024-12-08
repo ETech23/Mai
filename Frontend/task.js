@@ -1,91 +1,90 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
-
-  // Redirect to login if the token is missing
-  if (!token) {
-    alert("You must be logged in to access this page.");
-    window.location.href = "https://mai-psi.vercel.app";
-    return;
-  }
-
-  // Optionally verify the token with the backend
-  validateToken(token);
-});
-
-// Function to validate the token (optional)
-async function validateToken(token) {
-  try {
-    const response = await fetch("https://mai.fly.dev/api/auth/validate", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!response.ok) {
-      throw new Error("Invalid token");
-    }
-
-    const data = await response.json();
-    if (!data.success) {
-      throw new Error(data.message);
-    }
-  } catch (error) {
-    console.error("Token validation failed:", error.message);
-    alert("Your session has expired. Please log in again.");
-    localStorage.removeItem("token");
-    window.location.href = "https://mai-psi.vercel.app";
-  }
-}
-
-const contactForm = document.getElementById("contactForm");
-const messagesList = document.getElementById("messagesList");
+const BASE_URL = "https://mai.fly.dev"; // Your backend URL
 const token = localStorage.getItem("token");
 
-// Fetch user's chat history
-async function fetchMessages() {
+// DOM Elements
+const userMessageInput = document.getElementById("user-message");
+const sendMessageButton = document.getElementById("send-message");
+const userMessagesContainer = document.getElementById("user-messages");
+const prevPageButton = document.getElementById("prev-page");
+const nextPageButton = document.getElementById("next-page");
+
+let currentPage = 1;
+
+// Fetch user messages
+async function fetchMessages(page = 1) {
   try {
-    const response = await fetch("/api/messages", {
+    const response = await fetch(`${BASE_URL}/api/user/messages?page=${page}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
 
     if (data.success) {
-      messagesList.innerHTML = ""; // Clear current messages
-      data.messages.forEach((msg) => {
-        const li = document.createElement("li");
-        li.textContent = `${msg.sender}: ${msg.message} (${new Date(msg.timestamp).toLocaleString()})`;
-        messagesList.appendChild(li);
-      });
+      userMessagesContainer.innerHTML = data.messages
+        .map(
+          (msg) => `
+          <div class="message ${msg.sender}">
+            <p>${msg.message}</p>
+            <small>${msg.sender === "user" ? "You" : "Admin"} | ${new Date(
+              msg.timestamp
+            ).toLocaleString()}</small>
+          </div>
+        `
+        )
+        .join("");
+
+      currentPage = page;
+    } else {
+      alert(data.message);
     }
   } catch (error) {
-    console.error("Error fetching messages:", error);
+    console.error("Error fetching messages:", error.message);
   }
 }
 
-// Submit a new message
-contactForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const userMessage = document.getElementById("userMessage").value;
+// Send a message
+sendMessageButton.addEventListener("click", async () => {
+  const message = userMessageInput.value.trim();
+  if (!message) return alert("Please enter a message.");
 
   try {
-    const response = await fetch("/api/messages", {
+    const response = await fetch(`${BASE_URL}/api/user/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ message: userMessage }),
+      body: JSON.stringify({ message }),
     });
-
     const data = await response.json();
+
     if (data.success) {
-      document.getElementById("userMessage").value = ""; // Clear the textarea
-      fetchMessages(); // Refresh messages
+      alert("Message sent successfully!");
+      userMessageInput.value = "";
+      fetchMessages(currentPage);
     } else {
-      alert("Error sending message. Please try again.");
+      alert(data.message);
     }
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error("Error sending message:", error.message);
   }
 });
 
-// Fetch messages on page load
+// Pagination controls
+prevPageButton.addEventListener("click", () => {
+  if (currentPage > 1) fetchMessages(currentPage - 1);
+});
+
+nextPageButton.addEventListener("click", () => {
+  fetchMessages(currentPage + 1);
+});
+
+// Initial Fetch
 fetchMessages();
+
+const backButton = document.getElementById("back-button");
+if (backButton) {
+  
+  backButton.addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+}

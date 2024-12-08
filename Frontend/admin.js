@@ -1,68 +1,76 @@
-const BASE_URL = "https://mai.fly.dev"; // Replace with your backend URL
-const token = localStorage.getItem("token");
+const adminToken = localStorage.getItem("token");
+const userListContainer = document.getElementById("user-list");
+const adminMessagesContainer = document.getElementById("admin-messages");
+const filterBySelect = document.getElementById("filter-by");
+const sortOrderSelect = document.getElementById("sort-order");
+const applyFiltersButton = document.getElementById("apply-filters");
+const usersButton = document.querySelector("#users-button");
+const userList = document.querySelector("#user-list");
+const messagesPagination = document.querySelector("#messages-pagination");
 
-// Fetch and display all users
+const BASE_URL = "https://mai.fly.dev";
+
+if (!adminToken) {
+  console.error("No token found in localStorage");
+  alert("You need to log in as an admin to access this page.");
+  window.location.href = "https://mai-psi.vercel.app"; // Redirect to login if no token is found
+}
+
+console.log("Admin Token:", adminToken);
+
+// Fetch and display users
 async function fetchUsers() {
+  const sortBy = filterBySelect.value;
+  const order = sortOrderSelect.value;
+  const minBalance = document.getElementById("min-balance").value;
+  const maxBalance = document.getElementById("max-balance").value;
+  const minReferrals = document.getElementById("min-referrals").value;
+  const maxReferrals = document.getElementById("max-referrals").value;
+
   try {
-    const response = await fetch(`${BASE_URL}/api/admin/users`, {
-      headers: { Authorization: `Bearer ${token}` },
+    const queryParams = new URLSearchParams({
+      sortBy,
+      order,
+      minBalance,
+      maxBalance,
+      minReferrals,
+      maxReferrals,
+    });
+
+    const response = await fetch(`${BASE_URL}/api/admin/users?${queryParams}`, {
+      headers: { Authorization: `Bearer ${adminToken}` },
     });
 
     const data = await response.json();
 
     if (data.success) {
-      const tbody = document.querySelector("#user-table tbody");
-      tbody.innerHTML = data.users
+      userListContainer.innerHTML = data.users
         .map(
           (user) => `
-          <tr>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.balance} MAI</td>
-            <td>${user.isSuspended ? "Suspended" : "Active"}</td>
-            <td>
-              <button onclick="sendMessage('${user._id}')">Send Message</button>
-              <button onclick="resetPassword('${user._id}')">Reset Password</button>
+          <div class="user">
+            <p><strong>${user.name}</strong></p>
+            <p>Email: ${user.email}</p>
+            <p>Balance: ${user.balance} | Referrals: ${user.referralCount}</p>
+            <p>Status: ${user.isSuspended ? "Suspended" : "Active"}</p>
+            <div class="user-actions">
+              <button onclick="editUser('${user._id}')">Edit</button>
               <button onclick="toggleSuspension('${user._id}', ${!user.isSuspended})">
                 ${user.isSuspended ? "Unsuspend" : "Suspend"}
               </button>
-              <button onclick="editUser('${user._id}')">Edit Details</button>
-            </td>
-          </tr>
+              <button onclick="resetPassword('${user._id}')">Reset Password</button>
+            </div>
+          </div>
         `
         )
         .join("");
+
+      const totalUsersContainer = document.getElementById("total-users");
+      totalUsersContainer.textContent = `Total Users: ${data.totalUsers}`;
     } else {
-      console.error("Error loading users:", data.message);
+      alert(data.message || "Failed to fetch users.");
     }
   } catch (error) {
     console.error("Error fetching users:", error.message);
-  }
-}
-
-// Send a message to a user
-async function sendMessage(userId) {
-  const message = prompt("Enter your message:");
-  if (!message) return;
-
-  try {
-    const response = await fetch(`${BASE_URL}/api/admin/message`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ userId, message }),
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      alert("Message sent successfully!");
-    } else {
-      alert(`Error: ${data.message}`);
-    }
-  } catch (error) {
-    console.error("Error sending message:", error.message);
   }
 }
 
@@ -76,7 +84,7 @@ async function resetPassword(userId) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${adminToken}`,
       },
       body: JSON.stringify({ userId, newPassword }),
     });
@@ -92,7 +100,7 @@ async function resetPassword(userId) {
   }
 }
 
-// Suspend or Unsuspend a User
+// Toggle a user's suspension status
 async function toggleSuspension(userId, isSuspended) {
   const confirmation = confirm(
     `Are you sure you want to ${isSuspended ? "suspend" : "unsuspend"} this user?`
@@ -104,7 +112,7 @@ async function toggleSuspension(userId, isSuspended) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${adminToken}`,
       },
       body: JSON.stringify({ userId, isSuspended }),
     });
@@ -121,7 +129,7 @@ async function toggleSuspension(userId, isSuspended) {
   }
 }
 
-// Edit a User's Details
+// Edit a user's details
 async function editUser(userId) {
   const name = prompt("Enter new name (leave blank to keep current):");
   const email = prompt("Enter new email (leave blank to keep current):");
@@ -132,14 +140,9 @@ async function editUser(userId) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${adminToken}`,
       },
-      body: JSON.stringify({
-        userId,
-        name,
-        email,
-        balance: balance ? parseFloat(balance) : undefined,
-      }),
+      body: JSON.stringify({ userId, name, email, balance: balance ? parseFloat(balance) : undefined }),
     });
 
     const data = await response.json();
@@ -154,5 +157,58 @@ async function editUser(userId) {
   }
 }
 
-// Initial call to fetch users
+// Fetch admin messages
+async function fetchAdminMessages(page = 1) {
+  console.log(`Fetching messages for page ${page}...`);
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/messages/admin/messages?page=${page}`,
+      {
+        headers: { Authorization: `Bearer ${adminToken}` },
+      }
+    );
+    const data = await response.json();
+
+    if (data.success) {
+      adminMessagesContainer.innerHTML = data.messages
+        .map(
+          (msg) => `
+          <div class="message ${msg.sender}">
+            <p>${msg.message}</p>
+            <small>${msg.sender === "user" ? "User" : "Admin"} | ${new Date(
+              msg.timestamp
+            ).toLocaleString()}</small>
+          </div>
+        `
+        )
+        .join("");
+
+      updatePagination(data.pagination); // Update pagination UI
+    } else {
+      console.error("Error fetching admin messages:", data.message);
+      alert(data.message || "Failed to fetch messages.");
+    }
+  } catch (error) {
+    console.error("Error fetching admin messages:", error.message);
+  }
+}
+
+// Update pagination UI
+function updatePagination({ page, totalPages }) {
+  messagesPagination.innerHTML = `
+    <button ${page === 1 ? "disabled" : ""} onclick="fetchAdminMessages(${page - 1})">Previous</button>
+    <span>Page ${page} of ${totalPages}</span>
+    <button ${page === totalPages ? "disabled" : ""} onclick="fetchAdminMessages(${page + 1})">Next</button>
+  `;
+}
+
+// Event listeners for toggling user list visibility and applying filters
+usersButton.addEventListener("click", () => {
+  userList.classList.toggle("hidden");
+});
+applyFiltersButton.addEventListener("click", fetchUsers);
+
+// Initial fetches
 fetchUsers();
+fetchAdminMessages();

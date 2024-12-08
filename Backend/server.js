@@ -2,8 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const messagesRoutes = require("./routes/messages");
-const adminRoutes = require("./routes/admin");
+const userMessages = require("./routes/userMessages");
+const adminMessages = require("./routes/adminMessages");
+
 
 // Load environment variables
 dotenv.config();
@@ -13,6 +14,8 @@ connectDB();
 
 // Initialize Express app
 const app = express();
+
+app.use("/api/messages", userMessages);                     app.use("/api/messages/admin", adminMessages);
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -51,9 +54,6 @@ app.get("/register", (req, res) => {
 
 // API Routes
 // Import and use the tasks route
-app.use("/api/admin", adminRoutes);
-
-app.use("/api/messages", messagesRoutes);
 app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/mining", require("./routes/mining"));

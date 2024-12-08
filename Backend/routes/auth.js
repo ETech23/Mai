@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const router = express.Router();
+const auth = require("../middleware/auth"); // Import auth middleware
 
 // Register a user
 router.post("/register", async (req, res) => {
@@ -33,22 +34,15 @@ router.post("/register", async (req, res) => {
       referredBy: referredBy || null,
     });
 
-    // Update referrer's profile
+    // Update referrer if applicable
     if (referredBy) {
       const referrer = await User.findOne({ referralCode: referredBy });
       if (referrer) {
-        console.log("Referrer found:", referrer.username);
-
-        // Add the new user to referrer's referrals list
         referrer.referrals.push(newUser._id);
-
-        // Boost mining rate by 5%
         referrer.miningRate = parseFloat((referrer.miningRate || 1) * 1.05).toFixed(2);
-
         await referrer.save();
-        console.log("Referrer updated successfully.");
       } else {
-        console.log("Invalid referral code:", referredBy);
+        return res.status(400).json({ message: "Invalid referral code" });
       }
     }
 
@@ -57,12 +51,11 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({
       username: newUser.username,
-      balance: newUser.balance,
       message: "Registration successful",
     });
   } catch (err) {
     console.error("Error during registration:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -71,7 +64,6 @@ router.post("/login", async (req, res) => {
   const { identifier, password } = req.body;
 
   try {
-    // Find user by email or username
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
@@ -80,46 +72,30 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "576h" }); // logs user out after 24days
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "576h" });
 
     res.json({
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      balance: user.balance,
-      miningRate: user.miningRate,
-      referralsCount: user.referrals.length,
       token,
+      balance: user.balance, // Include balance in the response
+      username: user.username,
     });
   } catch (err) {
     console.error("Error during login:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Get user details
-router.get("/details", async (req, res) => {
-  const token = req.header("Authorization")?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
-  }
-
+router.get("/details", auth, async (req, res) => {
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Fetch user details
-    const user = await User.findById(decoded.id)
+    const user = await User.findById(req.user.id)
       .select("-password")
-      .populate("referrals", "username email balance"); // Populate referral details
+      .populate("referrals", "username email balance");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -131,12 +107,12 @@ router.get("/details", async (req, res) => {
       email: user.email,
       balance: user.balance,
       miningRate: user.miningRate,
-      referrals: user.referrals, // Send detailed referral information
-      referralCode: user.referralCode, // Send referral code properly
+      referrals: user.referrals,
+      referralCode: user.referralCode,
     });
   } catch (err) {
     console.error("Error fetching user details:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

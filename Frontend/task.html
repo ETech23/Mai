@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Challenges</title>
-  <link rel="stylesheet" href="task.css">
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
- <div id="writeUsSection">
-  <h2>Contact Us</h2>
-  <form id="contactForm">
-    <textarea id="userMessage" placeholder="Write your message here..." required></textarea>
-    <button type="submit">Send Message</button>
-  </form>
-
-  <div id="chatHistory">
-    <h3>Your Messages</h3>
-    <ul id="messagesList"></ul>
+  <div class="container">
+     <div id="back-button">
+   ↩️
   </div>
-</div>
+    <h1>Write Us</h1>
+
+    <!-- Message Form -->
+    <div class="message-form">
+      <textarea id="user-message" placeholder="Type your message here..."></textarea>
+      <button id="send-message">Send</button>
+    </div>
+
+    <!-- User Messages -->
+    <h2>Your Messages</h2>
+    <div id="user-messages"></div>
+    <div class="pagination">
+      <button id="prev-page">Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
 
   <script src="task.js"></script>
 </body>
