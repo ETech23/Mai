@@ -42,6 +42,7 @@ async function apiRequest(endpoint, method = "GET", body = null) {
   return data;
 }
 
+// Fetch users
 // Fetch users with filters and pagination
 async function fetchUsers() {
   const queryParams = new URLSearchParams({
@@ -164,7 +165,7 @@ async function respondToMessage(messageId, userId) {
   if (!response) return;
 
   try {
-    const data = await apiRequest("/api/admin/respond", "POST", { messageId, userId, response });
+    const data = await apiRequest("/api/admin/messages/respond", "POST", { messageId, userId, response });
     alert(data.message);
     fetchMessages();
   } catch (error) {

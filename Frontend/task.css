@@ -128,7 +128,7 @@ button:hover {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Spacing between messages */
+  gap: 0; /* Spacing between messages */
 }
 
 .user-message {

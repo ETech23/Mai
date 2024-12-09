@@ -6,6 +6,7 @@ const Message = require("../models/Message");
 const adminAuth = require("../middleware/adminAuth");
 
 // Fetch all users with filters and pagination
+// Fetch all users with filters and pagination
 router.get("/users", adminAuth, async (req, res) => {
   const { page = 1, limit = 10, minBalance, maxBalance, minReferrals, maxReferrals } = req.query;
   const skip = (page - 1) * limit;
@@ -20,31 +21,61 @@ router.get("/users", adminAuth, async (req, res) => {
       if (maxBalance) filter.balance.$lte = parseFloat(maxBalance);
     }
 
-    // Add referral filters
+    // Use aggregation pipeline for referral filters
+    const pipeline = [
+      {
+        $addFields: {
+          referralCount: {
+            $cond: {
+              if: { $isArray: "$referrals" },
+              then: { $size: "$referrals" },
+              else: 0,
+            },
+          },
+        },
+      },
+    ];
+
+    // Add referral count filters to the aggregation pipeline
     if (minReferrals || maxReferrals) {
-      filter.referrals = {};
-      if (minReferrals) filter.referrals.$gte = parseInt(minReferrals);
-      if (maxReferrals) filter.referrals.$lte = parseInt(maxReferrals);
+      const referralFilter = {};
+      if (minReferrals) referralFilter.$gte = parseInt(minReferrals);
+      if (maxReferrals) referralFilter.$lte = parseInt(maxReferrals);
+
+      pipeline.push({ $match: { referralCount: referralFilter } });
     }
 
-    const users = await User.aggregate([
-      { $addFields: { referralCount: { $size: "$referrals" } } },
-      { $match: filter },
+    // Add the main query filter for balance
+    pipeline.push({ $match: filter });
+
+    // Pagination
+    pipeline.push(
       { $skip: skip },
-      { $limit: parseInt(limit) },
+      { $limit: parseInt(limit) }
+    );
+
+    // Fetch filtered and paginated users
+    const users = await User.aggregate(pipeline);
+
+    // Calculate total users matching the filter
+    const totalUsers = await User.aggregate([
+      { $addFields: { referralCount: { $cond: { if: { $isArray: "$referrals" }, then: { $size: "$referrals" }, else: 0 } } } },
+      { $match: filter },
+      ...(minReferrals || maxReferrals ? [{ $match: { referralCount: referralFilter } }] : []),
+      { $count: "total" },
     ]);
 
-    const totalUsers = await User.countDocuments(filter);
+    const totalCount = totalUsers.length > 0 ? totalUsers[0].total : 0;
 
     res.json({
       success: true,
       users,
-      totalUsers,
+      totalUsers: totalCount,
       pagination: {
-        total: totalUsers,
+        total: totalCount,
         page: parseInt(page),
         limit: parseInt(limit),
-        totalPages: Math.ceil(totalUsers / limit),
+        totalPages: Math.ceil(totalCount / limit),
       },
     });
   } catch (error) {
@@ -52,7 +83,6 @@ router.get("/users", adminAuth, async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch users." });
   }
 });
-
 // Suspend or unsuspend a user
 router.post("/users/suspend", adminAuth, async (req, res) => {
   const { userId, isSuspended } = req.body;
