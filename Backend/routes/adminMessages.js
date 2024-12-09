@@ -1,11 +1,12 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const Message = require("../models/Message");
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 
-// Inline Middleware for Admin Authentication
+// Admin Authentication Middleware
 const adminAuth = (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
   if (!token) {
@@ -19,20 +20,27 @@ const adminAuth = (req, res, next) => {
     }
     req.user = decoded;
     next();
-  } catch (err) {
-    console.error("Admin token verification failed:", err.message);
-    res.status(403).json({ success: false, message: "Invalid or expired token" });
+  } catch (error) {
+    console.error("Admin token verification failed:", error.message);
+    return res.status(403).json({ success: false, message: "Invalid or expired token" });
   }
 };
 
-// Fetch all user messages with pagination
+// Helper Function to Validate Admin Role
+const validateAdmin = (req, res) => {
+  if (!req.user?.isAdmin) {
+    return res.status(403).json({ success: false, message: "Admin access only" });
+  }
+};
+
+// Fetch All User Messages with Pagination
 router.get("/messages", adminAuth, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
   try {
     const messages = await Message.find()
-      .sort({ timestamp: -1 })
+      .sort({ timestamp: -1 }) // Sort by most recent
       .skip((page - 1) * limit)
       .limit(limit);
 
@@ -50,71 +58,56 @@ router.get("/messages", adminAuth, async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching admin messages:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Fetch all users with referral count and total user count
-// Fetch all users with referral count and filtering/sorting
-router.get("/users", auth, async (req, res) => {
-  const { isAdmin } = req.user;
-  if (!isAdmin) {
-    return res.status(403).json({ success: false, message: "Admin access only" });
-  }
-
+// Fetch All Users with Filtering, Sorting, and Referral Count
+router.get("/users", adminAuth, async (req, res) => {
   const { sortBy, order = "asc", minBalance, maxBalance, minReferrals, maxReferrals } = req.query;
   const sortOrder = order === "desc" ? -1 : 1;
 
   try {
     const filter = {};
 
-    // Add balance filtering if provided
+    // Apply balance filtering
     if (minBalance || maxBalance) {
       filter.balance = {};
       if (minBalance) filter.balance.$gte = parseFloat(minBalance);
       if (maxBalance) filter.balance.$lte = parseFloat(maxBalance);
     }
 
-    // Add referral count filtering if provided
+    // Apply referral count filtering
     if (minReferrals || maxReferrals) {
       filter.referrals = {};
       if (minReferrals) filter.referrals.$gte = parseInt(minReferrals);
       if (maxReferrals) filter.referrals.$lte = parseInt(maxReferrals);
     }
 
+    // Aggregate user data with referral count
     const users = await User.aggregate([
+      { $addFields: { referralCount: { $size: "$referrals" } } }, // Compute referral count
+      { $match: filter }, // Apply filters
       {
-        $addFields: {
-          referralCount: { $size: "$referrals" }, // Compute referral count dynamically
-        },
-      },
-      { $match: filter }, // Apply the filtering
-      {
-        $sort:
-          sortBy === "referrals"
-            ? { referralCount: sortOrder }
-            : sortBy === "balance"
-            ? { balance: sortOrder }
-            : {}, // Default: no sorting
+        $sort: sortBy === "referrals"
+          ? { referralCount: sortOrder }
+          : sortBy === "balance"
+          ? { balance: sortOrder }
+          : {}, // Default: no sorting
       },
     ]);
 
-    const totalUsers = await User.countDocuments(); // Count total users
+    const totalUsers = await User.countDocuments();
 
     res.json({ success: true, users, totalUsers });
   } catch (error) {
     console.error("Error fetching users:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Suspend or unsuspend a user
-router.post("/suspend", auth, async (req, res) => {
-  const { isAdmin } = req.user;
-  if (!isAdmin) {
-    return res.status(403).json({ success: false, message: "Admin access only" });
-  }
-
+// Suspend or Unsuspend a User
+router.post("/suspend", adminAuth, async (req, res) => {
   const { userId, isSuspended } = req.body;
 
   if (typeof isSuspended !== "boolean") {
@@ -130,30 +123,19 @@ router.post("/suspend", auth, async (req, res) => {
     user.isSuspended = isSuspended; // Update suspension status
     await user.save();
 
-    res.json({
-      success: true,
-      message: `User has been ${isSuspended ? "suspended" : "unsuspended"}.`,
-    });
+    res.json({ success: true, message: `User has been ${isSuspended ? "suspended" : "unsuspended"}.` });
   } catch (error) {
-    console.error("Error suspending user:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Error updating suspension status:", error.message);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Reset a user's password
-router.post("/reset-password", auth, async (req, res) => {
-  const { isAdmin } = req.user;
-  if (!isAdmin) {
-    return res.status(403).json({ success: false, message: "Admin access only" });
-  }
-
+// Reset a User's Password
+router.post("/reset-password", adminAuth, async (req, res) => {
   const { userId, newPassword } = req.body;
 
   if (!newPassword || newPassword.length < 6) {
-    return res.status(400).json({
-      success: false,
-      message: "Password must be at least 6 characters long.",
-    });
+    return res.status(400).json({ success: false, message: "Password must be at least 6 characters long." });
   }
 
   try {
@@ -162,17 +144,20 @@ router.post("/reset-password", auth, async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    user.password = newPassword; // Replace with a hashed password in production
+    // Hash the new password before saving
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
     await user.save();
 
     res.json({ success: true, message: "Password reset successfully!" });
   } catch (error) {
     console.error("Error resetting password:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Respond to a message
+// Respond to a User Message
 router.post("/respond", adminAuth, async (req, res) => {
   const { userId, messageId, response } = req.body;
 
@@ -199,15 +184,11 @@ router.post("/respond", adminAuth, async (req, res) => {
 
     await adminResponse.save();
 
-    // Notify the user
-    user.notifications = user.notifications || [];
-    user.notifications.push({ message: "You have a new message from admin." });
-    await user.save();
-
+    // Optionally notify the user
     res.json({ success: true, message: "Response sent successfully!" });
   } catch (error) {
-    console.error("Error responding to message:", error.message);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Error sending response:", error.message);
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
