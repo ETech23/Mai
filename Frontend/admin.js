@@ -143,14 +143,15 @@ async function fetchMessages() {
 }
 
 // Render messages in the UI
+// Render messages with username
 function renderMessages(messages) {
   messageListContainer.innerHTML = messages
     .map(
       (msg) => `
       <div class="item">
-        <p>${msg.message}</p>
+        <p><strong>${msg.userId?.username || "Unknown User"}</strong>: ${msg.message}</p>
         <p><small>${msg.sender === "user" ? "User" : "Admin"} | ${new Date(msg.timestamp).toLocaleString()}</small></p>
-        <button onclick="respondToMessage('${msg._id}', '${msg.userId}')">Respond</button>
+        <button onclick="respondToMessage('${msg._id}', '${msg.userId?._id}')">Respond</button>
       </div>
     `
     )

@@ -125,15 +125,17 @@ router.put("/users/edit", adminAuth, async (req, res) => {
 });
 
 // Fetch all user messages with pagination
+// Fetch All User Messages with Pagination and Include Username
 router.get("/messages", adminAuth, async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
 
   try {
     const messages = await Message.find()
-      .sort({ timestamp: -1 })
-      .skip(skip)
-      .limit(parseInt(limit));
+      .populate("userId", "username email") // Populate userId with username and email
+      .sort({ timestamp: -1 }) // Sort by most recent messages
+      .skip((page - 1) * limit)
+      .limit(limit);
 
     const totalMessages = await Message.countDocuments();
 
@@ -142,14 +144,14 @@ router.get("/messages", adminAuth, async (req, res) => {
       messages,
       pagination: {
         total: totalMessages,
-        page: parseInt(page),
-        limit: parseInt(limit),
+        page,
+        limit,
         totalPages: Math.ceil(totalMessages / limit),
       },
     });
   } catch (error) {
-    console.error("Error fetching messages:", error.message);
-    res.status(500).json({ success: false, message: "Failed to fetch messages." });
+    console.error("Error fetching admin messages:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 

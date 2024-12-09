@@ -13,7 +13,7 @@ let currentPage = 1;
 // Fetch user messages
 async function fetchMessages(page = 1) {
   try {
-    const response = await fetch(`${BASE_URL}/api/user/messages?page=${page}`, {
+    const response = await fetch(`${BASE_URL}/api/messages?page=${page}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
@@ -22,11 +22,13 @@ async function fetchMessages(page = 1) {
       userMessagesContainer.innerHTML = data.messages
         .map(
           (msg) => `
-          <div class="message ${msg.sender}">
-            <p>${msg.message}</p>
-            <small>${msg.sender === "user" ? "You" : "Admin"} | ${new Date(
-              msg.timestamp
-            ).toLocaleString()}</small>
+          <div class="message-container ${msg.sender}">
+            <div class="message ${msg.sender}">
+              <p class="message-text">${msg.message}</p>
+              <small class="message-timestamp">${msg.sender === "user" ? "You" : "Admin"} | ${new Date(
+                msg.timestamp
+              ).toLocaleString()}</small>
+            </div>
           </div>
         `
         )
@@ -47,7 +49,7 @@ sendMessageButton.addEventListener("click", async () => {
   if (!message) return alert("Please enter a message.");
 
   try {
-    const response = await fetch(`${BASE_URL}/api/user/messages`, {
+    const response = await fetch(`${BASE_URL}/api/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
