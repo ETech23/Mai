@@ -10,12 +10,11 @@ const adminAuth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
-
     if (!user || !user.isAdmin) {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    req.user = user; // Attach admin user to the request
+    req.user = user; // Attach user info to request
     next();
   } catch (error) {
     console.error("Admin authentication failed:", error.message);

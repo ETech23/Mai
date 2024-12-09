@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const userMessages = require("./routes/userMessages");
 const adminMessages = require("./routes/adminMessages");
+const adminRoutes = require("./routes/admin");
 
 // Load environment variables
 dotenv.config();
@@ -54,6 +55,7 @@ app.use("/api/articles", require("./routes/articles")); // Includes reactions
 app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/messages", userMessages);
 app.use("/api/messages/admin", adminMessages);
+app.use("/api/admin", adminRoutes);
 
 // Catch-all Route for Unmatched Endpoints
 app.use((req, res) => {

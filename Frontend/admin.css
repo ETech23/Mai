@@ -1,152 +1,115 @@
-/* General Styles */
+/* General Styling */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f9f9f9;
   color: #333;
 }
 
+/* Header */
 header {
   background-color: #007bff;
-  color: #fff;
+  color: white;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-h1, h2 {
-  font-family: Times New Roman;
-  margin: 0 0 20px;
-  margin: 5px;
+header h1 {
+  flex: 1;
 }
 
-.container, .admin-dashboard, .message-page {
-  max-width: 1200px;
+.icon-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Sections */
+section {
   margin: 20px auto;
   padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Filters Section */
 .filters {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-select, button {
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
+.filters input,
 button {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.primary-button {
   background-color: #007bff;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-button:hover {
+.primary-button:hover {
   background-color: #0056b3;
 }
 
-/* User List */
-.user-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
-  
-}
-
-.user-list.hidden {
-  display: none;
-}
-
-.user {
-  padding: 15px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.user p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-/* Message List */
-.message-list {
+/* Lists */
+.list-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.message {
+.list-container .item {
   padding: 15px;
-  border-radius: 5px;
-  background-color: #e7f3ff;
-  border: 1px solid #007bff;
-  position: relative;
-  margin: 5px;
-}
-
-.message.admin {
   background-color: #f5f5f5;
-  border: 1px solid #333;
-}
-
-.message p {
-  margin: 0 0 10px;
-}
-
-.message small {
-  display: block;
-  font-size: 12px;
-  color: #666;
-}
-
-/* Textarea for messages */
-textarea {
-  width: 90%;
-  padding: 15px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  resize: none;
-  font-size: 16px;
 }
 
-/* Pagination Buttons */
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .pagination button {
-  width: 48%;
   background-color: #007bff;
   color: white;
   border: none;
+  padding: 10px 15px;
   border-radius: 5px;
-  padding: 10px 0;
-  font-size: 16px;
   cursor: pointer;
-}
-
-.pagination button:hover {
-  background-color: #0056b3;
 }
 
 .pagination button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.pagination span {
+  align-self: center;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 5px;
+  }
 }
