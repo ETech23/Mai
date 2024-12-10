@@ -3,7 +3,7 @@ const adminToken = localStorage.getItem("token");
 
 if (!adminToken) {
   alert("Unauthorized access! Redirecting to login.");
-  window.location.href = "/login";
+  window.location.href = "./index.html";
 }
 
 // Elements
@@ -43,10 +43,10 @@ async function apiRequest(endpoint, method = "GET", body = null) {
 }
 
 // Fetch users
-// Fetch users with filters and pagination
-async function fetchUsers() {
+// Fetch users with filters, pagination, and render in the UI
+async function fetchUsers(page = 1) {
   const queryParams = new URLSearchParams({
-    page: userPage,
+    page,
     minBalance: minBalanceInput.value,
     maxBalance: maxBalanceInput.value,
     minReferrals: minReferralsInput.value,
@@ -55,15 +55,16 @@ async function fetchUsers() {
 
   try {
     const data = await apiRequest(`/api/admin/users?${queryParams}`);
-    renderUsers(data.users, data.totalUsers);
+    renderUsers(data.users, data.pagination);
   } catch (error) {
     console.error("Error fetching users:", error.message);
     alert("Failed to fetch users.");
   }
 }
 
-// Render users in the UI
-function renderUsers(users, totalUsers) {
+// Render users and pagination controls in the UI
+function renderUsers(users, pagination) {
+  // Render user list
   userListContainer.innerHTML = users
     .map(
       (user) => `
@@ -80,7 +81,37 @@ function renderUsers(users, totalUsers) {
     `
     )
     .join("");
-  totalUsersElement.textContent = `Total Users: ${totalUsers}`;
+
+  // Update total users count
+  totalUsersElement.textContent = `Total Users: ${pagination.total}`;
+
+  // Render Next and Previous buttons
+  renderPagination(pagination);
+}
+
+// Render pagination controls (Next/Previous)
+const paginationContainer = document.getElementById("user-pagination")
+function renderPagination({ page, totalPages }) {
+  paginationContainer.innerHTML = ""; // Clear existing buttons
+
+  // Set container class for styling
+  paginationContainer.className = "pagination-container";
+
+  // Previous button
+  const prevButton = document.createElement("button");
+  prevButton.textContent = "Previous";
+  prevButton.disabled = page === 1;
+  prevButton.onclick = () => fetchUsers(page - 1);
+  prevButton.className = "pagination-button"; // Add a class for consistent styling
+  paginationContainer.appendChild(prevButton);
+
+  // Next button
+  const nextButton = document.createElement("button");
+  nextButton.textContent = "Next";
+  nextButton.disabled = page === totalPages;
+  nextButton.onclick = () => fetchUsers(page + 1);
+  nextButton.className = "pagination-button"; // Add a class for consistent styling
+  paginationContainer.appendChild(nextButton);
 }
 
 // Suspend or unsuspend a user
@@ -88,7 +119,7 @@ async function toggleSuspension(userId, isSuspended) {
   if (!confirm(`Are you sure you want to ${isSuspended ? "suspend" : "unsuspend"} this user?`)) return;
 
   try {
-    const data = await apiRequest("/api/admin/suspend", "POST", { userId, isSuspended });
+    const data = await apiRequest("/api/admin/users/suspend", "POST", { userId, isSuspended });
     alert(data.message);
     fetchUsers();
   } catch (error) {
@@ -103,7 +134,7 @@ async function resetPassword(userId) {
   if (!newPassword) return;
 
   try {
-    const data = await apiRequest("/api/admin/reset-password", "POST", { userId, newPassword });
+    const data = await apiRequest("/api/admin/users/reset-password", "POST", { userId, newPassword });
     alert(data.message);
   } catch (error) {
     console.error("Error resetting password:", error.message);
@@ -118,7 +149,7 @@ async function editUser(userId) {
   const balance = prompt("Enter new balance (leave blank to keep current):");
 
   try {
-    const data = await apiRequest("/api/admin/edit", "PUT", {
+    const data = await apiRequest("/api/admin/users/edit", "PUT", {
       userId,
       name,
       email,
@@ -143,9 +174,19 @@ async function fetchMessages() {
   }
 }
 
-// Render messages in the UI
-// Render messages with username
-function renderMessages(messages) {
+// Fetch messages with pagination
+async function fetchMessages(page = 1) {
+  try {
+    const data = await apiRequest(`/api/admin/messages?page=${page}`);
+    renderMessages(data.messages, page, data.totalPages); // Pass pagination data
+  } catch (error) {
+    console.error("Error fetching messages:", error.message);
+    alert("Failed to fetch messages.");
+  }
+}
+
+// Render messages in the UI with pagination (Previous and Next buttons)
+function renderMessages(messages, page, totalPages) {
   messageListContainer.innerHTML = messages
     .map(
       (msg) => `
@@ -157,6 +198,30 @@ function renderMessages(messages) {
     `
     )
     .join("");
+
+  renderMessagePagination(page, totalPages); // Call renderPagination for messages
+}
+
+// Render message pagination buttons (Previous and Next)
+function renderMessagePagination(page, totalPages) {
+  const paginationContainer = document.getElementById('message-pagination');
+  paginationContainer.innerHTML = ""; // Clear existing buttons
+
+  // Previous button
+  const prevButton = document.createElement("button");
+  prevButton.textContent = "Previous";
+  prevButton.disabled = page === 1;
+  prevButton.onclick = () => fetchMessages(page - 1);
+  prevButton.className = "pagination-button"; // Add a class for consistent styling
+  paginationContainer.appendChild(prevButton);
+
+  // Next button
+  const nextButton = document.createElement("button");
+  nextButton.textContent = "Next";
+  nextButton.disabled = page === totalPages;
+  nextButton.onclick = () => fetchMessages(page + 1);
+  nextButton.className = "pagination-button"; // Add a class for consistent styling
+  paginationContainer.appendChild(nextButton);
 }
 
 // Respond to a message
@@ -173,6 +238,29 @@ async function respondToMessage(messageId, userId) {
     alert("Failed to send response.");
   }
 }
+
+// toggle visibilty
+document.getElementById("message-section-title").addEventListener("click", function() {
+  const messageSection = document.getElementById("message-section");
+
+  // Toggle the display of the message section
+  if (messageSection.style.display === "none" || messageSection.style.display === "") {
+    messageSection.style.display = "block";
+  } else {
+    messageSection.style.display = "none";
+  }
+});
+
+document.getElementById("user-section-title").addEventListener("click", function() {
+  const userSection = document.getElementById("user-section");
+
+  // Toggle the display of the user section
+  if (userSection.style.display === "none" || userSection.style.display === "") {
+    userSection.style.display = "block";
+  } else {
+    userSection.style.display = "none";
+  }
+});
 
 // Event Listeners
 applyFiltersButton.addEventListener("click", fetchUsers);

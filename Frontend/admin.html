@@ -15,29 +15,31 @@
     </header>
 
     <!-- User Section -->
-    <section id="user-section">
-      <h2>Users</h2>
-      <div class="filters">
-        <input type="number" id="min-balance" placeholder="Min Balance">
-        <input type="number" id="max-balance" placeholder="Max Balance">
-        <input type="number" id="min-referrals" placeholder="Min Referrals">
-        <input type="number" id="max-referrals" placeholder="Max Referrals">
-        <button id="apply-filters" class="primary-button">Apply Filters</button>
-      </div>
-      <div id="user-list" class="list-container"></div>
-      <div class="pagination" id="user-pagination"></div>
-      <p id="total-users"></p>
-    </section>
+    <h2 id="user-section-title">Users »»</h2>
+<section id="user-section">
+   <!-- Add id for the clickable title -->
+  <div class="filters">
+    <input type="number" id="min-balance" placeholder="Min Balance">
+    <input type="number" id="max-balance" placeholder="Max Balance">
+    <input type="number" id="min-referrals" placeholder="Min Referrals">
+    <input type="number" id="max-referrals" placeholder="Max Referrals">
+    <button id="apply-filters" class="primary-button">Apply Filters</button>
+  </div>
+  <div id="user-list" class="list-container"></div>
+  <div class="pagination" id="user-pagination"></div>
+  <p id="total-users"></p>
+</section>
     
     <div id="filter-by"></div>
     <div id="sort-order"></div>
 
     <!-- Message Section -->
+    <h2 id="message-section-title">Messages »»</h2>
     <section id="message-section">
-      <h2>Messages</h2>
-      <div id="message-list" class="list-container"></div>
-      <div class="pagination" id="message-pagination"></div>
-    </section>
+   <!-- Add id for the clickable title -->
+  <div id="message-list" class="list-container"></div>
+  <div class="message-pagination" id="message-pagination"></div>
+</section>
   </div>
 
   <script src="admin.js"></script>

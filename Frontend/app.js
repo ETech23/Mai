@@ -721,6 +721,23 @@ if (referralCode) {
     }
   });
 
+  // footer btns
+  document.getElementById("home-btn").addEventListener("click", () => {
+  window.location.href = "./index.html"; // Navigate to Home
+});
+
+document.getElementById("news-btn").addEventListener("click", () => {
+  window.location.href = "./news.html"; // Navigate to News/Updates
+});
+
+document.getElementById("ai-btn").addEventListener("click", () => {
+  window.location.href = "./index.html"; // Navigate to Mai AI
+});
+
+document.getElementById("wallet-btn").addEventListener("click", () => {
+  window.location.href = "./index.html"; // Navigate to Wallet
+});
+  
   // Restore session on page load
   checkPersistentLogin();
   console.log("checkPersistentLogin called");

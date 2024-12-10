@@ -23,6 +23,126 @@ header h1 {
   flex: 1;
 }
 
+/* Title styling */
+#user-section-title {
+  cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+#user-section-title:hover {
+  text-decoration: underline;
+}
+
+/* Initially hide the content of the section */
+#user-section {
+  display: none;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the filter inputs and buttons */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filters button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  background-color: #0056b3;
+}
+
+/* Title styling */
+#message-section-title {
+  cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+#message-section-title:hover {
+  text-decoration: underline;
+}
+
+/* Initially hide the content of the section */
+#message-section {
+  background-color: lightgray;
+  display: none;
+  padding: 20px;
+  background-color: f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the message list and pagination */
+.list-container {
+  margin-bottom: 20px;
+  background-color: grey;
+}
+
+.message-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.message-pagination button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.message-pagination button:hover {
+  background-color: #0056b3;
+}
+
+/* Style for the pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
+}
+
+#total-users {
+  font-weight: bold;
+  margin-top: 20px;
+}
+
 .icon-button {
   background: none;
   border: none;
@@ -30,11 +150,88 @@ header h1 {
   cursor: pointer;
 }
 
+/* Style for the buttons */
+.pagination-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 5px; /* Add spacing between buttons */
+}
+
+.pagination-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  background-color: #d6d6d6;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Style for the pagination buttons */
+.pagination-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 5px; /* Add spacing between buttons */
+}
+
+.pagination-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  background-color: #d6d6d6;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Style for the pagination container to align buttons side by side */
+#message-pagination {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  align-items: center; /* Align buttons vertically */
+  gap: 10px; /* Add space between buttons */
+  margin-top: 20px;
+}
+
+/* Style for the pagination container to align buttons side by side */
+.pagination-container {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  align-items: center; /* Align buttons vertically */
+  gap: 10px; /* Add space between buttons */
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
 /* Sections */
 section {
   margin: 20px auto;
   padding: 20px;
-  background: white;
+  background: lightgrey;
   border-radius: 8px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
