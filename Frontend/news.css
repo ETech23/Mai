@@ -34,11 +34,11 @@
   display: flex;
   
   margin-top: 15px;
-  gap: 15px;
+  
 }
 
 .reaction-buttons button {
-  padding: 10;
+  padding: 10px;
   border: none;
   border-radius: 5px;
   background-color: whitesmoke;

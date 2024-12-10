@@ -480,37 +480,105 @@ if (referralCode) {
     }
   }
 
-  // Fetch reactions and update UI
-  async function updateReactionCounts() {
-    console.log("Fetching reaction counts for all articles.");
-
-    try {
-      const response = await fetch("https://mai.fly.dev/api/articles");
-      const data = await response.json();
-
-      if (data.success) {
-        const articlesData = data.data;
-
-        articlesData.forEach((article) => {
-          const articleElement = Array.from(articles).find(
-            (el) => el.getAttribute("data-title") === article.title
-          );
-
-          if (articleElement) {
-            const likeCountElement = articleElement.querySelector(".like-count");
-            const dislikeCountElement = articleElement.querySelector(".dislike-count");
-
-            likeCountElement.textContent = article.likes || 0;
-            dislikeCountElement.textContent = article.dislikes || 0;
-          }
-        });
-      } else {
-        console.error("Failed to fetch articles:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching articles:", error);
-    }
+// Helper function to format numbers
+function formatNumber(number) {
+  if (number >= 1_000_000_000) {
+    return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "b";
+  } else if (number >= 1_000_000) {
+    return (number / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m";
+  } else if (number >= 1_000) {
+    return (number / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  } else {
+    return number;
   }
+}
+
+// Fetch reactions and update UI
+async function updateReactionCounts() {
+  console.log("Fetching reaction counts for all articles...");
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/articles");
+    const data = await response.json();
+
+    // Check if response is successful
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Failed to fetch articles.");
+    }
+
+    const articlesData = data.data;
+
+    if (!Array.isArray(articlesData)) {
+      console.error("Unexpected data format: articlesData is not an array");
+      return;
+    }
+
+    // Select all article elements
+    const articleElements = document.querySelectorAll(".news-article");
+
+    articlesData.forEach((article) => {
+      const articleElement = Array.from(articleElements).find(
+        (el) => el.getAttribute("data-title") === article.title
+      );
+
+      if (articleElement) {
+        const likeCountElement = articleElement.querySelector(".like-count");
+        const dislikeCountElement = articleElement.querySelector(".dislike-count");
+        const viewCountElement = articleElement.querySelector(".views");
+
+        // Safely update counts with formatted values
+        if (likeCountElement) {
+          likeCountElement.textContent = formatNumber(article.likes || 0);
+        } else {
+          console.warn(`Like count element not found for article: ${article.title}`);
+        }
+
+        if (dislikeCountElement) {
+          dislikeCountElement.textContent = formatNumber(article.dislikes || 0);
+        } else {
+          console.warn(`Dislike count element not found for article: ${article.title}`);
+        }
+
+        if (viewCountElement) {
+          viewCountElement.textContent = formatNumber(article.views || 0);
+        } else {
+          console.warn(`View count element not found for article: ${article.title}`);
+        }
+      } else {
+        console.warn(`No article element found for title: ${article.title}`);
+      }
+    });
+
+    console.log("Reaction counts updated successfully.");
+  } catch (error) {
+    console.error("Error fetching and updating reaction counts:", error);
+  }
+}
+
+// Retry mechanism for `updateReactionCounts`
+function retryUpdateReactionCounts(maxRetries = 3, delay = 2000) {
+  let attempts = 0;
+
+  const retry = async () => {
+    attempts++;
+    try {
+      await updateReactionCounts();
+      console.log("Reaction counts updated successfully.");
+    } catch (error) {
+      if (attempts < maxRetries) {
+        console.warn(`Retrying... Attempt ${attempts}`);
+        setTimeout(retry, delay);
+      } else {
+        console.error("Failed to update reaction counts after multiple attempts:", error);
+      }
+    }
+  };
+
+  retry();
+}
+
+// Run the retry mechanism on page load
+retryUpdateReactionCounts();
 
   // Function to handle pushing an article to the backend
   async function handlePushArticle() {

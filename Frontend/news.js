@@ -15,10 +15,13 @@ function toggleFullArticle(button) {
   }
 }
 
+
+
 // Function to handle reactions (like/dislike)
 async function handleReaction(event) {
   console.log("Reaction button clicked.");
 
+  // Check if the user is logged in
   if (!localStorage.getItem("token")) {
     alert("Please log in to react to articles.");
     return;
@@ -27,38 +30,50 @@ async function handleReaction(event) {
   const button = event.target;
   const articleElement = button.closest(".news-article");
   const articleTitle = articleElement.getAttribute("data-title");
+
+  if (!articleTitle) {
+    console.error("Article title not found.");
+    return;
+  }
+
   const isLike = button.classList.contains("like-btn");
   const reactionType = isLike ? "like" : "dislike";
+
+  console.log(`Article Title: ${articleTitle}, Reaction Type: ${reactionType}`);
 
   const reactionData = { title: articleTitle, reaction: reactionType };
 
   try {
+    // Send the reaction data to the server
     const response = await fetch("https://mai.fly.dev/api/articles/reactions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token
       },
       body: JSON.stringify(reactionData),
     });
 
     const data = await response.json();
+
     if (data.success) {
       console.log("Reaction saved successfully:", data);
 
+      // Update counts in the UI after success
       const likeCountElement = articleElement.querySelector(".like-count");
       const dislikeCountElement = articleElement.querySelector(".dislike-count");
 
-      if (isLike) {
-        likeCountElement.textContent = data.likeCount;
-      } else {
-        dislikeCountElement.textContent = data.dislikeCount;
+      // Update UI directly after receiving the success response
+      if (likeCountElement && dislikeCountElement) {
+        // Fetch updated reaction counts from the response and update UI
+        likeCountElement.textContent = formatNumber(data.likes || 0);
+        dislikeCountElement.textContent = formatNumber(data.dislikes || 0);
       }
     } else {
       console.error("Failed to save reaction:", data.message);
     }
   } catch (error) {
-    console.error("Error saving reaction:", error);
+    console.error("Error handling reaction:", error);
   }
 }
 
@@ -88,27 +103,62 @@ async function incrementViewCount(articleElement) {
   }
 }
 
+
+
+// Helper function to format numbers
+function formatNumber(number) {
+  if (number >= 1_000_000_000) {
+    return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "b";
+  } else if (number >= 1_000_000) {
+    return (number / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m";
+  } else if (number >= 1_000) {
+    return (number / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  } else {
+    return number;
+  }
+}
+
 // Fetch reactions and update UI
 async function updateReactionCounts() {
-  console.log("Fetching reaction counts for all articles.");
+  console.log("Fetching reaction counts for all articles...");
 
   try {
     const response = await fetch("https://mai.fly.dev/api/articles");
     const data = await response.json();
 
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch articles.");
+    }
+
     if (data.success) {
       const articlesData = data.data;
+
+      // Select all news article elements on the page
+      const articleElements = document.querySelectorAll(".news-article");
+
+      // Iterate through each article in the fetched data
       articlesData.forEach((article) => {
-        const articleElement = Array.from(document.querySelectorAll(".news-article")).find(
+        const articleElement = Array.from(articleElements).find(
           (el) => el.getAttribute("data-title") === article.title
         );
 
         if (articleElement) {
           const likeCountElement = articleElement.querySelector(".like-count");
           const dislikeCountElement = articleElement.querySelector(".dislike-count");
+          const viewCountElement = articleElement.querySelector(".views");
 
-          likeCountElement.textContent = article.likes || 0;
-          dislikeCountElement.textContent = article.dislikes || 0;
+          // Safely update the counts using the helper function
+          if (likeCountElement) {
+            likeCountElement.textContent = formatNumber(article.likes || 0);
+          }
+          if (dislikeCountElement) {
+            dislikeCountElement.textContent = formatNumber(article.dislikes || 0);
+          }
+          if (viewCountElement) {
+            viewCountElement.textContent = formatNumber(article.views || 0);
+          }
+        } else {
+          console.warn(`No article element found for title: ${article.title}`);
         }
       });
     } else {
@@ -118,6 +168,31 @@ async function updateReactionCounts() {
     console.error("Error fetching reaction counts:", error);
   }
 }
+
+// Retry mechanism for updateReactionCounts
+function retryUpdateReactionCounts(maxRetries = 3, delay = 2000) {
+  let attempts = 0;
+
+  const retry = async () => {
+    attempts++;
+    try {
+      await updateReactionCounts();
+      console.log("Reaction counts updated successfully.");
+    } catch (error) {
+      if (attempts < maxRetries) {
+        console.warn(`Retrying... Attempt ${attempts}`);
+        setTimeout(retry, delay);
+      } else {
+        console.error("Failed to update reaction counts after multiple attempts:", error);
+      }
+    }
+  };
+
+  retry();
+}
+
+// Run the function with retries to ensure robustness
+retryUpdateReactionCounts();
 
 // Push article to backend
 async function handlePushArticle() {
