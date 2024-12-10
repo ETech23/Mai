@@ -738,7 +738,7 @@ retryUpdateReactionCounts();
       localStorage.setItem("referralCode", referralCode);
 
       // Construct referral link
-      const referralLink = `https://mai.fly.dev/register?ref=${referralCode}`;
+      const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
       console.log("Referral link constructed:", referralLink);
 
       // Update dropdown content
