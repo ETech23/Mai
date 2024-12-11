@@ -1,9 +1,23 @@
 // Toggle full article visibility
 function toggleFullArticle(button) {
-  const article = document.querySelector(".news-article");
+  // Find the closest article container for the clicked button
+  const article = button.closest(".news-article");
+  
+  if (!article) {
+    console.error("Article element not found!");
+    return;
+  }
+
+  // Get the short and full descriptions
   const shortDescription = article.querySelector("#short-description");
   const fullDescription = article.querySelector("#full-description");
 
+  if (!shortDescription || !fullDescription) {
+    console.error("Descriptions not found!");
+    return;
+  }
+
+  // Toggle visibility of the short and full descriptions
   if (fullDescription.style.display === "none" || !fullDescription.style.display) {
     shortDescription.style.display = "none";
     fullDescription.style.display = "block";

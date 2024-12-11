@@ -6,7 +6,7 @@ body, h1, h2, h3, p, ul, ol, figure {
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #2C3E30;
+  background: #2C3E30;
   color: #8C9F92;
   margin: 0;
 }
