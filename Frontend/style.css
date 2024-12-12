@@ -26,10 +26,6 @@ body {
   margin: 0;
 }
 
-/* Utility Classes */
-.hidden {
-  display: none;
-}
 
 .container {
   max-width: 1200px;

@@ -1,3 +1,104 @@
+/* General Reset */
+body, h1, h2, h3, p, ul, ol, figure {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #2C3E30;
+  color: #8C9F92;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* News Section */
+.news-section {
+  background-color: #998c5e;
+  padding: 50px 20px;
+  margin-top: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.news-section h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.news-article {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border: 2px solid #A3B1A8;
+  border-radius: 10px;
+  padding: 20px;
+  background: #8C9F92;
+  text-align: justify;
+  font-family: "Georgia", serif;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.news-article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.news-article h4,
+.news-article h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.news-article p, ul {
+  line-height: 1.6;
+  color: #553;
+}
+
+.news-article a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.news-article a:hover {
+  text-decoration: underline;
+}
+
+.news-date {
+  font-size: 0.9em;
+  color: #888;
+  margin-top: 10px;
+  text-align: right;
+}
+
+#desktop-hint {
+  text-align: center;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #ffe0b3;
+  color: #333;
+  border: 2px solid #ff9900;
+  width: 80%;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
 .news-section {
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -66,4 +167,56 @@
 
 img {
   max-height: 150px;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  footer {
+    display: none;
+  }
+}
+/* Footer container */
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: linear-gradient(#998e5c, black, #998e5c);
+  padding: 10px 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+/* Footer button styles */
+.footer-btn {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 17px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.footer-btn i {
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+
+.footer-btn:hover {
+  transform: scale(1.1);
+  color: #ffdd57;
+}
+
+/* Add spacing for icons */
+.footer-btn span {
+  margin-top: 2px;
+  font-size: 12px;
 }

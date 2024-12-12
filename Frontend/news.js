@@ -1,3 +1,23 @@
+const isDesktop = window.innerWidth > 768;
+  const desktopHint = document.getElementById("desktop-hint");
+
+  if (isDesktop && desktopHint) {
+    // Show a hint message for desktop users
+    desktopHint.classList.remove("hidden");
+    desktopHint.innerHTML = `
+      <p>
+        For the best experience, please visit our site on a mobile device.
+        <br><strong>Mobile users can access full services including Code Assistance, Business Coaching, and more!</strong>
+      </p>
+    `;
+  }
+
+  const footer = document.querySelector("footer"); // Select the footer element
+
+  if (isDesktop && footer) {
+    footer.style.display = "none"; // Hide the footer for desktop users
+  }
+
 // Toggle full article visibility
 function toggleFullArticle(button) {
   // Find the closest article container for the clicked button
