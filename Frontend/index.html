@@ -8,9 +8,15 @@
   <link
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
   rel="stylesheet"
-/>
+>
 </head>
 <body>
+  <!-- Preloader -->
+<div id="preloader" class="preloader">
+  <!-- Preloader animation or content -->
+  <p><img src="./img/mai_co.png" style="width: 200px; height: 200px"></p>
+</div>
+  
   
    <!-- Mining Dashboard -->
   
@@ -41,7 +47,7 @@
   
   
   <!-- Login/Registration Form -->
-  <div class="form-container" id="form-container">
+  <div class="form-container hidden" id="form-container">
   <form id="auth-form">
     <h2 id="form-title">Login</h2>
     
@@ -146,7 +152,7 @@
     </div>
 <div id="articles-list"></div>
   -->
-  <section class="news-section">
+  <section id="news" class="news-section hidden">
     <h2>Latest News</h2>
 
     
@@ -217,10 +223,9 @@ Join Mai today and become part of a community that’s shaping the future of AI-
 </div>
     </div>
     
-     <button id="task-button" class="task-button hidden">Write Us</button>
+     <button id="task-button" class="task-button">Write Us</button>
     
-  <script src="app.js"></script>
-</body>
+
   
   <footer class="fixed-footer">
   <button class="footer-btn" id="home-btn">
@@ -240,5 +245,6 @@ Join Mai today and become part of a community that’s shaping the future of AI-
     <span>Wallet</span>
   </button>
 </footer>
-  
+    <script src="app.js"></script>
+</body>
 </html>

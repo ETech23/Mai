@@ -7,7 +7,8 @@ function toggleFullArticle(button) {
     console.error("Article element not found!");
     return;
   }
-
+  
+  
   // Get the short and full descriptions
   const shortDescription = article.querySelector("#short-description");
   const fullDescription = article.querySelector("#full-description");

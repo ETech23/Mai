@@ -4,6 +4,21 @@ body, h1, h2, h3, p, ul, ol, figure {
   padding: 0;
 }
 
+/* Optional: Style for preloader */
+.preloader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* Hide all content until JS is ready */
+.hidden {
+  display: none;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: #2C3E30;

@@ -59,6 +59,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // preloader
+  const preloader = document.getElementById("preloader");
+  
+
+  // Delay to show preloader before checking login status
+  setTimeout(() => {
+    preloader.style.display = "none"; // Hide preloader after delay
+     const newsSection = document.getElementById("news");
+      
+newsSection.classList.remove("hidden"); 
+    
+
+    const BASE_URL = "https://mai.fly.dev"; // Your backend URL
+const token = localStorage.getItem("token");
+    if (token) {
+      // Show the dashboard if logged in
+     dashboard.classList.remove("hidden");
+    } else {
+      // Show the login form if not logged in
+      formContainer.classList.remove("hidden");
+      
+    }
+  }, 1000); // Adjust time to suit your needs
+
+
+  
   // **Restore Mining Session**
   function restoreMiningSession() {
     const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
