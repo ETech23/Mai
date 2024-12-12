@@ -61,12 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // preloader
   const preloader = document.getElementById("preloader");
-  
+  preloader.classList.remove("hidden");
 
   // Delay to show preloader before checking login status
   setTimeout(() => {
     preloader.style.display = "none"; // Hide preloader after delay
      const newsSection = document.getElementById("news");
+    
+    preloader.classList.add("hidden");
       
 newsSection.classList.remove("hidden"); 
     
