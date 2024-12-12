@@ -7,7 +7,7 @@ const isDesktop = window.innerWidth > 768;
     desktopHint.innerHTML = `
       <p>
         For the best experience, please visit our site on a mobile device.
-        <br><strong>Mobile users can access full services including Code Assistance, Business Coaching, and more!</strong>
+        <br><strong>Mobile users can access full services including Mining Mai token, and more!</strong>
       </p>
     `;
   }
