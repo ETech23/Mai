@@ -824,7 +824,7 @@ if (shareButton) {
       const shareOptions = `
         <div id="share-options" style="margin-top: 10px;">
           <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
-          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Join MAI using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
+          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
           <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
           <button id="copy-link">Copy Link</button>
         </div>
