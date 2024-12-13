@@ -732,104 +732,219 @@ retryUpdateReactionCounts();
 
   // DOM Elements
 
-  // Ensure DOM elements exist
-  if (!menuIcon || !userInfoDropdown) {
-    console.error("Required DOM elements are missing");
-    return;
-  }
+  
+      // Ensure DOM elements exist
+if (!menuIcon || !userInfoDropdown) {
+  console.error("Required DOM elements are missing");
+  return;
+}
 
-  // Add event listener for menu toggle
-  menuIcon.addEventListener("click", async () => {
-    try {
-      console.log("Menu icon clicked");
+// Add event listener for menu toggle
+menuIcon.addEventListener("click", async () => {
+  try {
+    console.log("Menu icon clicked");
 
-      // Retrieve token from localStorage
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You must log in to view your referral link.");
-        return;
-      }
-      console.log("Token retrieved:", token);
+    // Retrieve token from localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must log in to view your referral link.");
+      return;
+    }
+    console.log("Token retrieved:", token);
 
-      // Fetch user details from backend
-      const response = await fetch("https://mai.fly.dev/api/auth/details", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    // Fetch user details from backend
+    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      if (!response.ok) {
-        alert("Failed to fetch user details. Please log in again.");
-        localStorage.clear();
-        window.location.reload();
-        return;
-      }
+    if (!response.ok) {
+      alert("Failed to fetch user details. Please log in again.");
+      localStorage.clear();
+      window.location.reload();
+      return;
+    }
 
-      const user = await response.json();
-      console.log("User details fetched:", user);
+    const user = await response.json();
+    console.log("User details fetched:", user);
 
-      const { username, email, balance, referrals, referralCode } = user;
+    const { username, email, balance, referrals, referralCode, name } = user;
 
-      // Update localStorage with latest user data
-      localStorage.setItem("username", username);
-      localStorage.setItem("email", email);
-      localStorage.setItem("minedBalance", balance.toFixed(4));
-      localStorage.setItem("referrals", referrals.length);
-      localStorage.setItem("referralCode", referralCode);
+    // Calculate streak level
+    const referralCount = referrals.length;
+    let streakLevel;
+    if (referralCount < 5) streakLevel = "Regular";
+    else if (referralCount < 10) streakLevel = "Intermediate";
+    else if (referralCount < 15) streakLevel = "Advanced";
+    else if (referralCount < 20) streakLevel = "Expert";
+    else streakLevel = "Master";
 
-      // Construct referral link
-      const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
-      console.log("Referral link constructed:", referralLink);
+    // Construct referral link
+    const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
+    console.log("Referral link constructed:", referralLink);
 
-      // Update dropdown content
-      userInfoDropdown.innerHTML = `
-        <p><strong>Name:</strong> ${localStorage.getItem("name")}</p>
-        <p><strong>Username:</strong> ${username}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Mined Balance:</strong> ${balance.toFixed(4)} MAI</p>
-        <p><strong>Referrals:</strong> ${referrals.length}</p>
-        <p><strong>Referral Link:</strong></p>
-        <p>
-          <small>
-            <a href="${referralLink}" id="referral-link" target="_blank">${referralLink}</a>
-          </small>
-        </p>
-        <button id="logout-button">Log Out</button>
+    // Update dropdown content
+    userInfoDropdown.innerHTML = `
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Username:</strong> ${username}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Mined Balance:</strong> ${balance.toFixed(4)} MAI</p>
+      <p><strong>Referrals:</strong> ${referralCount}</p>
+      <p><strong>Streak Level:</strong> ${streakLevel}</p>
+      <p><strong>Referral Link:</strong></p>
+      <p>
+        <small>
+          <a href="${referralLink}" id="referral-link" target="_blank">${referralLink}</a>
+        </small>
+      </p>
+      <button id="share-button">Share</button>
+      <button id="logout-button">Log Out</button>
+    `;
+
+    userInfoDropdown.classList.toggle("active");
+
+// Add event listener for the share button click
+const shareButton = document.getElementById("share-button");
+
+if (shareButton) {
+  shareButton.addEventListener("click", () => {
+    // Toggle the "clicked" class to change color to dark green
+    shareButton.classList.toggle("clicked");
+
+    // Show or hide share options
+    const existingShareOptions = document.getElementById("share-options");
+
+    if (existingShareOptions) {
+      // If share options exist, hide them
+      existingShareOptions.remove();
+    } else {
+      // If share options do not exist, show them directly below the share button
+      const shareOptions = `
+        <div id="share-options" style="margin-top: 10px;">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
+          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Join MAI using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
+          <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
+          <button id="copy-link">Copy Link</button>
+        </div>
       `;
+      
+      // Insert the share options directly below the share button
+      shareButton.insertAdjacentHTML("afterend", shareOptions);
 
-      userInfoDropdown.classList.toggle("active");
-
-      // Add long-press copy functionality for referral link
-      const referralLinkElement = document.getElementById("referral-link");
-      if (referralLinkElement) {
-        let timer;
-        referralLinkElement.addEventListener("mousedown", () => {
-          timer = setTimeout(() => {
-            navigator.clipboard.writeText(referralLink)
-              .then(() => alert("Referral link copied to clipboard!"))
-              .catch((err) => console.error("Failed to copy referral link:", err));
-          }, 1000);
-        });
-        referralLinkElement.addEventListener("mouseup", () => clearTimeout(timer));
-        referralLinkElement.addEventListener("mouseleave", () => clearTimeout(timer));
-      }
-
-      // Add logout functionality
-      const logoutButton = document.getElementById("logout-button");
-      if (logoutButton) {
-        logoutButton.addEventListener("click", () => {
-          localStorage.clear();
-          alert("Logged out successfully.");
-          window.location.reload();
+      // Add copy link functionality after appending the link
+      const copyLinkButton = document.getElementById("copy-link");
+      if (copyLinkButton) {
+        copyLinkButton.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(referralLink)
+            .then(() => alert("Referral link copied to clipboard!"))
+            .catch((err) => console.error("Failed to copy referral link:", err));
         });
       }
-    } catch (error) {
-      console.error("Error toggling menu:", error);
-      alert("An error occurred while fetching user details.");
     }
   });
+}
 
+    // Add logout functionality
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", () => {
+        localStorage.clear();
+        alert("Logged out successfully.");
+        window.location.reload();
+      });
+    }
+  } catch (error) {
+    console.error("Error toggling menu:", error);
+    alert("An error occurred while fetching user details.");
+  }
+});
+
+// Function to fetch the user data (adjust based on your API)
+async function fetchUserData() {
+  try {
+    // Assuming you have a token stored in localStorage for authentication
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+
+    // Make an API call to fetch the user's referral data (replace with your actual API endpoint)
+    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
+    }
+
+    const userData = await response.json();
+
+    // Assuming the response contains a 'referrals' array
+    const referrals = userData.referrals || []; // Fallback to empty array if not found
+
+    // Now calculate the streak level dynamically based on referral count
+    const referralCount = referrals.length;
+    let streakLevel;
+    if (referralCount < 5) streakLevel = "Regular";
+    else if (referralCount < 10) streakLevel = "Intermediate";
+    else if (referralCount < 20) streakLevel = "Partner";
+    else if (referralCount < 30) streakLevel = "Advanced";
+    else if (referralCount < 50) streakLevel = "Expert";
+    else streakLevel = "Master";
+
+    // Populate the streak level in the dashboard
+    const streakLevelContainer = document.getElementById("streak-level-container");
+
+    if (streakLevelContainer) {
+      streakLevelContainer.innerHTML = `
+        <div class="streak-level">
+          <span id="current-streak-level">Level: <strong>${streakLevel}</strong></span>
+          <button id="streak-dropdown-toggle">▼</button>
+        </div>
+        <div id="streak-dropdown" class="hidden">
+          <ul>
+            <li>Regular</li>
+            <li>Intermediate</li>
+            <li>Partner</li>
+            <li>Advanced</li>
+            <li>Expert</li>
+            <li>Master</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    // Add event listener for dropdown toggle
+    const streakDropdownToggle = document.getElementById("streak-dropdown-toggle");
+    const streakDropdown = document.getElementById("streak-dropdown");
+
+    if (streakDropdownToggle) {
+      streakDropdownToggle.addEventListener("click", () => {
+        streakDropdown.classList.toggle("hidden");
+
+        // Change button text based on dropdown visibility
+        if (streakDropdown.classList.contains("hidden")) {
+          streakDropdownToggle.textContent = "▼";
+        } else {
+          streakDropdownToggle.textContent = "▲";
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+}
+
+// Call the function to load user data on page load
+fetchUserData();
+  
   // footer btns
   document.getElementById("home-btn").addEventListener("click", () => {
   window.location.href = "./index.html"; // Navigate to Home

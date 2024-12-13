@@ -26,13 +26,117 @@ body {
   margin: 0;
 }
 
+/* Streak Level Container */
+.streak-level {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;  /* Center content horizontally */
+  gap: 4px;  /* Small gap between level text and button */
+  position: relative;  /* Ensure the dropdown is positioned relative to this container */
+  margin: 0;  /* No margin, ensuring the content stays centered */
+}
+
+#current-streak-level {
+  font-size: 20px;
+  font-weight: bolder;
+  color: #4caf50;  /* Green color for the current level */
+}
+
+#streak-dropdown-toggle {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #4caf50;
+  padding: 0;  /* No padding, directly attached to the level */
+  margin: 0;  /* Remove margin to eliminate extra space */
+}
+
+#streak-dropdown {
+  display: none;
+  position: absolute;  /* Position the dropdown absolutely below the current level */
+  top: %;  /* Place it directly below the level text */
+  left: 50%;  /* Center it horizontally */
+  transform: translateX(-50%);  /* Center it exactly */
+  background-color: rgba(#998e5c, 255, 255, 0.1);  /* Transparent background */
+  margin-top: 4px;  /* 4px gap between level text and dropdown */
+  z-index: 10;  /* Ensure it appears above other content */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Adds slight shadow for depth */
+  border-radius: 8px;  /* Rounded corners */
+  max-width: 200px;  /* Optional, limit width of dropdown */
+}
+
+#streak-dropdown ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#streak-dropdown li {
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.05);  /* Slightly darker transparent background */
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);  /* Optional, adds borders between items */
+}
+
+#streak-dropdown li:hover {
+  background-color: rgba(0, 0, 0, 0.1);  /* Darker hover effect */
+}
+
+/* Show the dropdown when not hidden */
+#streak-dropdown:not(.hidden) {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
+#share-button {
+  background-color: green !important;
+}
+#share-options {
+  margin-top: 10px;
+  background: #2C3E30;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+}
 
+#share-options a,
+#share-options button {
+  display: block;
+  margin: 5px 0;
+  text-decoration: none;
+  font-size: 14px;
+  color: #007bff;
+}
+
+#share-options a:hover {
+  text-decoration: underline;
+}
+
+#share-options button {
+  background: green !important;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#share-options button:hover {
+  background: #0056b3;
+}
 /* Header Styling */
 header {
   display: flex;
@@ -65,7 +169,8 @@ header h1 {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: none;
-  width: 200px;
+  max-width: 100%,
+/* width: 200px;*/
   z-index: 10;
 }
 
@@ -258,13 +363,14 @@ box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.5);
   top: 50px;
   left: 20px;
   background-color: darkslategray;
-  border: 5px solid #ddd;
+  border: 5px solid #998e5c;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 10px;
   display: none;
   z-index: 10;
-  width: 200px;
+ /*  max-width: 100%;
+  width: 200px;*/
   text-align: left;
 }
 
@@ -274,7 +380,7 @@ box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.5);
 
 #user-info-dropdown p {
   font-size: 1rem;
-  color: #333;
+  color: black;
   margin: 0;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
