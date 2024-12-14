@@ -94,19 +94,13 @@ const token = localStorage.getItem("token");
   }
 
   
-// Register the Service Worker
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/service-worker.js")
-    .then((reg) => console.log("Service Worker registered:", reg))
-    .catch((err) => console.error("Service Worker registration failed:", err));
-}
-
 // Handle the Install Text
 let deferredPrompt;
 const installText = document.getElementById("install-text");
 
 // Listen for the beforeinstallprompt event
 window.addEventListener("beforeinstallprompt", (e) => {
+  console.log("beforeinstallprompt event fired");
   // Prevent the default browser prompt
   e.preventDefault();
   deferredPrompt = e;
@@ -116,6 +110,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
   // Add a click event listener to the install text
   installText.addEventListener("click", () => {
+    console.log("Install text clicked");
     // Hide the install text
     installText.style.display = "none";
 
