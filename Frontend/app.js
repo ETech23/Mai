@@ -94,9 +94,9 @@ const token = localStorage.getItem("token");
   }
 
   
-// Handle the Install Text
+// Handle Install Button
 let deferredPrompt;
-const installText = document.getElementById("install-text");
+const installButton = document.getElementById("install-button");
 
 // Listen for the beforeinstallprompt event
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -105,14 +105,14 @@ window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  // Show the install text
-  installText.style.display = "block";
+  // Show the install button
+  installButton.style.display = "block";
 
-  // Add a click event listener to the install text
-  installText.addEventListener("click", () => {
-    console.log("Install text clicked");
-    // Hide the install text
-    installText.style.display = "none";
+  // Add a click event listener to the install button
+  installButton.addEventListener("click", () => {
+    console.log("Install button clicked");
+    // Hide the install button
+    installButton.style.display = "none";
 
     // Show the install prompt
     deferredPrompt.prompt();
