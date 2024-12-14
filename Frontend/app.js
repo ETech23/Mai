@@ -94,23 +94,32 @@ const token = localStorage.getItem("token");
   }
 
   
-  // Service Worker registration (if not already done)
+// Register the Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/service-worker.js")
     .then((reg) => console.log("Service Worker registered:", reg))
     .catch((err) => console.error("Service Worker registration failed:", err));
 }
 
-// Install prompt functionality
+// Handle the Install Button
 let deferredPrompt;
+const installButton = document.getElementById("install-button");
 
+// Listen for the beforeinstallprompt event
 window.addEventListener("beforeinstallprompt", (e) => {
-  // Prevent the default install prompt
+  // Prevent the default browser prompt
   e.preventDefault();
   deferredPrompt = e;
 
-  // Automatically show the install prompt
-  if (deferredPrompt) {
+  // Show the install button
+  installButton.style.display = "block";
+
+  // Add a click event listener to the install button
+  installButton.addEventListener("click", () => {
+    // Hide the install button
+    installButton.style.display = "none";
+
+    // Show the install prompt
     deferredPrompt.prompt();
 
     // Handle user's choice
@@ -120,14 +129,15 @@ window.addEventListener("beforeinstallprompt", (e) => {
       } else {
         console.log("User dismissed the install prompt");
       }
-      deferredPrompt = null; // Reset the prompt so it doesn't show repeatedly
+      deferredPrompt = null; // Reset the deferredPrompt
     });
-  }
+  });
 });
 
-// Optional: Log when the app is installed
+// Optional: Listen for the appinstalled event
 window.addEventListener("appinstalled", () => {
   console.log("App successfully installed");
+  alert("App installed successfully!");
 });
   
 
@@ -818,14 +828,23 @@ menuIcon.addEventListener("click", async () => {
     const { username, email, balance, referrals, referralCode, name } = user;
 
     // Calculate streak level
-    const referralCount = referrals.length;
-    let streakLevel;
-    if (referralCount < 5) streakLevel = "Regular";
-    else if (referralCount < 10) streakLevel = "Intermediate";
-    else if (referralCount < 15) streakLevel = "Advanced";
-    else if (referralCount < 20) streakLevel = "Expert";
-    else streakLevel = "Master";
+const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
+const referralCount = referrals.length;
+let streakLevel;
 
+if (referralCount < 5 && minedBalance <= 50) {
+  streakLevel = "Regular";
+} else if (referralCount < 10 && minedBalance <= 100) {
+  streakLevel = "Intermediate";
+} else if (referralCount < 20 && minedBalance <= 200) {
+  streakLevel = "Partner";
+} else if (referralCount < 30 && minedBalance <= 400) {
+  streakLevel = "Advanced";
+} else if (referralCount < 50 && minedBalance <= 600) {
+  streakLevel = "Expert";
+} else {
+  streakLevel = "Master";
+}
     // Construct referral link
     const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
@@ -934,16 +953,24 @@ async function fetchUserData() {
     // Assuming the response contains a 'referrals' array
     const referrals = userData.referrals || []; // Fallback to empty array if not found
 
-    // Now calculate the streak level dynamically based on referral count
-    const referralCount = referrals.length;
-    let streakLevel;
-    if (referralCount < 5) streakLevel = "Regular";
-    else if (referralCount < 10) streakLevel = "Intermediate";
-    else if (referralCount < 20) streakLevel = "Partner";
-    else if (referralCount < 30) streakLevel = "Advanced";
-    else if (referralCount < 50) streakLevel = "Expert";
-    else streakLevel = "Master";
+    /// Calculate streak level
+const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
+const referralCount = referrals.length;
+let streakLevel;
 
+if (referralCount < 5 && minedBalance <= 50) {
+  streakLevel = "Regular";
+} else if (referralCount < 10 && minedBalance <= 100) {
+  streakLevel = "Intermediate";
+} else if (referralCount < 20 && minedBalance <= 200) {
+  streakLevel = "Partner";
+} else if (referralCount < 30 && minedBalance <= 400) {
+  streakLevel = "Advanced";
+} else if (referralCount < 50 && minedBalance <= 600) {
+  streakLevel = "Expert";
+} else {
+  streakLevel = "Master";
+}
     // Populate the streak level in the dashboard
     const streakLevelContainer = document.getElementById("streak-level-container");
 
