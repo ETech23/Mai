@@ -251,8 +251,6 @@ document.getElementById("referral-input").value.trim(),
       if (response.ok) {
         if (isRegistering) {
           alert("Registration successful! You can now log in.");
-        } else {
-          alert("Logged in successfully!");
           // Switch to Login Form
     formTitle.textContent = "Login";
     authSubmit.textContent = "Login";
@@ -262,6 +260,9 @@ document.getElementById("referral-input").value.trim(),
     // Prefill login fields with registered data
     document.getElementById("identifier").value = payload.username || payload.email;
     document.getElementById("password").value = payload.password;
+        } else {
+          alert("Logged in successfully!");
+          
   
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
