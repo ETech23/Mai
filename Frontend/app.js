@@ -253,6 +253,16 @@ document.getElementById("referral-input").value.trim(),
           alert("Registration successful! You can now log in.");
         } else {
           alert("Logged in successfully!");
+          // Switch to Login Form
+    formTitle.textContent = "Login";
+    authSubmit.textContent = "Login";
+    loginFields.classList.remove("hidden");
+    registerFields.classList.add("hidden");
+          
+    // Prefill login fields with registered data
+    document.getElementById("identifier").value = payload.username || payload.email;
+    document.getElementById("password").value = payload.password;
+  
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
           localStorage.setItem("email", data.email);
@@ -359,6 +369,8 @@ authForm.addEventListener("submit", (e) => {
     console.log("Logging in user...");
   }
 })
+  
+  
   
   
   const taskButton = document.getElementById("task-button");
