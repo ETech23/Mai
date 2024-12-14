@@ -85,14 +85,50 @@ const token = localStorage.getItem("token");
     }
   }, 1000); // Adjust time to suit your needs
   
-  /** // Redirect for desktop users
+   // Redirect for desktop users
   const isDesktop = window.innerWidth > 800;
 
   if (isDesktop) {
     // Redirect to the news page
     window.location.href = "./news.html";
-  }**/
+  }
 
+  
+  // Service Worker registration (if not already done)
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js")
+    .then((reg) => console.log("Service Worker registered:", reg))
+    .catch((err) => console.error("Service Worker registration failed:", err));
+}
+
+// Install prompt functionality
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  // Prevent the default install prompt
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Automatically show the install prompt
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+
+    // Handle user's choice
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("User accepted the install prompt");
+      } else {
+        console.log("User dismissed the install prompt");
+      }
+      deferredPrompt = null; // Reset the prompt so it doesn't show repeatedly
+    });
+  }
+});
+
+// Optional: Log when the app is installed
+window.addEventListener("appinstalled", () => {
+  console.log("App successfully installed");
+});
   
 
   
