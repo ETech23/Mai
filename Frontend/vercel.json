@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/register", "destination": "/" },
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/(news)", "destination": "/news.html" },
+    { "source": "/", "destination": "/index.html" }
   ]
 }
