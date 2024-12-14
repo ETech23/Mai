@@ -2,7 +2,7 @@
   "name": "Mai AI",
   "short_name": "MAI",
   "description": "MAI AI token mining platform",
-  "start_url": "https://mai-psi.vercel.app/",
+  "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#2C3E30",

@@ -86,15 +86,11 @@ const token = localStorage.getItem("token");
   }, 1000); // Adjust time to suit your needs
   
   // Redirect for desktop users
-  const isDesktop = window.innerWidth > 768;
+  const isDesktop = window.innerWidth > 800;
 
   if (isDesktop) {
     // Redirect to the news page
     window.location.href = "./news.html";
-    
-
-
-  
   }
 
   
