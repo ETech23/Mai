@@ -26,6 +26,42 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningInterval;
   let countdownInterval;
 
+  if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then((reg) => console.log("Service Worker registered:", reg))
+      .catch((err) => console.error("Service Worker registration failed:", err));
+  });
+}
+  
+  let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  // Prevent the default install prompt
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Show your custom install button
+  const installButton = document.getElementById("install-button");
+  installButton.style.display = "block";
+
+  installButton.addEventListener("click", () => {
+    // Show the install prompt
+    deferredPrompt.prompt();
+
+    // Handle user's choice
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("User accepted the install prompt");
+      } else {
+        console.log("User dismissed the install prompt");
+      }
+      deferredPrompt = null;
+    });
+  });
+});
+  
+  
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
@@ -786,13 +822,23 @@ menuIcon.addEventListener("click", async () => {
     const { username, email, balance, referrals, referralCode, name } = user;
 
     // Calculate streak level
-    const referralCount = referrals.length;
-    let streakLevel;
-    if (referralCount < 5) streakLevel = "Regular";
-    else if (referralCount < 10) streakLevel = "Intermediate";
-    else if (referralCount < 15) streakLevel = "Advanced";
-    else if (referralCount < 20) streakLevel = "Expert";
-    else streakLevel = "Master";
+const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
+const referralCount = referrals.length;
+let streakLevel;
+
+if (referralCount < 5 && minedBalance <= 50) {
+  streakLevel = "Regular";
+} else if (referralCount < 10 && minedBalance <= 100) {
+  streakLevel = "Intermediate";
+} else if (referralCount < 20 && minedBalance <= 200) {
+  streakLevel = "Partner";
+} else if (referralCount < 30 && minedBalance <= 400) {
+  streakLevel = "Advanced";
+} else if (referralCount < 50 && minedBalance <= 600) {
+  streakLevel = "Expert";
+} else {
+  streakLevel = "Master";
+}
 
     // Construct referral link
     const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
@@ -903,14 +949,24 @@ async function fetchUserData() {
     const referrals = userData.referrals || []; // Fallback to empty array if not found
 
     // Now calculate the streak level dynamically based on referral count
-    const referralCount = referrals.length;
-    let streakLevel;
-    if (referralCount < 5) streakLevel = "Regular";
-    else if (referralCount < 10) streakLevel = "Intermediate";
-    else if (referralCount < 20) streakLevel = "Partner";
-    else if (referralCount < 30) streakLevel = "Advanced";
-    else if (referralCount < 50) streakLevel = "Expert";
-    else streakLevel = "Master";
+    // Calculate streak level
+const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
+const referralCount = referrals.length;
+let streakLevel;
+
+if (referralCount < 5 && minedBalance <= 50) {
+  streakLevel = "Regular";
+} else if (referralCount < 10 && minedBalance <= 100) {
+  streakLevel = "Intermediate";
+} else if (referralCount < 20 && minedBalance <= 200) {
+  streakLevel = "Partner";
+} else if (referralCount < 30 && minedBalance <= 400) {
+  streakLevel = "Advanced";
+} else if (referralCount < 50 && minedBalance <= 600) {
+  streakLevel = "Expert";
+} else {
+  streakLevel = "Master";
+}
 
     // Populate the streak level in the dashboard
     const streakLevelContainer = document.getElementById("streak-level-container");

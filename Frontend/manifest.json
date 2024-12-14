@@ -1,5 +1,11 @@
 {
-  "name": "MAI AI token mining platform",
+  "name": "Mai AI",
+  "short_name": "MAI",
+  "description": "MAI AI token mining platform",
+  "start_url": "https://mai-psi.vercel.app",
+  "display": "standalone",
+  "background_color": "#2C3E30",
+  "theme_color": "#998e5c",
   "icons": [
     {
       "src": "/social/mai_icon.png",

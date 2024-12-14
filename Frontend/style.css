@@ -26,6 +26,35 @@ body {
   margin: 0;
 }
 
+/* Install Button Styles */
+#install-button {
+  display: none; /* Initially hidden */
+  position: absolute; /* Keeps it where you placed it in the HTML */
+  background-color: #2C3E32; /* Blue background */
+  color: #ffffff; /* White text */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Space inside the button */
+  font-size: 16px; /* Text size */
+  font-weight: bold; /* Bold text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow */
+}
+
+/* Hover Effect */
+#install-button:hover {
+  background-color: #2C3E30; /* Darker blue on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+}
+
+/* Active State */
+#install-button:active {
+  background-color: #003f7f; /* Even darker blue when clicked */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow */
+}
+
+
 /* Streak Level Container */
 .streak-level {
   font-family: Arial, sans-serif;
