@@ -101,9 +101,9 @@ if ("serviceWorker" in navigator) {
     .catch((err) => console.error("Service Worker registration failed:", err));
 }
 
-// Handle the Install Button
+// Handle the Install Text
 let deferredPrompt;
-const installButton = document.getElementById("install-button");
+const installText = document.getElementById("install-text");
 
 // Listen for the beforeinstallprompt event
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -111,13 +111,13 @@ window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  // Show the install button
-  installButton.style.display = "block";
+  // Show the install text
+  installText.style.display = "block";
 
-  // Add a click event listener to the install button
-  installButton.addEventListener("click", () => {
-    // Hide the install button
-    installButton.style.display = "none";
+  // Add a click event listener to the install text
+  installText.addEventListener("click", () => {
+    // Hide the install text
+    installText.style.display = "none";
 
     // Show the install prompt
     deferredPrompt.prompt();

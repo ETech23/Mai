@@ -25,24 +25,20 @@ body {
   color: #8C9F92;
   margin: 0;
 }
-#install-button {
+#install-text {
   position: fixed; /* Fixed position to ensure it stays in place */
-  top: 20px; /* Distance from the top */
+  top: 30px; /* Distance from the top */
   right: 150px; /* Distance from the right */
   z-index: 9999; /* Ensure it appears above other elements */
-  padding: 10px 15px;
-  background-color: 2C3E30;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: darkgray; /* Text color */
+  font-size: 17px; /* Font size */
+  cursor: pointer; /* Cursor changes to pointer on hover */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
   opacity: 0.9; /* Slight transparency */
 }
 
-#install-button:hover {
-  background-color: #2C3E30;
+#install-text:hover {
+  text-decoration: underline; /* Underline on hover */
   opacity: 1; /* Fully visible on hover */
 }
 
