@@ -31,7 +31,7 @@ body {
   right: 150px; /* Distance from the right */
   z-index: 9999; /* Ensure it appears above other elements */
   padding: 10px 15px;
-
+  background-color: 2C3E30;
   color: #fff;
   border: none;
   border-radius: 5px;
