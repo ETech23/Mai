@@ -194,25 +194,110 @@ function updateApp() {
   }
 }
   
+// **Restore Mining Session**
+async function restoreMiningSession() {
+  try {
+    // Get the user's token from localStorage
+    const token = localStorage.getItem("token");
 
-  
-  // **Restore Mining Session**
-  function restoreMiningSession() {
-    const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
-    const miningEndTime = parseInt(localStorage.getItem("miningEndTime")) || 0;
+    if (!token) {
+      console.warn("No token found. User must log in.");
+      return;
+    }
+
+    // Fetch mining session status from backend
+    const response = await fetch("https://mai.fly.dev/api/mining/status", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      console.error("Failed to fetch mining session status:", errorMessage);
+      return;
+    }
+
+    // Parse the backend response
+    const { success, miningProgress, miningEndTime } = await response.json();
+
+    if (!success) {
+      console.warn("Mining session status not available.");
+      return;
+    }
+
+    // Calculate remaining time and determine whether to continue mining
     const now = Date.now();
+    const endTime = new Date(miningEndTime).getTime();
 
-    if (savedProgress < 100 && miningEndTime > now) {
-      continueMining(savedProgress, miningEndTime - now);
-      startCountdown(miningEndTime - now);
+    if (miningProgress < 100 && endTime > now) {
+      const remainingTime = endTime - now;
+
+      // Continue the mining session
+      console.log("Restoring mining session...");
+      continueMining(miningProgress, remainingTime);
+      startCountdown(remainingTime);
+
+      activateMiningButton.textContent = "Mining...";
+      activateMiningButton.disabled = true;
     } else {
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
+      console.log("Mining session has ended or progress is complete.");
       activateMiningButton.textContent = "Activate Mining";
       activateMiningButton.disabled = false;
     }
+  } catch (error) {
+    console.error("Error restoring mining session:", error.message);
   }
+}
+  
 
+  async function updateMiningSession(progress, endTime) {
+  const token = localStorage.getItem("token");
+
+  if (!token) return;
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/mining/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ progress, endTime }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to update mining session on the server.");
+    }
+  } catch (error) {
+    console.error("Error updating mining session:", error);
+  }
+}
+  
+  async function fetchMiningSession() {
+  const token = localStorage.getItem("token");
+
+  if (!token) return { progress: 0, endTime: null };
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/mining/session-status", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch mining session status.");
+    }
+
+    const data = await response.json();
+    return { progress: data.miningProgress, endTime: new Date(data.miningEndTime).getTime() };
+  } catch (error) {
+    console.error("Error fetching mining session:", error);
+    return { progress: 0, endTime: null };
+  }
+}
+  
   // **Start Countdown Timer**
   function startCountdown(remainingTime) {
     if (countdownInterval) clearInterval(countdownInterval);

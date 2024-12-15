@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
   referralBonusCount: { type: Number, default: 0 }, // Number of successful referrals
 }, {
   timestamps: true, // Automatically add `createdAt` and `updatedAt` fields
+  miningProgress: { type: Number, default: 0 }, // Mining progress in percentage
+  miningEndTime: { type: Date, default: null }, // End time of the mining session
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -147,4 +147,50 @@ router.post(
   }
 );
 
+// Update mining session
+router.post("/update", authenticate, async (req, res) => {
+  const { progress, endTime } = req.body;
+
+  if (progress < 0 || progress > 100 || !endTime) {
+    return res.status(400).json({ success: false, message: "Invalid data" });
+  }
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    user.miningProgress = progress;
+    user.miningEndTime = new Date(endTime);
+    await user.save();
+
+    res.json({ success: true, message: "Mining session updated" });
+  } catch (error) {
+    console.error("Error updating mining session:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// Fetch mining session status
+router.get("/status", authenticate, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("miningProgress miningEndTime");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({
+      success: true,
+      miningProgress: user.miningProgress,
+      miningEndTime: user.miningEndTime,
+    });
+  } catch (error) {
+    console.error("Error fetching mining session status:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+
 module.exports = router;
