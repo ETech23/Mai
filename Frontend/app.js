@@ -93,48 +93,64 @@ const token = localStorage.getItem("token");
     window.location.href = "./news.html";
   }
 
-  // Register the service worker
+// Register the service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/service-worker.js')  // Path to your service worker file
+      .register('/service-worker.js') // Path to your service worker file
       .then((registration) => {
         console.log('Service Worker registered:', registration);
+
+        // Listen for updates to the service worker
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+
+          newWorker.addEventListener('statechange', () => {
+            if (
+              newWorker.state === 'installed' &&
+              navigator.serviceWorker.controller
+            ) {
+              // Notify user about the new version
+              showUpdateNotification();
+            }
+          });
+        });
       })
       .catch((error) => {
         console.error('Service Worker registration failed:', error);
       });
   });
 }
+
 // Handle Install Button
 let deferredPrompt;
-const installButton = document.getElementById("install-button");
+const installButton = document.getElementById('install-button');
 
 // Listen for the beforeinstallprompt event
-window.addEventListener("beforeinstallprompt", (e) => {
-  console.log("beforeinstallprompt event fired");
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('beforeinstallprompt event fired');
   // Prevent the default browser prompt
   e.preventDefault();
   deferredPrompt = e;
 
   // Show the install button
-  installButton.style.display = "block";
+  installButton.style.display = 'block';
 
   // Add a click event listener to the install button
-  installButton.addEventListener("click", () => {
-    console.log("Install button clicked");
+  installButton.addEventListener('click', () => {
+    console.log('Install button clicked');
     // Hide the install button
-    installButton.style.display = "none";
+    installButton.style.display = 'none';
 
     // Show the install prompt
     deferredPrompt.prompt();
 
     // Handle user's choice
     deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the install prompt");
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
       } else {
-        console.log("User dismissed the install prompt");
+        console.log('User dismissed the install prompt');
       }
       deferredPrompt = null; // Reset the deferredPrompt
     });
@@ -142,10 +158,41 @@ window.addEventListener("beforeinstallprompt", (e) => {
 });
 
 // Optional: Listen for the appinstalled event
-window.addEventListener("appinstalled", () => {
-  console.log("App successfully installed");
-  alert("App installed successfully!");
+window.addEventListener('appinstalled', () => {
+  console.log('App successfully installed');
+  alert('App installed successfully!');
 });
+
+// Show update notification
+function showUpdateNotification() {
+  const updateBanner = document.createElement('div');
+  updateBanner.id = 'update-banner';
+  updateBanner.style.position = 'fixed';
+  updateBanner.style.bottom = '20px';
+  updateBanner.style.left = '50%';
+  updateBanner.style.transform = 'translateX(-50%)';
+  updateBanner.style.background = '#2C3E30';
+  updateBanner.style.color = '#fff';
+  updateBanner.style.padding = '10px 20px';
+  updateBanner.style.borderRadius = '5px';
+  updateBanner.style.zIndex = '9999';
+  updateBanner.textContent = 'A new version is available. Click to update.';
+
+  updateBanner.addEventListener('click', () => {
+    updateApp();
+    document.body.removeChild(updateBanner);
+  });
+
+  document.body.appendChild(updateBanner);
+}
+
+// Update the app
+function updateApp() {
+  if (navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
+    window.location.reload();
+  }
+}
   
 
   
