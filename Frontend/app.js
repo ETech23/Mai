@@ -245,6 +245,10 @@ function updateApp() {
   }
 }
   
+  function startMiningSession(miningProgress, miningEndTime) {
+  localStorage.setItem("miningProgress", miningProgress);
+  localStorage.setItem("miningEndTime", miningEndTime);
+}
 
   async function updateMiningSession(progress, endTime) {
   const token = localStorage.getItem("token");
