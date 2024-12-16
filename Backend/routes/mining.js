@@ -25,36 +25,42 @@ const authenticate = (req, res, next) => {
  ============================ */
 
 // Start a mining session
-router.post(
-  "/start",
-  authenticate,
-  async (req, res) => {
-    try {
-      const userId = req.user.id;
+router.post("/start", authenticate, async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-      // Check if there's an active session
-      let session = await MiningSession.findOne({ userId, isActive: true });
-      if (session) {
-        return res.status(200).json({ success: true, session });
-      }
-
-      // Create a new mining session
-      session = new MiningSession({
-        userId,
-        startTime: Date.now(),
-        duration: 3600000, // 1 hour in milliseconds
-        isActive: true,
+    // Check for an active session
+    const existingSession = await MiningSession.findOne({ userId, isActive: true });
+    if (existingSession) {
+      return res.status(400).json({
+        success: false,
+        message: "A mining session is already active.",
+        session: existingSession,
       });
-
-      await session.save();
-      res.status(201).json({ success: true, session });
-    } catch (error) {
-      console.error("Error starting mining session:", error);
-      res.status(500).json({ success: false, message: "Server error" });
     }
-  }
-);
 
+    // Create a new mining session
+    const now = Date.now();
+    const newSession = new MiningSession({
+      userId,
+      startTime: now,
+      endTime: now + 3600000, // 1 hour from now
+      duration: 3600000,
+      isActive: true,
+    });
+
+    await newSession.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Mining session started successfully.",
+      session: newSession,
+    });
+  } catch (error) {
+    console.error("Error starting mining session:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 // Stop mining session
 router.post("/end", authenticate, async (req, res) => {
   try {

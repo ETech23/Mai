@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningInterval;
   let countdownInterval;
 
+  window.onload = () => {
+  restoreMiningSession();
+};
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
@@ -194,58 +197,38 @@ function updateApp() {
   }
 }
   
-// **Restore Mining Session**
-async function restoreMiningSession() {
+  async function restoreMiningSession() {
   try {
-    // Get the user's token from localStorage
     const token = localStorage.getItem("token");
+    if (!token) return console.error("No token found. User must log in.");
 
-    if (!token) {
-      console.warn("No token found. User must log in.");
-      return;
-    }
-
-    // Fetch mining session status from backend
     const response = await fetch("https://mai.fly.dev/api/mining/status", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      console.error("Failed to fetch mining session status:", errorMessage);
+    const data = await response.json();
+    if (!data.success || !data.miningEndTime) {
+      activateMiningButton.textContent = "Activate Mining";
+      activateMiningButton.disabled = false;
       return;
     }
 
-    // Parse the backend response
-    const { success, miningProgress, miningEndTime } = await response.json();
-
-    if (!success) {
-      console.warn("Mining session status not available.");
-      return;
-    }
-
-    // Calculate remaining time and determine whether to continue mining
     const now = Date.now();
-    const endTime = new Date(miningEndTime).getTime();
+    const endTime = new Date(data.miningEndTime).getTime();
 
-    if (miningProgress < 100 && endTime > now) {
+    if (data.isMining && endTime > now) {
       const remainingTime = endTime - now;
-
-      // Continue the mining session
-      console.log("Restoring mining session...");
-      continueMining(miningProgress, remainingTime);
+      continueMining(data.miningProgress, remainingTime);
       startCountdown(remainingTime);
-
       activateMiningButton.textContent = "Mining...";
       activateMiningButton.disabled = true;
     } else {
-      console.log("Mining session has ended or progress is complete.");
       activateMiningButton.textContent = "Activate Mining";
       activateMiningButton.disabled = false;
     }
   } catch (error) {
-    console.error("Error restoring mining session:", error.message);
+    console.error("Error restoring mining session:", error);
   }
 }
   
