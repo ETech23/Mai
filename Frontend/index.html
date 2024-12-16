@@ -181,16 +181,34 @@
 <div id="articles-list"></div>
   -->
   <section id="news" class="news-section hidden">
-    <h2>Latest News</h2>
-
+    <h2>Latest Update</h2>
     
-    <div class="news-article" data-title="The Mai Project">
-      <h4 style="text-align: left">The Mai Project: Rewarding Early Adoption Through AI-Powered Mining</h4>
-      <img src="img/land.webp" style="border-radius: 10px" alt="The Mai Project Image">
-      <br>
-      <p>The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and community-driven platforms. Designed to onboard users seamlessly while rewarding early adopters, Mai offers a unique opportunity to engage with an innovative AI system and be part of a rapidly evolving ecosystem.</p>
+    <!-- Article 1-->
+  <div class="news-article" data-title="The Mai Project">
+    <h4 style="text-align: left">The Mai Project: Rewarding Early Adoption Through AI-Powered Mining</h4>
+    <img src="img/land.webp" style="border-radius: 10px" alt="The Mai Project Image">
+    <br>
 
-      <p>At its core, Mai is an AI language model built to assist, educate, and connect users in meaningful ways. During its initial phase, the platform incorporates a mining mechanism that allows users to earn Mai tokens by interacting with the AI and completing specific activities. This mining phase is more than just an incentive program—it’s a gateway to a future of integrated AI-powered solutions that prioritize user engagement and reward participation.</p>
+    <!-- Short Description -->
+    <p id="short-description">
+      The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and
+      community-driven platforms. Designed to onboard users seamlessly while rewarding early adopters...
+    </p>
+
+    <!-- Full Description (Initially Hidden) -->
+    <div id="full-description" style="display: none;">
+      <p>
+        The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and
+        community-driven platforms. Designed to onboard users seamlessly while rewarding early adopters, Mai offers a
+        unique opportunity to engage with an innovative AI system and be part of a rapidly evolving ecosystem.
+      </p>
+      <p>
+        At its core, Mai is an AI language model built to assist, educate, and connect users in meaningful ways. During
+        its initial phase, the platform incorporates a mining mechanism that allows users to earn Mai tokens by
+        interacting with the AI and completing specific activities
+      </p>
+      <p>
+      This mining phase is more than just an incentive program—it’s a gateway to a future of integrated AI-powered solutions that prioritize user engagement and reward participation.</p>
 
       <h4>The Vision Behind Mai</h4>
 
@@ -238,18 +256,21 @@ Join Mai today and become part of a community that’s shaping the future of AI-
       <!--
       <button id="push-article">Push to Backend</button>
     -->
-  
-      
-      <!-- Reaction Buttons -->
-<div class="reaction-buttons">
-      <!-- View Count -->
-  <div>
-<p class="view-count" style=" margin-top: 5px ">📊 <span class="views">0</span></p>
     </div>
-<button class="like-btn">👍<span class="like-count">0</span></button>
-<button class="dislike-btn">❤️<span class="dislike-count">0</span></button>
-</div>
+
+    <!-- Read More Button -->
+    <button class="read-more" onclick="toggleFullArticle(this)">Read More</button>
+
+    <!-- Reaction Buttons -->
+    <div class="reaction-buttons">
+      <div>
+        <p class="view-count" style="margin-top: 5px;">📊 <span class="views">0</span></p>
+      </div>
+      <button class="like-btn">👍 <span class="like-count">0</span></button>
+      <button class="dislike-btn">❤️ <span class="dislike-count">0</span></button>
     </div>
+  </div>
+  </section>
     
      <button id="task-button" class="task-button">Write Us</button>
     

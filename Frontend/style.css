@@ -590,7 +590,23 @@ box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.5);
   margin-top: 10px;
 }
 
+img {
+  max-height: 150px;
+}
 
+.read-more {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  font-size: 14px;
+  padding: 5px 0;
+}
+
+.read-more:hover {
+  text-decoration: none;
+}
 .reaction-buttons button {
   border: none;
   background-color: #8C9F92;#e0e0e0

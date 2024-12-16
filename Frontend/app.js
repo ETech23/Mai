@@ -611,6 +611,32 @@ if (referralCode) {
   }
 } **/
   
+window.toggleFullArticle = function(button) {
+  const article = button.closest(".news-article");
+
+  if (!article) {
+    console.error("Article element not found!");
+    return;
+  }
+
+  const shortDescription = article.querySelector("#short-description");
+  const fullDescription = article.querySelector("#full-description");
+
+  if (!shortDescription || !fullDescription) {
+    console.error("Descriptions not found!");
+    return;
+  }
+
+  if (fullDescription.style.display === "none" || !fullDescription.style.display) {
+    shortDescription.style.display = "none";
+    fullDescription.style.display = "block";
+    button.textContent = "Show Less";
+  } else {
+    shortDescription.style.display = "block";
+    fullDescription.style.display = "none";
+    button.textContent = "Read More";
+  }
+};
 
   const articles = document.querySelectorAll(".news-article");
   const pushArticleButton = document.getElementById("push-article");
