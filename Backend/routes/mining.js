@@ -62,21 +62,26 @@ router.post("/start", authenticate, async (req, res) => {
   }
 });
 // Stop mining session
-router.post("/end", authenticate, async (req, res) => {
+router.post("/complete", authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const session = await MiningSession.findOne({ userId, isActive: true });
+    // Find the active mining session
+    const session = await MiningSession.findOneAndUpdate(
+      { userId, isActive: true },
+      { isActive: false }
+    );
+
     if (!session) {
-      return res.status(404).json({ success: false, message: "No active session found" });
+      return res.status(404).json({ success: false, message: "No active session found." });
     }
 
-    session.isActive = false;
-    await session.save();
+    // Update the user's `isMining` field to false
+    await User.findByIdAndUpdate(userId, { isMining: false });
 
-    res.status(200).json({ success: true, message: "Mining session ended" });
+    res.status(200).json({ success: true, message: "Mining session completed." });
   } catch (error) {
-    console.error("Error ending mining session:", error);
+    console.error("Error completing mining session:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
@@ -179,18 +184,29 @@ router.post("/update", authenticate, async (req, res) => {
 });
 
 // Fetch mining session status
+// Get mining session status
 router.get("/status", authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("miningProgress miningEndTime");
+    const userId = req.user.id;
 
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+    // Find the active mining session
+    const session = await MiningSession.findOne({ userId, isActive: true });
+
+    if (!session) {
+      return res.status(404).json({ success: false, message: "No active mining session found." });
     }
 
-    res.json({
+    const now = Date.now();
+    const miningEndTime = new Date(session.endTime).getTime();
+
+    // Check if mining session is still active
+    const isMining = now < miningEndTime;
+
+    res.status(200).json({
       success: true,
-      miningProgress: user.miningProgress,
-      miningEndTime: user.miningEndTime,
+      miningProgress: Math.min(100, ((now - session.startTime) / session.duration) * 100),
+      miningEndTime: session.endTime,
+      isMining,
     });
   } catch (error) {
     console.error("Error fetching mining session status:", error);

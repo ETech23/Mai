@@ -200,26 +200,32 @@ function updateApp() {
   async function restoreMiningSession() {
   try {
     const token = localStorage.getItem("token");
-    if (!token) return console.error("No token found. User must log in.");
+
+    if (!token) {
+      console.error("No token found. User must log in.");
+      return;
+    }
 
     const response = await fetch("https://mai.fly.dev/api/mining/status", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    const data = await response.json();
-    if (!data.success || !data.miningEndTime) {
+    if (!response.ok) {
+      console.error("Failed to fetch mining session status.");
       activateMiningButton.textContent = "Activate Mining";
       activateMiningButton.disabled = false;
       return;
     }
 
-    const now = Date.now();
-    const endTime = new Date(data.miningEndTime).getTime();
+    const data = await response.json();
 
-    if (data.isMining && endTime > now) {
-      const remainingTime = endTime - now;
-      continueMining(data.miningProgress, remainingTime);
+    if (data.success && data.isMining) {
+      const { miningProgress, miningEndTime } = data;
+      const now = Date.now();
+      const remainingTime = new Date(miningEndTime).getTime() - now;
+
+      continueMining(miningProgress, remainingTime);
       startCountdown(remainingTime);
       activateMiningButton.textContent = "Mining...";
       activateMiningButton.disabled = true;
@@ -229,6 +235,8 @@ function updateApp() {
     }
   } catch (error) {
     console.error("Error restoring mining session:", error);
+    activateMiningButton.textContent = "Activate Mining";
+    activateMiningButton.disabled = false;
   }
 }
   
