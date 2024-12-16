@@ -187,6 +187,11 @@ function showUpdateNotification() {
   });
 
   document.body.appendChild(updateBanner);
+  
+  // Optionally reload the page automatically after some time
+  setTimeout(() => {
+    window.location.reload();
+  }, 3000);
 }
 
 // Update the app
