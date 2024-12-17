@@ -912,7 +912,10 @@ menuIcon.addEventListener("click", async () => {
 
 
     // Construct referral link
-    const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
+    const description = "Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link!";
+const encodedDescription = encodeURIComponent(description);
+
+const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}&description=${encodedDescription}`;
     console.log("Referral link constructed:", referralLink);
 
     // Update dropdown content
