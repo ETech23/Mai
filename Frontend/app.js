@@ -25,10 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningProgress = 0;
   let miningInterval;
   let countdownInterval;
-
-  window.onload = () => {
-  restoreMiningSession();
-};
+  
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
@@ -86,17 +83,21 @@ const token = localStorage.getItem("token");
       formContainer.classList.remove("hidden");
       
     }
-  }, 1000); // Adjust time to suit your needs
+  }, 3000); // Adjust time to suit your needs
   
-   // Redirect for desktop users
-  const isDesktop = window.innerWidth > 800;
+  // Redirect for desktop users
+  const isDesktop = window.innerWidth > 768;
 
   if (isDesktop) {
     // Redirect to the news page
     window.location.href = "./news.html";
+    
+
+
+  
   }
 
-// Register the service worker
+  // Register the service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
@@ -201,103 +202,25 @@ function updateApp() {
     window.location.reload();
   }
 }
+
   
-  async function restoreMiningSession() {
-  try {
-    const token = localStorage.getItem("token");
+  // **Restore Mining Session**
+  function restoreMiningSession() {
+    const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
+    const miningEndTime = parseInt(localStorage.getItem("miningEndTime")) || 0;
+    const now = Date.now();
 
-    if (!token) {
-      console.error("No token found. User must log in.");
-      return;
-    }
-
-    const response = await fetch("https://mai.fly.dev/api/mining/status", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!response.ok) {
-      console.error("Failed to fetch mining session status.");
-      activateMiningButton.textContent = "Activate Mining";
-      activateMiningButton.disabled = false;
-      return;
-    }
-
-    const data = await response.json();
-
-    if (data.success && data.isMining) {
-      const { miningProgress, miningEndTime } = data;
-      const now = Date.now();
-      const remainingTime = new Date(miningEndTime).getTime() - now;
-
-      continueMining(miningProgress, remainingTime);
-      startCountdown(remainingTime);
-      activateMiningButton.textContent = "Mining...";
-      activateMiningButton.disabled = true;
+    if (savedProgress < 100 && miningEndTime > now) {
+      continueMining(savedProgress, miningEndTime - now);
+      startCountdown(miningEndTime - now);
     } else {
+      localStorage.removeItem("miningProgress");
+      localStorage.removeItem("miningEndTime");
       activateMiningButton.textContent = "Activate Mining";
       activateMiningButton.disabled = false;
     }
-  } catch (error) {
-    console.error("Error restoring mining session:", error);
-    activateMiningButton.textContent = "Activate Mining";
-    activateMiningButton.disabled = false;
   }
-}
-  
-  function startMiningSession(miningProgress, miningEndTime) {
-  localStorage.setItem("miningProgress", miningProgress);
-  localStorage.setItem("miningEndTime", miningEndTime);
-}
 
-  async function updateMiningSession(progress, endTime) {
-  const token = localStorage.getItem("token");
-
-  if (!token) return;
-
-  try {
-    const response = await fetch("https://mai.fly.dev/api/mining/update", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ progress, endTime }),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to update mining session on the server.");
-    }
-  } catch (error) {
-    console.error("Error updating mining session:", error);
-  }
-}
-  
-  async function fetchMiningSession() {
-  const token = localStorage.getItem("token");
-
-  if (!token) return { progress: 0, endTime: null };
-
-  try {
-    const response = await fetch("https://mai.fly.dev/api/mining/session-status", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch mining session status.");
-    }
-
-    const data = await response.json();
-    return { progress: data.miningProgress, endTime: new Date(data.miningEndTime).getTime() };
-  } catch (error) {
-    console.error("Error fetching mining session:", error);
-    return { progress: 0, endTime: null };
-  }
-}
-  
   // **Start Countdown Timer**
   function startCountdown(remainingTime) {
     if (countdownInterval) clearInterval(countdownInterval);
@@ -432,19 +355,8 @@ document.getElementById("referral-input").value.trim(),
       if (response.ok) {
         if (isRegistering) {
           alert("Registration successful! You can now log in.");
-          // Switch to Login Form
-    formTitle.textContent = "Login";
-    authSubmit.textContent = "Login";
-    loginFields.classList.remove("hidden");
-    registerFields.classList.add("hidden");
-          
-    // Prefill login fields with registered data
-    document.getElementById("identifier").value = payload.username || payload.email;
-    document.getElementById("password").value = payload.password;
         } else {
           alert("Logged in successfully!");
-          
-  
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
           localStorage.setItem("email", data.email);
@@ -553,8 +465,6 @@ authForm.addEventListener("submit", (e) => {
 })
   
   
-  
-  
   const taskButton = document.getElementById("task-button");
 if (taskButton) {
   taskButton.addEventListener("click", () => {
@@ -619,8 +529,7 @@ if (referralCode) {
     console.warn("Referral input field not found. Cannot populate referral code.");
   }
 } **/
-  
-window.toggleFullArticle = function(button) {
+  window.toggleFullArticle = function(button) {
   const article = button.closest(".news-article");
 
   if (!article) {
@@ -992,24 +901,16 @@ menuIcon.addEventListener("click", async () => {
 
     const { username, email, balance, referrals, referralCode, name } = user;
 
-    // Calculate streak level
-const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
-const referralCount = referrals.length;
-let streakLevel;
+    const referralCount = referrals.length;
+    let streakLevel;
+    if (referralCount < 5) streakLevel = "Regular";
+    else if (referralCount < 10) streakLevel = "Intermediate";
+    else if (referralCount < 20) streakLevel = "Partner";
+    else if (referralCount < 30) streakLevel = "Advanced";
+    else if (referralCount < 50) streakLevel = "Expert";
+    else streakLevel = "Master";
 
-if (referralCount < 5 && minedBalance <= 50) {
-  streakLevel = "Regular";
-} else if (referralCount < 10 && minedBalance <= 100) {
-  streakLevel = "Intermediate";
-} else if (referralCount < 20 && minedBalance <= 200) {
-  streakLevel = "Partner";
-} else if (referralCount < 30 && minedBalance <= 400) {
-  streakLevel = "Advanced";
-} else if (referralCount < 50 && minedBalance <= 600) {
-  streakLevel = "Expert";
-} else {
-  streakLevel = "Master";
-}
+
     // Construct referral link
     const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
@@ -1053,7 +954,7 @@ if (shareButton) {
       const shareOptions = `
         <div id="share-options" style="margin-top: 10px;">
           <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
-          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
+          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Join MAI using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
           <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
           <button id="copy-link">Copy Link</button>
         </div>
@@ -1118,24 +1019,17 @@ async function fetchUserData() {
     // Assuming the response contains a 'referrals' array
     const referrals = userData.referrals || []; // Fallback to empty array if not found
 
-    /// Calculate streak level
-const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
-const referralCount = referrals.length;
-let streakLevel;
+    // Now calculate the streak level dynamically based on referral count
+    const referralCount = referrals.length;
+    let streakLevel;
+    if (referralCount < 5) streakLevel = "Regular";
+    else if (referralCount < 10) streakLevel = "Intermediate";
+    else if (referralCount < 20) streakLevel = "Partner";
+    else if (referralCount < 30) streakLevel = "Advanced";
+    else if (referralCount < 50) streakLevel = "Expert";
+    else streakLevel = "Master";
 
-if (referralCount < 5 && minedBalance <= 50) {
-  streakLevel = "Regular";
-} else if (referralCount < 10 && minedBalance <= 100) {
-  streakLevel = "Intermediate";
-} else if (referralCount < 20 && minedBalance <= 200) {
-  streakLevel = "Partner";
-} else if (referralCount < 30 && minedBalance <= 400) {
-  streakLevel = "Advanced";
-} else if (referralCount < 50 && minedBalance <= 600) {
-  streakLevel = "Expert";
-} else {
-  streakLevel = "Master";
-}
+
     // Populate the streak level in the dashboard
     const streakLevelContainer = document.getElementById("streak-level-container");
 
