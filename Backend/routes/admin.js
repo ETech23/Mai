@@ -6,22 +6,29 @@ const Message = require("../models/Message");
 const adminAuth = require("../middleware/adminAuth");
 
 // Fetch all users with filters and pagination
-// Fetch all users with filters and pagination
 router.get("/users", adminAuth, async (req, res) => {
   const { page = 1, limit = 10, minBalance, maxBalance, minReferrals, maxReferrals } = req.query;
-  const skip = (page - 1) * limit;
+
+  // Validate page and limit
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+
+  if (isNaN(pageNum) || isNaN(limitNum) || pageNum <= 0 || limitNum <= 0) {
+    return res.status(400).json({ success: false, message: "Invalid page or limit parameters." });
+  }
+
+  const skip = (pageNum - 1) * limitNum;
 
   try {
+    // Base filter
     const filter = {};
-
-    // Add balance filters
     if (minBalance || maxBalance) {
       filter.balance = {};
       if (minBalance) filter.balance.$gte = parseFloat(minBalance);
       if (maxBalance) filter.balance.$lte = parseFloat(maxBalance);
     }
 
-    // Use aggregation pipeline for referral filters
+    // Aggregation pipeline
     const pipeline = [
       {
         $addFields: {
@@ -34,9 +41,10 @@ router.get("/users", adminAuth, async (req, res) => {
           },
         },
       },
+      { $match: filter },
     ];
 
-    // Add referral count filters to the aggregation pipeline
+    // Add referral filters if provided
     if (minReferrals || maxReferrals) {
       const referralFilter = {};
       if (minReferrals) referralFilter.$gte = parseInt(minReferrals);
@@ -45,27 +53,39 @@ router.get("/users", adminAuth, async (req, res) => {
       pipeline.push({ $match: { referralCount: referralFilter } });
     }
 
-    // Add the main query filter for balance
-    pipeline.push({ $match: filter });
-
     // Pagination
-    pipeline.push(
-      { $skip: skip },
-      { $limit: parseInt(limit) }
-    );
+    pipeline.push({ $skip: skip }, { $limit: limitNum });
 
-    // Fetch filtered and paginated users
+    // Fetch users
     const users = await User.aggregate(pipeline);
 
-    // Calculate total users matching the filter
-    const totalUsers = await User.aggregate([
-      { $addFields: { referralCount: { $cond: { if: { $isArray: "$referrals" }, then: { $size: "$referrals" }, else: 0 } } } },
+    // Total user count
+    const totalPipeline = [
+      {
+        $addFields: {
+          referralCount: {
+            $cond: {
+              if: { $isArray: "$referrals" },
+              then: { $size: "$referrals" },
+              else: 0,
+            },
+          },
+        },
+      },
       { $match: filter },
-      ...(minReferrals || maxReferrals ? [{ $match: { referralCount: referralFilter } }] : []),
-      { $count: "total" },
-    ]);
+    ];
 
-    const totalCount = totalUsers.length > 0 ? totalUsers[0].total : 0;
+    if (minReferrals || maxReferrals) {
+      const referralFilter = {};
+      if (minReferrals) referralFilter.$gte = parseInt(minReferrals);
+      if (maxReferrals) referralFilter.$lte = parseInt(maxReferrals);
+
+      totalPipeline.push({ $match: { referralCount: referralFilter } });
+    }
+
+    totalPipeline.push({ $count: "total" });
+    const totalUsersResult = await User.aggregate(totalPipeline);
+    const totalCount = totalUsersResult.length > 0 ? totalUsersResult[0].total : 0;
 
     res.json({
       success: true,
@@ -73,9 +93,9 @@ router.get("/users", adminAuth, async (req, res) => {
       totalUsers: totalCount,
       pagination: {
         total: totalCount,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        totalPages: Math.ceil(totalCount / limit),
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(totalCount / limitNum),
       },
     });
   } catch (error) {

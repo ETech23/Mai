@@ -43,14 +43,13 @@ async function apiRequest(endpoint, method = "GET", body = null) {
 }
 
 // Fetch users
-// Fetch users with filters, pagination, and render in the UI
 async function fetchUsers(page = 1) {
   const queryParams = new URLSearchParams({
-    page,
-    minBalance: minBalanceInput.value,
-    maxBalance: maxBalanceInput.value,
-    minReferrals: minReferralsInput.value,
-    maxReferrals: maxReferralsInput.value,
+    page: page.toString(), // Ensure page is passed as a string
+    minBalance: minBalanceInput.value || "", // Use empty string if no value
+    maxBalance: maxBalanceInput.value || "",
+    minReferrals: minReferralsInput.value || "",
+    maxReferrals: maxReferralsInput.value || "",
   });
 
   try {

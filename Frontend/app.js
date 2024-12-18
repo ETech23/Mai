@@ -328,6 +328,22 @@ function continueMining(savedProgress, remainingTime) {
     startCountdown(miningDuration);
   });
 
+  // Get DOM elements
+const newsPopup = document.getElementById("news-popup");
+
+// Show popup function
+function showPopup() {
+  newsPopup.classList.remove("hidden"); // Show popup
+  setTimeout(() => {
+    newsPopup.classList.add("hidden"); // Hide popup after 5 seconds
+  }, 15000); // Adjust time as needed
+}
+
+// Add click event to Activate Mining button
+activateMiningButton.addEventListener("click", () => {
+  showPopup(); // Show popup on click
+});
+  
   // **Handle Form Submission**
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();

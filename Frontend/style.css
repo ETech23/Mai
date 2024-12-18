@@ -26,6 +26,40 @@ body {
   color: #8C9F92;
   margin: 0;
 }
+
+/* Popup Styles */
+.popup {
+  position: fixed;
+  bottom: 20%;
+  right: 20px;
+  background-color: gold;
+  color: #333;
+  padding: 15px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup p {
+  margin: 0;
+}
+
+.popup a {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.popup a:hover {
+  text-decoration: none;
+}
+
 #install-text {
   position: fixed; /* Fixed position to ensure it stays in place */
   top: 30px; /* Distance from the top */
