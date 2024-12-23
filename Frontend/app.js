@@ -22,8 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // State Variables
   let isMiningActive = false;
-  let miningProgress = 0;
+/**let miningProgress = 0;
   let miningInterval;
+<<<<<<< HEAD
   let countdownInterval;
   
   
@@ -38,6 +39,13 @@ document.addEventListener('copy', (e) => {
   e.preventDefault();
   alert('Copying content is not allowed!');
 });
+=======
+  let countdownInterval;**/
+
+ // window.onload = () => {
+ restoreMiningSession();
+//};
+>>>>>>> refs/remotes/origin/main
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
@@ -95,21 +103,95 @@ const token = localStorage.getItem("token");
       formContainer.classList.remove("hidden");
       
     }
-  }, 3000); // Adjust time to suit your needs
+  }, 1000); // Adjust time to suit your needs
   
-  // Redirect for desktop users
-  const isDesktop = window.innerWidth > 768;
+   // Redirect for desktop users
+  const isDesktop = window.innerWidth > 800;
 
   if (isDesktop) {
     // Redirect to the news page
     window.location.href = "./news.html";
-    
-
-
-  
   }
 
-  // Register the service worker
+async function restoreMiningSession() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found. User must log in.");
+      return;
+    }
+
+    const response = await fetch("https://mai.fly.dev/api/mining/status", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch mining session status.");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (data.success && data.session.isActive) {
+      const { progress, remainingTime } = data.session;
+      console.log("Restoring mining session...", progress, remainingTime);
+
+      continueMining(progress, remainingTime);
+      startCountdown(remainingTime);
+      activateMiningButton.textContent = "Mining...";
+      activateMiningButton.disabled = true;
+    } else {
+      activateMiningButton.textContent = "Activate Mining";
+      activateMiningButton.disabled = false;
+    }
+  } catch (error) {
+    console.error("Error restoring mining session:", error);
+  }
+}
+
+async function continueMining(savedProgress, remainingTime) {
+  miningProgress = savedProgress;
+  isMiningActive = true;
+  activateMiningButton.disabled = true;
+  activateMiningButton.textContent = "Mining...";
+
+  startCountdown(remainingTime);
+
+  const incrementInterval = 1000; // 1 second
+  const miningEndTime = Date.now() + remainingTime;
+
+  miningInterval = setInterval(async () => {
+    if (Date.now() >= miningEndTime || miningProgress >= 100) {
+      clearInterval(miningInterval);
+      isMiningActive = false;
+      miningProgress = 100;
+      activateMiningButton.disabled = false;
+      activateMiningButton.textContent = "Activate Mining";
+
+      await fetch("https://mai.fly.dev/api/mining/end", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      alert("Mining session completed!");
+    } else {
+      miningProgress += (1 / 3600) * 100;
+      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+      const newBalance = currentBalance + 0.0010;
+
+      localStorage.setItem("miningProgress", miningProgress);
+      localStorage.setItem("minedBalance", newBalance.toFixed(4));
+      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+
+      progressCircle.style.background = `conic-gradient(#2C3E30 ${miningProgress}%, #718074 ${miningProgress}%)`;
+
+      await updateBalance(newBalance);
+    }
+  }, incrementInterval);
+}
+
+// Register the service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
@@ -214,149 +296,132 @@ function updateApp() {
     window.location.reload();
   }
 }
-
   
-  // **Restore Mining Session**
-  function restoreMiningSession() {
-    const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
-    const miningEndTime = parseInt(localStorage.getItem("miningEndTime")) || 0;
-    const now = Date.now();
+  // Mining Session
+  const minedValueElement = document.getElementById("mined-value");
+  const countdownElement = document.getElementById("countdown");
+  
 
-    if (savedProgress < 100 && miningEndTime > now) {
-      continueMining(savedProgress, miningEndTime - now);
-      startCountdown(miningEndTime - now);
-    } else {
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-      activateMiningButton.textContent = "Activate Mining";
-      activateMiningButton.disabled = false;
+  const miningRatePerSecond = 0.0005; // Base mining rate
+  let miningRateBoost = 1; // Base boost multiplier
+  let miningInterval;
+  let endTime;
+
+  // Helper: Fetch mining session from the backend
+  async function fetchMiningSession() {
+    try {
+      const response = await fetch("https://mai.fly.dev/api/mining/status", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add user's auth token
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.session; // Contains startTime, duration, miningRateBoost, etc.
+      } else {
+        console.error("Failed to fetch mining session.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching mining session:", error);
+      return null;
     }
   }
 
-  // **Start Countdown Timer**
-  function startCountdown(remainingTime) {
-    if (countdownInterval) clearInterval(countdownInterval);
+  // Helper: Update mining session in the backend
+  async function updateMiningSession(startTime, duration, boost) {
+    try {
+      await fetch("https://mai.fly.dev/api/mining/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`, // Add user's auth token
+        },
+        body: JSON.stringify({ startTime, duration, miningRateBoost: boost }),
+      });
+    } catch (error) {
+      console.error("Error updating mining session:", error);
+    }
+  }
 
-    countdownInterval = setInterval(() => {
+  // Function to calculate progress percentage
+  function calculateProgress(startTime, duration) {
+    const elapsed = Math.min(Date.now() - startTime, duration * 1000);
+    return (elapsed / (duration * 1000)) * 100;
+  }
+
+  // Function to start mining
+  function startMining(startTimestamp, duration) {
+    activateMiningButton.disabled = true;
+    activateMiningButton.textContent = "Mining...";
+    const startTime = startTimestamp || Date.now();
+    endTime = startTime + duration * 1000;
+
+    // Save mining session to the backend
+    updateMiningSession(startTime, duration, miningRateBoost);
+
+    miningInterval = setInterval(() => {
+      const now = Date.now();
+      const remainingTime = Math.max(0, endTime - now);
+      const elapsedTime = duration - remainingTime / 1000;
+
+      // Update progress circle
+      const progress = calculateProgress(startTime, duration);
+      progressCircle.style.setProperty("--progress", progress);
+
+      // Update mined value
+      const minedValue = ((elapsedTime * miningRateBoost) * miningRatePerSecond).toFixed(4);
+      minedValueElement.textContent = `${minedValue} MAI`;
+
+      // Update countdown timer
+      const minutes = Math.floor(remainingTime / 60000);
+      const seconds = Math.floor((remainingTime % 60000) / 1000);
+      countdownElement.textContent = `${minutes}m ${seconds}s`;
+
+      // Stop mining session when time is up
       if (remainingTime <= 0) {
-        clearInterval(countdownInterval);
-        miningCountdown.textContent = "Next session available!";
-      } else {
-        const minutes = Math.floor(remainingTime / (60 * 1000));
-        const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-        miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-        remainingTime -= 1000;
+        clearInterval(miningInterval);
+        activateMiningButton.disabled = false;
+        activateMiningButton.textContent = "Activate Mining";
+        countdownElement.textContent = "Session ended.";
       }
     }, 1000);
   }
 
-  // **Continue Mining**
- // Define the updateBalance function first
-async function updateBalance(newBalance) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.error("No token found. Cannot update balance.");
-    return;
+  // Function to handle boost mining rate
+  function applyMiningBoost(boostTokens, referrals) {
+    const boostFromTokens = (boostTokens / 50) * 0.015; // 1.5% per 50 tokens
+    const boostFromReferrals = referrals * 0.015; // 1.5% per referral
+    miningRateBoost = 1 + boostFromTokens + boostFromReferrals;
   }
 
-  try {
-    const response = await fetch("https://mai.fly.dev/api/mining/update", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Failed to update balance:", errorData.message || response.statusText);
-    }
-  } catch (error) {
-    console.error("Error updating balance:", error);
-  }
-}
-
-// Then, define other functions that call updateBalance
-function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
-
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
-
-  startCountdown(remainingTime);
-
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
-      clearInterval(miningInterval);
-      isMiningActive = false;
-      miningProgress = 100;
-      activateMiningButton.disabled = false;
-      activateMiningButton.textContent = "Activate Mining";
-
-      alert("Mining session completed!");
-
-      // Clear local storage for mining
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += (1 / 3600) * 100; // Increment based on 1-hour session
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-      const newBalance = currentBalance + 0.0010; // Add 0.0010 every second
-
-      localStorage.setItem("miningProgress", miningProgress);
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-
-      progressCircle.style.background = `conic-gradient( #2C3E30 ${miningProgress}%, #718074 ${miningProgress}%)`;
-
-      // Update backend balance
-      try {
-        await updateBalance(newBalance);
-      } catch (error) {
-        console.error("Failed to update balance to backend:", error);
+  // Check mining session on page load
+  async function checkExistingMiningSession() {
+    const session = await fetchMiningSession();
+    if (session) {
+      const { startTime, duration, miningRateBoost: savedBoost } = session;
+      const remainingTime = Math.max(0, (startTime + duration * 1000) - Date.now());
+      if (remainingTime > 0) {
+        miningRateBoost = savedBoost;
+        startMining(startTime, remainingTime / 1000);
+      } else {
+        console.log("No active mining session.");
       }
     }
-  }, incrementInterval);
-}
+  }
 
-  // **Activate Mining**
+  // Event listener for activating mining
   activateMiningButton.addEventListener("click", () => {
-    if (isMiningActive) {
-      alert("Mining is already active!");
-      return;
-    }
-    const miningDuration = 60 * 60 * 1000; // 1 hour
-    const miningEndTime = Date.now() + miningDuration;
-
-    isMiningActive = true;
-    localStorage.setItem("miningProgress", "0");
-    localStorage.setItem("miningEndTime", miningEndTime.toString());
-    continueMining(0, miningDuration);
-    startCountdown(miningDuration);
+    const duration = 3600; // Adjustable based on user preference
+    startMining(Date.now(), duration);
   });
 
-  // Get DOM elements
-const newsPopup = document.getElementById("news-popup");
+  // Initialize the page
+  checkExistingMiningSession();
 
-// Show popup function
-function showPopup() {
-  newsPopup.classList.remove("hidden"); // Show popup
-  setTimeout(() => {
-    newsPopup.classList.add("hidden"); // Hide popup after 5 seconds
-  }, 15000); // Adjust time as needed
-}
-
-// Add click event to Activate Mining button
-activateMiningButton.addEventListener("click", () => {
-  showPopup(); // Show popup on click
-});
-  
-  // **Handle Form Submission**
+// **Handle Form Submission**
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const identifier = document.getElementById("identifier").value.trim();
@@ -383,8 +448,19 @@ document.getElementById("referral-input").value.trim(),
       if (response.ok) {
         if (isRegistering) {
           alert("Registration successful! You can now log in.");
+          // Switch to Login Form
+    formTitle.textContent = "Login";
+    authSubmit.textContent = "Login";
+    loginFields.classList.remove("hidden");
+    registerFields.classList.add("hidden");
+          
+    // Prefill login fields with registered data
+    document.getElementById("identifier").value = payload.username || payload.email;
+    document.getElementById("password").value = payload.password;
         } else {
           alert("Logged in successfully!");
+          
+  
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
           localStorage.setItem("email", data.email);
@@ -493,6 +569,8 @@ authForm.addEventListener("submit", (e) => {
 })
   
   
+  
+  
   const taskButton = document.getElementById("task-button");
 if (taskButton) {
   taskButton.addEventListener("click", () => {
@@ -557,7 +635,8 @@ if (referralCode) {
     console.warn("Referral input field not found. Cannot populate referral code.");
   }
 } **/
-  window.toggleFullArticle = function(button) {
+  
+window.toggleFullArticle = function(button) {
   const article = button.closest(".news-article");
 
   if (!article) {
@@ -831,60 +910,6 @@ retryUpdateReactionCounts();
   articles.forEach((article) => incrementViewCount(article));
 
   
-  /**
-  const hash = window.location.hash;
-  const urlParams = new URLSearchParams(hash.split("?")[1]);
-  if (hash.includes("register")) {
-    formTitle.textContent = "Register";
-    registerFields.classList.remove("hidden");
-    loginFields.classList.add("hidden");
-
-    if (referralCode && referralInput) {
-      referralInput.value = referralCode;
-      console.log("Referral Code Set:", referralCode);
-    }
-  } else {
-    formTitle.textContent = "Login";
-    registerFields.classList.add("hidden");
-    loginFields.classList.remove("hidden");
-}
-  **/
-  // Menu Toggling
-  /**menuIcon.addEventListener("click", () => {
-    try {
-      const username = localStorage.getItem("username");
-      const email = localStorage.getItem("email");
-      const minedBalance = localStorage.getItem("minedBalance");
-      const referrals = localStorage.getItem("referrals") || 0;
-      const referralLink = `https://mai.fly.dev/register?ref=${username}`;
-
-      const userInfoDropdown = document.getElementById("user-info-dropdown");
-      userInfoDropdown.innerHTML = `
-        <p><strong>Name:</strong> ${localStorage.getItem("name")}</p>
-        <p><strong>Username:</strong> ${username}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Mined Balance:</strong> ${minedBalance || "0.0000"} MAI</p>
-        <p><strong>Referrals:</strong> ${referrals}</p>
-        <p><strong>Referral Link:</strong></p>
-        <p><small><a href="${referralLink}" target="_blank">${referralLink}</a></small></p>
-        <button id="logout-button">Log Out</button>
-      `;
-
-      userInfoDropdown.classList.toggle("active");
-
-      const logoutButton = document.getElementById("logout-button");
-      if (logoutButton) {
-        logoutButton.addEventListener("click", () => {
-          localStorage.clear();
-          alert("Logged out successfully.");
-          window.location.reload();
-        });
-      }
-    } catch (error) {
-      console.error("Error toggling menu:", error);
-    }
-  });
-});**/
 
 
   // DOM Elements
@@ -929,19 +954,26 @@ menuIcon.addEventListener("click", async () => {
 
     const { username, email, balance, referrals, referralCode, name } = user;
 
-    const referralCount = referrals.length;
-    let streakLevel;
-    if (referralCount < 5) streakLevel = "Regular";
-    else if (referralCount < 10) streakLevel = "Intermediate";
-    else if (referralCount < 20) streakLevel = "Partner";
-    else if (referralCount < 30) streakLevel = "Advanced";
-    else if (referralCount < 50) streakLevel = "Expert";
-    else streakLevel = "Master";
+    // Calculate streak level
+const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
+const referralCount = referrals.length;
+let streakLevel;
 
-
+if (referralCount < 5 && minedBalance <= 50) {
+  streakLevel = "Regular";
+} else if (referralCount < 10 && minedBalance <= 100) {
+  streakLevel = "Intermediate";
+} else if (referralCount < 20 && minedBalance <= 200) {
+  streakLevel = "Partner";
+} else if (referralCount < 30 && minedBalance <= 400) {
+  streakLevel = "Advanced";
+} else if (referralCount < 50 && minedBalance <= 600) {
+  streakLevel = "Expert";
+} else {
+  streakLevel = "Master";
+}
     // Construct referral link
-
-const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://mai-psi.vercel.app/register?ref=${referralCode}`;
+    const referralLink = `https://mai-psi.vercel.app/register?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
 
     // Update dropdown content
@@ -1048,17 +1080,24 @@ async function fetchUserData() {
     // Assuming the response contains a 'referrals' array
     const referrals = userData.referrals || []; // Fallback to empty array if not found
 
-    // Now calculate the streak level dynamically based on referral count
-    const referralCount = referrals.length;
-    let streakLevel;
-    if (referralCount < 5) streakLevel = "Regular";
-    else if (referralCount < 10) streakLevel = "Intermediate";
-    else if (referralCount < 20) streakLevel = "Partner";
-    else if (referralCount < 30) streakLevel = "Advanced";
-    else if (referralCount < 50) streakLevel = "Expert";
-    else streakLevel = "Master";
+    /// Calculate streak level
+const minedBalance = parseFloat(localStorage.getItem("minedBalance"));
+const referralCount = referrals.length;
+let streakLevel;
 
-
+if (referralCount < 5 && minedBalance <= 50) {
+  streakLevel = "Regular";
+} else if (referralCount < 10 && minedBalance <= 100) {
+  streakLevel = "Intermediate";
+} else if (referralCount < 20 && minedBalance <= 200) {
+  streakLevel = "Partner";
+} else if (referralCount < 30 && minedBalance <= 400) {
+  streakLevel = "Advanced";
+} else if (referralCount < 50 && minedBalance <= 600) {
+  streakLevel = "Expert";
+} else {
+  streakLevel = "Master";
+}
     // Populate the streak level in the dashboard
     const streakLevelContainer = document.getElementById("streak-level-container");
 
