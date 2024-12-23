@@ -26,6 +26,18 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningInterval;
   let countdownInterval;
   
+  
+  // Disable right-click
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Disable text selection
+document.addEventListener('selectstart', (e) => e.preventDefault());
+
+// Optional: Prevent copy event
+document.addEventListener('copy', (e) => {
+  e.preventDefault();
+  alert('Copying content is not allowed!');
+});
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");

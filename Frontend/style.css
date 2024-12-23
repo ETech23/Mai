@@ -1,4 +1,17 @@
 
+/* Disable text selection only, keep buttons functional */
+.no-select {
+  user-select: none; /* Standard property */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* Internet Explorer */
+  -moz-user-select: none; /* Firefox */
+}
+
+/* Ensure buttons inside non-selectable areas remain clickable */
+.no-select button,
+.no-select a {
+  pointer-events: auto; /* Restore pointer events for buttons and links */
+}
 /* General Reset */
 body, h1, h2, h3, p, ul, ol, figure {
   margin: 0;
