@@ -250,7 +250,7 @@ header h1 {
 /* User Info Dropdown */
 #user-info-dropdown {
   position: fixed;
-  top: 0!important; /* Aligns dropdown to the very top */
+  top: 2px!important; /* Aligns dropdown to the very top */
   left: 0;
   right: 0; /* Optional: stretch across the full width */
   background-color: #998e5c;

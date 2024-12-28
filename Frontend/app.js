@@ -266,6 +266,75 @@ async function updateBalance(newBalance) {
   }
 }
 
+// Check if mining data exists in localStorage
+let miningStartTime = localStorage.getItem('miningStartTime')
+    ? parseInt(localStorage.getItem('miningStartTime'))
+    : null;
+
+let miningEndTime = localStorage.getItem('miningEndTime')
+    ? parseInt(localStorage.getItem('miningEndTime'))
+    : null;
+
+ isMiningActive = localStorage.getItem('isMiningActive') === 'true';
+
+// Start mining only if it's active
+if (isMiningActive && miningStartTime && miningEndTime) {
+    startMiningProgress();
+}
+
+// Function to start mining
+function startMining() {
+    if (!isMiningActive) {
+        miningStartTime = Date.now();
+        miningEndTime = miningStartTime + 3600 * 1000; // 1 hour later
+        isMiningActive = true;
+
+        // Save to localStorage
+        localStorage.setItem('miningStartTime', miningStartTime);
+        localStorage.setItem('miningEndTime', miningEndTime);
+        localStorage.setItem('isMiningActive', 'true');
+
+        startMiningProgress();
+    }
+}
+
+// Function to update mining progress based on current time
+function updateMiningProgress() {
+    if (!isMiningActive || !miningStartTime || !miningEndTime) return;
+
+    const currentTime = Date.now();
+    if (currentTime >= miningEndTime) {
+        miningProgress = 100;
+        isMiningActive = false;
+        clearInterval(miningInterval);
+
+        // Clear localStorage
+        localStorage.removeItem('miningStartTime');
+        localStorage.removeItem('miningEndTime');
+        localStorage.removeItem('isMiningActive');
+    } else {
+        miningProgress = ((currentTime - miningStartTime) / (miningEndTime - miningStartTime)) * 100;
+    }
+
+    // Update the circular progress bar
+    progressCircle.style.background = `conic-gradient(
+        #2C3E30 ${miningProgress}%, 
+        #718074 ${miningProgress}% 100%
+    )`;
+}
+
+// Start mining progress interval
+function startMiningProgress() {
+    miningInterval = setInterval(updateMiningProgress, 1000);
+    updateMiningProgress(); // Initial call to set progress immediately
+}
+
+// Update progress when user returns to the app
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        updateMiningProgress();
+    }
+});
 // Then, define other functions that call updateBalance
 function continueMining(savedProgress, remainingTime) {
   miningProgress = savedProgress;
