@@ -261,6 +261,9 @@ header h1 {
   z-index: 1000;
   text-align: left;
   transition: transform 0.2s ease-in-out!important;
+  right: 0; /* Stretch across the full width */
+  bottom: 0; /* Stretch to the bottom (footer area) */
+  overflow-y: auto;
   }
 
 #user-info-dropdown.active {
