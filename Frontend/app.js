@@ -292,15 +292,18 @@ function continueMining(savedProgress, remainingTime) {
       localStorage.removeItem("miningProgress");
       localStorage.removeItem("miningEndTime");
     } else {
-      miningProgress += (1 / 3600) * 100; // Increment based on 1-hour session
+      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
       const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-      const newBalance = currentBalance + 0.0010; // Add 0.0010 every second
+      const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
 
       localStorage.setItem("miningProgress", miningProgress);
       localStorage.setItem("minedBalance", newBalance.toFixed(4));
       minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
 
-      progressCircle.style.background = `conic-gradient( #2C3E30 ${miningProgress}%, #718074 ${miningProgress}%)`;
+      progressCircle.style.background = `conic-gradient(
+  #2C3E30 ${miningProgress}%, 
+  #718074 ${miningProgress}% 100%
+)`;
 
       // Update backend balance
       try {
@@ -336,7 +339,7 @@ function showPopup() {
   newsPopup.classList.remove("hidden"); // Show popup
   setTimeout(() => {
     newsPopup.classList.add("hidden"); // Hide popup after 5 seconds
-  }, 15000); // Adjust time as needed
+  }, 10000); // Adjust time as needed
 }
 
 // Add click event to Activate Mining button
@@ -873,22 +876,16 @@ retryUpdateReactionCounts();
     }
   });
 });**/
-
-
-  // DOM Elements
-
   
-      // Ensure DOM elements exist
-if (!menuIcon || !userInfoDropdown) {
-  console.error("Required DOM elements are missing");
-  return;
-}
-
-// Add event listener for menu toggle
+  
+  // DOM Elements
+  
 menuIcon.addEventListener("click", async () => {
+  event.stopPropagation(); // Prevent event from bubbling up to the document
+  
   try {
     console.log("Menu icon clicked");
-
+    
     // Retrieve token from localStorage
     const token = localStorage.getItem("token");
     if (!token) {
@@ -912,6 +909,8 @@ menuIcon.addEventListener("click", async () => {
       return;
     }
 
+    
+    
     const user = await response.json();
     console.log("User details fetched:", user);
 
@@ -952,6 +951,8 @@ const referralLink = `Mai is an AI language model. Early users who complete dail
 
     userInfoDropdown.classList.toggle("active");
 
+
+  
 // Add event listener for the share button click
 const shareButton = document.getElementById("share-button");
 
@@ -994,6 +995,18 @@ if (shareButton) {
   });
 }
 
+    
+    // Close dropdown when clicking outside
+document.addEventListener("click", (event) => {
+  if (
+    userInfoDropdown.classList.contains("active") &&
+    !userInfoDropdown.contains(event.target) && // Check if clicked outside dropdown
+    event.target !== menuIcon // Check if clicked is not the menu icon
+  ) {
+    userInfoDropdown.classList.remove("active");
+  }
+});
+    
     // Add logout functionality
     const logoutButton = document.getElementById("logout-button");
     if (logoutButton) {
@@ -1095,19 +1108,19 @@ fetchUserData();
   
   // footer btns
   document.getElementById("home-btn").addEventListener("click", () => {
-  window.location.href = "./index.html"; // Navigate to Home
+  window.location.href = "index.html"; // Navigate to Home
 });
 
 document.getElementById("news-btn").addEventListener("click", () => {
-  window.location.href = "./news.html"; // Navigate to News/Updates
+  window.location.href = "news.html"; // Navigate to News/Updates
 });
 
 document.getElementById("ai-btn").addEventListener("click", () => {
-  window.location.href = "./index.html"; // Navigate to Mai AI
+  window.location.href = ""; // Navigate to Mai AI
 });
 
 document.getElementById("wallet-btn").addEventListener("click", () => {
-  window.location.href = "./index.html"; // Navigate to Wallet
+  window.location.href = ""; // Navigate to Wallet
 });
   
   // Restore session on page load
