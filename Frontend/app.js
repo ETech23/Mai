@@ -1062,7 +1062,8 @@ minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
     
     // Update dropdown content
     userInfoDropdown.innerHTML = `
-      <p><strong>Name:</strong> ${name}</p>
+      <p style="text-align: center"><strong>MAI App</strong></p>
+    <p><strong>Name:</strong> ${name}</p>
       <p><strong>Username:</strong> ${username}</p>
       <p><strong>Email:</strong> ${email}</p>
     <p><strong>Streak Level:</strong> ${streakLevel}</p>
@@ -1070,10 +1071,12 @@ minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
       <p><strong>Mined Balance:</strong> ${balance.toFixed(5)} MAI</p>
     
       <p><strong>Referrals:</strong> ${referralCount}</p>
-      
+      <p><strong><a href"">Utilities</a></strong></p>
     <p><strong><a href"">Roadmap</a></strong></p>
     <p><strong><a href"">White Paper</a></strong></p>
     <p><strong><a href"">FAGs</a></strong></p>
+    <p><strong><a href"">Privacy Policy</a></strong></p>
+    
       <p><strong>Referral Link:</strong></p>
       
       <button id="share-button">Share</button>
