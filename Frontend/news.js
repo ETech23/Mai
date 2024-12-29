@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (aiButton) {
     aiButton.addEventListener("click", () => {
-      window.location.href = "";
+      window.location.href = "ai.html";
     });
   }
 

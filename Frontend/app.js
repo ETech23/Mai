@@ -1256,7 +1256,7 @@ document.getElementById("news-btn").addEventListener("click", () => {
 });
 
 document.getElementById("ai-btn").addEventListener("click", () => {
-  window.location.href = ""; // Navigate to Mai AI
+  window.location.href = "ai.html"; // Navigate to Mai AI
 });
 
 document.getElementById("wallet-btn").addEventListener("click", () => {

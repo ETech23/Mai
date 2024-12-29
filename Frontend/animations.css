@@ -1,0 +1,93 @@
+/* General Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+}
+
+#animation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* AI Animation Section */
+#ai-animation {
+  flex: 1;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#ai-animation h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+#ai-animation p {
+  font-size: 1.2rem;
+  animation: slideIn 2s ease-in-out;
+}
+
+#ai-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Crypto Animation Section */
+#crypto-animation {
+  flex: 1;
+  text-align: center;
+  background: rgba(10, 25, 47, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#crypto-animation h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+#crypto-animation p {
+  font-size: 1.2rem;
+  animation: slideIn 2s ease-in-out;
+}
+
+#crypto-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); }
+  to { transform: translateY(0); }
+}
+

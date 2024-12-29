@@ -1,0 +1,160 @@
+/* General Styles */
+/*body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  overflow-x: hidden;
+}*/
+/* General Styles */
+body {
+  margin: 0;
+  overflow: hidden; /* Prevent scrollbars during animation */
+  background: linear-gradient(to bottom, #001f3f, #005f9f);
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* AI Section */
+.ai-section {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.ai-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.ai-section p {
+  font-size: 1.2rem;
+}
+
+/* Call to Action */
+.cta-section {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.cta-section button {
+  background-color: #2C3E30;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Ice Animation Styles */
+.ice-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.ice {
+  position: absolute;
+  top: -10px;
+  width: 8px;
+  height: 8px;
+  background: #cce7ff;
+  border-radius: 50%;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+
+/* Animation Container */
+.animation-container {
+  text-align: center;
+  padding: 5px;
+}
+
+/* AI Section */
+.ai-section {
+  margin-top: 10px;
+}
+
+.ai-section h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.ai-animation {
+  max-width: 200px;
+  max-height: 200px;
+  height: 300px;
+  margin: 20px auto;
+  background: radial-gradient(circle, #34e89e, #0f3443);
+  border-radius: 50%;
+  box-shadow: 0 0 20px #34e89e;
+  animation: pulse 3s infinite ease-in-out;
+}
+
+/* Call to Action Section */
+.cta-section {
+  margin-top: 70px;
+}
+
+.cta-section h3 {
+  font-size: 1.8em;
+}
+
+#explore-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #1e3c72;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#explore-button:hover {
+  background-color: #2a5298;
+}
+
+/* Keyframe Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 20px #34e89e;
+  }
+  50% {
+    transform: scale(1.2);
+    box-shadow: 0 0 40px #34e89e;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px #34e89e;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
