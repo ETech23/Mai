@@ -271,14 +271,22 @@ header h1 {
   display: block;
 }
 
+#user-info-dropdown i {
+  min-width: 25px;
+  max-width: 25px;
+  text-decoration: none;
+  color: #2C3E30;
+}
 #user-info-dropdown p {
+  display: flex;
+  align-items: center;
   font-size: 1rem;
   color: black;
-  margin: 0;
+  gap: 5px;
+  margin: 8px 0;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
 }
-
 #user-info-dropdown p:last-child {
   border-bottom: none;
 }

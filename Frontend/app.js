@@ -1061,27 +1061,32 @@ localStorage.setItem("minedBalance", newBalance.toFixed(4));
 minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;  
     
     // Update dropdown content
-    userInfoDropdown.innerHTML = `
-      <p style="text-align: center"><strong>MAI App</strong></p>
-    <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Username:</strong> ${username}</p>
-      <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Streak Level:</strong> ${streakLevel}</p>
-    <p><strong>Mining Rate:</strong> ${miningRate.toFixed(5)} MAI/sec</p>
-      <p><strong>Mined Balance:</strong> ${balance.toFixed(5)} MAI</p>
-    
-      <p><strong>Referrals:</strong> ${referralCount}</p>
-      <p><strong><a href"">Utilities</a></strong></p>
-    <p><strong><a href"">Roadmap</a></strong></p>
-    <p><strong><a href"">White Paper</a></strong></p>
-    <p><strong><a href"">FAGs</a></strong></p>
-    <p><strong><a href"">Privacy Policy</a></strong></p>
-    
-      <p><strong>Referral Link:</strong></p>
-      
-      <button id="share-button">Share</button>
-      <button id="logout-button">Log Out</button>
-    `;
+// Update dropdown content
+userInfoDropdown.innerHTML = `
+  <p style="text-align: center"><strong>MAI App</strong></p>
+  <p><i class="fas fa-user"></i> <strong></strong> ${name}</p>
+  <p><i class="fas fa-user-tag"></i> <strong></strong> ${username}</p>
+  <p><i class="fas fa-envelope"></i> <strong></strong> ${email}</p>
+  <p><i class="fas fa-fire"></i> <strong></strong> ${streakLevel}</p>
+  <p><i class="fas fa-cogs"></i> <strong></strong> ${miningRate.toFixed(5)} MAI/sec</p>
+  <p><i class="fas fa-wallet"></i> <strong></strong> ${balance.toFixed(5)} MAI</p>
+  <p><i class="fas fa-users"></i> <strong></strong> ${referralCount}</p>
+  
+  <hr>
+  
+  <p><i class="fas fa-toolbox"></i> <strong><a href="#">Utilities</a></strong></p>
+  <p><i class="fas fa-road"></i> <strong><a href="#">Roadmap</a></strong></p>
+  <p><i class="fas fa-file-alt"></i> <strong><a href="#">White Paper</a></strong></p>
+  <p><i class="fas fa-question-circle"></i> <strong><a href="#">FAQs</a></strong></p>
+  <p><i class="fas fa-shield-alt"></i> <strong><a href="#">Privacy Policy</a></strong></p>
+  
+  <hr>
+  
+  <p><i class="fas fa-link"></i> <strong>Referral Link:</strong></p>
+  <button id="share-button"><i class="fas fa-share-alt"></i> Share</button>
+  <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+    <p>v1.03</p>
+`;
 
     userInfoDropdown.classList.toggle("active");
 
