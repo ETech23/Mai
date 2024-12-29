@@ -171,10 +171,11 @@ body {
 }
 #share-options {
   margin-top: 10px;
-  background: #2C3E30;
+  background: #718054;
   padding: 10px;
   border-radius: 5px;
   text-align: left;
+  font-weight: bold;
 }
 
 #share-options a,

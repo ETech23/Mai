@@ -363,7 +363,38 @@ function continueMining(savedProgress, remainingTime) {
     } else {
       miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
       const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-      const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
+     // const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
+      // Default mining rate
+const defaultRate = 0.0005;
+
+// Get referral count from user data
+      const token = localStorage.getItem("token");
+      const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
+    }
+
+    
+      const userData = await response.json();
+      const referrals = userData.referrals || []; // Fallback to empty array if not found
+
+const referralCount = referrals.length;
+
+// Calculate the bonus multiplier based on referrals (5% per referral)
+const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
+
+// Calculate the new balance with the referral bonus applied
+const newBalance = currentBalance + (defaultRate * referralBonus);
+
+// Update the local storage or display
+localStorage.setItem("minedBalance", newBalance.toFixed(4));
+minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
 
       localStorage.setItem("miningProgress", miningProgress);
       localStorage.setItem("minedBalance", newBalance.toFixed(4));
@@ -1000,20 +1031,51 @@ menuIcon.addEventListener("click", async () => {
 const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://mai-psi.vercel.app/register?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
 
+  // Default mining rate
+const defaultRate = 0.0005;
+
+// Get referral count from user data
+//const referralCount = referrals.length;
+
+// Calculate the bonus multiplier based on referrals (5% per referral)
+const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
+
+// Optional: Cap the referral bonus multiplier to prevent extreme boosts
+const cappedReferralBonus = Math.min(referralBonus, 2); // Max 100% bonus
+
+// Calculate the dynamic mining rate
+const miningRate = defaultRate * cappedReferralBonus;
+
+// Display mining rate
+const miningRateDisplay = document.getElementById("mining-rate");
+if (miningRateDisplay) {
+  miningRateDisplay.textContent = `Mining Rate: ${miningRate.toFixed(5)} MAI/sec`;
+}
+
+// Calculate new balance
+    const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+const newBalance = currentBalance + miningRate;
+
+// Update balance in localStorage and UI
+localStorage.setItem("minedBalance", newBalance.toFixed(4));
+minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;  
+    
     // Update dropdown content
     userInfoDropdown.innerHTML = `
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Username:</strong> ${username}</p>
       <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Mined Balance:</strong> ${balance.toFixed(4)} MAI</p>
+    <p><strong>Streak Level:</strong> ${streakLevel}</p>
+    <p><strong>Mining Rate:</strong> ${miningRate.toFixed(5)} MAI/sec</p>
+      <p><strong>Mined Balance:</strong> ${balance.toFixed(5)} MAI</p>
+    
       <p><strong>Referrals:</strong> ${referralCount}</p>
-      <p><strong>Streak Level:</strong> ${streakLevel}</p>
+      
+    <p><strong><a href"">Roadmap</a></strong></p>
+    <p><strong><a href"">White Paper</a></strong></p>
+    <p><strong><a href"">FAGs</a></strong></p>
       <p><strong>Referral Link:</strong></p>
-      <p>
-        <small>
-          <a href="${referralLink}" id="referral-link" target="_blank">${referralLink}</a>
-        </small>
-      </p>
+      
       <button id="share-button">Share</button>
       <button id="logout-button">Log Out</button>
     `;
@@ -1157,6 +1219,7 @@ async function fetchUserData() {
 
     if (streakDropdownToggle) {
       streakDropdownToggle.addEventListener("click", () => {
+        event.stopPropagation(); // Prevent the click from propagating to the document
         streakDropdown.classList.toggle("hidden");
 
         // Change button text based on dropdown visibility
