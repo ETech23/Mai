@@ -7,10 +7,24 @@
   color: #fff;
   overflow-x: hidden;
 }*/
+/* Disable text selection only, keep buttons functional */
+.no-select {
+  user-select: none; /* Standard property */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* Internet Explorer */
+  -moz-user-select: none; /* Firefox */
+}
+
+/* Ensure buttons inside non-selectable areas remain clickable */
+.no-select button,
+.no-select a {
+  pointer-events: auto; /* Restore pointer events for buttons and links */
+}
+
 /* General Styles */
 body {
   margin: 0;
-  overflow: hidden; /* Prevent scrollbars during animation */
+  overflow: auto; /* Prevent scrollbars during animation */
   background: linear-gradient(to bottom, #001f3f, #005f9f);
   color: #fff;
   font-family: Arial, sans-serif;
@@ -118,6 +132,7 @@ body {
 }
 
 #explore-button {
+  margin-bottom: 10px
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 1em;
