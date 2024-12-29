@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mai-cache-v7.07'; // Cache name
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v7.07'; // Dynamic cache name
+const CACHE_NAME = 'mai-cache-v7.08'; // Cache name
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v7.08'; // Dynamic cache name
 
 // Files to cache manually
 const STATIC_FILES = [
