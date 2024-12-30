@@ -10,6 +10,10 @@
 <meta property="og:type" content="website" />
   
   <title>MAI AI and token Mining Platform</title>
+  <script type="text/javascript" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    
   <link rel="stylesheet" href="style.css">
   <link
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -125,8 +129,7 @@
   <br>
   <br>
   
-  
-  
+
 
 
   <!-- News & Articles Section --
@@ -147,15 +150,122 @@
     </div>
 <div id="articles-list"></div>
   -->
-  <section id="news" class="news-section hidden">
+      <style>
+/* Default state of each div */
+.div-content {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+}
+
+/* Hover effect: slide upwards and add shadow */
+.div-content:hover {
+    transform: translateY(-10px); /* Slides the div 10px upwards */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+}
+</style>
+  
+
+<section id="news" class="news-section hidden">
     <h2>Latest Update</h2>
     
+    <div class="update div-content" style="background-color: white">
+        <h3 style="color: black">How the Mining Phase Works</h3><br>
+        
+        <p>
+            Mai employs an AI-powered mining system, allowing users to earn tokens seamlessly through participation, engagement, and collaboration. This innovative approach ensures both fairness and scalability, rewarding users based on their activity and community growth contributions.
+        </p>
+    </div>
+    <div class="update div-content" style="background-color: white">
+        <h4 style="color: black">Key Aspects of Mai’s Mining System</h4>
+        <ul>
+            <li><b>Active Participation:</b>
+                <p>Users are rewarded for remaining active during mining sessions. Mining operates on a session-based model, where users activate mining for a set duration.</p>
+            </li>
+            <li><b>Engagement with AI-Driven Activities:</b>
+                <p>Activities such as interacting with the AI chatbot, completing tasks, or providing feedback contribute to token accumulation.</p>
+            </li>
+            <li><b>Collaboration via Referrals:</b>
+                <p>Referring others to join Mai not only grows the community but also enhances your mining rate. Every successful referral increases the mining bonus by 5%.</p>
+            </li>
+        </ul></div>
+<div class="update div-content" style="background-color: white">
+        <h4 style="color: black">Mining Rate Mechanism</h4>
+        <p>The mining rate dynamically adjusts based on referrals, ensuring early adopters and active users gain fair rewards.</p>
+        <h4>Key Components</h4>
+<ul>
+    <li><b>Base Rate:</b> 
+        0.0005MAI per second
+  </li>
+    <li><b>Referral Bonus:</b> 
+        +5% per referred user
+   </li>
+</ul>
+</div>
+    <div class="update div-content" style="background-color: white">
+  <h4 style="color: black">Mining Rate Formula</h4>
+<div class="formula-container">
+\[
+\begin{aligned}
+\text{Mining Rate} &= \\
+\text{Base Rate} \times \left(1 + (\text{referralCount} \times 0.05)\right)
+\end{aligned}
+\]
+</div>
+
+        <h4 style="color: black">Example Calculations</h4>
+<div class="math-example">
+    <ul>
+        <li>
+            <b>5 Referrals:</b><br>
+\[
+            \begin{aligned}
+            &0.0005 \times (1 + (5 \times 0.05)) \\
+            &= 0.0005 \times 1.25 \\
+            &= 0.000625
+            \end{aligned}
+\]
+        </li>
+        <li>
+            <b>10 Referrals:</b><br>
+\[
+            \begin{aligned}
+            &0.0005 \times (1 + (10 \times 0.05)) \\
+            &= 0.0005 \times 1.5 \\
+            &= 0.00075
+            \end{aligned}
+\]
+        </li>
+        <li>
+            <b>Midpoint Check:</b><br>
+\[
+            \begin{aligned}
+            &\frac{0.0005 + 0.00075}{2} \\
+            &= \frac{0.00125}{2} \\
+            &= 0.000625
+            \end{aligned}
+\]
+        </li>
+    </ul>
+</div>
+
+        <h4 style="color: black">Why It Seems Off</h4>
+        <p>
+            The values appear inconsistent because the increase is linear, not exponential. A 5% bonus per referral scales linearly with the number of referrals. The math holds up, and the linear growth ensures consistency.
+        </p>
+        <p>
+            This dynamic calculation ensures users are incentivized to expand the Mai ecosystem through referrals.
+        </p>
+    </div>
+
+
+    
+    
     <!-- Article 1-->
-  <div class="news-article" data-title="The Mai Project">
+      <section>
+  <div class="news-article div-content" data-title="The Mai Project">
     <h4 style="text-align: left">The Mai Project: Rewarding Early Adoption Through AI-Powered Mining</h4>
     <img src="img/land.webp" style="border-radius: 10px" alt="The Mai Project Image">
     <br>
-
+  
     <!-- Short Description -->
     <p id="short-description">
       The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and
