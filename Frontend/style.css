@@ -1,27 +1,28 @@
-<style>
+
+
+
 /* Default state of each div */
 .div-content {
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
 }
 
-/* Hover effect: make the div move and adjust */
+/* Hover effect: slide upwards and add shadow */
 .div-content:hover {
-    transform: translateY(-5px); /* Moves the div 5px up */
+    transform: translateY(-10px); /* Slides the div 10px upwards */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
 }
-</style>
 /* Disable text selection only, keep buttons functional */
 .no-select {
-  user-select: none; /* Standard property */
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* Internet Explorer */
-  -moz-user-select: none; /* Firefox */
+  user-select: none !important; /* Standard property */
+  -webkit-user-select: none !important; /* Safari */
+  -ms-user-select: none !important; /* Internet Explorer */
+  -moz-user-select: none !important; /* Firefox */
 }
 
 /* Ensure buttons inside non-selectable areas remain clickable */
 .no-select button,
 .no-select a {
-  pointer-events: auto; /* Restore pointer events for buttons and links */
+  pointer-events: auto !important; /* Restore pointer events for buttons and links */
 }
 /* General Reset */
 body, h1, h2, h3, p, ul, ol, figure {
@@ -641,6 +642,7 @@ box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.5);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 
 .news-article:hover {
   transform: translateY(-5px);

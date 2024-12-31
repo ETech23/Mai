@@ -1,0 +1,13 @@
+/* Disable text selection only, keep buttons functional */
+.no-select {
+  user-select: none !important; /* Standard property */
+  -webkit-user-select: none !important; /* Safari */
+  -ms-user-select: none !important; /* Internet Explorer */
+  -moz-user-select: none !important; /* Firefox */
+}
+
+/* Ensure buttons inside non-selectable areas remain clickable */
+.no-select button,
+.no-select a {
+  pointer-events: auto !important; /* Restore pointer events for buttons and links */
+}

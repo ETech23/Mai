@@ -23,12 +23,13 @@
   <link rel="icon" href="./social/mai_co.png" type="image/png">
 </head>
 <body>
-  </div><div class="no-select">
+  <div class="no-select">
   <!- Preloader -->
 <div id="preloader" class="preloader">
   <!-- Preloader animation or content -->
   <p><img src="./img/mai_co.png" style="width: 200px; height: 200px"></p>
 </div>
+  
   
   
    <!-- Mining Dashboard -->
@@ -47,7 +48,7 @@
       <p style="text-align: center"><strong>Welcome!</strong><br> 1 MAI ≈ $2</p>
       
     </header>
-    
+  
     <!-- Install Button -->
 <button id="install-button" style="
   display: none;
@@ -64,6 +65,7 @@
   font-size: 14px;">
   Install App
 </button>
+     
     <main id="dynamic-content" class="mining-container">
       <div id="mining-dashboard">
   <div id="streak-level-container"></div>
@@ -77,7 +79,7 @@
       <button id="activate-mining">Activate Mining</button>
     </main>
   </div>
-  
+ 
   
   
   
@@ -150,24 +152,13 @@
     </div>
 <div id="articles-list"></div>
   -->
-      <style>
-/* Default state of each div */
-.div-content {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-}
 
-/* Hover effect: slide upwards and add shadow */
-.div-content:hover {
-    transform: translateY(-10px); /* Slides the div 10px upwards */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
-}
-</style>
   
 
-<section id="news" class="news-section hidden">
-    <h2>Latest Update</h2>
+<section id="news" class="news-section hidden" >
+    <h2>About MAI </h2>
     
-    <div class="update div-content" style="background-color: white">
+    <div class="update div-content" style="background-color: white; ">
         <h3 style="color: black">How the Mining Phase Works</h3><br>
         
         <p>
@@ -354,24 +345,34 @@ Join Mai today and become part of a community that’s shaping the future of AI-
 
     <nav>
   <footer id="footer" class="fixed-footer">
-  <button class="footer-btn" id="home-btn">
-    <i class="fas fa-home"></i>
-    <span>Home</span>
-  </button>
-  <button class="footer-btn" id="news-btn">
-    <i class="fas fa-newspaper"></i>
-    <span>News</span>
-  </button>
-  <button class="footer-btn" id="ai-btn">
-    <i class="fas fa-robot"></i>
-    <span>Mai AI</span>
-  </button>
-  <button class="footer-btn" id="wallet-btn">
-    <i class="fas fa-wallet"></i>
-    <span>Wallet</span>
-  </button>
-</footer></nav>
+    <button class="footer-btn" id="home-btn">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </button>
+    <button class="footer-btn" id="news-btn">
+      <i class="fas fa-newspaper"></i>
+      <span>News</span>
+    </button>
+    <button class="footer-btn" id="ai-btn">
+      <i class="fas fa-robot"></i>
+      <span>Mai AI</span>
+    </button>
+    <button class="footer-btn" id="wallet-btn">
+      <i class="fas fa-wallet"></i>
+      <span>Wallet</span>
+    </button>
+    <button class="footer-btn" id="menu-btn">
+      <i class="fas fa-bars"></i> <!-- Correct menu icon -->
+      <span>More..</span>
+    </button>
+  </footer>
+</nav>
   </div>
+  </div>
+      </div>
+      
+   
+  
     <script src="app.js"></script>
   <script>
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };

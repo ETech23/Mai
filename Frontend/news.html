@@ -20,6 +20,7 @@
 </head>
 
 <body>
+  <div class="no-select">
   <div id="desktop-hint" class="hidden"></div>
   <section id="news" class="news-section">
   <h2>Latest News</h2>
@@ -59,16 +60,18 @@
     <!-- Article 3-->
  <div class="news-article" data-title="The Impact of Artificial Intelligence: Transforming Lives, Business, and the Global Economy">
     <h4 style="text-align: left">The Impact of Artificial Intelligence: Transforming Lives, Businesses, and the Global Economy</h4>
-    <img src="img/ai.webp" style="border-radius: 10px" alt="Image showing connection between ai and its impact areas" >
+    <img src="img/ai.webp" style="border-radius: 10px" alt="Image showing connection between ai and its impact areas">
     <br>
     
     <!-- Short Description -->
-<p id="short-description">
-    Artificial Intelligence (AI) has rapidly evolved from a futuristic concept to an integral part of daily life, influencing how we live, work, and interact. Its transformative power extends across various domains, creating a profound impact on individuals, businesses,...</p>
+    <p id="short-description">
+        Artificial Intelligence (AI) has rapidly evolved from a futuristic concept to an integral part of daily life, influencing how we live, work, and interact. Its transformative power extends across various domains, creating a profound impact on individuals, businesses,...
+    </p>
     
-<!-- Full Description (Initially Hidden) -->
-<div id="full-description" style="display: none;">
-  <p>
+    <!-- Full Description (Initially Hidden) -->
+    <div id="full-description" style="display: none;">
+        <p>
+
 Artificial Intelligence (AI) has rapidly evolved from a futuristic concept to an integral part of daily life, influencing how we live, work, and interact. Its transformative power extends across various domains, creating a profound impact on individuals, businesses, and the economies of nations. Below, we explore the key areas where AI has left its mark and the tangible achievements shaping the modern world.</p><br>
   
   <h3>1. Impact on People’s Lives</h3>
@@ -178,7 +181,7 @@ The journey of AI is just beginning, and its potential remains boundless—resha
 </div>
 
  <!-- Read More Button -->
-<button class="read-more" onclick="toggleFullArticle(this)">Read More</button>
+<button class="toggle-button" onclick="toggleFullArticle(this)">Read More</button>
 
     <!-- Reaction Buttons -->
 <div class="reaction-buttons">
@@ -249,7 +252,7 @@ While Trump’s promises are favorable for the crypto and AI sectors, critics ar
 </div>
 
  <!-- Read More Button -->
-<button class="read-more" onclick="toggleFullArticle(this)">Read More</button>
+<button class="toggle-button" onclick="toggleFullArticle(this)">Read More</button>
 
     <!-- Reaction Buttons -->
 <div class="reaction-buttons">
@@ -337,7 +340,7 @@ Join Mai today and become part of a community that’s shaping the future of AI-
     </div>
 
     <!-- Read More Button -->
-    <button class="read-more" onclick="toggleFullArticle(this)">Read More</button>
+    <button class="toggle-button" onclick="toggleFullArticle(this)">Read More</button>
 
     <!-- Reaction Buttons -->
     <div class="reaction-buttons">
@@ -376,9 +379,15 @@ Join Mai today and become part of a community that’s shaping the future of AI-
     <i class="fas fa-wallet"></i>
     <span>Wallet</span>
   </button>
+    <button class="footer-btn" id="menu-btn">
+      <i class="fas fa-bars"></i> <!-- Correct menu icon -->
+      <span>More..</span>
+    </button>
 </footer>
+ </div>
 
 <script src="news.js"></script>
   <!--<script src="app.js"></script>-->
   </body>
 </html>
+    

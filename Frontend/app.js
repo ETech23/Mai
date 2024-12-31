@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningInterval;
   let countdownInterval;
   
+  
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
@@ -83,7 +84,7 @@ const token = localStorage.getItem("token");
       formContainer.classList.remove("hidden");
       
     }
-  }, 3000); // Adjust time to suit your needs
+  }, 1500); // Adjust time to suit your needs
   
   // Redirect for desktop users
   const isDesktop = window.innerWidth > 768;
@@ -1074,11 +1075,11 @@ userInfoDropdown.innerHTML = `
   
   <hr>
   
-  <p><i class="fas fa-toolbox"></i> <strong><a href="#">Utilities</a></strong></p>
-  <p><i class="fas fa-road"></i> <strong><a href="#">Roadmap</a></strong></p>
+  <p><i class="fas fa-toolbox"></i> <strong><a href="more.html#utilities">Utilities</a></strong></p>
+  <p><i class="fas fa-road"></i> <strong><a href="more.html#roadmap">Roadmap</a></strong></p>
   <p><i class="fas fa-file-alt"></i> <strong><a href="#">White Paper</a></strong></p>
-  <p><i class="fas fa-question-circle"></i> <strong><a href="#">FAQs</a></strong></p>
-  <p><i class="fas fa-shield-alt"></i> <strong><a href="#">Privacy Policy</a></strong></p>
+  <p><i class="fas fa-question-circle"></i> <strong><a href="more.html#fag">FAQs</a></strong></p>
+  <p><i class="fas fa-shield-alt"></i> <strong><a href="more.html#privacy-policy">Privacy Policy</a></strong></p>
   
   <hr>
   
@@ -1248,7 +1249,7 @@ fetchUserData();
   
   // footer btns
   document.getElementById("home-btn").addEventListener("click", () => {
-  window.location.href = "index.html"; // Navigate to Home
+    href = "#index.html"; // Navigate to Home
 });
 
 document.getElementById("news-btn").addEventListener("click", () => {
@@ -1259,9 +1260,19 @@ document.getElementById("ai-btn").addEventListener("click", () => {
   window.location.href = "ai.html"; // Navigate to Mai AI
 });
 
-document.getElementById("wallet-btn").addEventListener("click", () => {
-  window.location.href = ""; // Navigate to Wallet
+  
+  document.getElementById("menu-btn").addEventListener("click", () => {
+  window.location.href = "more.html"; // Navigate to Mai AI
 });
+
+  
+  //document.getElementById("menu-btn").addEventListener("click", () => {
+ // window.location.href = ""; // Navigate to Wallet
+//});
+  
+//document.getElementById("wallet-btn").addEventListener("click", () => {
+//window.location.href = ""; // Navigate to Wallet
+//});
   
   // Restore session on page load
   checkPersistentLogin();

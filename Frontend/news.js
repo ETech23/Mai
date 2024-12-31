@@ -12,6 +12,8 @@ const isDesktop = window.innerWidth > 768;
     `;
   }
 
+
+
   const footer = document.querySelector("footer"); // Select the footer element
 
   if (isDesktop && footer) {
@@ -28,7 +30,6 @@ function toggleFullArticle(button) {
     return;
   }
   
-  
   // Get the short and full descriptions
   const shortDescription = article.querySelector("#short-description");
   const fullDescription = article.querySelector("#full-description");
@@ -43,11 +44,43 @@ function toggleFullArticle(button) {
     shortDescription.style.display = "none";
     fullDescription.style.display = "block";
     button.textContent = "Show Less";
+
+    // Add an event listener to fold back when clicking inside the full description
+    fullDescription.addEventListener("click", foldBackContent);
   } else {
     shortDescription.style.display = "block";
     fullDescription.style.display = "none";
     button.textContent = "Read More";
+    
+    // Remove the click event listener when the full content is hidden
+    fullDescription.removeEventListener("click", foldBackContent);
   }
+}
+
+// Fold the content back to short description
+function foldBackContent(event) {
+  const article = event.target.closest(".news-article");
+  
+  if (!article) {
+    console.error("Article element not found!");
+    return;
+  }
+  
+  const shortDescription = article.querySelector("#short-description");
+  const fullDescription = article.querySelector("#full-description");
+  const button = article.querySelector(".toggle-button");
+
+  if (!shortDescription || !fullDescription || !button) {
+    console.error("Elements not found!");
+    return;
+  }
+
+  shortDescription.style.display = "block";
+  fullDescription.style.display = "none";
+  button.textContent = "Read More";
+
+  // Remove the event listener after the content is folded back
+  fullDescription.removeEventListener("click", foldBackContent);
 }
 
 
@@ -286,6 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const newsButton = document.getElementById("news-btn");
   const aiButton = document.getElementById("ai-btn");
   const walletButton = document.getElementById("wallet-btn");
+  const menuButton =
+  document.getElementById("menu-btn");
 
   if (homeButton) {
     homeButton.addEventListener("click", () => {
@@ -308,6 +343,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (walletButton) {
     walletButton.addEventListener("click", () => {
       window.location.href = "";
+    });
+  }
+  
+    if (menuButton) {
+    menuButton.addEventListener("click", () => {
+      window.location.href = "more.html";
     });
   }
 });
