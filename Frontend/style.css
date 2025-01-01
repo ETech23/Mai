@@ -1,8 +1,25 @@
+.filler {
+     margin-top: 20px;
+}
+     
+      .message {
+      color: white;
+      display: none;
+      position: absolute;
+      background-color: #333;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      max-width: 250px;
+      z-index: 10;
+    }
 
 
 
 /* Default state of each div */
 .div-content {
+     w
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
 }
 
@@ -45,6 +62,31 @@ body, h1, h2, h3, p, ul, ol, figure {
   display: none;
 }
 
+.bubble-background {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: lightgoldenrodyellow;
+    overflow: hidden;
+}
+
+.bubble {
+    position: absolute;
+    background-color: #2C3E30;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: float 10s infinite ease-in-out;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) translateX(0);
+    }
+    100% {
+        transform: translateY(-100vh) translateX(20px);
+    }
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: #2C3E30;
@@ -52,54 +94,140 @@ body {
   margin: 0;
 }
 
-/* Formula Container */
+/* General Section Styles */
+.news-section {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    background-color: #F5F8FF;
+}
+
+/* Section Heading */
+h2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #3B3B3B;
+    margin-bottom: 15px;
+}
+
+/* Div Content - Common Styling */
+.div-content {
+    border-radius: 12px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+/* Purple Section */
+.section-purple {
+    background-color: #2C3E30;
+    color: #fff;
+}
+
+.section-purple h3 {
+    font-size: 18px;
+    color: #FFF;
+    margin-bottom: 10px;
+}
+
+.section-purple p {
+    font-size: 14px;
+    color: #EDEDF7;
+    line-height: 1.6;
+}
+
+/* Light Section */
+.section-light {
+    background-color: #F9FAFB;
+    color: #3B3B3B;
+}
+
+.section-light h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.section-light p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.section-light ul {
+    margin-left: 20px;
+    line-height: 1.5;
+}
+
+/* Light Gray Section */
+.section-light-gray {
+    background-color: #EDEDED;
+    color: #3B3B3B;
+}
+
+.section-light-gray h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* White Section */
+.section-white {
+    background-color: #FFFFFF;
+    color: #3B3B3B;
+    border: 1px solid #E0E0E0;
+}
+
+.section-white h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Formula Styling */
 .formula-container {
-    overflow-x: auto;
-    background: #f9f9f9;
+    background-color: #F9FAFB;
     padding: 10px;
-    border-radius: 5px;
-    margin: 10px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
 }
 
-/* Example Math Calculations */
-.math-example {
-    margin-top: 15px;
-    background: #fdfdfd;
-    padding: 10px;
-    border-left: 3px solid #4CAF50;
-    border-radius: 5px;
-}
-
+/* Math Example Styling */
 .math-example ul {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
 }
 
 .math-example li {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    line-height: 1.4;
 }
 
-/* Lists */
-ul {
-    list-style-type: disc;
-    margin-left: 20px;
-}
-
-ul li {
-    margin-bottom: 10px;
-}
-
-/* Paragraphs */
+/* Paragraph Spacing */
 p {
-    line-height: 1.6;
-    color: #555;
+    margin: 10px 0;
 }
+
+/* Button Styling */
+/**button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #388E3C;
+}**/
 
 /* Responsive Design */
-@media (max-width: 600px) {
-    .news-section {
+@media (max-width: 768px) {
+    .div-content {
         padding: 15px;
+    }
+    .formula-container {
+        font-size: 13px;
     }
 }
 /* Popup Styles */
@@ -271,7 +399,7 @@ header {
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(#2C3E30, black, #998e5c);
-  padding: 20px;
+  padding: 10px;
   color: #8C9F92;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -611,50 +739,12 @@ box-shadow: 10px 4px 6px rgba(0, 0, 0, 0.5);
   display: none;
 }
 
-/* News Section */
-.news-section {
-  background-color: #998c5e;
-  padding: 50px 20px;
-  margin-top: 40px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
-
-.news-section h2 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.news-article, .update {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  border: 2px solid #A3B1A8;
-  border-radius: 10px;
-  padding: 20px;
-  background: #8C9F92;
-  text-align: justify;
-  font-family: "Georgia", serif;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
 
 
-.news-article:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
-}
 
-.news-article h4,
-.news-article h3 
-.update {
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
+
+
+.
 
 .news-article p, ul {
   line-height: 1.6;

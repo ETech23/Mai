@@ -20,42 +20,69 @@ const isDesktop = window.innerWidth > 768;
     footer.style.display = "none"; // Hide the footer for desktop users
   }
 
-// Toggle full article visibility
-function toggleFullArticle(button) {
-  // Find the closest article container for the clicked button
-  const article = button.closest(".news-article");
-  
-  if (!article) {
-    console.error("Article element not found!");
-    return;
+// Toggle full article visibility and handle image resizing
+function toggleFullArticle(article) {
+  // Find the content area and expand it
+  const content = article.querySelector(".content");
+  if (content) {
+    content.classList.toggle("expanded");
   }
-  
-  // Get the short and full descriptions
+
+  // Get the short and full descriptions, image, and title
   const shortDescription = article.querySelector("#short-description");
   const fullDescription = article.querySelector("#full-description");
-
-  if (!shortDescription || !fullDescription) {
-    console.error("Descriptions not found!");
+  const image = article.querySelector("img");
+  
+  if (!shortDescription || !fullDescription || !image) {
+    console.error("Required elements not found!");
     return;
   }
 
-  // Toggle visibility of the short and full descriptions
+  // Toggle visibility and layout
   if (fullDescription.style.display === "none" || !fullDescription.style.display) {
+    // Show full description
     shortDescription.style.display = "none";
     fullDescription.style.display = "block";
-    button.textContent = "Show Less";
 
-    // Add an event listener to fold back when clicking inside the full description
-    fullDescription.addEventListener("click", foldBackContent);
+    // Update image layout for full description
+    image.style.width = "100%";
+    image.style.height = "150px";
+    image.style.float = "none";
+    image.style.marginRight = "0";
+    image.style.marginTop = "10px";
+
+    // Add full-view class
+    article.classList.remove("short-view");
+    article.classList.add("full-view");
   } else {
+    // Show short description
     shortDescription.style.display = "block";
     fullDescription.style.display = "none";
-    button.textContent = "Read More";
-    
-    // Remove the click event listener when the full content is hidden
-    fullDescription.removeEventListener("click", foldBackContent);
+
+    // Update image layout for short description
+    image.style.width = "150px";
+    image.style.height = "80px";
+    image.style.float = "left";
+    image.style.marginRight = "10px";
+    image.style.marginTop = "0";
+
+    // Add short-view class
+    article.classList.remove("full-view");
+    article.classList.add("short-view");
   }
 }
+
+// Attach click event listener to the entire article (except like/love buttons)
+document.querySelectorAll(".news-article").forEach(article => {
+  article.addEventListener("click", function(event) {
+    // Prevent the like and love buttons from triggering the toggle
+    if (event.target.closest(".like-btn, .dislike-btn, .view-count")) {
+      return;
+    }
+
+    toggleFullArticle(article);
+  });
+});
 
 // Fold the content back to short description
 function foldBackContent(event) {
@@ -68,18 +95,30 @@ function foldBackContent(event) {
   
   const shortDescription = article.querySelector("#short-description");
   const fullDescription = article.querySelector("#full-description");
+  const image = article.querySelector("img");
   const button = article.querySelector(".toggle-button");
 
-  if (!shortDescription || !fullDescription || !button) {
+  if (!shortDescription || !fullDescription || !image || !button) {
     console.error("Elements not found!");
     return;
   }
 
+  // Reset to short description mode
   shortDescription.style.display = "block";
   fullDescription.style.display = "none";
   button.textContent = "Read More";
 
-  // Remove the event listener after the content is folded back
+  // Update image layout for short description
+  image.style.width = "100px";
+  image.style.height = "80px";
+  image.style.float = "left";
+  image.style.marginRight = "10px";
+
+  // Add short-view class
+  article.classList.remove("full-view");
+  article.classList.add("short-view");
+
+  // Remove the event listener
   fullDescription.removeEventListener("click", foldBackContent);
 }
 

@@ -1,3 +1,36 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const bubbleContainer = document.querySelector('.bubble-background');
+
+    if (!bubbleContainer) {
+        console.error('Bubble container not found!');
+        return;
+    }
+
+    // Create 30 bubbles dynamically
+    for (let i = 0; i < 30; i++) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+
+        // Random size between 20px and 120px
+        const size = Math.random() * 100 + 20; 
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+
+        // Random horizontal position (0% - 100%)
+        const leftPosition = Math.random() * 100;
+        bubble.style.left = `${leftPosition}%`;
+
+        // Random animation duration (5s - 15s)
+        bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
+
+        // Random animation delay (0s - 5s)
+        bubble.style.animationDelay = `${Math.random() * 5}s`;
+
+        bubbleContainer.appendChild(bubble);
+    }
+});
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // DOM Elements
   const formContainer = document.getElementById("form-container");
@@ -25,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningProgress = 0;
   let miningInterval;
   let countdownInterval;
-  
   
   // **Persistent Login Check**
   async function checkPersistentLogin() {
@@ -92,12 +124,39 @@ const token = localStorage.getItem("token");
   if (isDesktop) {
     // Redirect to the news page
     window.location.href = "./news.html";
-    
-
-
-  
   }
 
+    const powText = document.getElementById('pow-text');
+const messageBox = document.getElementById('message-box');
+
+// For mouse devices (desktop)
+powText.addEventListener('mousedown', function() {
+  messageBox.style.display = 'block'; // Show message
+});
+
+powText.addEventListener('mouseup', function() {
+  messageBox.style.display = 'none'; // Hide message
+});
+
+powText.addEventListener('mouseleave', function() {
+  messageBox.style.display = 'none'; // Hide message if mouse leaves
+});
+
+// For touch devices (mobile)
+powText.addEventListener('touchstart', function() {
+  messageBox.style.display = 'block'; // Show message
+});
+
+powText.addEventListener('touchend', function() {
+  messageBox.style.display = 'none'; // Hide message
+});
+
+powText.addEventListener('touchcancel', function() {
+  messageBox.style.display = 'none'; // Hide message if touch is canceled
+});
+
+  
+  
   // Register the service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -222,23 +281,70 @@ function updateApp() {
     }
   }
 
-  // **Start Countdown Timer**
-  function startCountdown(remainingTime) {
+  
+
+// **Start Countdown Timer with Progress Circle Sync**
+function startCountdown(remainingTime, totalTime) {
     if (countdownInterval) clearInterval(countdownInterval);
 
-    countdownInterval = setInterval(() => {
-      if (remainingTime <= 0) {
-        clearInterval(countdownInterval);
-        miningCountdown.textContent = "Next session available!";
-      } else {
-        const minutes = Math.floor(remainingTime / (60 * 1000));
-        const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-        miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-        remainingTime -= 1000;
-      }
-    }, 1000);
-  }
+    const startTime = Date.now();
+    const endTime = startTime + remainingTime;
 
+    // Save endTime and totalTime in localStorage
+    localStorage.setItem('countdownEndTime', endTime);
+    localStorage.setItem('countdownTotalTime', totalTime || remainingTime);
+
+    countdownInterval = setInterval(() => {
+        const currentTime = Date.now();
+        const timeLeft = endTime - currentTime;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+            localStorage.removeItem('countdownEndTime');
+            localStorage.removeItem('countdownTotalTime');
+        } else {
+            const minutes = Math.floor(timeLeft / (60 * 1000));
+            const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
+            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+
+            // Update Progress Circle
+            const totalTimeStored = parseInt(localStorage.getItem('countdownTotalTime'), 10);
+            const progressPercentage = ((totalTimeStored - timeLeft) / totalTimeStored) * 100;
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
+        }
+    }, 1000);
+}
+
+// **Resume Countdown on Page Load**
+function resumeCountdown() {
+    const endTime = parseInt(localStorage.getItem('countdownEndTime'), 10);
+    const totalTime = parseInt(localStorage.getItem('countdownTotalTime'), 10);
+
+    if (endTime && totalTime) {
+        const currentTime = Date.now();
+        const remainingTime = endTime - currentTime;
+
+        if (remainingTime > 0) {
+            startCountdown(remainingTime, totalTime); // Resume with remaining time and total time
+        } else {
+            // Timer expired
+            localStorage.removeItem('countdownEndTime');
+            localStorage.removeItem('countdownTotalTime');
+            miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+        }
+    }
+}
+
+// **Ensure DOM is Loaded Before Initialization**
+
+    
+  
   // **Continue Mining**
  // Define the updateBalance function first
 async function updateBalance(newBalance) {
@@ -401,10 +507,39 @@ minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
       localStorage.setItem("minedBalance", newBalance.toFixed(4));
       minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
 
-      progressCircle.style.background = `conic-gradient(
+      /**progressCircle.style.background = `conic-gradient(
   #2C3E30 ${miningProgress}%, 
   #718074 ${miningProgress}% 100%
-)`;
+)`;**/
+      
+      function startCountdown(remainingTime) {
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    const totalTime = remainingTime; // Store initial remaining time for reference
+
+    countdownInterval = setInterval(() => {
+        if (remainingTime <= 0) {
+            clearInterval(countdownInterval);
+            miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+        } else {
+            const minutes = Math.floor(remainingTime / (60 * 1000));
+            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+
+            // Update Progress Bar
+            let progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
+            progressPercentage = Math.min(progressPercentage, 100); // Ensure it doesn't exceed 100%
+
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
+
+            remainingTime -= 1000;
+        }
+    }, 1000);
+}
 
       // Update backend balance
       try {

@@ -45,7 +45,11 @@
         <button id="logout-button">Log Out</button>
       </div>
       
-      <p style="text-align: center"><strong>Welcome!</strong><br> 1 MAI ≈ $2</p>
+      <p style="text-align: center"><strong id="pow-text">POW<sup>?</sup></strong>
+
+  <br> 1 MAI ≈ $2</p>
+        
+        <div class="message" id="message-box">Your activities demonstrate your Proof of Work. The more mining tasks you complete, the greater your rewards.</div>
       
     </header>
   
@@ -65,7 +69,7 @@
   font-size: 14px;">
   Install App
 </button>
-     
+      
     <main id="dynamic-content" class="mining-container">
       <div id="mining-dashboard">
   <div id="streak-level-container"></div>
@@ -78,6 +82,7 @@
       <p id="mining-countdown">Next session in: --:--:--</p>
       <button id="activate-mining">Activate Mining</button>
     </main>
+     
   </div>
  
   
@@ -155,18 +160,20 @@
 
   
 
-<section id="news" class="news-section hidden" >
-    <h2>About MAI </h2>
+
+<section id="news" class="news-section hidden">
     
-    <div class="update div-content" style="background-color: white; ">
-        <h3 style="color: black">How the Mining Phase Works</h3><br>
-        
+    <h2>About MAI</h2>
+    
+    <div class="update div-content section-purple">
+        <h3>How the Mining Phase Works</h3>
         <p>
             Mai employs an AI-powered mining system, allowing users to earn tokens seamlessly through participation, engagement, and collaboration. This innovative approach ensures both fairness and scalability, rewarding users based on their activity and community growth contributions.
         </p>
     </div>
-    <div class="update div-content" style="background-color: white">
-        <h4 style="color: black">Key Aspects of Mai’s Mining System</h4>
+
+    <div class="update div-content section-light">
+        <h4>Key Aspects of Mai’s Mining System</h4>
         <ul>
             <li><b>Active Participation:</b>
                 <p>Users are rewarded for remaining active during mining sessions. Mining operates on a session-based model, where users activate mining for a set duration.</p>
@@ -177,68 +184,67 @@
             <li><b>Collaboration via Referrals:</b>
                 <p>Referring others to join Mai not only grows the community but also enhances your mining rate. Every successful referral increases the mining bonus by 5%.</p>
             </li>
-        </ul></div>
-<div class="update div-content" style="background-color: white">
-        <h4 style="color: black">Mining Rate Mechanism</h4>
+        </ul>
+    </div>
+
+    <div class="update div-content section-light-gray">
+        <h4>Mining Rate Mechanism</h4>
         <p>The mining rate dynamically adjusts based on referrals, ensuring early adopters and active users gain fair rewards.</p>
         <h4>Key Components</h4>
-<ul>
-    <li><b>Base Rate:</b> 
-        0.0005MAI per second
-  </li>
-    <li><b>Referral Bonus:</b> 
-        +5% per referred user
-   </li>
-</ul>
-</div>
-    <div class="update div-content" style="background-color: white">
-  <h4 style="color: black">Mining Rate Formula</h4>
-<div class="formula-container">
-\[
-\begin{aligned}
-\text{Mining Rate} &= \\
-\text{Base Rate} \times \left(1 + (\text{referralCount} \times 0.05)\right)
-\end{aligned}
-\]
-</div>
+        
+            <li><b>Base Rate:</b> 0.0005MAI per second</li>
+            <li><b>Referral Bonus:</b> +5% per referred user</li>
+        
+    </div>
 
-        <h4 style="color: black">Example Calculations</h4>
-<div class="math-example">
-    <ul>
-        <li>
-            <b>5 Referrals:</b><br>
+    <div class="update div-content section-white">
+        <h4>Mining Rate Formula</h4>
+        <div class="formula-container">
 \[
             \begin{aligned}
-            &0.0005 \times (1 + (5 \times 0.05)) \\
-            &= 0.0005 \times 1.25 \\
-            &= 0.000625
+            \text{Mining Rate} &= \\
+            \text{Base Rate} \times \left(1 + (\text{referralCount} \times 0.05)\right)
             \end{aligned}
 \]
-        </li>
-        <li>
-            <b>10 Referrals:</b><br>
-\[
-            \begin{aligned}
-            &0.0005 \times (1 + (10 \times 0.05)) \\
-            &= 0.0005 \times 1.5 \\
-            &= 0.00075
-            \end{aligned}
-\]
-        </li>
-        <li>
-            <b>Midpoint Check:</b><br>
-\[
-            \begin{aligned}
-            &\frac{0.0005 + 0.00075}{2} \\
-            &= \frac{0.00125}{2} \\
-            &= 0.000625
-            \end{aligned}
-\]
-        </li>
-    </ul>
-</div>
+        </div>
 
-        <h4 style="color: black">Why It Seems Off</h4>
+        <h4>Example Calculations</h4>
+        <div class="math-example">
+            <ul>
+                <li>
+                    <b>5 Referrals:</b><br>
+\[
+                    \begin{aligned}
+                    &0.0005 \times (1 + (5 \times 0.05)) \\
+                    &= 0.0005 \times 1.25 \\
+                    &= 0.000625
+                    \end{aligned}
+\]
+                </li>
+                <li>
+                    <b>10 Referrals:</b><br>
+\[
+                    \begin{aligned}
+                    &0.0005 \times (1 + (10 \times 0.05)) \\
+                    &= 0.0005 \times 1.5 \\
+                    &= 0.00075
+                    \end{aligned}
+\]
+                </li>
+                <li>
+                    <b>Midpoint Check:</b><br>
+\[
+                    \begin{aligned}
+                    &\frac{0.0005 + 0.00075}{2} \\
+                    &= \frac{0.00125}{2} \\
+                    &= 0.000625
+                    \end{aligned}
+\]
+                </li>
+            </ul>
+        </div>
+
+        <h4>Why It Seems Off</h4>
         <p>
             The values appear inconsistent because the increase is linear, not exponential. A 5% bonus per referral scales linearly with the number of referrals. The math holds up, and the linear growth ensures consistency.
         </p>
@@ -246,99 +252,17 @@
             This dynamic calculation ensures users are incentivized to expand the Mai ecosystem through referrals.
         </p>
     </div>
-
-
     
-    
-    <!-- Article 1-->
-      <section>
-  <div class="news-article div-content" data-title="The Mai Project">
-    <h4 style="text-align: left">The Mai Project: Rewarding Early Adoption Through AI-Powered Mining</h4>
-    <img src="img/land.webp" style="border-radius: 10px" alt="The Mai Project Image">
-    <br>
-  
-    <!-- Short Description -->
-    <p id="short-description">
-      The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and
-      community-driven platforms. Designed to onboard users seamlessly while rewarding early adopters...
-    </p>
-
-    <!-- Full Description (Initially Hidden) -->
-    <div id="full-description" style="display: none;">
-      <p>
-        The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and
-        community-driven platforms. Designed to onboard users seamlessly while rewarding early adopters, Mai offers a
-        unique opportunity to engage with an innovative AI system and be part of a rapidly evolving ecosystem.
-      </p>
-      <p>
-        At its core, Mai is an AI language model built to assist, educate, and connect users in meaningful ways. During
-        its initial phase, the platform incorporates a mining mechanism that allows users to earn Mai tokens by
-        interacting with the AI and completing specific activities
-      </p>
-      <p>
-      This mining phase is more than just an incentive program—it’s a gateway to a future of integrated AI-powered solutions that prioritize user engagement and reward participation.</p>
-
-      <h4>The Vision Behind Mai</h4>
-
-      <p>
-       The Mai Project envisions a future where AI serves as a collaborative partner for individuals and communities. Early adopters who participate in the mining phase will be rewarded with Mai tokens at the Token Generation Event (TGE). These tokens will serve as the platform's native currency and hold utility in various future services, such as:
-<ul >
-          <li>Accessing Premium AI Features: Users can utilize Mai tokens to unlock advanced AI tools and capabilities.</li>
-
-<li>Facilitating Collaborations: The platform plans to integrate a social feature where users can connect, network, and collaborate based on their interactions with the AI.</li>
-
-        <li>Supporting Community Growth: Mai tokens will enable users to contribute to and benefit from the platform's ongoing development.
-        </li>
-</ul>
-        </p>
-
-      <h4>How the Mining Phase Works</h4>
-<p>
-During the mining phase, users are rewarded with Mai tokens for their active participation. By engaging with the AI, users not only accumulate tokens but also provide valuable insights that help refine and improve the system. The mining process is simple, inclusive, and transparent, ensuring that every participant has a fair opportunity to earn rewards.
-
-One unique aspect of Mai’s onboarding process is its referral program. Early adopters can invite others to join the platform using personalized referral links. Each successful referral boosts the referrer's mining efficiency, incentivizing collaboration and expanding the community.
-</p>
-      <h4>The Future of Mai</h4>
-<p>
-As Mai evolves, it aims to transcend traditional AI applications by integrating a social platform that fosters collaboration and connection. Leveraging its advanced algorithms, the AI will analyze user interactions to suggest meaningful partnerships and collaborations. Whether you're an entrepreneur seeking like-minded individuals or a developer looking to team up on a project, Mai will help bridge the gap and facilitate impactful relationships.
-
-The Mai token will be central to this ecosystem, empowering users to transact, connect, and innovate. By combining AI with blockchain technology, Mai ensures that its services remain decentralized, secure, and community-oriented.
-</p>
-      <h4>Why Join Mai Now?</h4>
-<p>
-Becoming an early adopter of the Mai Project is not just about earning tokens—it's about being part of a pioneering journey that redefines how AI interacts with and benefits users. Here’s why you should consider joining today:
-
-Exclusive Rewards: Early adopters will be uniquely positioned to benefit from the TGE, receiving Mai tokens that can grow in utility and value as the platform expands.
-
-Cutting-Edge Innovation: Engage with a next-generation AI system that learns from you and adapts to your needs.
-
-Collaborative Opportunities: As Mai integrates its social platform, you’ll be at the forefront of a dynamic, AI-driven network of innovators and creators.
-</p>
-      <hr>
-      <p>
-The Mai Project represents a bold step into the future of AI and blockchain integration. By rewarding early adopters and fostering collaboration through innovative features, Mai is building a platform that empowers its users to grow, connect, and succeed.
-
-Join Mai today and become part of a community that’s shaping the future of AI-powered solutions. Together, we can redefine how technology interacts with the world—one token at a time.
-</p>
-      <p class="news-date">November 29, 2024</p> 
-      <!--
-      <button id="push-article">Push to Backend</button>
-    -->
-    </div>
-
-    <!-- Read More Button -->
-    <button class="read-more" onclick="toggleFullArticle(this)">Read More</button>
-
-    <!-- Reaction Buttons -->
-    <div class="reaction-buttons">
-      <div>
-        <p class="view-count" style="margin-top: 5px;">📊 <span class="views">0</span></p>
+     
+      <p><a href="news.html#about">More info..</a></p>
       </div>
-      <button class="like-btn">👍 <span class="like-count">0</span></button>
-      <button class="dislike-btn">❤️ <span class="dislike-count">0</span></button>
-    </div>
-  </div>
-  </section>
+</section>
+     
+      <div class="filler ">
+          <p style="text-align: center">.....</p>
+      </div>
+    
+
     
      <button id="task-button" class="task-button">Write Us</button>
     
@@ -346,8 +270,8 @@ Join Mai today and become part of a community that’s shaping the future of AI-
     <nav>
   <footer id="footer" class="fixed-footer">
     <button class="footer-btn" id="home-btn">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
+      <i class="fas fa-cogs"></i>
+      <span>POW</span>
     </button>
     <button class="footer-btn" id="news-btn">
       <i class="fas fa-newspaper"></i>

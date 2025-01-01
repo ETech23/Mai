@@ -11,3 +11,4 @@
 .no-select a {
   pointer-events: auto !important; /* Restore pointer events for buttons and links */
 }
+
