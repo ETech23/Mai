@@ -12,3 +12,6 @@
   pointer-events: auto !important; /* Restore pointer events for buttons and links */
 }
 
+.collapse li, p{
+  text-align: justify;
+}

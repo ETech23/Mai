@@ -25,7 +25,7 @@
 body {
   margin: 0;
   overflow: auto; 
-  background: linear-gradient(to bottom, #001f3f, #005f9f);
+  background: linear-gradient(to bottom, #2C3E30, #005f9f);
   color: #fff;
   font-family: Arial, sans-serif;
 }
