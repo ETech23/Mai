@@ -155,58 +155,70 @@ powText.addEventListener('touchcancel', function() {
   messageBox.style.display = 'none'; // Hide message if touch is canceled
 });
 
-    let points = 0; // Initial points
+    // Authentication Token (Replace with actual user token retrieval logic)
+const token = localStorage.getItem("token");
 
-// Fetch Points from Backend
+// Elements
+const dashboardPointsDisplay = document.getElementById("dashboard-points-display");
+const dropdownPointsDisplay = document.getElementById("dropdown-points-display");
+
+// Fetch Current Points from Backend
 async function fetchPoints() {
   try {
-    const response = await fetch('https://your-backend-url/api/points');
+    const response = await fetch("https://mai.fly.dev/api/points", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch points");
+    }
+
     const data = await response.json();
-    points = data.points || 0;
-    updatePointsDisplay();
+    updatePointsUI(data.points);
   } catch (error) {
-    console.error('Error fetching points:', error);
+    console.error("Error fetching points:", error.message);
   }
 }
 
 // Update Points on Backend
 async function updatePoints(increment) {
   try {
-    const response = await fetch('https://your-backend-url/api/points', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("https://mai.fly.dev/api/points", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ increment }),
     });
+
+    if (!response.ok) {
+      throw new Error("Failed to update points");
+    }
+
     const data = await response.json();
-    points = data.points;
-    updatePointsDisplay();
+    updatePointsUI(data.points);
   } catch (error) {
-    console.error('Error updating points:', error);
+    console.error("Error updating points:", error.message);
   }
 }
 
-// Update Points Display on Dashboard and Dropdown
-function updatePointsDisplay() {
-  // Update Dashboard
-  const dashboardPointsElement = document.getElementById('dashboard-points');
-  if (dashboardPointsElement) {
-    dashboardPointsElement.textContent = `${points.toFixed(1)} Points`;
-  }
-
-  // Update Dropdown
-  const dropdownPointsElement = document.getElementById('user-points');
-  if (dropdownPointsElement) {
-    dropdownPointsElement.textContent = `${points.toFixed(1)} Points`;
-  }
+// Update Points UI
+function updatePointsUI(points) {
+  dashboardPointsDisplay.textContent = points.toFixed(2);
+  dropdownPointsDisplay.textContent = points.toFixed(2);
 }
 
-// Start Timer to Add Points Every 20 Seconds
-setInterval(() => {
+// Timer to Increment Points Every 20 Seconds
+let pointsIncrementInterval = setInterval(() => {
   updatePoints(0.1); // Increment points by 0.1 every 20 seconds
 }, 20000);
 
-// Initialize Points on Page Load
-fetchPoints();
+// Initial Fetch on Page Load
+document.addEventListener("DOMContentLoaded", fetchPoints);
 
 
     

@@ -1,47 +1,61 @@
-const express = require('express');
+const express = require("express");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
-const mongoose = require('mongoose');
+const User = require("../models/User");
 
-// User Schema (if not already defined)
-const User = mongoose.model('User', new mongoose.Schema({
-  username: String,
-  email: String,
-  points: { type: Number, default: 0 }
-}));
+// Inline Middleware for Authentication
+const authenticate = (req, res, next) => {
+  const token = req.header("Authorization")?.split(" ")[1]; // Extract token from Authorization header
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
 
-// Middleware to mock authentication (Replace with your actual auth middleware)
-const authenticateUser = (req, res, next) => {
-  req.user = { id: '12345' }; // Replace with actual user ID from authentication
-  next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token using JWT_SECRET
+    req.user = decoded; // Attach decoded user to req.user
+    next();
+  } catch (err) {
+    console.error("Invalid or expired token:", err.message);
+    res.status(403).json({ message: "Invalid or expired token" });
+  }
 };
 
-// Route to get user points
-router.get('/points', authenticateUser, async (req, res) => {
+// **Get User Points**
+router.get("/", authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const user = await User.findById(req.user.id); // Use req.user.id from the decoded token
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
-    res.json({ points: user.points });
+    res.json({ success: true, points: user.points || 0 });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error fetching user points:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
-// Route to update points based on time spent
-router.post('/points', authenticateUser, async (req, res) => {
+// **Update User Points**
+router.post("/", authenticate, async (req, res) => {
   try {
-    const { increment } = req.body; // Points increment sent from frontend
-    const user = await User.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const { increment } = req.body; // Points increment sent from the frontend
 
-    user.points += increment;
+    if (typeof increment !== "number" || increment <= 0) {
+      return res.status(400).json({ success: false, message: "Invalid increment value" });
+    }
+
+    const user = await User.findById(req.user.id); // Find user by decoded token ID
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    user.points = (user.points || 0) + increment; // Add increment to user's points
     await user.save();
 
-    res.json({ message: 'Points updated', points: user.points });
+    res.json({ success: true, message: "Points updated successfully", points: user.points });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error updating user points:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
