@@ -155,7 +155,58 @@ powText.addEventListener('touchcancel', function() {
   messageBox.style.display = 'none'; // Hide message if touch is canceled
 });
 
-  
+    let points = 0;
+  let secondsSpent = 0;
+  let interval;
+
+  // Start tracking time
+  function startTracking() {
+    interval = setInterval(() => {
+      secondsSpent += 1;
+      
+      if (secondsSpent % 20 === 0) {
+        points += 0.1; // Award 0.1 points every 20 seconds
+        document.getElementById('points-display').innerHTML = `<small>${points.toFixed(1)} Points</small>`;
+        updatePointsBackend(points); // Update points on the server
+      }
+    }, 1000); // Run every second
+  }
+
+  // Stop tracking (optional, for when user logs out or leaves the page)
+  function stopTracking() {
+    clearInterval(interval);
+  }
+
+  // Send points update to backend
+  async function updatePointsBackend(points) {
+  try {
+    const response = await fetch('/api/points/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+        userId: 'user123', // Replace with dynamic user ID
+        points 
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update points on server');
+    }
+
+    const data = await response.json();
+    console.log('Points updated:', data);
+  } catch (error) {
+    console.error('Error updating points:', error);
+  }
+}
+  // Start tracking when the page loads
+  document.addEventListener('DOMContentLoaded', startTracking);
+  window.addEventListener('beforeunload', stopTracking); // Ensure cleanup on exit
+
+
+    
   
   // Register the service worker
 if ('serviceWorker' in navigator) {
@@ -1194,7 +1245,20 @@ const newBalance = currentBalance + miningRate;
 
 // Update balance in localStorage and UI
 localStorage.setItem("minedBalance", newBalance.toFixed(4));
-minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;  
+minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+      
+function updateUserPointsDisplay(newPoints) {
+  const pointsElement = document.getElementById('user-points');
+  if (pointsElement) {
+    pointsElement.textContent = newPoints.toFixed(1);
+  }
+}
+
+// Example update call
+setInterval(() => {
+  points += 0.1; // Increment points
+  updateUserPointsDisplay(points);
+}, 20000); // Every 20 seconds      
     
     // Update dropdown content
 // Update dropdown content
@@ -1207,6 +1271,8 @@ userInfoDropdown.innerHTML = `
   <p><i class="fas fa-cogs"></i> <strong></strong> ${miningRate.toFixed(5)} MAI/sec</p>
   <p><i class="fas fa-wallet"></i> <strong></strong> ${balance.toFixed(5)} MAI</p>
   <p><i class="fas fa-users"></i> <strong></strong> ${referralCount}</p>
+  <p><i class="fas fa-star"></i> <strong>Points:</strong> <span id="user-points">${points.toFixed(1)}</span></p>
+
   
   <hr>
   

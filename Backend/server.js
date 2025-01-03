@@ -54,6 +54,8 @@ app.use("/api/articles", require("./routes/articles")); // Includes reactions
 app.use("/api/tasks", require("./routes/tasks"));
 app.use("/api/messages", userMessages);
 app.use("/api/admin", adminRoutes);
+// Import points route
+app.use('/api/points', require('./routes/points'));
 
 // Catch-all Route for Unmatched Endpoints
 app.use((req, res) => {
