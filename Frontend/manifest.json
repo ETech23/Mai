@@ -4,7 +4,7 @@
   "description": "MAI AI token mining platform",
   "start_url": "/index.html",
   "scope": "/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "background_color": "#2C3E30",
   "theme_color": "#998e5c",
   "icons": [
