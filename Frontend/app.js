@@ -155,55 +155,58 @@ powText.addEventListener('touchcancel', function() {
   messageBox.style.display = 'none'; // Hide message if touch is canceled
 });
 
-    let points = 0;
-  let secondsSpent = 0;
-  let interval;
+    let points = 0; // Initial points
 
-  // Start tracking time
-  function startTracking() {
-    interval = setInterval(() => {
-      secondsSpent += 1;
-      
-      if (secondsSpent % 20 === 0) {
-        points += 0.1; // Award 0.1 points every 20 seconds
-        document.getElementById('points-display').innerHTML = `<small>${points.toFixed(1)} Points</small>`;
-        updatePointsBackend(points); // Update points on the server
-      }
-    }, 1000); // Run every second
-  }
-
-  // Stop tracking (optional, for when user logs out or leaves the page)
-  function stopTracking() {
-    clearInterval(interval);
-  }
-
-  // Send points update to backend
-  async function updatePointsBackend(points) {
+// Fetch Points from Backend
+async function fetchPoints() {
   try {
-    const response = await fetch('/api/points/update', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        userId: 'user123', // Replace with dynamic user ID
-        points 
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update points on server');
-    }
-
+    const response = await fetch('https://your-backend-url/api/points');
     const data = await response.json();
-    console.log('Points updated:', data);
+    points = data.points || 0;
+    updatePointsDisplay();
+  } catch (error) {
+    console.error('Error fetching points:', error);
+  }
+}
+
+// Update Points on Backend
+async function updatePoints(increment) {
+  try {
+    const response = await fetch('https://your-backend-url/api/points', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ increment }),
+    });
+    const data = await response.json();
+    points = data.points;
+    updatePointsDisplay();
   } catch (error) {
     console.error('Error updating points:', error);
   }
 }
-  // Start tracking when the page loads
-  document.addEventListener('DOMContentLoaded', startTracking);
-  window.addEventListener('beforeunload', stopTracking); // Ensure cleanup on exit
+
+// Update Points Display on Dashboard and Dropdown
+function updatePointsDisplay() {
+  // Update Dashboard
+  const dashboardPointsElement = document.getElementById('dashboard-points');
+  if (dashboardPointsElement) {
+    dashboardPointsElement.textContent = `${points.toFixed(1)} Points`;
+  }
+
+  // Update Dropdown
+  const dropdownPointsElement = document.getElementById('user-points');
+  if (dropdownPointsElement) {
+    dropdownPointsElement.textContent = `${points.toFixed(1)} Points`;
+  }
+}
+
+// Start Timer to Add Points Every 20 Seconds
+setInterval(() => {
+  updatePoints(0.1); // Increment points by 0.1 every 20 seconds
+}, 20000);
+
+// Initialize Points on Page Load
+fetchPoints();
 
 
     
@@ -1247,18 +1250,7 @@ const newBalance = currentBalance + miningRate;
 localStorage.setItem("minedBalance", newBalance.toFixed(4));
 minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
       
-function updateUserPointsDisplay(newPoints) {
-  const pointsElement = document.getElementById('user-points');
-  if (pointsElement) {
-    pointsElement.textContent = newPoints.toFixed(1);
-  }
-}
-
-// Example update call
-setInterval(() => {
-  points += 0.1; // Increment points
-  updateUserPointsDisplay(points);
-}, 20000); // Every 20 seconds      
+     
     
     // Update dropdown content
 // Update dropdown content
@@ -1271,7 +1263,7 @@ userInfoDropdown.innerHTML = `
   <p><i class="fas fa-cogs"></i> <strong></strong> ${miningRate.toFixed(5)} MAI/sec</p>
   <p><i class="fas fa-wallet"></i> <strong></strong> ${balance.toFixed(5)} MAI</p>
   <p><i class="fas fa-users"></i> <strong></strong> ${referralCount}</p>
-  <p><i class="fas fa-star"></i> <strong>Points:</strong> <span id="user-points">${points.toFixed(1)}</span></p>
+  <p><i class="fas fa-star"></i> <strong></strong> <span id="user-points">0.0 Points</span></p>
 
   
   <hr>
