@@ -155,12 +155,17 @@ powText.addEventListener('touchcancel', function() {
   messageBox.style.display = 'none'; // Hide message if touch is canceled
 });
 
-    // Authentication Token (Replace with actual user token retrieval logic)
+// Authentication Token (Replace with actual user token retrieval logic)
 const token = localStorage.getItem("token");
 
 // Elements
-const dashboardPointsDisplay = document.getElementById("dashboard-points-display");
-const dropdownPointsDisplay = document.getElementById("dropdown-points-display");
+const dashboardPointsDisplay = document.getElementById("dashboard-points");
+const dropdownPointsDisplay = document.querySelector("#dropdown-points");
+
+// Ensure token exists before proceeding
+if (!token) {
+  console.error("Authentication token is missing. Please log in.");
+}
 
 // Fetch Current Points from Backend
 async function fetchPoints() {
@@ -177,7 +182,11 @@ async function fetchPoints() {
     }
 
     const data = await response.json();
-    updatePointsUI(data.points);
+    if (data.success) {
+      updatePointsUI(data.points);
+    } else {
+      throw new Error(data.message || "Failed to fetch points");
+    }
   } catch (error) {
     console.error("Error fetching points:", error.message);
   }
@@ -200,25 +209,38 @@ async function updatePoints(increment) {
     }
 
     const data = await response.json();
-    updatePointsUI(data.points);
+    if (data.success) {
+      updatePointsUI(data.points); // Update UI with new points
+    } else {
+      throw new Error(data.message || "Failed to update points");
+    }
   } catch (error) {
     console.error("Error updating points:", error.message);
   }
 }
 
-// Update Points UI
+// Update Points in the UI
 function updatePointsUI(points) {
-  dashboardPointsDisplay.textContent = points.toFixed(2);
-  dropdownPointsDisplay.textContent = points.toFixed(2);
+  if (dashboardPointsDisplay) {
+    dashboardPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+  }
+
+  if (dropdownPointsDisplay) {
+    dropdownPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+  }
 }
 
 // Timer to Increment Points Every 20 Seconds
-let pointsIncrementInterval = setInterval(() => {
-  updatePoints(0.1); // Increment points by 0.1 every 20 seconds
+let pointsIncrementInterval = setInterval(async () => {
+  await updatePoints(0.1); // Increment points by 0.1 every 20 seconds
 }, 20000);
 
 // Initial Fetch on Page Load
-document.addEventListener("DOMContentLoaded", fetchPoints);
+document.addEventListener("DOMContentLoaded", () => {
+  if (token) {
+    fetchPoints();
+  }
+});
 
 
     
@@ -1264,18 +1286,21 @@ minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
       
      
     
-    // Update dropdown content
 // Update dropdown content
 userInfoDropdown.innerHTML = `
-  <p style="text-align: center"><strong>MAI App</strong></p>
-  <p><i class="fas fa-user"></i> <strong></strong> ${name}</p>
-  <p><i class="fas fa-user-tag"></i> <strong></strong> ${username}</p>
-  <p><i class="fas fa-envelope"></i> <strong></strong> ${email}</p>
-  <p><i class="fas fa-fire"></i> <strong></strong> ${streakLevel}</p>
-  <p><i class="fas fa-cogs"></i> <strong></strong> ${miningRate.toFixed(5)} MAI/sec</p>
-  <p><i class="fas fa-wallet"></i> <strong></strong> ${balance.toFixed(5)} MAI</p>
-  <p><i class="fas fa-users"></i> <strong></strong> ${referralCount}</p>
-  <p><i class="fas fa-star"></i> <strong></strong> <span id="user-points">0.0 Points</span></p>
+  <p class="text-center mb-2"><strong>MAI App</strong></p>
+  <p class="mb-2"><i class="fas fa-user me-2"></i> <strong>${name}</strong></p>
+  <p class="mb-2"><i class="fas fa-user-tag me-2"></i> <strong>${username}</strong></p>
+  <p class="mb-2"><i class="fas fa-envelope me-2"></i> <strong>${email}</strong></p>
+  <p class="mb-2"><i class="fas fa-fire me-2"></i> <strong>${streakLevel}</strong></p>
+  <p class="mb-2"><i class="fas fa-cogs me-2"></i> <strong>${miningRate.toFixed(5)} MAI/sec</strong></p>
+  <p class="mb-2"><i class="fas fa-wallet me-2"></i> <strong>${balance.toFixed(5)} MAI</strong></p>
+  <p class="mb-2"><i class="fas fa-users me-2"></i> <strong>${referralCount}</strong></p>
+  <p class="mb-2">
+  <i class="fas fa-star me-2"></i> 
+  <strong id="dropdown-points">0.00 Points</strong>
+</p>
+
 
   
   <hr>
