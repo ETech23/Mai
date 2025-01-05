@@ -44,13 +44,12 @@ async function apiRequest(endpoint, method = "GET", body = null) {
 
 // Fetch users
 async function fetchUsers(page = 1) {
-  const queryParams = new URLSearchParams({
-    page: page.toString(), // Ensure page is passed as a string
-    minBalance: minBalanceInput.value || "", // Use empty string if no value
-    maxBalance: maxBalanceInput.value || "",
-    minReferrals: minReferralsInput.value || "",
-    maxReferrals: maxReferralsInput.value || "",
-  });
+  const queryParams = new URLSearchParams({ page: page.toString() });
+
+if (minBalanceInput.value) queryParams.append("minBalance", minBalanceInput.value);
+if (maxBalanceInput.value) queryParams.append("maxBalance", maxBalanceInput.value);
+if (minReferralsInput.value) queryParams.append("minReferrals", minReferralsInput.value);
+if (maxReferralsInput.value) queryParams.append("maxReferrals", maxReferralsInput.value);
 
   try {
     const data = await apiRequest(`/api/admin/users?${queryParams}`);

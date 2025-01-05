@@ -1,37 +1,11 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const bubbleContainer = document.querySelector('.bubble-background');
-
-    if (!bubbleContainer) {
-        console.error('Bubble container not found!');
-        return;
-    }
-
-    // Create 30 bubbles dynamically
-    for (let i = 0; i < 30; i++) {
-        const bubble = document.createElement('div');
-        bubble.classList.add('bubble');
-
-        // Random size between 20px and 120px
-        const size = Math.random() * 100 + 20; 
-        bubble.style.width = `${size}px`;
-        bubble.style.height = `${size}px`;
-
-        // Random horizontal position (0% - 100%)
-        const leftPosition = Math.random() * 100;
-        bubble.style.left = `${leftPosition}%`;
-
-        // Random animation duration (5s - 15s)
-        bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
-
-        // Random animation delay (0s - 5s)
-        bubble.style.animationDelay = `${Math.random() * 5}s`;
-
-        bubbleContainer.appendChild(bubble);
-    }
-});
-
-
 document.addEventListener("DOMContentLoaded", () => {
+        initializePoints();
+        fetchPoints();
+        resumeCountdown();
+        // Restore session on page load
+        checkPersistentLogin(); 
+        console.log("checkPersistentLogin called");
+  });
   // DOM Elements
   const formContainer = document.getElementById("form-container");
   const authForm = document.getElementById("auth-form");
@@ -155,21 +129,41 @@ powText.addEventListener('touchcancel', function() {
   messageBox.style.display = 'none'; // Hide message if touch is canceled
 });
 
+
 // Authentication Token (Replace with actual user token retrieval logic)
-const token = localStorage.getItem("token");
+let token = localStorage.getItem("token");
 
-// Elements
+// User Activity Tracking
+let isUserActive = false;
+let lastActiveTime = Date.now();
+
+// Track User Activity
+document.addEventListener("scroll", () => {
+  isUserActive = true;
+  lastActiveTime = Date.now();
+});
+
+document.addEventListener("click", () => {
+  isUserActive = true;
+  lastActiveTime = Date.now();
+});
+
+// UI Elements for Displaying Points
+//const dropdownPointsDisplay = document.getElementById("dropdown-points");
 const dashboardPointsDisplay = document.getElementById("dashboard-points");
-const dropdownPointsDisplay = document.querySelector("#dropdown-points");
 
-// Ensure token exists before proceeding
-if (!token) {
-  console.error("Authentication token is missing. Please log in.");
-}
-
-// Fetch Current Points from Backend
+/**
+ * Fetch Current Points from Backend
+ */
 async function fetchPoints() {
+  if (!token) {
+    console.error("Missing authorization token");
+    return 0; // Return 0 points if no token
+  }
+
   try {
+    console.log("Fetching points from backend...");
+
     const response = await fetch("https://mai.fly.dev/api/points", {
       method: "GET",
       headers: {
@@ -177,23 +171,37 @@ async function fetchPoints() {
       },
     });
 
+    console.log("Response status:", response.status);
+
     if (!response.ok) {
       throw new Error("Failed to fetch points");
     }
 
     const data = await response.json();
-    if (data.success) {
-      updatePointsUI(data.points);
+    console.log("Fetched points data object:", data);
+
+    // Ensure correct access to points
+    if (data && data.success && typeof data.points === "number") {
+      console.log("Points fetched successfully:", data.points);
+      return data.points;
     } else {
-      throw new Error(data.message || "Failed to fetch points");
+      throw new Error("Invalid response structure: 'points' not found");
     }
   } catch (error) {
     console.error("Error fetching points:", error.message);
+    return 0;
   }
 }
 
-// Update Points on Backend
+/**
+ * Update Points on Backend
+ */
 async function updatePoints(increment) {
+  if (!token) {
+    console.error("Missing authorization token");
+    return 0;
+  }
+
   try {
     const response = await fetch("https://mai.fly.dev/api/points", {
       method: "POST",
@@ -210,37 +218,102 @@ async function updatePoints(increment) {
 
     const data = await response.json();
     if (data.success) {
-      updatePointsUI(data.points); // Update UI with new points
+      return data.points;
     } else {
       throw new Error(data.message || "Failed to update points");
     }
   } catch (error) {
     console.error("Error updating points:", error.message);
+    return 0;
   }
 }
 
-// Update Points in the UI
+/**
+ * Update UI with Points
+ */
 function updatePointsUI(points) {
+  const dashboardPointsDisplay = document.getElementById("dashboard-points");
+  const dropdownPointsDisplay = document.getElementById("dropdown-points");
+
   if (dashboardPointsDisplay) {
     dashboardPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+    console.log("Dashboard Points Updated:", points);
+  } else {
+    console.warn("Dashboard points display element not found.");
   }
 
   if (dropdownPointsDisplay) {
     dropdownPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+    console.log("Dropdown Points Updated:", points);
+  } else {
+    console.warn("Dropdown points display element not found.");
   }
 }
 
-// Timer to Increment Points Every 20 Seconds
+/**
+ * Initialize Points on Page Load and Maintain Sync
+ */
+let currentPoints = 0;
+
+async function initializePoints() {
+  if (!token) {
+    console.warn("No token found. Skipping points initialization.");
+    return;
+  }
+
+  try {
+    console.log("Initializing points on page load...");
+
+    // Fetch points from backend on page load
+    currentPoints = await fetchPoints();
+    console.log("Fetched Points on Load:", currentPoints);
+
+    // Immediately update the UI
+    if (typeof currentPoints === "number") {
+      updatePointsUI(currentPoints);
+    } else {
+      console.warn("Fetched points are not a valid number.");
+    }
+
+    // Start periodic synchronization every 10 seconds
+    setInterval(async () => {
+      try {
+        const latestPoints = await fetchPoints();
+        console.log("Fetched points during sync:", latestPoints);
+
+        if (latestPoints !== currentPoints) {
+          currentPoints = latestPoints;
+          updatePointsUI(currentPoints);
+        }
+      } catch (error) {
+        console.error("Error syncing points:", error.message);
+      }
+    }, 1000); // Sync every 1 seconds
+
+  } catch (error) {
+    console.error("Error initializing points:", error.message);
+  }
+}
+
+
+/**
+ * Increment Points Based on User Activity
+ */
 let pointsIncrementInterval = setInterval(async () => {
-  await updatePoints(0.1); // Increment points by 0.1 every 20 seconds
+  if (isUserActive && (Date.now() - lastActiveTime) < 15000) {
+    try {
+      const newPoints = await updatePoints(0.1); // Increment backend points by 0.1
+      currentPoints = newPoints; // Update local points
+      updatePointsUI(currentPoints); // Reflect in UI
+    } catch (error) {
+      console.error("Error incrementing points:", error.message);
+    }
+  }
+  isUserActive = false; // Reset activity state
 }, 20000);
 
-// Initial Fetch on Page Load
-document.addEventListener("DOMContentLoaded", () => {
-  if (token) {
-    fetchPoints();
-  }
-});
+
+
 
 
     
@@ -408,7 +481,6 @@ function startCountdown(remainingTime, totalTime) {
     }, 1000);
 }
 
-// **Resume Countdown on Page Load**
 function resumeCountdown() {
     const endTime = parseInt(localStorage.getItem('countdownEndTime'), 10);
     const totalTime = parseInt(localStorage.getItem('countdownTotalTime'), 10);
@@ -418,7 +490,18 @@ function resumeCountdown() {
         const remainingTime = endTime - currentTime;
 
         if (remainingTime > 0) {
-            startCountdown(remainingTime, totalTime); // Resume with remaining time and total time
+            // Calculate the already elapsed time
+            const elapsedTime = totalTime - remainingTime;
+            const progressPercentage = (elapsedTime / totalTime) * 100;
+
+            // Start Countdown with the correct remaining time
+            startCountdown(remainingTime, totalTime);
+
+            // Sync Progress Circle Immediately
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
         } else {
             // Timer expired
             localStorage.removeItem('countdownEndTime');
@@ -1286,6 +1369,67 @@ minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
       
      
     
+
+
+// Select Dropdown Points Display Element
+const dropdownPointsDisplay = document.getElementById("dropdown-points");
+
+/**
+ * Update Dropdown UI with Points
+ */
+function updatePointsUI(points) {
+  if (dropdownPointsDisplay) {
+    dropdownPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+  } else {
+    console.warn("Dropdown points element not found in DOM.");
+  }
+}
+
+/**
+ * Fetch Points from Backend and Update Dropdown
+ */
+async function initializePoints() {
+  if (!token) {
+    console.warn("No token found. Skipping points initialization.");
+    return;
+  }
+
+  try {
+    console.log("Initializing points on page load...");
+
+    // Fetch points from backend
+    const currentPoints = await fetchPoints();
+    console.log("Current Points Fetched on Load:", currentPoints);
+
+    if (typeof currentPoints === "number") {
+      updatePointsUI(currentPoints); // Update Dropdown UI Immediately
+    } else {
+      console.warn("Points fetched are not a valid number.");
+    }
+  } catch (error) {
+    console.error("Error initializing points:", error.message);
+  }
+}
+
+/**
+ * Periodically Sync Points
+ */
+setInterval(async () => {
+  if (token) {
+    try {
+      const currentPoints = await fetchPoints();
+      updatePointsUI(currentPoints); // Update points periodically
+    } catch (error) {
+      console.error("Error syncing points:", error.message);
+    }
+  }
+}, 1000); // Sync every 10 seconds
+
+// Initialize Points on Page Load
+document.addEventListener("DOMContentLoaded", () => {
+  
+});
+      
 // Update dropdown content
 userInfoDropdown.innerHTML = `
   <p class="text-center mb-2"><strong>MAI App</strong></p>
@@ -1504,7 +1648,4 @@ document.getElementById("ai-btn").addEventListener("click", () => {
 //window.location.href = ""; // Navigate to Wallet
 //});
   
-  // Restore session on page load
-  checkPersistentLogin();
-  console.log("checkPersistentLogin called");
-});
+    

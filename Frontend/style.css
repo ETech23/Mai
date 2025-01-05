@@ -670,8 +670,8 @@ header h1 {
 }
 
 .mining-sphere {
-  width: 210px;
-  height: 210px;
+  width: 230px;
+  height: 230px;
   border: 10px solid #998c5e;
   border-radius: 50%;
   background: conic-gradient(#2C3E30 0%, #718074 100%);

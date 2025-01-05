@@ -11,8 +11,7 @@ router.get("/users", adminAuth, async (req, res) => {
 
   // Validate page and limit
   const pageNum = parseInt(page);
-  const limitNum = parseInt(limit);
-
+  const limitNum = parseInt(limit);                         
   if (isNaN(pageNum) || isNaN(limitNum) || pageNum <= 0 || limitNum <= 0) {
     return res.status(400).json({ success: false, message: "Invalid page or limit parameters." });
   }
@@ -22,13 +21,16 @@ router.get("/users", adminAuth, async (req, res) => {
   try {
     // Base filter
     const filter = {};
-    if (minBalance || maxBalance) {
-      filter.balance = {};
-      if (minBalance) filter.balance.$gte = parseFloat(minBalance);
-      if (maxBalance) filter.balance.$lte = parseFloat(maxBalance);
+    
+    // Balance filter
+    if (!isNaN(parseFloat(minBalance))) {
+      filter.balance = { ...filter.balance, $gte: parseFloat(minBalance) };
+    }
+    if (!isNaN(parseFloat(maxBalance))) {
+      filter.balance = { ...filter.balance, $lte: parseFloat(maxBalance) };
     }
 
-    // Aggregation pipeline
+    // Aggregation Pipeline
     const pipeline = [
       {
         $addFields: {
@@ -44,33 +46,21 @@ router.get("/users", adminAuth, async (req, res) => {
       { $match: filter },
     ];
 
-    // Add referral filters if provided
-    if (minReferrals || maxReferrals) {
-      const referralFilter = {};
-      if (minReferrals) referralFilter.$gte = parseInt(minReferrals);
-      if (maxReferrals) referralFilter.$lte = parseInt(maxReferrals);
-
-      pipeline.push({ $match: { referralCount: referralFilter } });
+    if (!isNaN(parseInt(minReferrals))) {
+      pipeline.push({ $match: { referralCount: { $gte: parseInt(minReferrals) } } });
+    }
+    if (!isNaN(parseInt(maxReferrals))) {
+      pipeline.push({ $match: { referralCount: { $lte: parseInt(maxReferrals) } } });
     }
 
-    // Pagination
     pipeline.push({ $skip: skip }, { $limit: limitNum });
 
-    // Fetch users
     const users = await User.aggregate(pipeline);
 
     // Total user count
     const totalPipeline = [
       {
-        $addFields: {
-          referralCount: {
-            $cond: {
-              if: { $isArray: "$referrals" },
-              then: { $size: "$referrals" },
-              else: 0,
-            },
-          },
-        },
+        $addFields: { referralCount: { $cond: { if: { $isArray: "$referrals" }, then: { $size: "$referrals" }, else: 0 } } },
       },
       { $match: filter },
     ];
