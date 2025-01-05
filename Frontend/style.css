@@ -19,7 +19,6 @@
 
 /* Default state of each div */
 .div-content {
-     w
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
 }
 
@@ -109,11 +108,17 @@ h2 {
     margin-bottom: 15px;
 }
 
+.content {
+     background-color: #F9FAFB;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
 /* Div Content - Common Styling */
 .div-content {
     border-radius: 12px;
     margin-bottom: 20px;
-    padding: 20px;
+    
 }
 
 /* Purple Section */
@@ -129,7 +134,7 @@ h2 {
 }
 
 .section-purple p {
-    font-size: 14px;
+    font-size: 15px;
     color: #EDEDF7;
     line-height: 1.6;
 }
@@ -147,7 +152,7 @@ h2 {
 }
 
 .section-light p {
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.5;
 }
 
