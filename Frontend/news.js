@@ -12,7 +12,103 @@ const isDesktop = window.innerWidth > 768;
     `;
   }
 
+// Authentication Token (Replace with actual user token retrieval logic)
+let token = localStorage.getItem("token");
 
+// User Activity Tracking
+let isUserActive = false;
+let lastActiveTime = Date.now();
+
+// Track User Activity
+document.addEventListener("scroll", () => {
+  isUserActive = true;
+  lastActiveTime = Date.now();
+});
+
+document.addEventListener("click", () => {
+  isUserActive = true;
+  lastActiveTime = Date.now();
+});
+
+// UI Elements for Displaying Points
+//const dropdownPointsDisplay = document.getElementById("dropdown-points");
+const dashboardPointsDisplay = document.getElementById("dashboard-points");
+
+/**
+ * Fetch Current Points from Backend
+ */
+async function fetchPoints() {
+  if (!token) {
+    console.error("Missing authorization token");
+    return 0; // Return 0 points if no token
+  }
+
+  try {
+    console.log("Fetching points from backend...");
+
+    const response = await fetch("https://mai.fly.dev/api/points", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch points");
+    }
+
+    const data = await response.json();
+    console.log("Fetched points data object:", data);
+
+    // Ensure correct access to points
+    if (data && data.success && typeof data.points === "number") {
+      console.log("Points fetched successfully:", data.points);
+      return data.points;
+    } else {
+      throw new Error("Invalid response structure: 'points' not found");
+    }
+  } catch (error) {
+    console.error("Error fetching points:", error.message);
+    return 0;
+  }
+}
+
+/**
+ * Update Points on Backend
+ */
+async function updatePoints(increment) {
+  if (!token) {
+    console.error("Missing authorization token");
+    return 0;
+  }
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/points", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ increment }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update points");
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      return data.points;
+    } else {
+      throw new Error(data.message || "Failed to update points");
+    }
+  } catch (error) {
+    console.error("Error updating points:", error.message);
+    return 0;
+  }
+}
 
   const footer = document.querySelector("footer"); // Select the footer element
 
@@ -76,7 +172,7 @@ function toggleFullArticle(article) {
 document.querySelectorAll(".news-article").forEach(article => {
   article.addEventListener("click", function(event) {
     // Prevent the like and love buttons from triggering the toggle
-    if (event.target.closest(".like-btn, .dislike-btn, .view-count")) {
+    if (event.target.closest(".like-btn, .dislike-btn, .view-count, .push")) {
       return;
     }
 

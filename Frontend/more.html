@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="more.css">
+    <script type="text/javascript" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
         <style>
     body {
       background-color: #ddd; 
@@ -53,11 +56,12 @@
       <div class="col-md-6 mb-4">
         <div class="card h-100 shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">MAI</h5>
+            <h5 class="card-title"></h5>
             <p class="card-text" style="text-align: justify;">
-              The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and
-              community-driven platforms. Designed to onboard users seamlessly while rewarding early adopters, Mai offers a
-              unique opportunity to engage with an innovative AI system and be part of a rapidly evolving ecosystem.
+                  <div class="update div-content section-purple">
+        <h3>What is MAI?</h3>
+        <p>The Mai Project is a revolutionary platform merging artificial intelligence, blockchain, and a community-driven approach. Designed with user-friendliness in mind, Mai rewards early adopters while offering seamless access to an innovative AI system.</p>
+    </div>
             </p>
             <button class="btn btn-link text-primary" data-toggle="collapse" data-target="#mai-details" aria-expanded="false" aria-controls="mai-details">
               Read More ▼
@@ -86,6 +90,63 @@
               <p>
                 During the mining phase, users are rewarded with Mai tokens for their active participation. By engaging with the AI, users not only accumulate tokens but also provide valuable insights that help refine and improve the system. The mining process is simple, inclusive, and transparent, ensuring that every participant has a fair opportunity to earn rewards.
               </p>
+               <div class="update div-content section-light-gray">
+        <h4>Mining Rate Mechanism</h4>
+        <p>The mining rate dynamically adjusts based on referrals, ensuring early adopters and active users gain fair rewards.</p>
+        <h4>Key Components</h4>
+        
+            <li><b>Base Rate:</b> 0.0005MAI per second</li>
+            <li><b>Referral Bonus:</b> +5% per referred user</li>
+        
+    </div>
+
+    <div class="update div-content section-white">
+        <h4>Mining Rate Formula</h4>
+        <div class="formula-container">
+\[
+            \begin{aligned}
+            \text{Mining Rate} &= \\
+            \text{Base Rate} \times \left(1 + (\text{referralCount} \times 0.05)\right)
+            \end{aligned}
+\]
+        </div>
+
+        <h4>Example Calculations</h4>
+        <div class="math-example">
+            <ul>
+                <li>
+                    <b>5 Referrals:</b><br>
+\[
+                    \begin{aligned}
+                    &0.0005 \times (1 + (5 \times 0.05)) \\
+                    &= 0.0005 \times 1.25 \\
+                    &= 0.000625
+                    \end{aligned}
+\]
+                </li>
+                <li>
+                    <b>10 Referrals:</b><br>
+\[
+                    \begin{aligned}
+                    &0.0005 \times (1 + (10 \times 0.05)) \\
+                    &= 0.0005 \times 1.5 \\
+                    &= 0.00075
+                    \end{aligned}
+\]
+                </li>
+                <li>
+                    <b>Midpoint Check:</b><br>
+\[
+                    \begin{aligned}
+                    &\frac{0.0005 + 0.00075}{2} \\
+                    &= \frac{0.00125}{2} \\
+                    &= 0.000625
+                    \end{aligned}
+\]
+                </li>
+            </ul>
+        </div>
+
               <p>
                 One unique aspect of Mai’s onboarding process is its referral program. Early adopters can invite others to join the platform using personalized referral links. Each successful referral boosts the referrer's mining efficiency, incentivizing collaboration and expanding the community.
               </p>
@@ -107,6 +168,8 @@
                 <li>Cutting-Edge Innovation: Engage with a next-generation AI system that learns from you and adapts to your needs.</li>
                 <li>Collaborative Opportunities: As Mai integrates its social platform, you’ll be at the forefront of a dynamic, AI-driven network of innovators and creators.</li>
               </ul>
+ 
+    
 
               <hr>
               <p><small>

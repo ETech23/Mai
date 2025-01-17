@@ -1439,7 +1439,7 @@ userInfoDropdown.innerHTML = `
   <p class="mb-2"><i class="fas fa-fire me-2"></i> <strong>${streakLevel}</strong></p>
   <p class="mb-2"><i class="fas fa-cogs me-2"></i> <strong>${miningRate.toFixed(5)} MAI/sec</strong></p>
   <p class="mb-2"><i class="fas fa-wallet me-2"></i> <strong>${balance.toFixed(5)} MAI</strong></p>
-  <p class="mb-2"><i class="fas fa-users me-2"></i> <strong>${referralCount}</strong></p>
+  <p class="mb-2"><i class="fas fa-users me-2"></i> <strong>${referralCount} Referrals</strong></p>
   <p class="mb-2">
   <i class="fas fa-star me-2"></i> 
   <strong id="dropdown-points">0.00 Points</strong>
