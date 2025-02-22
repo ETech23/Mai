@@ -562,6 +562,7 @@ setInterval(async () => {
 document.addEventListener("DOMContentLoaded", () => {
   
 });
+      
       // Update dropdown content
 userInfoDropdown.innerHTML = `
   <p class="text-center mb-2"><strong>MAI App</strong></p>
@@ -589,8 +590,23 @@ userInfoDropdown.innerHTML = `
     <p>v1.03</p>
 `;
       userInfoDropdown.classList.toggle("active");
-      // Add event listener for the share button click
-const shareButton = document.getElementById("share-button");
+      
+     const shareButton = document.getElementById("share-button");
+
+// Define shareOnWhatsApp in the global scope
+function shareOnWhatsApp() {
+  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
+  const whatsappUrl = `whatsapp://send?text=${message}`;
+
+  // Try opening WhatsApp directly
+  window.open(whatsappUrl, '_system');
+
+  // Fallback to the browser if WhatsApp is not installed
+  setTimeout(() => {
+    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
+    window.open(fallbackUrl, '_system'); // Open in system browser
+  }, 500); // Wait 500ms to check if WhatsApp opened
+}
 
 if (shareButton) {
   shareButton.addEventListener("click", () => {
@@ -607,7 +623,73 @@ if (shareButton) {
       const shareOptions = `
         <div id="share-options" style="margin-top: 10px;">
           <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
+          <a href="#" id="whatsapp-share">Share on WhatsApp</a><br>
+          <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
+          <button id="copy-link">Copy Link</button>
+        </div>
+      `;
+
+      // Insert the share options directly below the share button
+      shareButton.insertAdjacentHTML("afterend", shareOptions);
+
+      // Add event listener for the WhatsApp share link
+      const whatsappShareLink = document.getElementById("whatsapp-share");
+      if (whatsappShareLink) {
+        whatsappShareLink.addEventListener("click", (e) => {
+          e.preventDefault(); // Prevent default link behavior
+          shareOnWhatsApp(); // Call the shareOnWhatsApp function
+        });
+      }
+
+      // Add copy link functionality after appending the link
+      const copyLinkButton = document.getElementById("copy-link");
+      if (copyLinkButton) {
+        copyLinkButton.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(referralLink)
+            .then(() => alert("Referral link copied to clipboard!"))
+            .catch((err) => console.error("Failed to copy referral link:", err));
+        });
+      }
+    }
+  });
+} 
+    /**  // Add event listener for the share button click
+const shareButton = document.getElementById("share-button");
+      
+      function shareOnWhatsApp() {
+  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
+  const whatsappUrl = `whatsapp://send?text=${message}`;
+
+  // Try opening WhatsApp directly
+  window.open(whatsappUrl, '_system');
+
+  // Fallback to the browser if WhatsApp is not installed
+  setTimeout(() => {
+    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
+    window.open(fallbackUrl, '_system'); // Open in system browser
+  }, 500); // Wait 500ms to check if WhatsApp opened
+}
+
+if (shareButton) {
+  shareButton.addEventListener("click", () => {
+    // Toggle the "clicked" class to change color to dark green
+    shareButton.classList.toggle("clicked");
+
+    // Show or hide share options
+    const existingShareOptions = document.getElementById("share-options");
+    if (existingShareOptions) {
+      // If share options exist, hide them
+      existingShareOptions.remove();
+    } else {
+      // If share options do not exist, show them directly below the share button
+      
+      
+      const shareOptions = `
+        <div id="share-options" style="margin-top: 10px;">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
       <a href="#" onclick="shareOnWhatsApp()">Share on WhatsApp</a>
+      
           <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
       <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
           <button id="copy-link">Copy Link</button>
@@ -629,20 +711,8 @@ if (shareButton) {
       }
     }
   });
-}
-      function shareOnWhatsApp() {
-  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
-  const whatsappUrl = `whatsapp://send?text=${message}`;
+}**/
 
-  // Try opening WhatsApp directly
-  window.location.href = whatsappUrl;
-
-  // Fallback to the browser if WhatsApp is not installed
-  setTimeout(() => {
-    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
-    window.open(fallbackUrl, '_system'); // Open in system browser
-  }, 500); // Wait 500ms to check if WhatsApp opened
-}
       // Close dropdown when clicking outside
 document.addEventListener("click", (event) => {
   if (
