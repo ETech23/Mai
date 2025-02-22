@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let miningInterval;
   let countdownInterval;
   
+
+  
   // **Persistent Login Check**
   async function checkPersistentLogin() {
     const token = localStorage.getItem("token");
@@ -154,7 +156,8 @@ const dashboardPointsDisplay = document.getElementById("dashboard-points");
 
 /**
  * Fetch Current Points from Backend
- */
+ **/
+  
 async function fetchPoints() {
   if (!token) {
     console.error("Missing authorization token");
@@ -754,7 +757,7 @@ activateMiningButton.addEventListener("click", () => {
   showPopup(); // Show popup on click
 });
   
-  // **Handle Form Submission**
+    // **Handle Form Submission**
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const identifier = document.getElementById("identifier").value.trim();
