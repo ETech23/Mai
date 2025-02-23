@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="Mai AI Token" />
+  <meta property="og:description" content="Join the project today and get rewarded with digital money; Mai Crypto Token." />
+  <meta property="og:image" content="https://mai-psi.vercel.app/social/graphic.png" />
+  <meta property="og:url" content="https://mai-psi.vercel.app" />
+  <meta property="og:type" content="website" />
+  <title>MAI AI and Token Mining Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="./social/mai_co.png" type="image/png">
+  <style>
+    /* Custom CSS for animations and transitions */
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .hover-scale {
+      transition: transform 0.3s ease-in-out;
+    }
+    .hover-scale:hover {
+      transform: scale(1.05);
+    }
+  
+  /* Footer container */
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(100%); /* Initially hidden */
+  font-size: 14px;
+  margin-top: 0;
+  padding: 2px;
+}
+
+.fixed-footer.visible {
+  transform: translateY(0); /* Show footer */
+}
+
+/* Add spacing for icons */
+.footer-btn span {
+  margin-top: 2px;
+  font-size: 12px;
+}
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-inter">
+  <!-- Login/Registration Form -->
+  <div class="form-container hid den" id="form-container">
+    <form id="auth-form" class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md mx-auto mt-20 fade-in">
+      <h2 id="form-title" class="text-2xl font-bold text-yellow-400 mb-6 text-center">Login</h2>
+      <!-- Login Fields -->
+      <div id="login-fields">
+        <label for="identifier" class="block text-gray-400 mb-2">Email or Username</label>
+        <input type="text" id="identifier" name="identifier" class="w-full p-3 rounded bg-gray-700 text-white mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your email or username" required>
+        <label for="password" class="block text-gray-400 mb-2">Password</label>
+        <input type="password" id="password" name="password" class="w-full p-3 rounded bg-gray-700 text-white mb-6 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your password" required>
+      </div>
+      <!-- Register Fields -->
+      <div id="register-fields" class="hidden">
+        <label for="name" class="block text-gray-400 mb-2">Name</label>
+        <input type="text" id="name" name="name" class="w-full p-3 rounded bg-gray-700 text-white mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your name">
+        <label for="username" class="block text-gray-400 mb-2">Username</label>
+        <input type="text" id="username" name="username" class="w-full p-3 rounded bg-gray-700 text-white mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your username">
+        <label for="email" class="block text-gray-400 mb-2">Email</label>
+        <input type="email" id="email" name="email" class="w-full p-3 rounded bg-gray-700 text-white mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your email">
+        <label for="password-register" class="block text-gray-400 mb-2">Password</label>
+        <input type="password" id="password-register" name="password-register" class="w-full p-3 rounded bg-gray-700 text-white mb-6 focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your password">
+        <!-- Hidden Referral input -->
+        <input type="hidden" id="referral-input" name="referralCode">
+      </div>
+      <button type="submit" id="auth-submit" class="w-full bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors">Login</button>
+      <p id="toggle-form" class="text-center text-gray-400 mt-4">Don’t have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Register here</span></p>
+    </form>
+  </div>
+
+  <!-- About MAI Section -->
+  <section id="news" class="news-section hidd en bg-gray-900 p-6">
+    <h2 class="text-3xl font-bold text-yellow-400 mb-6 text-center">About MAI</h2>
+    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
+      <h3 class="text-2xl font-semibold text-yellow-400 mb-4">What is MAI?</h3>
+      <p class="text-gray-300">The Mai Project is a revolutionary platform merging artificial intelligence, blockchain, and a community-driven approach. Designed with user-friendliness in mind, Mai rewards early adopters while offering seamless access to an innovative AI system.</p>
+    </div>
+    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
+      <h3 class="text-2xl font-semibold text-yellow-400 mb-4">How the Mining Phase Works</h3>
+      <p class="text-gray-300">Mai employs an AI-powered mining system, allowing users to earn tokens seamlessly through participation, engagement, and collaboration. This innovative approach ensures both fairness and scalability, rewarding users based on their activity and community growth contributions.</p>
+    </div>
+    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
+      <h3 class="text-2xl font-semibold text-yellow-400 mb-4">Exclusive Rewards for Active Users</h3>
+      <p class="text-gray-300">Active users will be periodically rewarded with airdrops, even before the Token Generation Event (TGE). These airdrops are designed to incentivize engagement, loyalty, and consistent activity within the platform. Your eligibility for airdrops and the amount you’ll receive will be determined by the points you accumulate over time.</p>
+      <p class="text-gray-300 mt-2">Please note, these airdrops serve as incentives for active participation and are not the actual MAI token rewards.</p>
+    </div>
+    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
+      <h4 class="text-xl font-semibold text-yellow-400 mb-4">Key Aspects of Mai’s Mining System</h4>
+      <ul class="list-disc list-inside text-gray-300">
+        <li class="mb-2"><b>Active Participation:</b> Users are rewarded for remaining active during mining sessions.</li>
+        <li class="mb-2"><b>Engagement with AI-Driven Activities:</b> Activities such as interacting with the AI chatbot, completing tasks, or providing feedback contribute to token accumulation.</li>
+        <li class="mb-2"><b>Collaboration via Referrals:</b> Referring others to join Mai not only grows the community but also enhances your mining rate.</li>
+      </ul>
+    </div>
+    <div class="update text-center bg-gray-800 p-6 items-center rounded-lg shadow-lg mb-6 hover-scale"><a href="index.html"><button >Get Started</a></button></div>
+    <div class="text-center mt-6">
+      <a href="news.html#about" class="text-yellow-400 hover:underline">More info..</a>
+    </div>
+  </section>
+
+  <!-- Footer Navigation -->
+  <nav>
+  <footer id="footer" class="fixed-footer bg-gray-800 p-4 flex justify-around items-center transition-transform duration-300">
+    <!-- Home Button -->
+    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
+      <i class="fas fa-cogs text-2xl"></i>
+      <span class="text-sm mt-1">POW</span>
+    </button>
+    <!-- News Button -->
+    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
+      <i class="fas fa-newspaper text-2xl"></i>
+      <span class="text-sm mt-1">News</span>
+    </button>
+    <!-- Mai AI Button -->
+    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
+      <i class="fas fa-robot text-2xl"></i>
+      <span class="text-sm mt-1">Mai AI</span>
+    </button>
+    <!-- Wallet Button -->
+    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
+      <i class="fas fa-wallet text-2xl"></i>
+      <span class="text-sm mt-1">Wallet</span>
+    </button>
+    <!-- Menu Button -->
+    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
+      <i class="fas fa-bars text-2xl"></i>
+      <span class="text-sm mt-1">More</span>
+    </button>
+  </footer>
+</nav>
+
+  <script src="login.js"></script>
+</body>
+</html>

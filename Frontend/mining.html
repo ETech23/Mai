@@ -225,10 +225,23 @@
   animation: dropdownFadeIn 0.6s ease-out forwards; /* Ensure animation triggers on toggle */
   display: block;
 }
+  
+  .no-select {
+  user-select: none !important; /* Standard property */
+  -webkit-user-select: none !important; /* Safari */
+  -ms-user-select: none !important; /* Internet Explorer */
+  -moz-user-select: none !important; /* Firefox */
+}
+
+/* Ensure buttons inside non-selectable areas remain clickable */
+.no-select button,
+.no-select a {
+  pointer-events: auto !important; /* Restore pointer events for buttons and links */
+}
   </style>
 </head>
 <body class="dark min-h-screen bg-gradient-to-b from-dark to-dark-200 text-gray-100">
-  
+  <div class="no-select">
    <!-- Preloader --
 <div id="preloader" class="preloader hidden">
   <!-- Preloader animation or content --
@@ -389,6 +402,7 @@
           </div>
     </main>
   </div>
+</div>
   <div class="form-container hidden" id="form-container"></div>
 
   <!-- Theme toggle functionality - isolated from your main JavaScript -->
@@ -573,40 +587,51 @@ userInfoDropdown.innerHTML = `
   <p class="mb-2"><i class="fas fa-cogs me-2"></i> <strong>${miningRate.toFixed(5)} MAI/sec</strong></p>
   <p class="mb-2"><i class="fas fa-wallet me-2"></i> <strong>${balance.toFixed(5)} MAI</strong></p>
   <p class="mb-2"><i class="fas fa-users me-2"></i> <strong>${referralCount} Referrals</strong></p>
-      <p class="mb-2">
-  <i class="fas fa-star me-2"></i> 
-  <strong id="dropdown-points">0.00 Points</strong>
-</p>
-      <hr>
-      <p><i class="fas fa-toolbox"></i> <strong><a href="more.html#utilities">Utilities</a></strong></p>
+  <p class="mb-2">
+    <i class="fas fa-star me-2"></i> 
+    <strong id="dropdown-points">0.00 Points</strong>
+  </p>
+  <hr>
+  <p><i class="fas fa-toolbox"></i> <strong><a href="more.html#utilities">Utilities</a></strong></p>
   <p><i class="fas fa-road"></i> <strong><a href="more.html#roadmap">Roadmap</a></strong></p>
   <p><i class="fas fa-file-alt"></i> <strong><a href="#">White Paper</a></strong></p>
-      <p><i class="fas fa-question-circle"></i> <strong><a href="more.html#fag">FAQs</a></strong></p>
+  <p><i class="fas fa-question-circle"></i> <strong><a href="more.html#fag">FAQs</a></strong></p>
   <p><i class="fas fa-shield-alt"></i> <strong><a href="more.html#privacy-policy">Privacy Policy</a></strong></p>
-      <hr>
-      <p><i class="fas fa-link"></i> <strong>Referral Link:</strong></p>
+  <hr>
+  <p><i class="fas fa-link"></i> <strong>Referral Link:</strong></p>
   <button id="share-button"><i class="fas fa-share-alt"></i> Share</button>
   <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</button>
-    <p>v1.03</p>
+  <p>v1.03</p>
 `;
-      userInfoDropdown.classList.toggle("active");
+
       
-     const shareButton = document.getElementById("share-button");
-
-// Define shareOnWhatsApp in the global scope
-function shareOnWhatsApp() {
-  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
-  const whatsappUrl = `whatsapp://send?text=${message}`;
-
-  // Try opening WhatsApp directly
-  window.open(whatsappUrl, '_system');
-
-  // Fallback to the browser if WhatsApp is not installed
-  setTimeout(() => {
-    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
-    window.open(fallbackUrl, '_system'); // Open in system browser
-  }, 500); // Wait 500ms to check if WhatsApp opened
+      // Add logout functionality
+const logoutButton = document.getElementById("logout-button");
+if (logoutButton) {
+  logoutButton.addEventListener("click", () => {
+    // Prompt the user to confirm logout
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      // Clear localStorage and reload the page
+      localStorage.clear();
+      alert("Logged out successfully.");
+      window.location.reload();
+    } else {
+      // Do nothing if the user cancels
+      console.log("Logout canceled.");
+    }
+  });
+} else {
+  console.error("Logout button not found in the DOM.");
 }
+      
+// Toggle dropdown visibility
+userInfoDropdown.classList.toggle("active");
+
+
+  
+ // Add event listener for the share button click
+const shareButton = document.getElementById("share-button");
 
 if (shareButton) {
   shareButton.addEventListener("click", () => {
@@ -615,6 +640,7 @@ if (shareButton) {
 
     // Show or hide share options
     const existingShareOptions = document.getElementById("share-options");
+
     if (existingShareOptions) {
       // If share options exist, hide them
       existingShareOptions.remove();
@@ -623,23 +649,14 @@ if (shareButton) {
       const shareOptions = `
         <div id="share-options" style="margin-top: 10px;">
           <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
-          <a href="#" id="whatsapp-share">Share on WhatsApp</a><br>
+          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
           <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
           <button id="copy-link">Copy Link</button>
         </div>
       `;
-
+      
       // Insert the share options directly below the share button
       shareButton.insertAdjacentHTML("afterend", shareOptions);
-
-      // Add event listener for the WhatsApp share link
-      const whatsappShareLink = document.getElementById("whatsapp-share");
-      if (whatsappShareLink) {
-        whatsappShareLink.addEventListener("click", (e) => {
-          e.preventDefault(); // Prevent default link behavior
-          shareOnWhatsApp(); // Call the shareOnWhatsApp function
-        });
-      }
 
       // Add copy link functionality after appending the link
       const copyLinkButton = document.getElementById("copy-link");
@@ -653,67 +670,10 @@ if (shareButton) {
       }
     }
   });
-} 
-    /**  // Add event listener for the share button click
-const shareButton = document.getElementById("share-button");
-      
-      function shareOnWhatsApp() {
-  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
-  const whatsappUrl = `whatsapp://send?text=${message}`;
-
-  // Try opening WhatsApp directly
-  window.open(whatsappUrl, '_system');
-
-  // Fallback to the browser if WhatsApp is not installed
-  setTimeout(() => {
-    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
-    window.open(fallbackUrl, '_system'); // Open in system browser
-  }, 500); // Wait 500ms to check if WhatsApp opened
 }
 
-if (shareButton) {
-  shareButton.addEventListener("click", () => {
-    // Toggle the "clicked" class to change color to dark green
-    shareButton.classList.toggle("clicked");
-
-    // Show or hide share options
-    const existingShareOptions = document.getElementById("share-options");
-    if (existingShareOptions) {
-      // If share options exist, hide them
-      existingShareOptions.remove();
-    } else {
-      // If share options do not exist, show them directly below the share button
-      
-      
-      const shareOptions = `
-        <div id="share-options" style="margin-top: 10px;">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
-      <a href="#" onclick="shareOnWhatsApp()">Share on WhatsApp</a>
-      
-          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
-      <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
-          <button id="copy-link">Copy Link</button>
-        </div>
-      `;
-      
-      // Insert the share options directly below the share button
-      shareButton.insertAdjacentHTML("afterend", shareOptions);
-
-      // Add copy link functionality after appending the link
-      const copyLinkButton = document.getElementById("copy-link");
-      if (copyLinkButton) {
-        copyLinkButton.addEventListener("click", () => {
-          navigator.clipboard
-            .writeText(referralLink)
-           .then(() => alert("Referral link copied to clipboard!"))
-            .catch((err) => console.error("Failed to copy referral link:", err));
-        });
-      }
-    }
-  });
-}**/
-
-      // Close dropdown when clicking outside
+    
+    // Close dropdown when clicking outside
 document.addEventListener("click", (event) => {
   if (
     userInfoDropdown.classList.contains("active") &&
@@ -724,20 +684,15 @@ document.addEventListener("click", (event) => {
   }
 });
     
-    // Add logout functionality
-    const logoutButton = document.getElementById("logout-button");
-      if (logoutButton) {
-      logoutButton.addEventListener("click", () => {
-        localStorage.clear();
-        alert("Logged out successfully.");
-        window.location.reload();
-      });
-    }
+  
+
   } catch (error) {
     console.error("Error toggling menu:", error);
     alert("An error occurred while fetching user details.");
   }
 });
+  
+        
   
   // Function to fetch the user data (adjust based on your API)
 async function fetchUserData() {
@@ -1309,145 +1264,8 @@ document.addEventListener("visibilitychange", () => {
         updateMiningProgress();
     }
 });
-  
-  /**
-// Then, define other functions that call updateBalance
-function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
-
-  startCountdown(remainingTime);
-
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
-      clearInterval(miningInterval);
-      isMiningActive = false;
-      miningProgress = 100;
-      activateMiningButton.disabled = false;
-      activateMiningButton.textContent = "Activate Mining";
-
-      alert("Mining session completed!");
-      // Clear local storage for mining
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-     // const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
-      // Default mining rate
-const defaultRate = 0.0005;
-
-// Get referral count from user data
-  
-   
-      **/
-      function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
-  
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
-
-  startCountdown(remainingTime);
-
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
-      clearInterval(miningInterval);
-      isMiningActive = false;
-      miningProgress = 100;
-      activateMiningButton.disabled = false;
-      activateMiningButton.textContent = "Activate Mining";
-
-      alert("Mining session completed!");
-
-      // Clear local storage for mining
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100% 
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-      
-      // Default mining rate
-      const defaultRate = 0.0005;
-
-      // Calculate new balance and update local storage
-      const newBalance = currentBalance + defaultRate;
-      localStorage.setItem("minedBalance", newBalance.toFixed(8));
-    }
-  }, incrementInterval);
-}
-      // Get referral count from user data
-     // const token = localStorage.getItem("token");
-      const response =  fetch("https://mai.fly.dev/api/auth/details", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-
-    
-      const userData =  response.json();
-      const referrals = userData.referrals || []; // Fallback to empty array if not found
-
-const referralCount = referrals.length;
-
-// Calculate the bonus multiplier based on referrals (5% per referral)
-const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
-
-// Calculate the new balance with the referral bonus applied
-const newBalance = currentBalance + (defaultRate * referralBonus);
-
-// Update the local storage or display
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-
-      localStorage.setItem("miningProgress", miningProgress);
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-      
-      function startCountdown(remainingTime) {
-    if (countdownInterval) clearInterval(countdownInterval);
-
-    const totalTime = remainingTime; // Store initial remaining time for reference
-
-    countdownInterval = setInterval(() => {
-        if (remainingTime <= 0) {
-            clearInterval(countdownInterval);
-            miningCountdown.textContent = "Next session available!";
-            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
-        } else {
-            const minutes = Math.floor(remainingTime / (60 * 1000));
-            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-          // Update Progress Bar
-            let progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
-            progressPercentage = Math.min(progressPercentage, 100); // Ensure it doesn't exceed 100%
-
-            progressCircle.style.background = `conic-gradient(
-                #2C3E30 ${progressPercentage}%, 
-                #718074 ${progressPercentage}% 100%
-            )`;
-
-            remainingTime -= 1000;
-        }
-    }, 1000);
-}
-  
-  
 
 
-  
-  
 
       </script>
   <script src="appg.js"></script>

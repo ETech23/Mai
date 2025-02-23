@@ -1,430 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAI - More Features</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="more.css">
-    <script type="text/javascript" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
-        <style>
-    body {
-      background-color: #ddd; 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAI - More Features</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="./social/mai_co.png" type="image/png">
+  <style>
+    /* Custom CSS for animations and transitions */
+    .hover-scale {
+      transition: transform 0.3s ease-in-out;
+    }
+    .hover-scale:hover {
+      transform: scale(1.02);
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Disable text selection */
+    .no-select {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -ms-user-select: none !important;
+      -moz-user-select: none !important;
+    }
+    /* Ensure buttons remain clickable */
+    .no-select button,
+    .no-select a {
+      pointer-events: auto !important;
+    }
+    /* Justify text in collapse sections */
+    .collapse li, .collapse p {
+      text-align: justify;
+    }
   </style>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6212762431201571"
-     crossorigin="anonymous"></script>
 </head>
-<body>
-<div class="no-select">
-     <section>
-    <!-- Navbar Section -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">MAI Project</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#about">About MAI</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#utilities">Utilities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#roadmap">Roadmap</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#fag">FAQs</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#privacy-policy">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body class="bg-gray-900 text-white font-inter no-select">
+  <!-- Navbar Section -->
+  <nav class="bg-gray-800 p-4 flex justify-between items-center">
+    <a class="text-xl font-bold text-yellow-400" href="index.html">MAI Project</a>
+    <button class="text-gray-400 hover:text-white">
+      
+    </button>
+  </nav>
 
-    <!-- Hero Section -->
-    <header class="text-white text-center py-5" style="background-color: #2C3E30;">
+  <!-- Hero Section -->
+  <header class="text-white text-center py-5" style="background-color: #2C3E30;">
     <div class="container">
-        <h1>Explore MAI Features</h1>
-        <p class="lead text-center">Discover more about the utilities, roadmap, and privacy policy of the MAI project.</p>
+      <h1 class="text-3xl font-bold">Explore MAI Features</h1>
+      <p class="text-gray-300 mt-2">Discover more about the utilities, roadmap, and privacy policy of the MAI project.</p>
     </div>
-</header>
+  </header>
+
+  <!-- About Section -->
+  <section id="about" class="py-5">
+    <div class="container">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">About MAI</h2>
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover-scale fade-in">
+        <h3 class="text-xl font-semibold text-yellow-400 mb-4">What is MAI?</h3>
+        <p class="text-gray-400">
+          The Mai Project is a revolutionary platform merging artificial intelligence, blockchain, and a community-driven approach. Designed with user-friendliness in mind, Mai rewards early adopters while offering seamless access to an innovative AI system.
+        </p>
     
-    <!-- About Section -->
-<section id="about" class="py-5">
-  <div class="container">
-    <h2 class="text-center mb-4">About MAI</h2>
-    <div class="row">
-      <!-- MAI Section -->
-      <div class="col-md-6 mb-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title"></h5>
-            <p class="card-text" style="text-align: justify;">
-                  <div class="update div-content section-purple">
-        <h3>What is MAI?</h3>
-        <p>The Mai Project is a revolutionary platform merging artificial intelligence, blockchain, and a community-driven approach. Designed with user-friendliness in mind, Mai rewards early adopters while offering seamless access to an innovative AI system.</p>
-    </div>
-            </p>
-            <button class="btn btn-link text-primary" data-toggle="collapse" data-target="#mai-details" aria-expanded="false" aria-controls="mai-details">
-              Read More ▼
-            </button>
-            <div id="mai-details" class="collapse">
-              <p>
-                At its core, Mai is an AI language model built to assist, educate, and connect users in meaningful ways. During
-                its initial phase, the platform incorporates a mining mechanism that allows users to earn Mai tokens by
-                interacting with the AI and completing specific activities.
-              </p>
-              <p>
-                This mining phase is more than just an incentive program—it’s a gateway to a future of integrated AI-powered solutions that prioritize user engagement and reward participation.
-              </p>
-
-              <h4>The Vision Behind Mai</h4>
-              <p>
-                The Mai Project envisions a future where AI serves as a collaborative partner for individuals and communities. Early adopters who participate in the mining phase will be rewarded with Mai tokens at the Token Generation Event (TGE). These tokens will serve as the platform's native currency and hold utility in various future services, such as:
-              </p>
-              <ul>
-                <li>Accessing Premium AI Features: Users can utilize Mai tokens to unlock advanced AI tools and capabilities.</li>
-                <li>Facilitating Collaborations: The platform plans to integrate a social feature where users can connect, network, and collaborate based on their interactions with the AI.</li>
-                <li>Supporting Community Growth: Mai tokens will enable users to contribute to and benefit from the platform's ongoing development.</li>
-              </ul>
-
-              <h4>How the Mining Phase Works</h4>
-              <p>
-                During the mining phase, users are rewarded with Mai tokens for their active participation. By engaging with the AI, users not only accumulate tokens but also provide valuable insights that help refine and improve the system. The mining process is simple, inclusive, and transparent, ensuring that every participant has a fair opportunity to earn rewards.
-              </p>
-               <div class="update div-content section-light-gray">
-        <h4>Mining Rate Mechanism</h4>
-        <p>The mining rate dynamically adjusts based on referrals, ensuring early adopters and active users gain fair rewards.</p>
-        <h4>Key Components</h4>
-        
-            <li><b>Base Rate:</b> 0.0005MAI per second</li>
-            <li><b>Referral Bonus:</b> +5% per referred user</li>
-        
-    </div>
-
-    <div class="update div-content section-white">
-        <h4>Mining Rate Formula</h4>
-        <div class="formula-container">
-\[
-            \begin{aligned}
-            \text{Mining Rate} &= \\
-            \text{Base Rate} \times \left(1 + (\text{referralCount} \times 0.05)\right)
-            \end{aligned}
-\]
+        <div id="mai-details" class="collapse">
+          <p class="text-gray-400">
+            At its core, Mai is an AI language model built to assist, educate, and connect users in meaningful ways. During its initial phase, the platform incorporates a mining mechanism that allows users to earn Mai tokens by interacting with the AI and completing specific activities.
+          </p>
+          <p class="text-gray-400">
+            This mining phase is more than just an incentive program—it’s a gateway to a future of integrated AI-powered solutions that prioritize user engagement and reward participation.
+          </p>
+          <h4 class="text-lg font-semibold text-yellow-400 mt-4">The Vision Behind Mai</h4>
+          <p class="text-gray-400">
+            The Mai Project envisions a future where AI serves as a collaborative partner for individuals and communities. Early adopters who participate in the mining phase will be rewarded with Mai tokens at the Token Generation Event (TGE). These tokens will serve as the platform's native currency and hold utility in various future services, such as:
+          </p>
+          <ul class="text-gray-400">
+            <li>Accessing Premium AI Features: Users can utilize Mai tokens to unlock advanced AI tools and capabilities.</li>
+            <li>Facilitating Collaborations: The platform plans to integrate a social feature where users can connect, network, and collaborate based on their interactions with the AI.</li>
+            <li>Supporting Community Growth: Mai tokens will enable users to contribute to and benefit from the platform's ongoing development.</li>
+          </ul>
+          <!-- Additional content here -->
         </div>
+      </div>
+    </div>
+  </section>
 
-        <h4>Example Calculations</h4>
-        <div class="math-example">
-            <ul>
-                <li>
-                    <b>5 Referrals:</b><br>
-\[
-                    \begin{aligned}
-                    &0.0005 \times (1 + (5 \times 0.05)) \\
-                    &= 0.0005 \times 1.25 \\
-                    &= 0.000625
-                    \end{aligned}
-\]
-                </li>
-                <li>
-                    <b>10 Referrals:</b><br>
-\[
-                    \begin{aligned}
-                    &0.0005 \times (1 + (10 \times 0.05)) \\
-                    &= 0.0005 \times 1.5 \\
-                    &= 0.00075
-                    \end{aligned}
-\]
-                </li>
-                <li>
-                    <b>Midpoint Check:</b><br>
-\[
-                    \begin{aligned}
-                    &\frac{0.0005 + 0.00075}{2} \\
-                    &= \frac{0.00125}{2} \\
-                    &= 0.000625
-                    \end{aligned}
-\]
-                </li>
+  <!-- Utilities Section -->
+  <section id="utilities" class="py-5">
+    <div class="container">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">Utilities</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- MAI AI Card -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover-scale fade-in">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">MAI AI</h3>
+          <p class="text-gray-400">
+            MAI AI is the backbone of our platform, focused on democratizing premium AI services by making them accessible, affordable, and user-friendly.
+          </p>
+   
+          <div id="mai-ai-details" class="collapse">
+            <ul class="text-gray-400">
+              <li><strong>Personal AI Assistant:</strong> Perform tasks, answer questions, and provide personalized recommendations.</li>
+              <li><strong>Affordable Premium Tools:</strong> Access advanced analytics, content generation, and predictive insights.</li>
+              <li><strong>Seamless Integration:</strong> Works with mining dashboards, notifications, and community tools.</li>
+              <li><strong>Scalable and Adaptive:</strong> Learns and improves with user interactions.</li>
+              <li><strong>Cross-Platform Compatibility:</strong> Consistent experience across mobile, desktop, and web.</li>
             </ul>
+            <p class="text-gray-400">
+              With MAI AI, users are not just consumers of technology but active participants in shaping AI's role in solving real-world challenges.
+            </p>
+          </div>
         </div>
 
-              <p>
-                One unique aspect of Mai’s onboarding process is its referral program. Early adopters can invite others to join the platform using personalized referral links. Each successful referral boosts the referrer's mining efficiency, incentivizing collaboration and expanding the community.
-              </p>
+        <!-- MAI Social Card -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg hover-scale fade-in">
+          <h3 class="text-xl font-semibold text-yellow-400 mb-4">MAI Social</h3>
+          <p class="text-gray-400">
+            MAI Social is an upcoming platform designed to create meaningful interactions and foster community growth within the MAI ecosystem.
+          </p>
+        
+          <div id="mai-social-details" class="collapse">
+            <ul class="text-gray-400">
+              <li><strong>Community Interaction:</strong> Connect, share insights, and collaborate on projects.</li>
+              <li><strong>Referral Rewards Integration:</strong> Incentivized growth through referral bonuses.</li>
+              <li><strong>Content Sharing & Collaboration:</strong> Share AI-driven insights and posts seamlessly.</li>
+              <li><strong>Project Collaboration Tools:</strong> Built-in tools for team collaboration.</li>
+              <li><strong>User Engagement Analytics:</strong> Personalized analytics dashboards.</li>
+              <li><strong>Secure and Privacy-Focused:</strong> Strong emphasis on user data privacy.</li>
+            </ul>
+            <p class="text-gray-400">
+              MAI Social creates a thriving digital space for collaboration, innovation, and connection.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-              <h4>The Future of Mai</h4>
-              <p>
-                As Mai evolves, it aims to transcend traditional AI applications by integrating a social platform that fosters collaboration and connection. Leveraging its advanced algorithms, the AI will analyze user interactions to suggest meaningful partnerships and collaborations. Whether you're an entrepreneur seeking like-minded individuals or a developer looking to team up on a project, Mai will help bridge the gap and facilitate impactful relationships.
-              </p>
-              <p>
-                The Mai token will be central to this ecosystem, empowering users to transact, connect, and innovate. By combining AI with blockchain technology, Mai ensures that its services remain decentralized, secure, and community-oriented.
-              </p>
+  <!-- Roadmap Section -->
+  <section id="roadmap" class="py-5 bg-gray-800">
+    <div class="container">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">Roadmap</h2>
+      <ul class="list-group">
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">✅ Mining Phase</li>
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">✅ Onboard Users</li>
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">🚀 Launch Mai AI</li>
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">🚀 Launch Mai Social</li>
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">🚀 Launch Mai Token</li>
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">📊 Token Distribution</li>
+      </ul>
+    </div>
+  </section>
 
-              <h4>Why Join Mai Now?</h4>
-              <p>
-                Becoming an early adopter of the Mai Project is not just about earning tokens—it's about being part of a pioneering journey that redefines how AI interacts with and benefits users. Here’s why you should consider joining today:
-              </p>
-              <ul>
-                <li>Exclusive Rewards: Early adopters will be uniquely positioned to benefit from the TGE, receiving Mai tokens that can grow in utility and value as the platform expands.</li>
-                <li>Cutting-Edge Innovation: Engage with a next-generation AI system that learns from you and adapts to your needs.</li>
-                <li>Collaborative Opportunities: As Mai integrates its social platform, you’ll be at the forefront of a dynamic, AI-driven network of innovators and creators.</li>
-              </ul>
- 
-    
-
-              <hr>
-              <p><small>
-                The Mai Project represents a bold step into the future of AI and blockchain integration. By rewarding early adopters and fostering collaboration through innovative features, Mai is building a platform that empowers its users to grow, connect, and succeed.
-              </small></p>
-              <p><small>
-                Join Mai today and become part of a community that’s shaping the future of AI-powered solutions. Together, we can redefine how technology interacts with the world—one token at a time.
-              </small></p>
+  <!-- FAQs Section -->
+  <section id="fag" class="py-5">
+    <div class="container">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">FAQs</h2>
+      <div class="accordion" id="faqAccordion">
+        <!-- FAQ Item 1 -->
+        <div class="accordion-item bg-gray-800 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button bg-gray-700 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              What is MAI AI?
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+            <div class="accordion-body text-gray-400 p-4">
+              MAI AI is an advanced artificial intelligence platform designed to provide affordable and accessible AI services.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="accordion-item bg-gray-800 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-gray-700 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              How does mining work?
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body text-gray-400 p-4">
+              Users can mine MAI tokens through daily activities and referrals.
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-    <!-- Utilities Section -->
-    <section id="utilities" class="py-5">
+  <!-- Privacy Policy Section -->
+  <section id="privacy-policy" class="py-5 bg-gray-800">
     <div class="container">
-        <h2 class="text-center mb-4">Utilities</h2>
-        <div class="row">
-            <!-- MAI AI Section -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">MAI AI</h5>
-                        <p class="card-text" style="text-align: justify;">
-                            MAI AI is the backbone of our platform, focused on democratizing premium AI services by making them accessible, affordable, and user-friendly.
-                        </p>
-                        <button class="btn btn-link text-primary" data-toggle="collapse" data-target="#mai-ai-details">
-                            Read More ▼
-                        </button>
-                        <div id="mai-ai-details" class="collapse">
-                            <ul>
-                                <li><strong>Personal AI Assistant:</strong> Perform tasks, answer questions, and provide personalized recommendations.</li>
-                                <li><strong>Affordable Premium Tools:</strong> Access advanced analytics, content generation, and predictive insights.</li>
-                                <li><strong>Seamless Integration:</strong> Works with mining dashboards, notifications, and community tools.</li>
-                                <li><strong>Scalable and Adaptive:</strong> Learns and improves with user interactions.</li>
-                                <li><strong>Cross-Platform Compatibility:</strong> Consistent experience across mobile, desktop, and web.</li>
-                            </ul>
-                            <p>
-                                With MAI AI, users are not just consumers of technology but active participants in shaping AI's role in solving real-world challenges.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+      <h2 class="text-2xl font-bold text-yellow-400 mb-4 text-center">Privacy Policy</h2>
+      <div class="accordion" id="privacyPolicyAccordion">
+        <!-- Privacy Policy Item 1 -->
+        <div class="accordion-item bg-gray-700 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button bg-gray-600 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              1. Information We Collect
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+            <div class="accordion-body text-gray-400 p-4">
+              We collect personal information, including your name, email address, and other details you provide when signing up or using our services.
             </div>
-
-            <!-- MAI Social Section -->
-            <div class="col-md-6 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">MAI Social</h5>
-                        <p class="card-text" style="text-align: justify;">
-                            MAI Social is an upcoming platform designed to create meaningful interactions and foster community growth within the MAI ecosystem.
-                        </p>
-                        <button class="btn btn-link text-primary" data-toggle="collapse" data-target="#mai-social-details">
-                            Read More ▼
-                        </button>
-                        <div id="mai-social-details" class="collapse">
-                            <ul>
-                                <li><strong>Community Interaction:</strong> Connect, share insights, and collaborate on projects.</li>
-                                <li><strong>Referral Rewards Integration:</strong> Incentivized growth through referral bonuses.</li>
-                                <li><strong>Content Sharing & Collaboration:</strong> Share AI-driven insights and posts seamlessly.</li>
-                                <li><strong>Project Collaboration Tools:</strong> Built-in tools for team collaboration.</li>
-                                <li><strong>User Engagement Analytics:</strong> Personalized analytics dashboards.</li>
-                                <li><strong>Secure and Privacy-Focused:</strong> Strong emphasis on user data privacy.</li>
-                            </ul>
-                            <p>
-                                MAI Social creates a thriving digital space for collaboration, innovation, and connection.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </div>
-</section>
-    
-
-
-    <!-- Roadmap Section -->
-    <section id="roadmap" class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Roadmap</h2>
-            <ul class="list-group">
-                <li class="list-group-item">✅ Mining Phase</li>
-                <li class="list-group-item">✅ Onboard Users</li>
-                <li class="list-group-item">🚀 Launch Mai AI</li>
-                <li class="list-group-item">🚀 Launch Mai Social</li>
-                <li class="list-group-item">🚀 Launch Mai Token</li>
-                <li class="list-group-item">📊 Token Distribution</li>
-            </ul>
+        <!-- Privacy Policy Item 2 -->
+        <div class="accordion-item bg-gray-700 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-gray-600 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              2. How We Use Your Information
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body text-gray-400 p-4">
+              We use your information to provide and improve our services, communicate with you, and enhance your experience on the platform.
+            </div>
+          </div>
         </div>
-    </section>
-
-    <!-- FAQs Section -->
-    <section id="fag" class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">FAQs</h2>
-            <div class="accordion" id="faqAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            What is MAI AI?
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                        <div class="accordion-body">
-                            MAI AI is an advanced artificial intelligence platform designed to provide affordable and accessible AI services.
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            How does mining work?
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                        <div class="accordion-body">
-                            Users can mine MAI tokens through daily activities and referrals.
-                        </div>
-                    </div>
-                </div>
+        
+                <!-- Privacy Policy Item 3 -->
+        <div class="accordion-item bg-gray-700 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-gray-600 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              3. Sharing Your Information
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body text-gray-400 p-4">
+              We do not share your personal information with third parties, except as required by law or in the case of business transfers.
             </div>
+          </div></div>
+        
+                <!-- Privacy Policy Item 4 -->
+        <div class="accordion-item bg-gray-700 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-gray-600 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              4. Data Security
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body text-gray-400 p-4">
+              We employ industry-standard security measures to protect your data from unauthorized access, alteration, or destruction.
+            </div>
+          </div></div>
+        
+                <!-- Privacy Policy Item 5 -->
+        <div class="accordion-item bg-gray-700 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-gray-600 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              5. Cookies
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body text-gray-400 p-4">
+              Our platform may use cookies to enhance user experience. You can control cookie settings in your browser.
+            </div>
+          </div>
         </div>
-    </section>
-    
-        <!-- Privacy Policy Section -->
-    
-    
-<section id="privacy-policy" class="py-5">
-    <div class="container" style="text-align: justify;">
-        <p class="card-text" >
-        <h2 class="text-center mb-4">Privacy Policy</h2>
-            
-            At MAI Project, we value your privacy. This Privacy Policy explains how we collect, use, and protect your personal information when you interact with our platform.
-        </p>
+        
+                <!-- Privacy Policy Item 6 -->
+        <div class="accordion-item bg-gray-700 rounded-lg mb-4">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-gray-600 text-white p-4 rounded-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              6. Changes to This Privacy Policy
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body text-gray-400 p-4">
+               We may update this Privacy Policy from time to time. Any changes will be posted on this page with the updated date.
 
-        <div class="accordion" id="privacyPolicyAccordion">
-            <!-- Information We Collect -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        1. Information We Collect
-                    </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                    <div class="accordion-body">
-                        We collect personal information, including your name, email address, and other details you provide when signing up or using our services.
-                    </div>
-                </div>
             </div>
-
-            <!-- How We Use Your Information -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        2. How We Use Your Information
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                    <div class="accordion-body">
-                        We use your information to provide and improve our services, communicate with you, and enhance your experience on the platform.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sharing Your Information -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        3. Sharing Your Information
-                    </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
-                    <div class="accordion-body">
-                        We do not share your personal information with third parties, except as required by law or in the case of business transfers.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Data Security -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingFour">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                        4. Data Security
-                    </button>
-                </h2>
-                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
-                    <div class="accordion-body">
-                        We employ industry-standard security measures to protect your data from unauthorized access, alteration, or destruction.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cookies -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingFive">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                        5. Cookies
-                    </button>
-                </h2>
-                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive">
-                    <div class="accordion-body">
-                        Our platform may use cookies to enhance user experience. You can control cookie settings in your browser.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Changes to Privacy Policy -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingSix">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                        6. Changes to This Privacy Policy
-                    </button>
-                </h2>
-                <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
-                    <div class="accordion-body">
-                        We may update this Privacy Policy from time to time. Any changes will be posted on this page with the updated date.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Us -->
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingSeven">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                        7. Contact Us
-                    </button>
-                </h2>
-                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven">
-                    <div class="accordion-body">
-                        If you have any questions or concerns regarding this Privacy Policy, please contact us at <a href="mailto:info@maiproject.com">info@maiproject.com</a>.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-</section> 
-    
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white  py-4 text-center">
-        <div class="container">
-            <p>&copy; 2024 MAI Project. All Rights Reserved.</p>
-        </div>
-    </footer>
+          </div>
+          
+            <!-- Contact Us Section -->
+  <section id="contactUs" class="py-3 bg-gray-800">
+    <div class="container">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-1 text-center">Contact us</h2>
+      <ul class="list-group">
+        <li class="list-group-item bg-gray-700 text-gray-400 p-4">If you have any questions or concerns regarding this Privacy Policy, please contact us at <a class="text-green-400" href="task.html">info@maiproject.com</a>.
 </div>
-    <!-- Bootstrap Script -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="more.js"></script>
+</li>
+        </ul>
+    </div>
+  </section>
+     
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4 text-center">
+    <div class="container">
+      <p>&copy; 2024 MAI Project. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap Script -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="more.js"></script>
 </body>
 </html>

@@ -3,325 +3,1699 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="Mai AI Token" />
-<meta property="og:description" content="Join the project today and get rewarded with digital money; Mai Crypto Token." />
-<meta property="og:image" content="https://mai-psi.vercel.app/social/graphic.png" />
-<meta property="og:url" content="https://mai-psi.vercel.app" />
-<meta property="og:type" content="website" />
-  
-  <title>MAI AI and token Mining Platform</title>
-  <script type="text/javascript" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+  <title>Mining Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              DEFAULT: '#121212',
+              100: '#1a1a1a',
+              200: '#282828',
+              300: '#3d3d3d',
+            },
+            gold: {
+              DEFAULT: '#FFD700',
+              100: '#FFF0A0',
+              200: '#B8860B',
+            },
+            silver: {
+              DEFAULT: '#C0C0C0',
+              100: '#E6E6E6',
+              200: '#A9A9A9',
+            },
+            copper: {
+              DEFAULT: '#B87333',
+              100: '#CD7F32',
+              200: '#A55D35',
+            },
+            mining: {
+              green: '#4caf50',
+              accent: '#2C3E30',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'floating 3s ease-in-out infinite',
+          },
+          keyframes: {
+            floating: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom styles that complement Tailwind */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
-  <link rel="stylesheet" href="style.css">
-  <link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-  rel="stylesheet"
->
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" href="./social/mai_co.png" type="image/png">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6212762431201571"
-     crossorigin="anonymous"></script>
-     
-  
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #121212;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
     
+    .mining-sphere {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #1a1a1a, #282828);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
+                  inset 0 4px 16px rgba(255, 255, 255, 0.1),
+                  inset 0 -4px 16px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+    
+    .mining-sphere::before {
+      content: '';
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(
+        circle at center,
+        rgba(76, 175, 80, 0.3) 0%,
+        rgba(76, 175, 80, 0.1) 40%,
+        transparent 70%
+      );
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .mining-sphere::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 30%;
+      width: 40%;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      filter: blur(5px);
+    }
+    
+    .mining-sphere p {
+      position: relative;
+      z-index: 2;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(76, 175, 80, 0.5);
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+    }
+    
+    /* Preserve .hidden class for your existing JavaScript */
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3d3d3d;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4caf50;
+    }
+    
+    /* Mining activation pulse */
+    .mining-active .mining-sphere {
+      box-shadow: 0 0 30px rgba(76, 175, 80, 0.5),
+                  inset 0 4px 16px rgba(76, 175, 80, 0.2),
+                  inset 0 -4px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Button hover effect */
+    button:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+  
+  /*User Info Dropdown */
+  
+#user-info-dropdown {
+  
+  
+  left: 0;
+  
+  
+  
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  display: none;
+  
+  text-align: left;
+  transition: transform 0.2s ease-in-out!important;
+  
+  
+  
+  }
+
+#user-info-dropdown.active {
+  display: block;
+}
+
+#user-info-dropdown i {
+  min-width: 25px;
+  max-width: 25px;
+  text-decoration: none;
+  color: darkgreen;
+}
+#user-info-dropdown p {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: white;
+  gap: 5px;
+  margin: 8px 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+#user-info-dropdown p:last-child {
+  border-bottom: none;
+}
+
+#user-info-dropdown a {
+  color: darkgreen;
+  text-decoration: none;
+  word-wrap: break-word;
+}
+
+#user-info-dropdown a:hover {
+  text-decoration: underline;
+}
+  #user-info-dropdown {
+  animation: dropdownFadeIn 0.6s ease-out forwards; /* Adjust duration and easing */
+  op acity: 0; /* Ensure it's hidden initially */
+  transform: translateY(-20px); /* Initial state before animation triggers */
+}
+
+/* Active state triggers animation */
+#user-info-dropdown.active {
+  animation: dropdownFadeIn 0.6s ease-out forwards; /* Ensure animation triggers on toggle */
+  display: block;
+}
+  
+  .task-button{
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  background-color: #28a745; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.task-button:hover {
+  background-color: #218838; /* Darker green */
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+.task-button:active {
+  transform: scale(1); /* Reset zoom effect */
+}
+  </style>
 </head>
-<div class="no-select">
-    
-                 
-              
-            
-    <body>
-    
-       <div class="no-select">
-  <!-- Preloader -->
-<div id="preloader" class="preloader">
-  <!-- Preloader animation or content -->
+<body class="dark min-h-screen bg-gradient-to-b from-dark to-dark-200 text-gray-100">
+  
+   <!-- Preloader --
+<div id="preloader" class="preloader hidden">
+  <!-- Preloader animation or content --
   <p><img src="./img/mai_co.png" style="width: 200px; height: 200px"></p>
 </div>
+  <div id="news"></div> -->
+  <!-- Toast notification system -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
   
+  <!-- Theme toggle -->
+  <button id="theme-toggle" class="fixed top-4 right-4 z-40 bg-dark-200 p-2 rounded-full shadow-lg text-gray-300 hover:text-white transition-all duration-300">
+    <i class="fa-solid fa-moon"></i>
+  </button>
   
+  <!-- Install Button (Preserving original) -->
+  <button id="install-button" class="hidden fixed top-20 right-4 z-40 bg-mining-accent text-white py-2 px-4 rounded-lg shadow-lg transition-all duration-300">
+    <i class="fa-solid fa-download mr-2"></i>Install App
+  </button>
   
-   <!-- Mining Dashboard -->
-  
-  
-  <div class="dashboard hidden" id="dashboard">
-    <header>
-      <div id="menu-icon">☰</div>
-      
-      <div id="user-info-dropdown" class="hidden">
+  <!-- Main Dashboard -->
+  <div class="dashboard hidden w-full min-h-screen flex flex-col" id="dashboard">
+    <!-- Header Section -->
+    <header class="bg-dark-100 border-b border-dark-300 p-4 shadow-md">
+      <div class="container mx-auto">
+        <div class="flex justify-between items-center">
+          <!-- Menu Icon -->
+          <div id="menu-icon" class="p-2 rounded-md bg-dark-200 hover:bg-dark-300 cursor-pointer transition-all text-xl ">
+            <i class="fa-solid fa-bars"></i>
+          
+          </div>  
+          
+          <!-- Logo/Title -->
+          <div class="text-center">
+            <h1 class="text-2xl font-bold flex items-center justify-center">
+              <span class="bg-clip-text text-transparent bg-gradient-to-r from-gold to-copper">MAI Coin</span>
+            </h1>
+          </div>
+          
+          <!-- POW Information -->
+        <div class="mt-4 text-center">
+          <p class="flex items-center justify-center">
+            <strong id="pow-text" class="font-bold flex items-start">
+              POW
+              <sup class="text-xs bg-dark-300 rounded-full w-4 h-4 flex items-center justify-center ml-1 cursor-help">?</sup>
+            </strong>
+          </p>
+          <p class="text-sm text-gray-400">1 MAI ≈ $2</p>
+          
+          <!-- Message Box -->
+          <div class="message hidden mt-3 mx-auto max-w-lg bg-dark-200 border border-dark-300 rounded-lg p-3 text-sm text-gray-300" id="message-box">
+            <!--  Your activities demonstrate your Proof of Work. The more mining tasks you complete, the greater your rewards.-->
+          </div>
+        </div>
+          
+          <!-- User Profile Section -->
+          <div class="relative">
+            <!--    <div class="w-10 h-10 rounded-full bg-dark-300 cursor-pointer flex items-center justify-center hover:bg-dark-200 transition-all" id="user-profile-trigger">
+               <i class="fa-solid fa-user"></i>
+              
+            </div>-->
+            <div " class="hidden">
         <p>Welcome, <span id="user-name">User</span></p>
         <p>Balance: <span id="mining-balance">0 MAI</span></p>
         <button id="logout-button">Log Out</button>
       </div>
-      
-      <p style="text-align: center"><strong id="pow-text">POW<sup>?</sup></strong>
-
-  <br> 1 MAI ≈ $2</p>
+            
+            <!-- User Dropdown (keeping original ID) -->
+            <div id="user-info-dropdown" class="hidden fixed max-h-[100vh] translate-x-0 overflow-scroll left-0 mt-0 w-56 bg-dark-100 rounded-lg shadow-xl border border-dark-300 p-4 z-30"> 
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-3 border-b border-dark-300 pb-3">
+                  <div class="w-12 h-12 rounded-full bg-dark-300 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-xl"></i>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-400">Welcome,</p>
+                    <p class="font-medium text-white" id="user-name">User</p>
+                  </div>
+                </div>
+                
+                <div class="pt-1">
+                  <p class="text-sm text-gray-400">Current Balance</p>
+                  <p class="font-bold text-xl text-gold" id="mining-balance">0 MAI</p>
+                  <p class="text-xs text-gray-400">≈ $0.00 USD</p>
+                </div>
+                
+                <button id="logout-button" class="mt-2 w-full bg-dark-300 hover:bg-red-900 text-white py-2 rounded-md transition-all flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                  <span>Log Out</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <div class="message" id="message-box">Your activities demonstrate your Proof of Work. The more mining tasks you complete, the greater your rewards.</div>
-      
+        
+      </div>
     </header>
-  
-    <!-- Install Button -->
-<button id="install-button" style="
-  display: none;
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  background-color: #2C3E30;
-  color: #fff;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;">
-  Install App
-</button>
+    
+    <!-- Main Content -->
+    <main id="dynamic-content" class="mining-container flex-grow p-4 md:p-6">
       
-    <main id="dynamic-content" class="mining-container">
-      <div id="mining-dashboard">
-  <div id="streak-level-container"></div>
-</div>
-      
-      <div id="progress-circle"  class="mining-sphere">
+      <div class="container mx-auto">
+        <!-- Analytics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
+            <h3 class="text-sm text-gray-400 mb-1">Average Daily Earnings</h3>
+            <p class="text-2xl font-bold text-white">4.24 <span class="text-gold text-lg">MAI</span></p>
+            <div class="mt-2 h-1 w-full bg-dark-300 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-mining-green to-gold w-2/5 rounded-full"></div>
+            </div>
+          </div>
           
-        <p id="mined-balance">0 MAI</p>
           
+          
+          
+        </div>
+        
+        <!-- Mining Dashboard (preserving original ID) -->
+        <div id="mining-dashboard" class="flex flex-col items-center justify-center gap-8 py-6">
+          <!-- Mining Sphere (preserving original class) -->
+          <div id="progress-circle" class="mining-sphere animate-float">
+            <p id="mined-balance" class="text-center">0 MAI</p>
+          </div>
+          
+          <!-- Points Container (preserving original ID) -->
+          <div id="points-container" class="bg-dark-100 rounded-lg px-6 py-3 shadow-lg border border-dark-300">
+            <p class="flex items-center gap-2 text-lg">
+              <i class="fa-regular fa-clock text-mining-green"></i>
+                   <small id="dropdown-points" class="text-gray-400"></small>
+              <span id="dashboard-points" class="text-mining-green font-medium">0.0 Points</span>
+            </p>
+          </div>
+          
+          <!-- Countdown Timer -->
+          <p id="mining-countdown" class="text-xl font-medium text-center">Next session in: --:--:--</p>
+          
+          <!-- Mining Button -->
+          <button id="activate-mining" class="bg-gradient-to-r from-mining-green to-mining-accent text-white py-3 px-8 rounded-full font-medium text-lg shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-3">
+            <i class="fa-solid fa-bolt"></i>
+            Activate Mining
+          </button>
+        </div>
+        <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
+            <h3 class="text-sm text-gray-400 mb-1">Network Status</h3>
+            <p class="text-lg font-medium text-white flex items-center">
+              <span class="w-3 h-3 rounded-full bg-mining-green mr-2 animate-pulse"></span>
+              Active
+            </p>
+          </div>
       </div>
-        
-    <div id="points-container">
-  <p style="display: ; align-items: center; gap: 5px; color: #4caf50; font-size: 20px;">
-    <small>Time Spent:</small>
-    <span id="dashboard-points" style="color: #4caf50;"><small>0.0 Points</small></span>
-  </p>
-</div>
-        
-      <p id="mining-countdown">Next session in: --:--:--</p>
-        
-      <button id="activate-mining">Activate Mining</button>
+      
+      <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
+            <h3 class="text-sm text-gray-400 mb-1">Mining Streak Level</h3>
+            <p class="text-2xl font-bold text-white flex items-center">
+              <span id="streak-level-container" class="flex"></span>
+              <span class="text-sm text-gray-400 ml-2"></span>
+            </p>
+          </div>
+      
+      <button id="task-button" class="task-button">Daily Task</button>
     </main>
-     
   </div>
- 
-  
-  
-  
-  <!-- Login/Registration Form -->
-  <div class="form-container hidden" id="form-container">
-  <form id="auth-form">
-    <h2 id="form-title">Login</h2>
-    
-    <!-- Login Fields -->
-    <div id="login-fields">
-      <label for="identifier">Email or Username</label>
-      <input type="text" id="identifier" name="identifier" placeholder="Enter your email or username" required>
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Enter your password" required>
-    </div>
-    
-    <!-- Register Fields -->
-    <div id="register-fields" class="hidden">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" placeholder="Enter your name">
-      <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="Enter your username" />
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email"/>
-      <label for="password-register">Password</label>
-      <input type="password" id="password-register" name="password-register" placeholder="Enter your password"/>
-      <!-- Hidden Referral input -->
-<input type="hidden" id="referral-input" name="referralCode"/>
-    </div>
+  <div class="form-container hidden" id="form-container"></div>
 
-    <button type="submit" id="auth-submit">Login</button>
-    <p id="toggle-form">Don’t have an account? <span>Register here</span></p>
-  </form>
-</div>
-  
-  
- <div id="news-popup" class="popup hidden">
-  <p>Check out the latest <a href="news.html" id="news-link">News</a>!</p>
-</div>
- 
-        
-
-    
-  
- 
-  
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-   <br>
-       <br>
-       <br>
-  
-
-
-
-
-  
-
-
-<section id="news" class="news-section hidden">
-    
-    <h2>About MAI</h2>
-    <div class="update div-content section-purple">
-        <h3>What is MAI?</h3>
-        <p>The Mai Project is a revolutionary platform merging artificial intelligence, blockchain, and a community-driven approach. Designed with user-friendliness in mind, Mai rewards early adopters while offering seamless access to an innovative AI system.</p>
-    </div>
-    
-    <div class="update div-content section-purple" style="background-color: white;">
-        
-<h3 style="background-color: #2C3E30; padding: 20px; border-radius: 10px; width: 97%; margin-left: -15px">How the Mining Phase Works</h3>
-        <p style="color: #2C3E30 !important;">
-            Mai employs an AI-powered mining system, allowing users to earn tokens seamlessly through participation, engagement, and collaboration. This innovative approach ensures both fairness and scalability, rewarding users based on their activity and community growth contributions.
-        </p>
-    </div>
-    <div class="update div-content section-purple" style="background-color: #EDEDED;">
-        <h3 style="background-color: #978e5c; padding: 20px; border-radius: 10px; width: 97%; margin-left: -15px">Exclusive Rewards for Active Users</h3>
-        <p style="color: black"> 
-Active users will be periodically rewarded with airdrops, even before the Token Generation Event (TGE). These airdrops are designed to incentivize engagement, loyalty, and consistent activity within the platform. Your eligibility for airdrops and the amount you’ll receive will be determined by the points you accumulate over time.  By staying active, users can earn rewards early, positioning themselves for greater benefits once the TGE occurs. <p style="color: black">Please note, these airdrops serve as incentives for active participation and are not the actual MAI token rewards.</p>
-        </p>
-    </div>
-
-    <div class="update div-content section-light">
-        <h4>Key Aspects of Mai’s Mining System</h4>
-        <ul>
-            <li><b>Active Participation:</b>
-                <p>Users are rewarded for remaining active during mining sessions. Mining operates on a session-based model, where users activate mining for a set duration.</p>
-            </li>
-            <li><b>Engagement with AI-Driven Activities:</b>
-                <p>Activities such as interacting with the AI chatbot, completing tasks, or providing feedback contribute to token accumulation.</p>
-            </li>
-            <li><b>Collaboration via Referrals:</b>
-                <p>Referring others to join Mai not only grows the community but also enhances your mining rate. Every successful referral increases the mining bonus by 5%.</p>
-            </li>
-        </ul>
-    </div>
-
-    <div class="update div-content section-light-gray">
-        <h4>Mining Rate Mechanism</h4>
-        <p>The mining rate dynamically adjusts based on referrals, ensuring early adopters and active users gain fair rewards.</p>
-        <h4>Key Components</h4>
-        
-            <li><b>Base Rate:</b> 0.0005MAI per second</li>
-            <li><b>Referral Bonus:</b> +5% per referred user</li>
-        
-    </div>
-
-    <div class="update div-content section-white">
-        <h4>Mining Rate Formula</h4>
-        <div class="formula-container">
-\[
-            \begin{aligned}
-            \text{Mining Rate} &= \\
-            \text{Base Rate} \times \left(1 + (\text{referralCount} \times 0.05)\right)
-            \end{aligned}
-\]
-        </div>
-
-        <h4>Example Calculations</h4>
-        <div class="math-example">
-            <ul>
-                <li>
-                    <b>5 Referrals:</b><br>
-\[
-                    \begin{aligned}
-                    &0.0005 \times (1 + (5 \times 0.05)) \\
-                    &= 0.0005 \times 1.25 \\
-                    &= 0.000625
-                    \end{aligned}
-\]
-                </li>
-                <li>
-                    <b>10 Referrals:</b><br>
-\[
-                    \begin{aligned}
-                    &0.0005 \times (1 + (10 \times 0.05)) \\
-                    &= 0.0005 \times 1.5 \\
-                    &= 0.00075
-                    \end{aligned}
-\]
-                </li>
-                <li>
-                    <b>Midpoint Check:</b><br>
-\[
-                    \begin{aligned}
-                    &\frac{0.0005 + 0.00075}{2} \\
-                    &= \frac{0.00125}{2} \\
-                    &= 0.000625
-                    \end{aligned}
-\]
-                </li>
-            </ul>
-        </div>
-
-        <h4>Why It Seems Off</h4>
-        <p>
-            The values appear inconsistent because the increase is linear, not exponential. A 5% bonus per referral scales linearly with the number of referrals. The math holds up, and the linear growth ensures consistency.
-        </p>
-        <p>
-            This dynamic calculation ensures users are incentivized to expand the Mai ecosystem through referrals.
-        </p>
-    </div>
-    
-     
-      <p><a href="news.html#about">More info..</a></p>
-      </div>
-</section>
-  
-     
-
-     
-      <div class="filler ">
-          <p style="text-align: center">.....</p>
-      </div>
-    
-
-    
-     <button id="task-button" class="task-button">Write Us</button>
-    
-
-    <nav>
-  <footer id="footer" class="fixed-footer">
-    <button class="footer-btn" id="home-btn">
-      <i class="fas fa-cogs"></i>
-      <span>POW</span>
-    </button>
-    <button class="footer-btn" id="news-btn">
-      <i class="fas fa-newspaper"></i>
-      <span>News</span>
-    </button>
-    <button class="footer-btn" id="ai-btn">
-      <i class="fas fa-robot"></i>
-      <span>Mai AI</span>
-    </button>
-    <button class="footer-btn" id="wallet-btn">
-      <i class="fas fa-wallet"></i>
-      <span><a href="mining.html">Wallet</a></span>
-    </button>
-    <button class="footer-btn" id="menu-btn">
-      <i class="fas fa-bars"></i> <!-- Correct menu icon -->
-      <span>More..</span>
-    </button>
-  </footer>
-</nav>
-  </div>
-  </div>
-      </div>
-      
-   
-  
-    <script src="app.js"></script>
+  <!-- Theme toggle functionality - isolated from your main JavaScript -->
   <script>
-  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
+  const token = localStorage.getItem("token");
+if (!token) {
+  alert("Please log in to get started");
+  window.location = "login.html";
+}
+    // Theme toggle functionality only - doesn't interfere with other elements
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      document.body.classList.toggle('light-theme');
+      
+      const icon = this.querySelector('i');
+      if (document.body.classList.contains('light-theme')) {
+        document.body.style.background = '#2C3E30';
+        document.body.style.color = '#121212';
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        document.body.style.background = '';
+        document.body.style.color = '';
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    });
+    
+  document.addEventListener("DOMContentLoaded", () => {
+        initializePoints();
+        fetchPoints();
+        resumeCountdown();
+        // Restore session on page load
+        checkPersistentLogin(); 
+        console.log("checkPersistentLogin called");
+        
+          // DOM Elements
+  
+menuIcon.addEventListener("click", async (event) => {  // Add (event) here
+  userInfoDropdown.classList.remove("hidden");
+  event.stopPropagation();
+// Prevent event from bubbling up to the document
+  
+  
+  try {
+    console.log("Menu icon clicked");
+    
+    // Retrieve token from localStorage
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must log in to view your referral link.");
+      return;
+    }
+    console.log("Token retrieved:", token);
+    
+    // Fetch user details from backend
+    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    if (!response.ok) {
+      alert("Failed to fetch user details. Please log in again.");
+      localStorage.clear();
+      window.location.reload();
+      return;
+    }
+    
+    const user = await response.json();
+    console.log("User details fetched:", user);
+
+    const { username, email, balance, referrals, referralCode, name } = user;
+
+    const referralCount = referrals.length;
+    let streakLevel;
+    if (referralCount < 5) streakLevel = "Regular";
+    else if (referralCount < 10) streakLevel = "Intermediate";
+    else if (referralCount < 20) streakLevel = "Partner";
+    else if (referralCount < 30) streakLevel = "Advanced";
+    else if (referralCount < 50) streakLevel = "Expert";
+    else streakLevel = "Master";
+
+      // Construct referral link
+
+const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://mai-psi.vercel.app/register?ref=${referralCode}`;
+    console.log("Referral link constructed:", referralLink);
+
+  // Default mining rate
+const defaultRate = 0.0005;
+
+// Get referral count from user data
+//const referralCount = referrals.length;
+
+// Calculate the bonus multiplier based on referrals (5% per referral)
+const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
+      
+      // Optional: Cap the referral bonus multiplier to prevent extreme boosts
+const cappedReferralBonus = Math.min(referralBonus, 2); // Max 100% bonus
+
+// Calculate the dynamic mining rate
+const miningRate = defaultRate * cappedReferralBonus;
+
+// Display mining rate
+const miningRateDisplay = document.getElementById("mining-rate");
+if (miningRateDisplay) {
+  miningRateDisplay.textContent = `Mining Rate: ${miningRate.toFixed(5)} MAI/sec`;
+}
+      // Calculate new balance
+    const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+const newBalance = currentBalance + miningRate;
+
+// Update balance in localStorage and UI
+localStorage.setItem("minedBalance", newBalance.toFixed(4));
+minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+// Select Dropdown Points Display Element
+const dropdownPointsDisplay = document.getElementById("dropdown-points");
+      
+      /**
+ * Update Dropdown UI with Points
+ */
+function updatePointsUI(points) {
+  if (dropdownPointsDisplay) {
+    dropdownPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+  } else {
+    console.warn("Dropdown points element not found in DOM.");
+  }
+}
+
+      /**
+ * Fetch Points from Backend and Update Dropdown
+ */
+async function initializePoints() {
+  if (!token) {
+    console.warn("No token found. Skipping points initialization.");
+    return;
+  }
+  try {
+    console.log("Initializing points on page load...");
+
+    // Fetch points from backend
+    const currentPoints = await fetchPoints();
+    console.log("Current Points Fetched on Load:", currentPoints);
+
+    if (typeof currentPoints === "number") {
+      
+      updatePointsUI(currentPoints); // Update Dropdown UI Immediately
+    } else {
+      console.warn("Points fetched are not a valid number.");
+    }
+  } catch (error) {
+    console.error("Error initializing points:", error.message);
+  }
+}
+      
+      /**
+ * Periodically Sync Points
+ */
+setInterval(async () => {
+  if (token) {
+    try {
+      const currentPoints = await fetchPoints();
+      updatePointsUI(currentPoints); // Update points periodically
+    } catch (error) {
+      console.error("Error syncing points:", error.message);
+    }
+  }
+}, 60000); // Sync every 60 seconds
+
+// Initialize Points on Page Load
+document.addEventListener("DOMContentLoaded", () => {
+  
+});
+      
+      // Update dropdown content
+userInfoDropdown.innerHTML = `
+  <p class="text-center mb-2"><strong>MAI App</strong></p>
+  <p class="mb-2"><i class="fas fa-user me-2"></i> <strong>${name}</strong></p>
+  <p class="mb-2"><i class="fas fa-user-tag me-2"></i> <strong>${username}</strong></p>
+  <p class="mb-2"><i class="fas fa-envelope me-2"></i> <strong>${email}</strong></p>
+  <p class="mb-2"><i class="fas fa-fire me-2"></i> <strong>${streakLevel}</strong></p>
+  <p class="mb-2"><i class="fas fa-cogs me-2"></i> <strong>${miningRate.toFixed(5)} MAI/sec</strong></p>
+  <p class="mb-2"><i class="fas fa-wallet me-2"></i> <strong>${balance.toFixed(5)} MAI</strong></p>
+  <p class="mb-2"><i class="fas fa-users me-2"></i> <strong>${referralCount} Referrals</strong></p>
+      <p class="mb-2">
+  <i class="fas fa-star me-2"></i> 
+  <strong id="dropdown-points">0.00 Points</strong>
+</p>
+      <hr>
+      <p><i class="fas fa-question-circle"></i> <strong><a href="more.html">About MAI</a></strong></p>
+      <p><i class="fas fa-toolbox"></i> <strong><a href="more.html#utilities">Utilities</a></strong></p>
+  <p><i class="fas fa-road"></i> <strong><a href="more.html#roadmap">Roadmap</a></strong></p>
+  <p><i class="fas fa-file-alt"></i> <strong><a href="#">White Paper</a></strong></p>
+      <p><i class="fas fa-question-circle"></i> <strong><a href="more.html#fag">FAQs</a></strong></p>
+  <p><i class="fas fa-shield-alt"></i> <strong><a href="more.html#privacy-policy">Privacy Policy</a></strong></p>
+      <hr>
+      <p><i class="fas fa-link"></i> <strong>Referral Link:</strong></p>
+  <button id="share-button"><i class="fas fa-share-alt"></i> Share</button>
+  <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+      <br>
+      <br>
+      <button id="Support"><i class="fas fa-headset"></i><a href="task.html" style="color: white;">Contact Us</a></button>
+    <p>v1.03</p>
+`;
+      userInfoDropdown.classList.toggle("active");
+      
+     const shareButton = document.getElementById("share-button");
+
+// Define shareOnWhatsApp in the global scope
+function shareOnWhatsApp() {
+  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
+  const whatsappUrl = `whatsapp://send?text=${message}`;
+
+  // Try opening WhatsApp directly
+  window.open(whatsappUrl, '_system');
+
+  // Fallback to the browser if WhatsApp is not installed
+  setTimeout(() => {
+    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
+    window.open(fallbackUrl, '_system'); // Open in system browser
+  }, 500); // Wait 500ms to check if WhatsApp opened
+}
+
+if (shareButton) {
+  shareButton.addEventListener("click", () => {
+    // Toggle the "clicked" class to change color to dark green
+    shareButton.classList.toggle("clicked");
+
+    // Show or hide share options
+    const existingShareOptions = document.getElementById("share-options");
+    if (existingShareOptions) {
+      // If share options exist, hide them
+      existingShareOptions.remove();
+    } else {
+      // If share options do not exist, show them directly below the share button
+      const shareOptions = `
+        <div id="share-options" style="margin-top: 10px;">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
+          <a href="#" id="whatsapp-share">Share on WhatsApp</a><br>
+          <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
+          <button id="copy-link">Copy Link</button>
+        </div>
+      `;
+
+      // Insert the share options directly below the share button
+      shareButton.insertAdjacentHTML("afterend", shareOptions);
+
+      // Add event listener for the WhatsApp share link
+      const whatsappShareLink = document.getElementById("whatsapp-share");
+      if (whatsappShareLink) {
+        whatsappShareLink.addEventListener("click", (e) => {
+          e.preventDefault(); // Prevent default link behavior
+          shareOnWhatsApp(); // Call the shareOnWhatsApp function
+        });
+      }
+      // Add copy link functionality after appending the link
+      const copyLinkButton = document.getElementById("copy-link");
+      if (copyLinkButton) {
+        copyLinkButton.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(referralLink)
+            .then(() => alert("Referral link copied to clipboard!"))
+            .catch((err) => console.error("Failed to copy referral link:", err));
+        });
+      }
+    }
+  });
+} 
+    /**  // Add event listener for the share button click
+const shareButton = document.getElementById("share-button");
+      
+      function shareOnWhatsApp() {
+  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
+  const whatsappUrl = `whatsapp://send?text=${message}`;
+
+  // Try opening WhatsApp directly
+  window.open(whatsappUrl, '_system');
+
+  // Fallback to the browser if WhatsApp is not installed
+  setTimeout(() => {
+    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
+    window.open(fallbackUrl, '_system'); // Open in system browser
+  }, 500); // Wait 500ms to check if WhatsApp opened
+}
+
+if (shareButton) {
+  shareButton.addEventListener("click", () => {
+    // Toggle the "clicked" class to change color to dark green
+    shareButton.classList.toggle("clicked");
+
+    // Show or hide share options
+    const existingShareOptions = document.getElementById("share-options");
+    if (existingShareOptions) {
+      // If share options exist, hide them
+      existingShareOptions.remove();
+    } else {
+      // If share options do not exist, show them directly below the share button
+      
+      
+      const shareOptions = `
+        <div id="share-options" style="margin-top: 10px;">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
+      <a href="#" onclick="shareOnWhatsApp()">Share on WhatsApp</a>
+      
+          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
+      <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
+          <button id="copy-link">Copy Link</button>
+        </div>
+      `;
+      
+      // Insert the share options directly below the share button
+      shareButton.insertAdjacentHTML("afterend", shareOptions);
+
+      // Add copy link functionality after appending the link
+      const copyLinkButton = document.getElementById("copy-link");
+      if (copyLinkButton) {
+        copyLinkButton.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(referralLink)
+           .then(() => alert("Referral link copied to clipboard!"))
+            .catch((err) => console.error("Failed to copy referral link:", err));
+        });
+      }
+    }
+  });
+}**/
+      
+      // Close dropdown when clicking outside
+document.addEventListener("click", (event) => {
+  if (
+    userInfoDropdown.classList.contains("active") &&
+    !userInfoDropdown.contains(event.target) && // Check if clicked outside dropdown
+    event.target !== menuIcon // Check if clicked is not the menu icon
+  ) {
+    userInfoDropdown.classList.remove("active");
+  }
+});
+    
+    // Add logout functionality
+    const logoutButton = document.getElementById("logout-button");
+      if (logoutButton) {
+      logoutButton.addEventListener("click", () => {
+        localStorage.clear();
+        alert("Logged out successfully.");
+        window.location.reload();
+      });
+    }
+  } catch (error) {
+    console.error("Error toggling menu:", error);
+    alert("An error occurred while fetching user details.");
+  }
+});
+  
+  // Function to fetch the user data (adjust based on your API)
+async function fetchUserData() {
+  try {
+    // Assuming you have a token stored in localStorage for authentication
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+    
+    // Make an API call to fetch the user's referral data (replace with your actual API endpoint)
+    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
+    }
+
+    const userData = await response.json();
+
+    // Assuming the response contains a 'referrals' array
+    const referrals = userData.referrals || []; // Fallback to empty array if not found
+    // Now calculate the streak level dynamically based on referral count
+    const referralCount = referrals.length;
+    let streakLevel;
+    if (referralCount < 5) streakLevel = "Regular";
+    else if (referralCount < 10) streakLevel = "Intermediate";
+    else if (referralCount < 20) streakLevel = "Partner";
+    else if (referralCount < 30) streakLevel = "Advanced";
+    else if (referralCount < 50) streakLevel = "Expert";
+    else streakLevel = "Master";
+      
+      // Populate the streak level in the dashboard
+    const streakLevelContainer = document.getElementById("streak-level-container");
+
+    if (streakLevelContainer) {
+      streakLevelContainer.innerHTML = `
+        <div class="streak-level">
+          <span id="current-streak-level">Level: <strong>${streakLevel}</strong></span>
+          <button id="streak-dropdown-toggle">▼</button>
+        </div>
+        <div id="streak-dropdown" class="hidden">
+          <ul>
+            <li>Regular</li>
+            <li>Intermediate</li>
+            <li>Partner</li>
+            <li>Advanced</li>
+            <li>Expert</li>
+            <li>Master</li>
+          </ul>
+        </div>
+      `;
+    }
+      
+      // Add event listener for dropdown toggle
+    const streakDropdownToggle = document.getElementById("streak-dropdown-toggle");
+    const streakDropdown = document.getElementById("streak-dropdown");
+
+    if (streakDropdownToggle) {
+      streakDropdownToggle.addEventListener("click", () => {
+        event.stopPropagation(); // Prevent the click from propagating to the document
+        streakDropdown.classList.toggle("hidden");
+        // Change button text based on dropdown visibility
+        if (streakDropdown.classList.contains("hidden")) {
+          streakDropdownToggle.textContent = "▼";
+        } else {
+          streakDropdownToggle.textContent = "▲";
+                  }
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+}
+  // Call the function to load user data on page load
+fetchUserData();
+    
+      // **Continue Mining**
+ // Define the updateBalance function first
+async function updateBalance(newBalance) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("No token found. Cannot update balance.");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/mining/update", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Failed to update balance:", errorData.message || response.statusText);
+    }
+  } catch (error) {
+    console.error("Error updating balance:", error);
+  }
+}
+
+// Check if mining data exists in localStorage
+let miningStartTime = localStorage.getItem('miningStartTime')
+    ? parseInt(localStorage.getItem('miningStartTime'))
+    : null;
+
+let miningEndTime = localStorage.getItem('miningEndTime')
+    ? parseInt(localStorage.getItem('miningEndTime'))
+    : null;
+
+ isMiningActive = localStorage.getItem('isMiningActive') === 'true';
+
+// Start mining only if it's active
+if (isMiningActive && miningStartTime && miningEndTime) {
+    startMiningProgress();
+}
+    
+    // Function to start mining
+function startMining() {
+    if (!isMiningActive) {
+        miningStartTime = Date.now();
+        miningEndTime = miningStartTime + 3600 * 1000; // 1 hour later
+        isMiningActive = true;
+
+        // Save to localStorage
+        localStorage.setItem('miningStartTime', miningStartTime);
+        localStorage.setItem('miningEndTime', miningEndTime);
+        localStorage.setItem('isMiningActive', 'true');
+
+        startMiningProgress();
+    }
+}
+
+// Function to update mining progress based on current time
+function updateMiningProgress() {
+    if (!isMiningActive || !miningStartTime || !miningEndTime) return;
+
+    const currentTime = Date.now();
+    if (currentTime >= miningEndTime) {
+        miningProgress = 100;
+        isMiningActive = false;
+        clearInterval(miningInterval);
+
+        // Clear localStorage
+        localStorage.removeItem('miningStartTime');
+        localStorage.removeItem('miningEndTime');
+        localStorage.removeItem('isMiningActive');
+    } else {
+        miningProgress = ((currentTime - miningStartTime) / (miningEndTime - miningStartTime)) * 100;
+    }
+
+    // Update the circular progress bar
+    progressCircle.style.background = `conic-gradient(
+        #2C3E30 ${miningProgress}%, 
+        #718074 ${miningProgress}% 100%
+    )`;
+}
+
+    // Start mining progress interval
+function startMiningProgress() {
+    miningInterval = setInterval(updateMiningProgress, 1000);
+    updateMiningProgress(); // Initial call to set progress immediately
+}
+
+// Update progress when user returns to the app
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        updateMiningProgress();
+    }
+});
+    
+   // Then, define other functions that call updateBalance
+function continueMining(savedProgress, remainingTime) {
+  miningProgress = savedProgress;
+  isMiningActive = true;
+  activateMiningButton.disabled = true;
+  activateMiningButton.textContent = "Mining...";
+
+  const incrementInterval = 1000; // 1 second
+  const miningEndTime = Date.now() + remainingTime;
+
+  startCountdown(remainingTime);
+
+  miningInterval = setInterval(async () => {
+    if (Date.now() >= miningEndTime || miningProgress >= 100) {
+      clearInterval(miningInterval);
+      isMiningActive = false;
+      miningProgress = 100;
+      activateMiningButton.disabled = false;
+      activateMiningButton.textContent = "Activate Mining";
+
+      alert("Mining session completed!");
+
+      // Clear local storage for mining
+      localStorage.removeItem("miningProgress");
+      localStorage.removeItem("miningEndTime");
+    } else {
+      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
+      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+     // const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
+      // Default mining rate
+const defaultRate = 0.0005;
+
+// Get referral count from user data
+      const token = localStorage.getItem("token");
+      const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
+    }
+
+    
+      const userData = await response.json();
+      const referrals = userData.referrals || []; // Fallback to empty array if not found
+
+const referralCount = referrals.length;
+
+// Calculate the bonus multiplier based on referrals (5% per referral)
+const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
+
+// Calculate the new balance with the referral bonus applied
+const newBalance = currentBalance + (defaultRate * referralBonus);
+
+// Update the local storage or display
+localStorage.setItem("minedBalance", newBalance.toFixed(4));
+minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+
+      localStorage.setItem("miningProgress", miningProgress);
+      localStorage.setItem("minedBalance", newBalance.toFixed(4));
+      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+
+      /**progressCircle.style.background = `conic-gradient(
+  #2C3E30 ${miningProgress}%, 
+  #718074 ${miningProgress}% 100%
+)`;**/ 
+
+  function startCountdown(remainingTime) {
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    const totalTime = remainingTime; // Store initial remaining time for reference
+
+    countdownInterval = setInterval(() => {
+        if (remainingTime <= 0) {
+            clearInterval(countdownInterval);
+            miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+        } else {
+            const minutes = Math.floor(remainingTime / (60 * 1000));
+            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+
+            // Update Progress Bar
+            let progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
+            progressPercentage = Math.min(progressPercentage, 100); // Ensure it doesn't exceed 100%
+
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
+
+            remainingTime -= 1000;
+        }
+    }, 1000);
+}
+
+      // Update backend balance
+      try {
+        await updateBalance(newBalance);
+      } catch (error) {
+        console.error("Failed to update balance to backend:", error);
+      }
+    }
+  }, incrementInterval);
+}
+           /**progressCircle.style.background = `conic-gradient(
+  #2C3E30 ${miningProgress}%, 
+  #718074 ${miningProgress}% 100%
+)`;**/
+    // **Activate Mining**
+  activateMiningButton.addEventListener("click", () => {
+    if (isMiningActive) {
+      alert("Mining is already active!");
+      return;
+    }
+    const miningDuration = 60 * 60 * 1000; // 1 hour
+    const miningEndTime = Date.now() + miningDuration;
+
+    isMiningActive = true;
+    localStorage.setItem("miningProgress", "0");
+    localStorage.setItem("miningEndTime", miningEndTime.toString());
+    continueMining(0, miningDuration);
+    startCountdown(miningDuration);
+  });
+  
+  // Get DOM elements
+const newsPopup = document.getElementById("news-popup");
+
+// Show popup function
+function showPopup() {
+  newsPopup.classList.remove("hidden"); // Show popup
+  setTimeout(() => {
+    newsPopup.classList.add("hidden"); // Hide popup after 5 seconds
+  }, 10000); // Adjust time as needed
+}
+
+// Add click event to Activate Mining button
+activateMiningButton.addEventListener("click", () => {
+  showPopup(); // Show popup on click
+});
+  
+  const taskButton = document.getElementById("task-button");
+if (taskButton) {
+  taskButton.addEventListener("click", () => {
+    window.location.href = "news.html";
+  });
+}
+
+    
+  });
+  
+    const dashboard = document.getElementById("dashboard");
+  const activateMiningButton = document.getElementById("activate-mining");
+  const progressCircle = document.getElementById("progress-circle");
+  const minedBalanceDisplay = document.getElementById("mined-balance");
+  const userNameDisplay = document.getElementById("user-name");
+  const menuIcon = document.getElementById("menu-icon");
+  const userInfoDropdown = document.getElementById("user-info-dropdown");
+  const formTitle = document.getElementById("form-title");
+  const nameInput = document.getElementById("name");
+  const usernameInput = document.getElementById("username");
+  const emailInput = document.getElementById("email");
+  const formContainer = document.getElementById("form-container");
+  const miningCountdown = document.getElementById("mining-countdown");
+  
+   // State Variables
+  let isMiningActive = false;
+  let miningProgress = 0;
+  let miningInterval;
+  let countdownInterval;
+  
+  // **Persistent Login Check**
+  async function checkPersistentLogin() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const response = await fetch("https://mai.fly.dev/api/auth/details", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          userNameDisplay.textContent = data.username;
+          minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+          localStorage.setItem("minedBalance", data.balance.toFixed(4));
+          localStorage.setItem("name", data.name);
+          formContainer.classList.add("hidden");
+          dashboard.classList.remove("hidden");
+          restoreMiningSession();
+        } else {
+          alert("Session expired. Please log in again.");
+          localStorage.clear();
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("Error restoring session:", error);
+        localStorage.clear();
+        window.location.reload();
+      }
+    }
+  }
+  
+  // Redirect for desktop users
+  const isDesktop = window.innerWidth > 768;
+
+  if (isDesktop) {
+    // Redirect to the news page
+    window.location.href = "./news.html";
+  }
+  
+  const powText = document.getElementById('pow-text');
+const messageBox = document.getElementById('message-box');
+
+// For mouse devices (desktop)
+powText.addEventListener('mousedown', function() {
+  messageBox.style.display = 'block'; // Show message
+});
+
+powText.addEventListener('mouseup', function() {
+  messageBox.style.display = 'none'; // Hide message
+});
+
+powText.addEventListener('mouseleave', function() {
+  messageBox.style.display = 'none'; // Hide message if mouse leaves
+});
+
+// For touch devices (mobile)
+powText.addEventListener('touchstart', function() {
+  messageBox.style.display = 'block'; // Show message
+});
+  
+  powText.addEventListener('touchend', function() {
+  messageBox.style.display = 'none'; // Hide message
+});
+
+powText.addEventListener('touchcancel', function() {
+  messageBox.style.display = 'none'; // Hide message if touch is canceled
+});
+  
+  // Authentication Token (Replace with actual user token retrieval logic)
+
+
+// User Activity Tracking
+let isUserActive = false;
+let lastActiveTime = Date.now();
+
+// Track User Activity
+document.addEventListener("scroll", () => {
+  isUserActive = true;
+  lastActiveTime = Date.now();
+});
+
+document.addEventListener("click", () => {
+  isUserActive = true;
+  lastActiveTime = Date.now();
+});
+
+// UI Elements for Displaying Points
+//const dropdownPointsDisplay = document.getElementById("dropdown-points");
+const dashboardPointsDisplay = document.getElementById("dashboard-points");
+  
+  async function fetchPoints() {
+  if (!token) {
+    console.error("Missing authorization token");
+    return 0; // Return 0 points if no token
+  }
+
+  try {
+    console.log("Fetching points from backend...");
+
+    const response = await fetch("https://mai.fly.dev/api/points", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch points");
+    }
+
+    const data = await response.json();
+    console.log("Fetched points data object:", data);
+    
+    // Ensure correct access to points
+    if (data && data.success && typeof data.points === "number") {
+      console.log("Points fetched successfully:", data.points);
+      return data.points;
+    } else {
+      throw new Error("Invalid response structure: 'points' not found");
+    }
+  } catch (error) {
+    console.error("Error fetching points:", error.message);
+    return 0;
+  }
+}
+  
+  /**
+ * Update Points on Backend
+ */
+async function updatePoints(increment) {
+  if (!token) {
+    console.error("Missing authorization token");
+    return 0;
+  }
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/points", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ increment }),
+    });
+    
+    if (!response.ok) {
+      throw new Error("Failed to update points");
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      return data.points;
+    } else {
+      throw new Error(data.message || "Failed to update points");
+    }
+  } catch (error) {
+    console.error("Error updating points:", error.message);
+    return 0;
+  }
+}
+  
+  
+  /**
+ * Update UI with Points
+ */
+function updatePointsUI(points) {
+  const dashboardPointsDisplay = document.getElementById("dashboard-points");
+  const dropdownPointsDisplay = document.getElementById("dropdown-points");
+
+  if (dashboardPointsDisplay) {
+    dashboardPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+    console.log("Dashboard Points Updated:", points);
+  } else {
+    console.warn("Dashboard points display element not found.");
+  }
+
+  if (dropdownPointsDisplay) {
+    dropdownPointsDisplay.textContent = `${points.toFixed(2)} Points`;
+    console.log("Dropdown Points Updated:", points);
+  } else {
+    console.warn("Dropdown points display element not found.");
+  }
+}
+  
+  /**
+ * Initialize Points on Page Load and Maintain Sync
+ */
+let currentPoints = 0;
+
+async function initializePoints() {
+  if (!token) {
+    console.warn("No token found. Skipping points initialization.");
+    return;
+  }
+
+  try {
+    console.log("Initializing points on page load...");
+
+    // Fetch points from backend on page load
+    currentPoints = await fetchPoints();
+    console.log("Fetched Points on Load:", currentPoints);
+
+    // Immediately update the UI
+    if (typeof currentPoints === "number") {
+      updatePointsUI(currentPoints);
+    } else {
+      console.warn("Fetched points are not a valid number.");
+    }
+    
+    // Start periodic synchronization every 10 seconds
+    setInterval(async () => {
+      try {
+        const latestPoints = await fetchPoints();
+        console.log("Fetched points during sync:", latestPoints);
+
+        if (latestPoints !== currentPoints) {
+          currentPoints = latestPoints;
+          updatePointsUI(currentPoints);
+        }
+      } catch (error) {
+        console.error("Error syncing points:", error.message);
+      }
+    }, 60000); // Sync every 1 seconds
+
+  } catch (error) {
+    console.error("Error initializing points:", error.message);
+  }
+}
+  
+  /**
+ * Increment Points Based on User Activity
+ */
+let pointsIncrementInterval = setInterval(async () => {
+  if (isUserActive && (Date.now() - lastActiveTime) < 15000) {
+    try {
+      const newPoints = await updatePoints(0.1); // Increment backend points by 0.1
+      currentPoints = newPoints; // Update local points
+      updatePointsUI(currentPoints); // Reflect in UI
+    } catch (error) {
+      console.error("Error incrementing points:", error.message);
+    }
+  }
+  isUserActive = false; // Reset activity state
+}, 20000);
+  
+  // **Restore Mining Session**
+  function restoreMiningSession() {
+    const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
+    const miningEndTime = parseInt(localStorage.getItem("miningEndTime")) || 0;
+    const now = Date.now();
+
+    if (savedProgress < 100 && miningEndTime > now) {
+      continueMining(savedProgress, miningEndTime - now);
+      startCountdown(miningEndTime - now);
+    } else {
+      localStorage.removeItem("miningProgress");
+      localStorage.removeItem("miningEndTime");
+      activateMiningButton.textContent = "Activate Mining";
+      activateMiningButton.disabled = false;
+    }
+  }
+  
+    // **Start Countdown Timer with Progress Circle Sync**
+function startCountdown(remainingTime, totalTime) {
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    const startTime = Date.now();
+    const endTime = startTime + remainingTime;
+
+    // Save endTime and totalTime in localStorage
+    localStorage.setItem('countdownEndTime', endTime);
+    localStorage.setItem('countdownTotalTime', totalTime || remainingTime);
+
+    countdownInterval = setInterval(() => {
+        const currentTime = Date.now();
+        const timeLeft = endTime - currentTime;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            
+          miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+            localStorage.removeItem('countdownEndTime');
+            localStorage.removeItem('countdownTotalTime');
+        } else {
+            const minutes = Math.floor(timeLeft / (60 * 1000));
+            const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
+  
+          miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+
+            // Update Progress Circle
+            const totalTimeStored = parseInt(localStorage.getItem('countdownTotalTime'), 10);
+            const progressPercentage = ((totalTimeStored - timeLeft) / totalTimeStored) * 100;
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
+        }
+    }, 1000);
+}
+  
+  function resumeCountdown() {
+    const endTime = parseInt(localStorage.getItem('countdownEndTime'), 10);
+    const totalTime = parseInt(localStorage.getItem('countdownTotalTime'), 10);
+
+    if (endTime && totalTime) {
+        const currentTime = Date.now();
+        const remainingTime = endTime - currentTime;
+
+        if (remainingTime > 0) {
+            // Calculate the already elapsed time
+            const elapsedTime = totalTime - remainingTime;
+            const progressPercentage = (elapsedTime / totalTime) * 100;
+
+            // Start Countdown with the correct remaining time
+            startCountdown(remainingTime, totalTime);
+          // Sync Progress Circle Immediately
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
+        } else {
+            // Timer expired
+            localStorage.removeItem('countdownEndTime');
+            localStorage.removeItem('countdownTotalTime');
+            miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+        }
+    }
+}
+  
+   // Define the updateBalance function first
+async function updateBalance(newBalance) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("No token found. Cannot update balance.");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://mai.fly.dev/api/mining/update", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Failed to update balance:", errorData.message || response.statusText);
+    }
+  } catch (error) {
+    console.error("Error updating balance:", error);
+  }
+}
+
+// Check if mining data exists in localStorage
+let miningStartTime = localStorage.getItem('miningStartTime')
+    ? parseInt(localStorage.getItem('miningStartTime'))
+    : null;
+
+let miningEndTime = localStorage.getItem('miningEndTime')
+    ? parseInt(localStorage.getItem('miningEndTime'))
+    : null;
+  isMiningActive = localStorage.getItem('isMiningActive') === 'true';
+
+// Start mining only if it's active
+if (isMiningActive && miningStartTime && miningEndTime) {
+    startMiningProgress();
+}
+  
+  // Function to start mining
+function startMining() {
+    if (!isMiningActive) {
+        miningStartTime = Date.now();
+        miningEndTime = miningStartTime + 3600 * 1000; // 1 hour later
+        isMiningActive = true;
+
+        // Save to localStorage
+        localStorage.setItem('miningStartTime', miningStartTime);
+        localStorage.setItem('miningEndTime', miningEndTime);
+        localStorage.setItem('isMiningActive', 'true');
+
+        startMiningProgress();
+    }
+}
+  
+  // Function to update mining progress based on current time
+function updateMiningProgress() {
+    if (!isMiningActive || !miningStartTime || !miningEndTime) return;
+
+    const currentTime = Date.now();
+    if (currentTime >= miningEndTime) {
+        miningProgress = 100;
+        isMiningActive = false;
+        clearInterval(miningInterval);
+
+        // Clear localStorage
+        localStorage.removeItem('miningStartTime');
+      localStorage.removeItem('miningEndTime');
+        localStorage.removeItem('isMiningActive');
+    } else {
+        miningProgress = ((currentTime - miningStartTime) / (miningEndTime - miningStartTime)) * 100;
+    }
+
+    // Update the circular progress bar
+    progressCircle.style.background = `conic-gradient(
+        #2C3E30 ${miningProgress}%, 
+        #718074 ${miningProgress}% 100%
+    )`;
+}
+  
+  // Start mining progress interval
+function startMiningProgress() {
+    miningInterval = setInterval(updateMiningProgress, 1000);
+    updateMiningProgress(); // Initial call to set progress immediately
+}
+
+// Update progress when user returns to the app
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        updateMiningProgress();
+    }
+});
+  
+  /**
+// Then, define other functions that call updateBalance
+function continueMining(savedProgress, remainingTime) {
+  miningProgress = savedProgress;
+  isMiningActive = true;
+  activateMiningButton.disabled = true;
+  activateMiningButton.textContent = "Mining...";
+  const incrementInterval = 1000; // 1 second
+  const miningEndTime = Date.now() + remainingTime;
+
+  startCountdown(remainingTime);
+
+  miningInterval = setInterval(async () => {
+    if (Date.now() >= miningEndTime || miningProgress >= 100) {
+      clearInterval(miningInterval);
+      isMiningActive = false;
+      miningProgress = 100;
+      activateMiningButton.disabled = false;
+      activateMiningButton.textContent = "Activate Mining";
+
+      alert("Mining session completed!");
+      // Clear local storage for mining
+      localStorage.removeItem("miningProgress");
+      localStorage.removeItem("miningEndTime");
+    } else {
+      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
+      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+     // const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
+      // Default mining rate
+const defaultRate = 0.0005;
+
+// Get referral count from user data
+  
+   
+      **/
+      function continueMining(savedProgress, remainingTime) {
+  miningProgress = savedProgress;
+  isMiningActive = true;
+  activateMiningButton.disabled = true;
+  activateMiningButton.textContent = "Mining...";
+  
+  const incrementInterval = 1000; // 1 second
+  const miningEndTime = Date.now() + remainingTime;
+
+  startCountdown(remainingTime);
+
+  miningInterval = setInterval(async () => {
+    if (Date.now() >= miningEndTime || miningProgress >= 100) {
+      clearInterval(miningInterval);
+      isMiningActive = false;
+      miningProgress = 100;
+      activateMiningButton.disabled = false;
+      activateMiningButton.textContent = "Activate Mining";
+
+      alert("Mining session completed!");
+
+      // Clear local storage for mining
+      localStorage.removeItem("miningProgress");
+      localStorage.removeItem("miningEndTime");
+    } else {
+      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100% 
+      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
+      
+      // Default mining rate
+      const defaultRate = 0.0005;
+
+      // Calculate new balance and update local storage
+      const newBalance = currentBalance + defaultRate;
+      localStorage.setItem("minedBalance", newBalance.toFixed(8));
+    }
+  }, incrementInterval);
+}
+      // Get referral count from user data
+     // const token = localStorage.getItem("token");
+      const response =  fetch("https://mai.fly.dev/api/auth/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
+    }
+
+    
+      const userData =  response.json();
+      const referrals = userData.referrals || []; // Fallback to empty array if not found
+
+const referralCount = referrals.length;
+
+// Calculate the bonus multiplier based on referrals (5% per referral)
+const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
+
+// Calculate the new balance with the referral bonus applied
+const newBalance = currentBalance + (defaultRate * referralBonus);
+
+// Update the local storage or display
+      localStorage.setItem("minedBalance", newBalance.toFixed(4));
+minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+
+      localStorage.setItem("miningProgress", miningProgress);
+      localStorage.setItem("minedBalance", newBalance.toFixed(4));
+      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
+      
+  function startCountdown(remainingTime) {
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    const totalTime = remainingTime; // Store initial remaining time for reference
+
+    countdownInterval = setInterval(() => {
+        if (remainingTime <= 0) {
+            clearInterval(countdownInterval);
+            miningCountdown.textContent = "Next session available!";
+            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+        } else {
+            const minutes = Math.floor(remainingTime / (60 * 1000));
+            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+          // Update Progress Bar
+            let progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
+            progressPercentage = Math.min(progressPercentage, 100); // Ensure it doesn't exceed 100%
+
+            progressCircle.style.background = `conic-gradient(
+                #2C3E30 ${progressPercentage}%, 
+                #718074 ${progressPercentage}% 100%
+            )`;
+
+            remainingTime -= 1000;
+        }
+    }, 1000);
+}
+  
+  
+
+
+  
+  
+
+      </script>
+  <script src="appg.js"></script>
 </body>
 </html>
