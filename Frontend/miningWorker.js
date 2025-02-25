@@ -1,11 +1,11 @@
-// service-worker.js
-
 const MINING_RATE = 0.0005; // Base mining rate per second
 const MINING_DURATION = 3600; // 1 hour in seconds
 const SYNC_INTERVAL = 10000; // Sync with backend every 10 seconds
 
 let miningInterval;
 let syncInterval;
+
+console.log("Service Worker: Script loaded");
 
 // Open or create an IndexedDB database
 const openDB = () => {
@@ -52,6 +52,8 @@ const calculateBoostedRate = (referrals) => {
 
 // Start mining
 const startMining = async (userId, referrals) => {
+  console.log("Service Worker: Starting mining for user", userId);
+
   let state = await getMiningState(userId);
 
   if (!state || !state.miningActive) {
@@ -105,6 +107,8 @@ const startMining = async (userId, referrals) => {
 
 // Stop mining
 const stopMining = async (userId) => {
+  console.log("Service Worker: Stopping mining for user", userId);
+
   clearInterval(miningInterval);
   clearInterval(syncInterval);
 
@@ -126,9 +130,25 @@ const stopMining = async (userId) => {
 self.addEventListener("message", (event) => {
   const { type, userId, referrals } = event.data;
 
+  console.log("Service Worker: Received message", event.data);
+
   if (type === "start") {
     startMining(userId, referrals);
   } else if (type === "stop") {
     stopMining(userId);
+  } else if (type === "restore") {
+    console.log("Service Worker: Restoring mining session for user", userId);
+    startMining(userId, referrals);
   }
+});
+
+// Handle Service Worker lifecycle events
+self.addEventListener("install", (event) => {
+  console.log("Service Worker: Installed");
+  self.skipWaiting(); // Activate immediately
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker: Activated");
+  event.waitUntil(self.clients.claim()); // Take control of all clients
 });

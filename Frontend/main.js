@@ -1,9 +1,19 @@
 // Register the Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("/miningWorker.js") // Correct path to the Service Worker file
+    .register("/miningworker.js") // Correct path to the Service Worker file
     .then((registration) => {
       console.log("Service Worker registered:", registration);
+
+      // Listen for the Service Worker to become active
+      registration.addEventListener("updatefound", () => {
+        const installingWorker = registration.installing;
+        installingWorker.addEventListener("statechange", () => {
+          if (installingWorker.state === "activated") {
+            console.log("Service Worker activated");
+          }
+        });
+      });
     })
     .catch((error) => {
       console.error("Service Worker registration failed:", error);
@@ -58,8 +68,10 @@ navigator.serviceWorker.addEventListener("message", (event) => {
   const { type, state } = event.data;
 
   if (type === "update") {
+    console.log("Received update from Service Worker:", state);
     updateUI(state);
   } else if (type === "stop") {
+    console.log("Mining session completed:", state);
     updateUI(state);
     alert("Mining session completed!");
   }
@@ -67,7 +79,11 @@ navigator.serviceWorker.addEventListener("message", (event) => {
 
 // Start mining
 miningButton.addEventListener("click", () => {
+  console.log("Activate Mining button clicked");
+
   navigator.serviceWorker.ready.then((registration) => {
+    console.log("Service Worker ready");
+
     registration.active.postMessage({
       type: "start",
       userId: userData.userId,
@@ -78,6 +94,8 @@ miningButton.addEventListener("click", () => {
 
 // Restore mining session on page load
 navigator.serviceWorker.ready.then((registration) => {
+  console.log("Restoring mining session");
+
   registration.active.postMessage({
     type: "restore",
     userId: userData.userId,
