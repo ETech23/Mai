@@ -1,7 +1,7 @@
 // Register the Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("https://mai-psi.vercel.app/miningWorker.html")
+    .register("/miningWorker.js") // Correct path to the Service Worker file
     .then((registration) => {
       console.log("Service Worker registered:", registration);
     })

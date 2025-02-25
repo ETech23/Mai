@@ -132,4 +132,3 @@ self.addEventListener("message", (event) => {
     stopMining(userId);
   }
 });
-
