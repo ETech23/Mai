@@ -1,4 +1,4 @@
-const BASE_URL = "https://mai.fly.dev"; // Your backend URL
+const BASE_URL = "https://mai.fly.dev"; // Backend URL
 const token = localStorage.getItem("token");
 
 // DOM Elements
@@ -10,37 +10,50 @@ const nextPageButton = document.getElementById("next-page");
 
 let currentPage = 1;
 
-// Fetch user messages
+// Fetch user messages (sorted in descending order)
 async function fetchMessages(page = 1) {
+  console.log("Fetching messages on page load..."); // Debugging step
+
   try {
     const response = await fetch(`${BASE_URL}/api/messages?page=${page}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
     const data = await response.json();
-
+    
     if (data.success) {
-      userMessagesContainer.innerHTML = data.messages
-        .map(
-          (msg) => `
-          <div class="message-container ${msg.sender}">
-            <div class="message ${msg.sender}">
-              <p class="message-text">${msg.message}</p>
-              <small class="message-timestamp">${msg.sender === "user" ? "You" : "Admin"} | ${new Date(
-                msg.timestamp
-              ).toLocaleString()}</small>
-            </div>
-          </div>
-        `
-        )
-        .join("");
+      const sortedMessages = data.messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
+      userMessagesContainer.innerHTML = data.messages
+  .map(
+    (msg) => `
+      <div class="message-container ${msg.sender === "user" ? "sent-container" : "received-container"}">
+        <div class="message ${msg.sender === "user" ? "sent" : "received"}">
+          <p>${msg.message}</p>
+          <span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString()}</span>
+        </div>
+      </div>
+    `
+  )
+  .join("");
+
+      scrollToBottom();
       currentPage = page;
     } else {
       alert(data.message);
     }
   } catch (error) {
-    console.error("Error fetching messages:", error.message);
+    console.error("Error fetching messages:", error);
   }
+}
+
+// Scroll to latest message
+function scrollToBottom() {
+  userMessagesContainer.scrollTop = userMessagesContainer.scrollHeight;
 }
 
 // Send a message
@@ -57,36 +70,36 @@ sendMessageButton.addEventListener("click", async () => {
       },
       body: JSON.stringify({ message }),
     });
+
     const data = await response.json();
 
     if (data.success) {
-      alert("Message sent successfully!");
       userMessageInput.value = "";
-      fetchMessages(currentPage);
+      fetchMessages(currentPage); // Fetch messages again after sending
     } else {
       alert(data.message);
     }
   } catch (error) {
-    console.error("Error sending message:", error.message);
+    console.error("Error sending message:", error);
   }
 });
 
 // Pagination controls
-prevPageButton.addEventListener("click", () => {
+prevPageButton?.addEventListener("click", () => {
   if (currentPage > 1) fetchMessages(currentPage - 1);
 });
 
-nextPageButton.addEventListener("click", () => {
+nextPageButton?.addEventListener("click", () => {
   fetchMessages(currentPage + 1);
 });
 
-// Initial Fetch
-fetchMessages();
+// Ensure messages load on page load
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM fully loaded, fetching messages...");
+  fetchMessages();
+});
 
-const backButton = document.getElementById("back-button");
-if (backButton) {
-  
-  backButton.addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
-}
+// Back Button
+document.getElementById("back-button")?.addEventListener("click", () => {
+  window.location.href = "index.html";
+});

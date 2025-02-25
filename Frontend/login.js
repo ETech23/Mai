@@ -24,9 +24,13 @@ formContainer.appendChild(miningPageLink);
 // **Handle Form Submission**
 authForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // Get form values
   const identifier = document.getElementById("identifier").value.trim();
   const password = document.getElementById("password").value.trim();
   const isRegistering = formTitle.textContent === "Register";
+
+  // Prepare payload based on whether the user is registering or logging in
   const payload = isRegistering
     ? {
         name: nameInput.value.trim(),
@@ -38,30 +42,48 @@ authForm.addEventListener("submit", async (e) => {
     : { identifier, password };
 
   try {
+    // Send request to the backend
     const response = await fetch(
-      `https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`,
+      `https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       }
     );
+
     const data = await response.json();
+
     if (response.ok) {
       if (isRegistering) {
+        // Handle successful registration
         alert("Registration successful! You can now log in.");
+        // Optionally, switch to the login form after registration
+        switchForm();
       } else {
+        // Handle successful login
         alert("Logged in successfully!");
+
+        // Save user data to localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.username);
         localStorage.setItem("email", data.email);
         localStorage.setItem("minedBalance", data.balance.toFixed(4));
 
-        // Hide the form and show the "Go to mining page" link
-        authForm.style.display = "none";
-        miningPageLink.style.display = "block";
+          window.location.href="index.html";
+        // Update UI with user data
+        userNameDisplay.textContent = data.username;
+        minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
+
+        // Show the dashboard and hide the login form
+        formContainer.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+
+        // Restore the mining session if it exists
+        restoreMiningSession();
       }
     } else {
+      // Handle errors
       alert(data.message || "Something went wrong!");
     }
   } catch (error) {
@@ -69,6 +91,34 @@ authForm.addEventListener("submit", async (e) => {
     alert("Something went wrong!");
   }
 });
+
+// **Switch Between Login and Registration Forms**
+function switchForm() {
+  const isRegistering = formTitle.textContent === "Register";
+
+  // Toggle form title and button text
+  formTitle.textContent = isRegistering ? "Login" : "Register";
+  submitButton.textContent = isRegistering ? "Login" : "Register";
+
+  // Toggle visibility of additional registration fields
+  nameInput.parentElement.classList.toggle("hidden", !isRegistering);
+  emailInput.parentElement.classList.toggle("hidden", !isRegistering);
+  usernameInput.parentElement.classList.toggle("hidden", !isRegistering);
+  passwordRegisterInput.parentElement.classList.toggle("hidden", !isRegistering);
+  referralInput.parentElement.classList.toggle("hidden", !isRegistering);
+
+  // Clear form fields
+  authForm.reset();
+}
+
+// **Add Event Listener to Switch Form Link**
+const switchFormLink = document.getElementById("switch-form-link");
+if (switchFormLink) {
+  switchFormLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    switchForm();
+  });
+}
 
 // **Toggle Between Login and Registration Form**
 toggleFormText.addEventListener("click", () => {

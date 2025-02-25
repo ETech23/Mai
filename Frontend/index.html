@@ -53,6 +53,7 @@
         }
       }
     }
+  
   </script>
   <style>
     /* Custom styles that complement Tailwind */
@@ -313,17 +314,22 @@
           <!-- POW Information -->
         <div class="mt-4 text-center">
           <p class="flex items-center justify-center">
-            <strong id="pow-text" class="font-bold flex items-start">
-              POW
+            <!--  <strong id="pow-text" class="font-bold flex items-start">
+              
               <sup class="text-xs bg-dark-300 rounded-full w-4 h-4 flex items-center justify-center ml-1 cursor-help">?</sup>
-            </strong>
+            </strong>-->
           </p>
           <p class="text-sm text-gray-400">1 MAI ≈ $2</p>
           
+          <div id="dashboard" class="hid den">
+  <h2><span id="username-display"></span></h2>
+  <p>Bal: <span id="mined-balance"></span></p>
+</div>
           <!-- Message Box -->
           <div class="message hidden mt-3 mx-auto max-w-lg bg-dark-200 border border-dark-300 rounded-lg p-3 text-sm text-gray-300" id="message-box">
             <!--  Your activities demonstrate your Proof of Work. The more mining tasks you complete, the greater your rewards.-->
           </div>
+          
         </div>
           
           <!-- User Profile Section -->
@@ -393,9 +399,9 @@
         <div id="mining-dashboard" class="flex flex-col items-center justify-center gap-8 py-6">
           <!-- Mining Sphere (preserving original class) -->
           <div id="progress-circle" class="mining-sphere animate-float">
-            <p id="mined-balance" class="text-center">0 MAI</p>
+            <p id="mined-balance" class="text-center">MAI</p>
           </div>
-          
+          <div id="postMessage"></div>
           <!-- Points Container (preserving original ID) -->
           <div id="points-container" class="bg-dark-100 rounded-lg px-6 py-3 shadow-lg border border-dark-300">
             <p class="flex items-center gap-2 text-lg">
@@ -437,6 +443,7 @@
   <div class="form-container hidden" id="form-container"></div>
 
   <!-- Theme toggle functionality - isolated from your main JavaScript -->
+  <script src="main.js"></script>
   <script>
   const token = localStorage.getItem("token");
 if (!token) {
@@ -460,11 +467,10 @@ if (!token) {
         icon.classList.add('fa-moon');
       }
     });
-    
   document.addEventListener("DOMContentLoaded", () => {
         initializePoints();
         fetchPoints();
-        resumeCountdown();
+       // resumeCountdown();
         // Restore session on page load
         checkPersistentLogin(); 
         console.log("checkPersistentLogin called");
@@ -489,7 +495,7 @@ menuIcon.addEventListener("click", async (event) => {  // Add (event) here
     console.log("Token retrieved:", token);
     
     // Fetch user details from backend
-    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -632,7 +638,7 @@ userInfoDropdown.innerHTML = `
       <hr>
       <p><i class="fas fa-link"></i> <strong>Referral Link:</strong></p>
   <button id="share-button"><i class="fas fa-share-alt"></i> Share</button>
-  <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+  <button ><a style="color: white;" href="logout.html"><i class="fas fa-sign-out-alt"></i> Log Out</a></button>
       <br>
       <br>
       <button id="Support"><i class="fas fa-headset"></i><a href="task.html" style="color: white;">Contact Us</a></button>
@@ -702,64 +708,10 @@ if (shareButton) {
     }
   });
 } 
-    /**  // Add event listener for the share button click
-const shareButton = document.getElementById("share-button");
-      
-      function shareOnWhatsApp() {
-  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
-  const whatsappUrl = `whatsapp://send?text=${message}`;
+  
 
-  // Try opening WhatsApp directly
-  window.open(whatsappUrl, '_system');
 
-  // Fallback to the browser if WhatsApp is not installed
-  setTimeout(() => {
-    const fallbackUrl = `https://api.whatsapp.com/send?text=${message}`;
-    window.open(fallbackUrl, '_system'); // Open in system browser
-  }, 500); // Wait 500ms to check if WhatsApp opened
-}
-
-if (shareButton) {
-  shareButton.addEventListener("click", () => {
-    // Toggle the "clicked" class to change color to dark green
-    shareButton.classList.toggle("clicked");
-
-    // Show or hide share options
-    const existingShareOptions = document.getElementById("share-options");
-    if (existingShareOptions) {
-      // If share options exist, hide them
-      existingShareOptions.remove();
-    } else {
-      // If share options do not exist, show them directly below the share button
-      
-      
-      const shareOptions = `
-        <div id="share-options" style="margin-top: 10px;">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
-      <a href="#" onclick="shareOnWhatsApp()">Share on WhatsApp</a>
-      
-          <a href="https://api.whatsapp.com/send?text=${encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink)}" target="_blank">Share on WhatsApp</a><br>
-      <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br>
-          <button id="copy-link">Copy Link</button>
-        </div>
-      `;
-      
-      // Insert the share options directly below the share button
-      shareButton.insertAdjacentHTML("afterend", shareOptions);
-
-      // Add copy link functionality after appending the link
-      const copyLinkButton = document.getElementById("copy-link");
-      if (copyLinkButton) {
-        copyLinkButton.addEventListener("click", () => {
-          navigator.clipboard
-            .writeText(referralLink)
-           .then(() => alert("Referral link copied to clipboard!"))
-            .catch((err) => console.error("Failed to copy referral link:", err));
-        });
-      }
-    }
-  });
-}**/
+         
       
       // Close dropdown when clicking outside
 document.addEventListener("click", (event) => {
@@ -798,7 +750,7 @@ async function fetchUserData() {
     }
     
     // Make an API call to fetch the user's referral data (replace with your actual API endpoint)
-    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -843,7 +795,6 @@ async function fetchUserData() {
         </div>
       `;
     }
-      
       // Add event listener for dropdown toggle
     const streakDropdownToggle = document.getElementById("streak-dropdown-toggle");
     const streakDropdown = document.getElementById("streak-dropdown");
@@ -865,250 +816,8 @@ async function fetchUserData() {
   }
 }
   // Call the function to load user data on page load
-fetchUserData();
-    
-      // **Continue Mining**
- // Define the updateBalance function first
-async function updateBalance(newBalance) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.error("No token found. Cannot update balance.");
-    return;
-  }
+fetchUserData(); 
 
-  try {
-    const response = await fetch("https://mai.fly.dev/api/mining/update", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Failed to update balance:", errorData.message || response.statusText);
-    }
-  } catch (error) {
-    console.error("Error updating balance:", error);
-  }
-}
-
-// Check if mining data exists in localStorage
-let miningStartTime = localStorage.getItem('miningStartTime')
-    ? parseInt(localStorage.getItem('miningStartTime'))
-    : null;
-
-let miningEndTime = localStorage.getItem('miningEndTime')
-    ? parseInt(localStorage.getItem('miningEndTime'))
-    : null;
-
- isMiningActive = localStorage.getItem('isMiningActive') === 'true';
-
-// Start mining only if it's active
-if (isMiningActive && miningStartTime && miningEndTime) {
-    startMiningProgress();
-}
-    
-    // Function to start mining
-function startMining() {
-    if (!isMiningActive) {
-        miningStartTime = Date.now();
-        miningEndTime = miningStartTime + 3600 * 1000; // 1 hour later
-        isMiningActive = true;
-
-        // Save to localStorage
-        localStorage.setItem('miningStartTime', miningStartTime);
-        localStorage.setItem('miningEndTime', miningEndTime);
-        localStorage.setItem('isMiningActive', 'true');
-
-        startMiningProgress();
-    }
-}
-
-// Function to update mining progress based on current time
-function updateMiningProgress() {
-    if (!isMiningActive || !miningStartTime || !miningEndTime) return;
-
-    const currentTime = Date.now();
-    if (currentTime >= miningEndTime) {
-        miningProgress = 100;
-        isMiningActive = false;
-        clearInterval(miningInterval);
-
-        // Clear localStorage
-        localStorage.removeItem('miningStartTime');
-        localStorage.removeItem('miningEndTime');
-        localStorage.removeItem('isMiningActive');
-    } else {
-        miningProgress = ((currentTime - miningStartTime) / (miningEndTime - miningStartTime)) * 100;
-    }
-
-    // Update the circular progress bar
-    progressCircle.style.background = `conic-gradient(
-        #2C3E30 ${miningProgress}%, 
-        #718074 ${miningProgress}% 100%
-    )`;
-}
-
-    // Start mining progress interval
-function startMiningProgress() {
-    miningInterval = setInterval(updateMiningProgress, 1000);
-    updateMiningProgress(); // Initial call to set progress immediately
-}
-
-// Update progress when user returns to the app
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-        updateMiningProgress();
-    }
-});
-    
-   // Then, define other functions that call updateBalance
-function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
-
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
-
-  startCountdown(remainingTime);
-
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
-      clearInterval(miningInterval);
-      isMiningActive = false;
-      miningProgress = 100;
-      activateMiningButton.disabled = false;
-      activateMiningButton.textContent = "Activate Mining";
-
-      alert("Mining session completed!");
-
-      // Clear local storage for mining
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-     // const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
-      // Default mining rate
-const defaultRate = 0.0005;
-
-// Get referral count from user data
-      const token = localStorage.getItem("token");
-      const response = await fetch("https://mai.fly.dev/api/auth/details", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-
-    
-      const userData = await response.json();
-      const referrals = userData.referrals || []; // Fallback to empty array if not found
-
-const referralCount = referrals.length;
-
-// Calculate the bonus multiplier based on referrals (5% per referral)
-const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
-
-// Calculate the new balance with the referral bonus applied
-const newBalance = currentBalance + (defaultRate * referralBonus);
-
-// Update the local storage or display
-localStorage.setItem("minedBalance", newBalance.toFixed(4));
-minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-
-      localStorage.setItem("miningProgress", miningProgress);
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-
-      /**progressCircle.style.background = `conic-gradient(
-  #2C3E30 ${miningProgress}%, 
-  #718074 ${miningProgress}% 100%
-)`;**/ 
-
-  function startCountdown(remainingTime) {
-    if (countdownInterval) clearInterval(countdownInterval);
-
-    const totalTime = remainingTime; // Store initial remaining time for reference
-
-    countdownInterval = setInterval(() => {
-        if (remainingTime <= 0) {
-            clearInterval(countdownInterval);
-            miningCountdown.textContent = "Next session available!";
-            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
-        } else {
-            const minutes = Math.floor(remainingTime / (60 * 1000));
-            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-
-            // Update Progress Bar
-            let progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
-            progressPercentage = Math.min(progressPercentage, 100); // Ensure it doesn't exceed 100%
-
-            progressCircle.style.background = `conic-gradient(
-                #2C3E30 ${progressPercentage}%, 
-                #718074 ${progressPercentage}% 100%
-            )`;
-
-            remainingTime -= 1000;
-        }
-    }, 1000);
-}
-
-      // Update backend balance
-      try {
-        await updateBalance(newBalance);
-      } catch (error) {
-        console.error("Failed to update balance to backend:", error);
-      }
-    }
-  }, incrementInterval);
-}
-           /**progressCircle.style.background = `conic-gradient(
-  #2C3E30 ${miningProgress}%, 
-  #718074 ${miningProgress}% 100%
-)`;**/
-    // **Activate Mining**
-  activateMiningButton.addEventListener("click", () => {
-    if (isMiningActive) {
-      alert("Mining is already active!");
-      return;
-    }
-    const miningDuration = 60 * 60 * 1000; // 1 hour
-    const miningEndTime = Date.now() + miningDuration;
-
-    isMiningActive = true;
-    localStorage.setItem("miningProgress", "0");
-    localStorage.setItem("miningEndTime", miningEndTime.toString());
-    continueMining(0, miningDuration);
-    startCountdown(miningDuration);
-  });
-  
-  // Get DOM elements
-const newsPopup = document.getElementById("news-popup");
-
-// Show popup function
-function showPopup() {
-  newsPopup.classList.remove("hidden"); // Show popup
-  setTimeout(() => {
-    newsPopup.classList.add("hidden"); // Hide popup after 5 seconds
-  }, 10000); // Adjust time as needed
-}
-
-// Add click event to Activate Mining button
-activateMiningButton.addEventListener("click", () => {
-  showPopup(); // Show popup on click
-});
-  
   const taskButton = document.getElementById("task-button");
 if (taskButton) {
   taskButton.addEventListener("click", () => {
@@ -1121,7 +830,7 @@ if (taskButton) {
   
     const dashboard = document.getElementById("dashboard");
   const activateMiningButton = document.getElementById("activate-mining");
-  const progressCircle = document.getElementById("progress-circle");
+ // const progressCircle = document.getElementById("progress-circle");
   const minedBalanceDisplay = document.getElementById("mined-balance");
   const userNameDisplay = document.getElementById("user-name");
   const menuIcon = document.getElementById("menu-icon");
@@ -1144,7 +853,7 @@ if (taskButton) {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await fetch("https://mai.fly.dev/api/auth/details", {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -1182,7 +891,7 @@ if (taskButton) {
   
   const powText = document.getElementById('pow-text');
 const messageBox = document.getElementById('message-box');
-
+/**
 // For mouse devices (desktop)
 powText.addEventListener('mousedown', function() {
   messageBox.style.display = 'block'; // Show message
@@ -1207,7 +916,7 @@ powText.addEventListener('touchstart', function() {
 
 powText.addEventListener('touchcancel', function() {
   messageBox.style.display = 'none'; // Hide message if touch is canceled
-});
+});**/
   
   // Authentication Token (Replace with actual user token retrieval logic)
 
@@ -1226,8 +935,8 @@ document.addEventListener("click", () => {
   isUserActive = true;
   lastActiveTime = Date.now();
 });
-
-// UI Elements for Displaying Points
+  
+  // UI Elements for Displaying Points
 //const dropdownPointsDisplay = document.getElementById("dropdown-points");
 const dashboardPointsDisplay = document.getElementById("dashboard-points");
   
@@ -1240,7 +949,7 @@ const dashboardPointsDisplay = document.getElementById("dashboard-points");
   try {
     console.log("Fetching points from backend...");
 
-    const response = await fetch("https://mai.fly.dev/api/points", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/points", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -1279,7 +988,7 @@ async function updatePoints(increment) {
   }
 
   try {
-    const response = await fetch("https://mai.fly.dev/api/points", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/points", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1303,7 +1012,6 @@ async function updatePoints(increment) {
     return 0;
   }
 }
-  
   
   /**
  * Update UI with Points
@@ -1404,7 +1112,7 @@ let pointsIncrementInterval = setInterval(async () => {
       activateMiningButton.disabled = false;
     }
   }
-  
+  /**
     // **Start Countdown Timer with Progress Circle Sync**
 function startCountdown(remainingTime, totalTime) {
     if (countdownInterval) clearInterval(countdownInterval);
@@ -1424,7 +1132,8 @@ function startCountdown(remainingTime, totalTime) {
             clearInterval(countdownInterval);
             
           miningCountdown.textContent = "Next session available!";
-            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+        }
+  /**          progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
             localStorage.removeItem('countdownEndTime');
             localStorage.removeItem('countdownTotalTime');
         } else {
@@ -1472,240 +1181,7 @@ function startCountdown(remainingTime, totalTime) {
             progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
         }
     }
-}
-  
-   // Define the updateBalance function first
-async function updateBalance(newBalance) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.error("No token found. Cannot update balance.");
-    return;
-  }
-
-  try {
-    const response = await fetch("https://mai.fly.dev/api/mining/update", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ balance: parseFloat(newBalance.toFixed(4)) }),
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Failed to update balance:", errorData.message || response.statusText);
-    }
-  } catch (error) {
-    console.error("Error updating balance:", error);
-  }
-}
-
-// Check if mining data exists in localStorage
-let miningStartTime = localStorage.getItem('miningStartTime')
-    ? parseInt(localStorage.getItem('miningStartTime'))
-    : null;
-
-let miningEndTime = localStorage.getItem('miningEndTime')
-    ? parseInt(localStorage.getItem('miningEndTime'))
-    : null;
-  isMiningActive = localStorage.getItem('isMiningActive') === 'true';
-
-// Start mining only if it's active
-if (isMiningActive && miningStartTime && miningEndTime) {
-    startMiningProgress();
-}
-  
-  // Function to start mining
-function startMining() {
-    if (!isMiningActive) {
-        miningStartTime = Date.now();
-        miningEndTime = miningStartTime + 3600 * 1000; // 1 hour later
-        isMiningActive = true;
-
-        // Save to localStorage
-        localStorage.setItem('miningStartTime', miningStartTime);
-        localStorage.setItem('miningEndTime', miningEndTime);
-        localStorage.setItem('isMiningActive', 'true');
-
-        startMiningProgress();
-    }
-}
-  
-  // Function to update mining progress based on current time
-function updateMiningProgress() {
-    if (!isMiningActive || !miningStartTime || !miningEndTime) return;
-
-    const currentTime = Date.now();
-    if (currentTime >= miningEndTime) {
-        miningProgress = 100;
-        isMiningActive = false;
-        clearInterval(miningInterval);
-
-        // Clear localStorage
-        localStorage.removeItem('miningStartTime');
-      localStorage.removeItem('miningEndTime');
-        localStorage.removeItem('isMiningActive');
-    } else {
-        miningProgress = ((currentTime - miningStartTime) / (miningEndTime - miningStartTime)) * 100;
-    }
-
-    // Update the circular progress bar
-    progressCircle.style.background = `conic-gradient(
-        #2C3E30 ${miningProgress}%, 
-        #718074 ${miningProgress}% 100%
-    )`;
-}
-  
-  // Start mining progress interval
-function startMiningProgress() {
-    miningInterval = setInterval(updateMiningProgress, 1000);
-    updateMiningProgress(); // Initial call to set progress immediately
-}
-
-// Update progress when user returns to the app
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-        updateMiningProgress();
-    }
-});
-  
-  /**
-// Then, define other functions that call updateBalance
-function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
-
-  startCountdown(remainingTime);
-
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
-      clearInterval(miningInterval);
-      isMiningActive = false;
-      miningProgress = 100;
-      activateMiningButton.disabled = false;
-      activateMiningButton.textContent = "Activate Mining";
-
-      alert("Mining session completed!");
-      // Clear local storage for mining
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100%
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-     // const newBalance = currentBalance + 0.0005; // Add 0.0005 every second
-      // Default mining rate
-const defaultRate = 0.0005;
-
-// Get referral count from user data
-  
-   
-      **/
-      function continueMining(savedProgress, remainingTime) {
-  miningProgress = savedProgress;
-  isMiningActive = true;
-  activateMiningButton.disabled = true;
-  activateMiningButton.textContent = "Mining...";
-  
-  const incrementInterval = 1000; // 1 second
-  const miningEndTime = Date.now() + remainingTime;
-
-  startCountdown(remainingTime);
-
-  miningInterval = setInterval(async () => {
-    if (Date.now() >= miningEndTime || miningProgress >= 100) {
-      clearInterval(miningInterval);
-      isMiningActive = false;
-      miningProgress = 100;
-      activateMiningButton.disabled = false;
-      activateMiningButton.textContent = "Activate Mining";
-
-      alert("Mining session completed!");
-
-      // Clear local storage for mining
-      localStorage.removeItem("miningProgress");
-      localStorage.removeItem("miningEndTime");
-    } else {
-      miningProgress += 100 / 3600; // Each second, add 1/3600th of 100% 
-      const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
-      
-      // Default mining rate
-      const defaultRate = 0.0005;
-
-      // Calculate new balance and update local storage
-      const newBalance = currentBalance + defaultRate;
-      localStorage.setItem("minedBalance", newBalance.toFixed(8));
-    }
-  }, incrementInterval);
-}
-      // Get referral count from user data
-     // const token = localStorage.getItem("token");
-      const response =  fetch("https://mai.fly.dev/api/auth/details", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-
-    
-      const userData =  response.json();
-      const referrals = userData.referrals || []; // Fallback to empty array if not found
-
-const referralCount = referrals.length;
-
-// Calculate the bonus multiplier based on referrals (5% per referral)
-const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
-
-// Calculate the new balance with the referral bonus applied
-const newBalance = currentBalance + (defaultRate * referralBonus);
-
-// Update the local storage or display
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-
-      localStorage.setItem("miningProgress", miningProgress);
-      localStorage.setItem("minedBalance", newBalance.toFixed(4));
-      minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
-      
-  function startCountdown(remainingTime) {
-    if (countdownInterval) clearInterval(countdownInterval);
-
-    const totalTime = remainingTime; // Store initial remaining time for reference
-
-    countdownInterval = setInterval(() => {
-        if (remainingTime <= 0) {
-            clearInterval(countdownInterval);
-            miningCountdown.textContent = "Next session available!";
-            progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
-        } else {
-            const minutes = Math.floor(remainingTime / (60 * 1000));
-            const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-          // Update Progress Bar
-            let progressPercentage = ((totalTime - remainingTime) / totalTime) * 100;
-            progressPercentage = Math.min(progressPercentage, 100); // Ensure it doesn't exceed 100%
-
-            progressCircle.style.background = `conic-gradient(
-                #2C3E30 ${progressPercentage}%, 
-                #718074 ${progressPercentage}% 100%
-            )`;
-
-            remainingTime -= 1000;
-        }
-    }, 1000);
-}
-  
-  
-
-
-  
+}**/
   
 
       </script>

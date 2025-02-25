@@ -4,33 +4,142 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us</title>
-  <link rel="stylesheet" href="task.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6212762431201571"
-     crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Chat Layout */
+    .chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 10px;
+  overflow: hidden;
+      
+}
+
+.chat-box {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+
+.message-container {
+  display: flex;
+  margin-bottom: 10px;
+  width: 100%;
+  
+}
+
+.message {
+  max-width: 70%;
+  word-wrap: break-word;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  position: relative;
+  min-width: 70px;
+}
+
+.received-container {
+  justify-content: flex-start;
+  padding: 5px;
+  
+}
+
+.received {
+  background: #2d2d2d;
+  color: #fff;
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+
+.sent-container {
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+.sent {
+  background: #facc15;
+  color: #000;
+  align-self: flex-end;
+  
+  border-bottom-right-radius: 2px;
+}
+
+.timestamp {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  bottom: 3px;
+  right: 10px;
+}
+
+.sent .timestamp {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: #1a1a1a;
+}
+
+.chat-input textarea {
+  flex: 1;
+  resize: none;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+  </style>
 </head>
-<body>
-  <div class="no-select">
-  <div class="container">
-     <div id="back-button">
-   ↩️
-  </div>
-    <h1>Write Us</h1>
+<body class="bg-gray-900 text-white font-inter no-select">
 
-    <!-- Message Form -->
-    <div class="message-form">
-      <textarea id="user-message" placeholder="Type your message here..."></textarea>
-      <button id="send-message">Send</button>
-    </div>
+  <!-- Back Button -->
+  <div id="back-button" class="p-4">
+    <button class="text-gray-400 hover:text-white">
+      <i class="fas fa-arrow-left text-2xl"></i>
+    </button>
+  </div>
 
-    <!-- User Messages -->
-    <h2>Your Messages</h2>
-    <div id="user-messages"></div>
-    <div class="pagination">
-      <button id="prev-page">Previous</button>
-      <button id="next-page">Next</button>
+  <!-- Chat Container -->
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-yellow-400 mb-4">Chat with Us</h1>
+
+    <div class="chat-container">
+      <div id="user-messages" class="chat-box space-y-4">
+        <!-- Example Messages -->
+        <div class="message-container received fade-in">
+          <div class="message received">
+            <p>Hello! How can we assist you today?</p>
+            <small class="message-timestamp">Sent on: 2024-01-01</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input Box -->
+      <div class="chat-input">
+        <textarea id="user-message" class="w-full p-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Type a message..." rows="1"></textarea>
+        <button id="send-message">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
     </div>
   </div>
-  </div>
+
   <script src="task.js"></script>
 </body>
 </html>
