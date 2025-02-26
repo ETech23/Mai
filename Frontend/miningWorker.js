@@ -71,9 +71,14 @@ const startMining = async (userId, referrals) => {
       return;
     }
 
-    state.balance += calculateBoostedRate(referrals);
+    const boostedRate = calculateBoostedRate(referrals);
+    console.log("Boosted rate:", boostedRate);
+
+    state.balance = parseFloat(state.balance) + boostedRate; // Ensure balance is a number
     state.timeLeft -= 1;
     await saveMiningState(userId, state);
+
+    console.log("Updated state:", state);
 
     // Send updated state to the main thread
     self.clients.matchAll().then((clients) => {

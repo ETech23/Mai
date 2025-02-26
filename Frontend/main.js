@@ -35,7 +35,7 @@ let userData = {
 // Update the UI
 const updateUI = (state) => {
   if (balanceDisplay) {
-    balanceDisplay.textContent = state.balance.toFixed(4) + " MAI";
+    balanceDisplay.textContent = parseFloat(state.balance).toFixed(4) + " MAI";
   }
 
   if (countdownDisplay) {

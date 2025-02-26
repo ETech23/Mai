@@ -10,7 +10,9 @@ const nameInput = document.getElementById("name");
 const usernameInput = document.getElementById("username");
 const emailInput = document.getElementById("email");
 const passwordRegisterInput = document.getElementById("password-register");
-const miningPageLink = document.createElement("a"); // Link to mining page
+const miningPageLink = document.createElement("a"); //Link to mining page
+const userNameDisplay = document.getElementById("username-display");
+const minedBalanceDisplay = document.getElementById("mined-balance");
 
 // Create and style the "Go to mining page" link
 miningPageLink.textContent = "Go to mining page";
