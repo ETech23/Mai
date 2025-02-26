@@ -46,7 +46,7 @@ authForm.addEventListener("submit", async (e) => {
   try {
     // Send request to the backend
     const response = await fetch(
-      `https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`,
+      `https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
