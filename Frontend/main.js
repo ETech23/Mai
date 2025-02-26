@@ -1,3 +1,5 @@
+const MINING_DURATION = 3600; // Define it at the top!
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/miningWorker.js")
