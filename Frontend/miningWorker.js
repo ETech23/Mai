@@ -7,7 +7,7 @@ let syncInterval;
 
 console.log("Service Worker: Script loaded");
 
-// Open or create an IndexedDB database
+// Open or create IndexedDB
 const openDB = () => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("MiningDB", 1);
@@ -24,7 +24,7 @@ const openDB = () => {
   });
 };
 
-// Save mining state to IndexedDB
+// Save mining state
 const saveMiningState = async (userId, state) => {
   const db = await openDB();
   const transaction = db.transaction("miningState", "readwrite");
@@ -32,36 +32,50 @@ const saveMiningState = async (userId, state) => {
   store.put({ userId, ...state });
 };
 
-// Get mining state from IndexedDB
+// Get mining state
 const getMiningState = async (userId) => {
   const db = await openDB();
   const transaction = db.transaction("miningState", "readonly");
   const store = transaction.objectStore("miningState");
   return new Promise((resolve, reject) => {
     const request = store.get(userId);
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => resolve(request.result || {});
     request.onerror = () => reject(request.error);
   });
 };
 
 // Calculate boosted mining rate
 const calculateBoostedRate = (referrals) => {
-  const boost = Math.min(referrals * 0.05, 1.0); // 5% boost per referral, capped at 100%
+  const boost = Math.min(referrals * 0.05, 1.0); // 5% boost per referral, max 100%
   return MINING_RATE * (1 + boost);
+};
+
+// Restore mining session
+const restoreMiningSession = async (userId) => {
+  let state = await getMiningState(userId);
+
+  if (state.miningActive) {
+    const elapsedTime = Math.floor((Date.now() - state.startTime) / 1000);
+    state.timeLeft = Math.max(0, state.timeLeft - elapsedTime);
+    await saveMiningState(userId, state);
+  }
+  return state;
 };
 
 // Start mining
 const startMining = async (userId, referrals) => {
   console.log("Service Worker: Starting mining for user", userId);
 
-  let state = await getMiningState(userId);
+  let state = await restoreMiningSession(userId);
+  state.balance = parseFloat(state.balance) || 0;
 
-  if (!state || !state.miningActive) {
+  if (!state.miningActive) {
     state = {
-      balance: 0,
+      balance: state.balance,
       timeLeft: MINING_DURATION,
       startTime: Date.now(),
       miningActive: true,
+      referrals,
     };
   }
 
@@ -71,41 +85,24 @@ const startMining = async (userId, referrals) => {
       return;
     }
 
-    const boostedRate = calculateBoostedRate(referrals);
-    console.log("Boosted rate:", boostedRate);
-
-    state.balance = parseFloat(state.balance) + boostedRate; // Ensure balance is a number
+    state.balance += calculateBoostedRate(referrals);
     state.timeLeft -= 1;
     await saveMiningState(userId, state);
 
-    console.log("Updated state:", state);
-
-    // Send updated state to the main thread
-    self.clients.matchAll().then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage({ type: "update", state });
-      });
-    });
+    self.clients.matchAll().then((clients) =>
+      clients.forEach((client) => client.postMessage({ type: "update", state }))
+    );
   }, 1000);
 
-  // Sync with backend every 10 seconds
   syncInterval = setInterval(async () => {
-    const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userId}`,
-      },
-      body: JSON.stringify({
-        balance: state.balance,
-        sessionActive: state.miningActive,
-        sessionStartTime: state.startTime,
-        timeLeft: state.timeLeft,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error("Failed to update backend:", await response.text());
+    try {
+      await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${userId}` },
+        body: JSON.stringify(state),
+      });
+    } catch (error) {
+      console.error("Failed to sync with backend:", error);
     }
   }, SYNC_INTERVAL);
 };
@@ -117,43 +114,26 @@ const stopMining = async (userId) => {
   clearInterval(miningInterval);
   clearInterval(syncInterval);
 
-  const state = await getMiningState(userId);
+  let state = await getMiningState(userId);
   if (state) {
     state.miningActive = false;
     await saveMiningState(userId, state);
 
-    // Notify the main thread
-    self.clients.matchAll().then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage({ type: "stop", state });
-      });
-    });
+    self.clients.matchAll().then((clients) =>
+      clients.forEach((client) => client.postMessage({ type: "stop", state }))
+    );
   }
 };
 
-// Handle messages from the main thread
+// Handle messages
 self.addEventListener("message", (event) => {
   const { type, userId, referrals } = event.data;
 
-  console.log("Service Worker: Received message", event.data);
-
-  if (type === "start") {
-    startMining(userId, referrals);
-  } else if (type === "stop") {
-    stopMining(userId);
-  } else if (type === "restore") {
-    console.log("Service Worker: Restoring mining session for user", userId);
-    startMining(userId, referrals);
-  }
+  if (type === "start") startMining(userId, referrals);
+  else if (type === "stop") stopMining(userId);
+  else if (type === "restore") restoreMiningSession(userId).then((state) => startMining(userId, state.referrals));
 });
 
-// Handle Service Worker lifecycle events
-self.addEventListener("install", (event) => {
-  console.log("Service Worker: Installed");
-  self.skipWaiting(); // Activate immediately
-});
-
-self.addEventListener("activate", (event) => {
-  console.log("Service Worker: Activated");
-  event.waitUntil(self.clients.claim()); // Take control of all clients
-});
+// Lifecycle events
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
