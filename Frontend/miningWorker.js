@@ -50,6 +50,19 @@ const calculateBoostedRate = (referrals) => {
   return MINING_RATE * (1 + boost);
 };
 
+// Register Background Sync for Persistent Mining
+const registerBackgroundSync = async () => {
+  if ("serviceWorker" in navigator && "SyncManager" in window) {
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.sync.register("syncMining").then(() => {
+        console.log("Background Sync registered!");
+      }).catch((err) => {
+        console.error("Failed to register Background Sync:", err);
+      });
+    });
+  }
+};
+
 // Start mining
 const startMining = async (userId, referrals) => {
   console.log("Service Worker: Starting mining for user", userId);
@@ -69,14 +82,14 @@ const startMining = async (userId, referrals) => {
     state.startTime = Date.now();
   }
 
-  // Prevent existing intervals from overlapping
+  // Prevent multiple intervals running at the same time
   clearInterval(miningInterval);
   clearInterval(syncInterval);
 
-  // **Prevent Service Worker from going inactive**
+  // Prevent Service Worker from going inactive
   setInterval(() => {
-    self.registration.update(); // Tells browser to keep Service Worker alive
-  }, 25000); // Runs every 25 seconds to avoid inactivity timeout
+    self.registration.update(); // Keep the Service Worker alive
+  }, 25000); // Runs every 25 seconds
 
   // **Mining interval - increases balance every second**
   miningInterval = setInterval(async () => {
@@ -143,6 +156,24 @@ const stopMining = async (userId) => {
   }
 };
 
+// Restore mining session on Service Worker activation
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker activated - Restoring mining session...");
+  event.waitUntil(self.clients.claim());
+
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({ type: "restoreSession" });
+    });
+  });
+
+  getMiningState().then((state) => {
+    if (state && state.miningActive) {
+      startMining(state.userId, state.referrals);
+    }
+  });
+});
+
 // Handle messages
 self.addEventListener("message", (event) => {
   const { type, userId, referrals } = event.data;
@@ -151,12 +182,6 @@ self.addEventListener("message", (event) => {
     startMining(userId, referrals);
   } else if (type === "stop") {
     stopMining(userId);
-  } else if (type === "restore") {
-    getMiningState(userId).then((state) => {
-      if (state && state.miningActive) {
-        startMining(userId, state.referrals);
-      }
-    });
   } else if (type === "restoreSession") {
     console.log("Restoring mining session after wake-up...");
     getMiningState(userId).then((state) => {
@@ -167,17 +192,19 @@ self.addEventListener("message", (event) => {
   }
 });
 
-// Lifecycle events
-self.addEventListener("activate", (event) => {
-  console.log("Service Worker activated - Checking for active mining session...");
-  event.waitUntil(
-    self.clients.claim().then(() => {
-      // Restore mining session for all open clients
-      self.clients.matchAll().then((clients) => {
-        clients.forEach((client) => {
-          client.postMessage({ type: "restoreSession" });
-        });
-      });
-    })
-  );
+// Background Sync Event Listener to Resume Mining
+self.addEventListener("sync", (event) => {
+  if (event.tag === "syncMining") {
+    event.waitUntil(
+      getMiningState().then((state) => {
+        if (state && state.miningActive) {
+          console.log("Background Sync: Resuming mining...");
+          startMining(state.userId, state.referrals);
+        }
+      })
+    );
+  }
 });
+
+// Lifecycle events
+self.addEventListener("install", () => self.skipWaiting());
