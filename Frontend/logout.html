@@ -67,53 +67,17 @@
 
 <script>
 async function confirmLogout() {
-  const confirmed = confirm("Are you sure you want to logout?");
+  const confirmed = confirm("Are you sure you want to logout? You may loose your current mining session.");
   if (confirmed) {
-    try {
-      // Save mining state to the backend before logging out
-      const token = localStorage.getItem("token");
-      if (token) {
-        const userKey = `user_${token}`;
-        const userData = JSON.parse(localStorage.getItem(userKey)) || {
-          balance: 0,
-          timeLeft: 3600,
-          startTime: null,
-          referrals: 0,
-          miningActive: false,
-        };
-
-        // Send mining state to the backend
-        const response = await fetch("https://mai.fly.dev/api/mining/update", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            balance: userData.balance,
-            sessionActive: userData.miningActive,
-            sessionStartTime: userData.startTime,
-            timeLeft: userData.timeLeft,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to save mining state.");
-        }
-      }
+    
 
       // Clear local storage (only the token and mining data)
       localStorage.removeItem("token");
-      localStorage.removeItem(`user_${token}`); // Clear user-specific mining data
-      localStorage.removeItem("minedBalance");
+      
 
       alert("Logout successful!");
       window.location.href = "index.html"; // Redirect to the home page
-    } catch (error) {
-      console.error("Error during logout:", error);
-      alert("Failed to save mining state. Please try again.");
-    }
-  }
+    } 
 }
 </script>
 

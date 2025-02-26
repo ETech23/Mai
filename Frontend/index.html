@@ -341,6 +341,7 @@
             <div " class="hidden">
         <p>Welcome, <span id="user-name">User</span></p>
         <p>Balance: <span id="mining-balance">0 MAI</span></p>
+              <div id="progress-circle2"></div>
         <button id="logout-button">Log Out</button>
       </div>
             
@@ -1095,7 +1096,7 @@ let pointsIncrementInterval = setInterval(async () => {
   }
   isUserActive = false; // Reset activity state
 }, 20000);
-  
+  /**
   // **Restore Mining Session**
   function restoreMiningSession() {
     const savedProgress = parseInt(localStorage.getItem("miningProgress")) || 0;
@@ -1110,8 +1111,8 @@ let pointsIncrementInterval = setInterval(async () => {
       localStorage.removeItem("miningEndTime");
       activateMiningButton.textContent = "Activate Mining";
       activateMiningButton.disabled = false;
-    }
-  }
+    }**/
+  
   /**
     // **Start Countdown Timer with Progress Circle Sync**
 function startCountdown(remainingTime, totalTime) {
