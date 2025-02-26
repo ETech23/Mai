@@ -69,7 +69,16 @@ const startMining = async (userId, referrals) => {
     state.startTime = Date.now();
   }
 
-  // Mining interval - increases balance every second
+  // Prevent existing intervals from overlapping
+  clearInterval(miningInterval);
+  clearInterval(syncInterval);
+
+  // **Prevent Service Worker from going inactive**
+  setInterval(() => {
+    self.registration.update(); // Tells browser to keep Service Worker alive
+  }, 25000); // Runs every 25 seconds to avoid inactivity timeout
+
+  // **Mining interval - increases balance every second**
   miningInterval = setInterval(async () => {
     if (state.timeLeft <= 0) {
       stopMining(userId);
@@ -144,11 +153,31 @@ self.addEventListener("message", (event) => {
     stopMining(userId);
   } else if (type === "restore") {
     getMiningState(userId).then((state) => {
-      if (state && state.miningActive) startMining(userId, state.referrals);
+      if (state && state.miningActive) {
+        startMining(userId, state.referrals);
+      }
+    });
+  } else if (type === "restoreSession") {
+    console.log("Restoring mining session after wake-up...");
+    getMiningState(userId).then((state) => {
+      if (state && state.miningActive) {
+        startMining(userId, state.referrals);
+      }
     });
   }
 });
 
 // Lifecycle events
-self.addEventListener("install", () => self.skipWaiting());
-self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker activated - Checking for active mining session...");
+  event.waitUntil(
+    self.clients.claim().then(() => {
+      // Restore mining session for all open clients
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({ type: "restoreSession" });
+        });
+      });
+    })
+  );
+});
