@@ -67,17 +67,17 @@
 
 <script>
 async function confirmLogout() {
-  const confirmed = confirm("Are you sure you want to logout? You may loose your current mining session.");
+ /** const confirmed = confirm("Are you sure you want to logout? You may loose your current mining session.");
   if (confirmed) {
-    
+    **/
 
       // Clear local storage (only the token and mining data)
       localStorage.removeItem("token");
       
 
-      alert("Logout successful!");
+    /**  alert("Logout successful!");**/
       window.location.href = "index.html"; // Redirect to the home page
-    } 
+   /** } **/
 }
 </script>
 
