@@ -56,7 +56,27 @@
   <div class="offline-container">
     <h1>You're Offline</h1>
     <p>It looks like you’re not connected to the internet. Don’t worry, your mining session and balance is intact.</p>
-    <a href="index.html">Go to Home</a>
+    <!-- <a href="index.html">Go to Home</a>-->
   </div>
+  <script>
+  // Function to check network connectivity
+    function checkNetwork() {
+      fetch('/') // Try to fetch the root page or any lightweight resource
+        .then(() => {
+          // If the fetch succeeds, the network is back
+          console.log('Network is back. Reloading page...');
+          window.location.reload(); // Reload the page
+        })
+        .catch(() => {
+          // If the fetch fails, the network is still down
+          console.log('Still offline. Retrying in 5 seconds...');
+          setTimeout(checkNetwork, 5000); // Retry after 5 seconds
+        });
+    }
+
+    // Start checking for network connectivity
+    checkNetwork();
+
+  </script>
 </body>
 </html>

@@ -1,6 +1,4 @@
-const CACHE_NAME = 'mai-cache-v8.1.5';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.5';
-
+const CACHE_NAME = 'mai-cache-v8.1.6';
 const STATIC_FILES = ['/offline.html'];
 
 self.addEventListener('install', (event) => {
@@ -20,7 +18,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME && cache !== DYNAMIC_CACHE_NAME) {
+          if (cache !== CACHE_NAME) {
             console.log('Deleting old cache:', cache);
             return caches.delete(cache);
           }
@@ -34,31 +32,17 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   console.log('Fetching:', event.request.url);
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        console.log('Serving from cache:', event.request.url);
-        return cachedResponse;
-      }
-      return fetch(event.request)
-        .then((networkResponse) => {
-          console.log('Serving from network:', event.request.url);
-          return caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
-            if (
-              event.request.url.startsWith('http') &&
-              !event.request.url.includes('/api/')
-            ) {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          });
-        })
-        .catch(() => {
-          console.log('Network failed, serving offline.html');
-          if (event.request.destination === 'document') {
-            return caches.match('/offline.html');
-          }
-        });
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        console.log('Serving from network:', event.request.url);
+        return networkResponse;
+      })
+      .catch(() => {
+        console.log('Network failed, serving offline.html');
+        if (event.request.destination === 'document') {
+          return caches.match('/offline.html');
+        }
+      })
   );
 });
 
