@@ -1,11 +1,12 @@
-const CACHE_NAME = 'mai-cache-v8.3.0';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.3.0';
+const CACHE_NAME = 'mai-cache-v8.2.0'; // Cache name
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.2.0'; // Dynamic cache name
 
+// Files to cache manually
 const STATIC_FILES = [
   '/',
   '/index.html',
-  '/style.css',
-  '/app.js',
+  '/style.css', // Main CSS file
+  '/app.js',    // Main JavaScript file
   '/social/mai_icon.png',
   '/social/mai_co.png',
   '/news.js',
@@ -14,22 +15,22 @@ const STATIC_FILES = [
   '/task.html',
   '/task.js',
   '/task.css',
-  '/offline.html',
+  '/offline.html', // Add offline.html for fallback
 ];
 
+// Install Service Worker and cache static files
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installing...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('Caching static files');
       return cache.addAll(STATIC_FILES);
     })
   );
-  self.skipWaiting();
+  self.skipWaiting(); // Immediately activate new service worker
 });
 
+// Activate Service Worker and clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -42,20 +43,20 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  self.clients.claim();
+  self.clients.claim(); // Take control of all clients
 });
 
+// Fetch requests
 self.addEventListener('fetch', (event) => {
-  console.log('Fetching:', event.request.url);
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        console.log('Serving from cache:', event.request.url);
-        return cachedResponse;
+        return cachedResponse; // Return cached file if available
       }
+
+      // Fetch from the network and cache dynamically
       return fetch(event.request)
         .then((networkResponse) => {
-          console.log('Serving from network:', event.request.url);
           return caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
             if (
               event.request.url.startsWith('http') &&
@@ -67,7 +68,7 @@ self.addEventListener('fetch', (event) => {
           });
         })
         .catch(() => {
-          console.log('Network failed, serving offline.html');
+          // Fallback to offline.html for documents
           if (event.request.destination === 'document') {
             return caches.match('/offline.html');
           }
@@ -76,6 +77,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+// Listen for skipWaiting message
 self.addEventListener('message', (event) => {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();

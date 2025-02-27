@@ -3,6 +3,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const miningCountdown = document.getElementById("mining-countdown");
     const minedBalanceDisplay = document.getElementById("mined-balance");
     const progressCircle = document.getElementById("progress-circle");
+    
+    if ('serviceWorker' in navigator) {
+         navigator.serviceWorker.register('/service-worker.js')
+           .then((registration) => {
+             console.log('Service Worker registered:', registration);
+           })
+           .catch((error) => {
+             console.error('Service Worker registration failed:', error);
+           });
+       }
 
     let countdownInterval;
     let isMiningActive = localStorage.getItem('isMiningActive') === 'true';
