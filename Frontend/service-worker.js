@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mai-cache-v8.1.6';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.6';
+const CACHE_NAME = 'mai-cache-v8.1.7';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.7';
 const STATIC_FILES = ['/offline.html'];
 
 self.addEventListener('install', (event) => {
