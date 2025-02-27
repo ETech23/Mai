@@ -269,6 +269,67 @@
     .no-select a {
       pointer-events: auto !important;
     }
+  
+   /* General styles for the banner */
+        #mobile-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        #mobile-banner p {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Button styles */
+        #mobile-banner button {
+            background: white;
+            color: #2575fc;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        #mobile-banner button:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        #mobile-banner button:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            #mobile-banner {
+                padding: 10px;
+            }
+
+            #mobile-banner p {
+                font-size: 14px;
+            }
+
+            #mobile-banner button {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+
   </style>
 </head>
 <body class="dark min-h-screen bg-gradient-to-b from-dark to-dark-200 text-gray-100 no-select">
@@ -443,6 +504,51 @@
   </div>
   <div class="form-container hidden" id="form-container"></div>
 
+  <div id="mobile-banner" style="display: none;">
+    <p>Get the best experience by using our app!</p>
+    <button onclick="redirectToAppOrStore()">Open App</button>
+    <button onclick="window.location.href='https://play.google.com/store/apps/details?id=com.yourapp.package'">Download from Play Store</button>
+    <button onclick="window.location.href='https://yourwebsite.com/path/to/your/app.apk'">Download APK</button>
+</div>
+
+<script>
+    // Define the isMobileDevice function
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Define the redirectToAppOrStore function
+    function redirectToAppOrStore() {
+        if (isMobileDevice()) {
+            // Deep link to your app
+            const appDeepLink = "https://yourwebsite.com"; // Replace with your app's deep link
+            const playStoreLink = "https://play.google.com/store/apps/details?id=com.yourapp.package"; // Replace with your Play Store link
+            const apkDownloadLink = "https://yourwebsite.com/path/to/your/app.apk"; // Replace with your APK download link
+
+            // Attempt to open the app
+            window.location.href = appDeepLink;
+
+            // If the app is not installed, redirect to the Play Store or APK download link after a delay
+            setTimeout(function() {
+                if (confirm("You don't have the app installed. Would you like to download it?")) {
+                    // Redirect to Play Store or APK download link
+                    if (navigator.userAgent.includes("Android")) {
+                        window.location.href = playStoreLink; // Redirect to Play Store for Android
+                    } else if (navigator.userAgent.includes("iPhone") || navigator.userAgent.includes("iPad")) {
+                        window.location.href = "https://apps.apple.com/app/id123456789"; // Replace with your App Store link
+                    } else {
+                        window.location.href = apkDownloadLink; // Redirect to APK download for other devices
+                    }
+                }
+            }, 1000); // Wait 1 second before checking if the app opened
+        }
+    }
+
+    // Show the mobile banner if the user is on a mobile device
+    if (isMobileDevice()) {
+        document.getElementById("mobile-banner").style.display = "block";
+    }
+</script>
   <!-- Theme toggle functionality - isolated from your main JavaScript -->
   <script src="main.js"></script>
   <script>
