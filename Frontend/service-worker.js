@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mai-cache-v8.1.4';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.4';
+const CACHE_NAME = 'mai-cache-v8.1.5';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.5';
 
 const STATIC_FILES = ['/offline.html'];
 
