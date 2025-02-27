@@ -3,26 +3,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const miningCountdown = document.getElementById("mining-countdown");
     const minedBalanceDisplay = document.getElementById("mined-balance");
     const progressCircle = document.getElementById("progress-circle");
-    
-    if ('serviceWorker' in navigator) {
-         navigator.serviceWorker.register('/service-worker.js')
+  
+  navigator.serviceWorker.register('/service-worker.js')
            .then((registration) => {
              console.log('Service Worker registered:', registration);
            })
            .catch((error) => {
              console.error('Service Worker registration failed:', error);
            });
-       }
+       
 
+    let miningInterval;
     let countdownInterval;
     let isMiningActive = localStorage.getItem('isMiningActive') === 'true';
-    
-    // Constants
-    const MINING_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
-    const MINING_RATE_PER_SECOND = 0.0005 ; // 0.0005 per second
-    const SYNC_INTERVAL = 30; // Sync with backend every 30 seconds
 
-    // IMPORTANT: Update UI immediately from stored values
+    // Update UI immediately from stored values
     updateUIFromStoredValues();
     
     // Process any pending offline balances first
@@ -31,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Calculate and apply any offline mining immediately
     calculateOfflineMining();
     
-    // Then restore any active mining session
+    // Restore any active mining session
     restoreMiningSession();
 
     // Attach Click Event to Mining Button
@@ -42,7 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const miningEndTime = Date.now() + MINING_DURATION;
+            const miningDuration = 60 * 60 * 1000; // 1 hour
+            const miningEndTime = Date.now() + miningDuration;
             const miningStartTime = Date.now();
 
             isMiningActive = true;
@@ -52,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("isMiningActive", "true");
             localStorage.setItem("lastUpdateTime", Date.now().toString());
 
-            // Start the timer and mining process together
-            startMiningSession(MINING_DURATION);
+            startCountdown(miningDuration);
+            startMiningProcess(miningDuration);
         });
     } else {
         console.error("Mining button not found! Ensure the button ID is correct.");
@@ -62,13 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle when user comes back to the app
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
-            // CRITICAL: Calculate and apply offline mining first
+            // Calculate and apply offline mining first
             calculateOfflineMining();
             
-            // Then restore the regular timer
+            // Restore the regular timer
             restoreMiningSession();
             
-            // Finally sync any pending balances
+            // Sync any pending balances
             syncPendingBalances();
         } else {
             // Save the last time user left
@@ -76,78 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Regular check for offline mining - run every 10 seconds when visible
+    // Regular check for offline mining - run every 10 seconds
     setInterval(() => {
         if (document.visibilityState === "visible") {
             calculateOfflineMining();
         }
     }, 10000);
-
-    // Function to start mining session - combines countdown and mining
-    function startMiningSession(remainingTime) {
-        if (countdownInterval) clearInterval(countdownInterval);
-        
-        const miningCountdown = document.getElementById("mining-countdown");
-        const progressCircle = document.getElementById("progress-circle");
-        const activateMiningButton = document.getElementById("activate-mining");
-        
-        const endTime = Date.now() + remainingTime;
-        
-        if (activateMiningButton) {
-            activateMiningButton.textContent = "Mining...";
-            activateMiningButton.disabled = true;
-        }
-        
-        // Single interval that handles both countdown UI updates and mining balance updates
-        countdownInterval = setInterval(async () => {
-            const currentTime = Date.now();
-            const timeLeft = endTime - currentTime;
-            const totalTime = MINING_DURATION;
-            
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                
-                if (miningCountdown) {
-                    miningCountdown.textContent = "Next session available!";
-                }
-                
-                if (progressCircle) {
-                    progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
-                }
-                
-                resetMiningSession(true);
-                return;
-            }
-            
-            // Update countdown timer UI
-            const minutes = Math.floor(timeLeft / (60 * 1000));
-            const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
-            
-            if (miningCountdown) {
-                miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-            }
-
-            // Calculate progress percentage
-            const progressPercentage = 100 - ((timeLeft / totalTime) * 100);
-            
-            if (progressCircle) {
-                progressCircle.style.background = `conic-gradient(
-                    #2C3E30 ${progressPercentage}%, 
-                    #718074 ${progressPercentage}% 100%
-                )`;
-            }
-            
-            // Save progress percentage for resuming after refresh
-            localStorage.setItem("miningProgress", progressPercentage.toString());
-            
-            // Update mining balance with EACH timer tick - ensures tight coupling
-            await updateMiningBalance();
-            
-            // Update the lastUpdateTime with every tick
-            localStorage.setItem("lastUpdateTime", currentTime.toString());
-            
-        }, 1000); // Update every second
-    }
 });
 
 // Update UI immediately from stored values
@@ -159,7 +89,7 @@ function updateUIFromStoredValues() {
         minedBalanceDisplay.textContent = `${storedBalance.toFixed(4)} MAI`;
     }
     
-    // Also update the mining button state
+    // Update the mining button state
     const activateMiningButton = document.getElementById("activate-mining");
     const isMiningActive = localStorage.getItem('isMiningActive') === 'true';
     
@@ -182,11 +112,10 @@ function calculateOfflineMining() {
         
         if (now >= miningEndTime) {
             // Mining session ended while offline
-            // Only count time until the end of the session
             timeToProcess = Math.max(0, miningEndTime - lastUpdateTime);
             
-            // Then mark mining as complete if it hasn't been done already
-            if (localStorage.getItem("isMiningActive") === "true") {
+            // Mark mining as complete if it hasn't been done already
+            if (now >= miningEndTime && localStorage.getItem("isMiningActive") === "true") {
                 console.log("Mining session completed while offline");
                 resetMiningSession(false); // Don't show alert for offline completion
             }
@@ -226,8 +155,8 @@ function updateBalanceBasedOnElapsedTime(elapsedSeconds, previousBalance) {
         const referralCount = (userData.referrals || []).length;
         const referralBonus = 1 + (referralCount * 0.05);
         
-        // Calculate mining rate per second 0.0005per second
-        const miningRatePerSecond = 0.0005 ;
+        // Calculate mining rate per second
+        const miningRatePerSecond = 0.0005; // Base mining rate
         const additionalBalance = elapsedSeconds * miningRatePerSecond * referralBonus;
         const newBalance = previousBalance + additionalBalance;
 
@@ -258,7 +187,8 @@ function restoreMiningSession() {
 
     if (miningEndTime > now && localStorage.getItem("isMiningActive") === "true") {
         const remainingTime = miningEndTime - now;
-        startMiningSession(remainingTime);
+        startCountdown(remainingTime);
+        startMiningProcess(remainingTime);
     } else if (miningEndTime <= now && localStorage.getItem("isMiningActive") === "true") {
         // Mining should have finished while app was closed
         resetMiningSession(false); // Don't show alert for expired sessions
@@ -271,8 +201,6 @@ function resetMiningSession(showAlert = true) {
     localStorage.removeItem("miningEndTime");
     localStorage.removeItem("miningStartTime");
     localStorage.setItem("isMiningActive", "false");
-    
-    // Update isMiningActive variable
     isMiningActive = false;
 
     if (showAlert && !localStorage.getItem("alerted")) {
@@ -300,6 +228,82 @@ function resetMiningSession(showAlert = true) {
     }
 }
 
+// Start Countdown Timer and Update Mining Progress
+function startCountdown(remainingTime) {
+    if (countdownInterval) clearInterval(countdownInterval);
+    
+    const miningCountdown = document.getElementById("mining-countdown");
+    const progressCircle = document.getElementById("progress-circle");
+    
+    const endTime = Date.now() + remainingTime;
+    const totalTime = 60 * 60 * 1000; // 1 hour
+    
+    countdownInterval = setInterval(() => {
+        const currentTime = Date.now();
+        const timeLeft = endTime - currentTime;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            
+            if (miningCountdown) {
+                miningCountdown.textContent = "Next session available!";
+            }
+            
+            if (progressCircle) {
+                progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
+            }
+            
+            resetMiningSession(true);
+        } else {
+            const minutes = Math.floor(timeLeft / (60 * 1000));
+            const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
+            
+            if (miningCountdown) {
+                miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+            }
+
+            // Calculate progress percentage
+            const progressPercentage = 100 - ((timeLeft / totalTime) * 100);
+            
+            if (progressCircle) {
+                progressCircle.style.background = `conic-gradient(
+                    #2C3E30 ${progressPercentage}%, 
+                    #718074 ${progressPercentage}% 100%
+                )`;
+            }
+            
+            // Save progress percentage for resuming after refresh
+            localStorage.setItem("miningProgress", progressPercentage.toString());
+        }
+    }, 1000);
+}
+
+// Start Mining Process and Sync Balance
+function startMiningProcess(remainingTime) {
+    if (miningInterval) clearInterval(miningInterval);
+    
+    const miningEndTime = Date.now() + remainingTime;
+
+    const activateMiningButton = document.getElementById("activate-mining");
+    if (activateMiningButton) {
+        activateMiningButton.textContent = "Mining...";
+        activateMiningButton.disabled = true;
+    }
+
+    miningInterval = setInterval(async () => {
+        const now = Date.now();
+        
+        if (now >= miningEndTime) {
+            clearInterval(miningInterval);
+            resetMiningSession(true);
+            return;
+        }
+
+        updateMiningBalance();
+        localStorage.setItem("lastUpdateTime", now.toString());
+    }, 1000);
+}
+
 // Update Balance and Save Pending If No Network
 async function updateMiningBalance() {
     const currentBalance = parseFloat(localStorage.getItem("minedBalance")) || 0;
@@ -318,12 +322,14 @@ async function updateMiningBalance() {
         const referralCount = (userData.referrals || []).length;
         const referralBonus = 1 + (referralCount * 0.05);
         
-        // Mining rate per second (0.0005 per second)
-        const miningRatePerSecond = 0.0005 ;
+        // Base Mining rate per second (0.0005 per second)
+        const miningRatePerSecond = 0.0005;
         const newBalance = currentBalance + miningRatePerSecond * referralBonus;
 
+        // Store the updated balance
         localStorage.setItem("minedBalance", newBalance.toFixed(4));
         
+        // Update UI immediately
         const minedBalanceDisplay = document.getElementById("mined-balance");
         if (minedBalanceDisplay) {
             minedBalanceDisplay.textContent = `${newBalance.toFixed(4)} MAI`;
@@ -379,71 +385,4 @@ function syncPendingBalances() {
             console.error("Failed to sync pending balance.");
         });
     }
-}
-
-// Function to start mining session - combines countdown and mining
-function startMiningSession(remainingTime) {
-    if (countdownInterval) clearInterval(countdownInterval);
-    
-    const miningCountdown = document.getElementById("mining-countdown");
-    const progressCircle = document.getElementById("progress-circle");
-    const activateMiningButton = document.getElementById("activate-mining");
-    
-    const endTime = Date.now() + remainingTime;
-    const MINING_DURATION = 60 * 60 * 1000; // 1 hour
-    
-    if (activateMiningButton) {
-        activateMiningButton.textContent = "Mining...";
-        activateMiningButton.disabled = true;
-    }
-    
-    // Single interval that handles both countdown UI updates and mining balance updates
-    countdownInterval = setInterval(async () => {
-        const currentTime = Date.now();
-        const timeLeft = endTime - currentTime;
-        const totalTime = MINING_DURATION;
-        
-        if (timeLeft <= 0) {
-            clearInterval(countdownInterval);
-            
-            if (miningCountdown) {
-                miningCountdown.textContent = "Next session available!";
-            }
-            
-            if (progressCircle) {
-                progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
-            }
-            
-            resetMiningSession(true);
-            return;
-        }
-        
-        // Update countdown timer UI
-        const minutes = Math.floor(timeLeft / (60 * 1000));
-        const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
-        
-        if (miningCountdown) {
-            miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
-        }
-
-        // Calculate progress percentage
-        const progressPercentage = 100 - ((timeLeft / totalTime) * 100);
-        
-        if (progressCircle) {
-            progressCircle.style.background = `conic-gradient(
-                #2C3E30 ${progressPercentage}%, 
-                #718074 ${progressPercentage}% 100%
-            )`;
-        }
-        
-        // Save progress percentage for resuming after refresh
-        localStorage.setItem("miningProgress", progressPercentage.toString());
-        
-        // Update mining balance with EACH timer tick - ensures tight coupling
-        await updateMiningBalance();
-        
-        // Update the lastUpdateTime with every tick
-        localStorage.setItem("lastUpdateTime", currentTime.toString());
-        
-    }, 1000); // Update every second
 }
