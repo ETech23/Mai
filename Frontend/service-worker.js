@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mai-cache-v8.1.8';
+const CACHE_NAME = 'mai-cache-v8.1.9';
 const STATIC_FILES = ['/offline.html'];
 
 self.addEventListener('install', (event) => {
