@@ -1,4 +1,5 @@
-const CACHE_NAME = 'mai-cache-v8.1.9';
+const CACHE_NAME = 'mai-cache-v8.1.6';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.6';
 const STATIC_FILES = ['/offline.html'];
 
 self.addEventListener('install', (event) => {
@@ -18,7 +19,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
+          if (cache !== CACHE_NAME && cache !== DYNAMIC_CACHE_NAME) {
             console.log('Deleting old cache:', cache);
             return caches.delete(cache);
           }
@@ -30,24 +31,26 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  console.log('Fetching:', event.request.url);
-  event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        console.log('Serving from network:', event.request.url);
-        return networkResponse;
-      })
-      .catch(() => {
-        console.log('Network failed, serving offline.html');
-        if (event.request.destination === 'document') {
-          return caches.match('/offline.html');
-        }
-      })
-  );
-});
-
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.action === 'skipWaiting') {
-    self.skipWaiting();
+  if (event.request.url.includes('https://mai.fly.dev/api/auth/login')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          // Cache the login API response
+          const clonedResponse = networkResponse.clone();
+          caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+            cache.put(event.request, clonedResponse);
+          });
+          return networkResponse;
+        })
+        .catch(() => {
+          // Serve the cached login API response
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // Handle other requests
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/offline.html'))
+    );
   }
 });
