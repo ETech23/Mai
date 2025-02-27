@@ -1,19 +1,8 @@
-const CACHE_NAME = 'mai-cache-v8.3.0';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.3.0';
+const CACHE_NAME = 'mai-cache-v8.1.1';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.1';
 
 const STATIC_FILES = [
   '/',
-  '/index.html',
-  '/style.css',
-  '/app.js',
-  '/social/mai_icon.png',
-  '/social/mai_co.png',
-  '/news.js',
-  '/news.html',
-  '/news.css',
-  '/task.html',
-  '/task.js',
-  '/task.css',
   '/offline.html',
 ];
 
