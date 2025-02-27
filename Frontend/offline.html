@@ -6,6 +6,11 @@
   <title>You're Offline</title>
   <style>
     body {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .container {
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
@@ -13,9 +18,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 75vh;
       text-align: center;
       color: #333;
+    
     }
 
     .offline-container {
@@ -53,9 +59,12 @@
   </style>
 </head>
 <body>
+  <img style="max-height: 50px;"src="images/mai_logo.png">
+  <div class="container">
   <div class="offline-container">
     <h1>You're Offline</h1>
     <p>It looks like you’re not connected to the internet. Don’t worry, your mining session and balance is intact.</p>
+  </div>
     <!-- <a href="index.html">Go to Home</a>-->
   </div>
   <script>
