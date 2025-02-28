@@ -26,7 +26,18 @@ const allowedOrigins = [
   "https://www.maichain.site",
 ];
 
-const origin = allowedOrigins.find((url) => url) || "https://mai-psi.vercel.app";
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true); // Allow the request
+    } else {
+      callback(new Error("Not allowed by CORS")); // Block the request
+    }
+  },
+  credentials: true, // Allow cookies and credentials
+};
+
+app.use(cors(corsOptions));
 
 // Debugging Middleware
 app.use((req, res, next) => {
