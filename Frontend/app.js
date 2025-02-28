@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 newsSection.classList.remove("hidden"); 
     
 
-    const BASE_URL = "https://mai.fly.dev"; // Your backend URL
+    const BASE_URL = "https://maicoin-41vo.onrender.com"; // Your backend URL
 const token = localStorage.getItem("token");
     if (token) {
       // Show the dashboard if logged in
@@ -167,7 +167,7 @@ async function fetchPoints() {
   try {
     console.log("Fetching points from backend...");
 
-    const response = await fetch("https://mai.fly.dev/api/points", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/points", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -206,7 +206,7 @@ async function updatePoints(increment) {
   }
 
   try {
-    const response = await fetch("https://mai.fly.dev/api/points", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/points", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -529,7 +529,7 @@ async function updateBalance(newBalance) {
   }
 
   try {
-    const response = await fetch("https://mai.fly.dev/api/mining/update", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -650,7 +650,7 @@ const defaultRate = 0.0005;
 
 // Get referral count from user data
       const token = localStorage.getItem("token");
-      const response = await fetch("https://mai.fly.dev/api/auth/details", {
+      const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -775,7 +775,7 @@ document.getElementById("referral-input").value.trim(),
       : { identifier, password };
 
     try {
-      const response = await fetch(`https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`, {
+      const response = await fetch(`https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -1015,7 +1015,7 @@ if (referralCode) {
     const reactionData = { title: articleTitle, reaction: reactionType };
 
     try {
-      const response = await fetch("https://mai.fly.dev/api/articles/reactions", {
+      const response = await fetch("https://maicoin-41vo.onrender.com/api/articles/reactions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1058,7 +1058,7 @@ if (referralCode) {
     console.log(`Sending View Data: ${JSON.stringify(viewData)}`);
 
     try {
-      const response = await fetch("https://mai.fly.dev/api/articles/view", {
+      const response = await fetch("https://maicoin-41vo.onrender.com/api/articles/view", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(viewData),
@@ -1097,7 +1097,7 @@ async function updateReactionCounts() {
   console.log("Fetching reaction counts for all articles...");
 
   try {
-    const response = await fetch("https://mai.fly.dev/api/articles");
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/articles");
     const data = await response.json();
 
     // Check if response is successful
@@ -1193,7 +1193,7 @@ retryUpdateReactionCounts();
     console.log(`Sending Article Data: ${JSON.stringify(articleData)}`);
 
     try {
-      const response = await fetch("https://mai.fly.dev/api/articles/add", {
+      const response = await fetch("https://maicoin-41vo.onrender.com/api/articles/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(articleData),
@@ -1305,7 +1305,7 @@ menuIcon.addEventListener("click", async () => {
     console.log("Token retrieved:", token);
 
     // Fetch user details from backend
-    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -1550,7 +1550,7 @@ async function fetchUserData() {
     }
 
     // Make an API call to fetch the user's referral data (replace with your actual API endpoint)
-    const response = await fetch("https://mai.fly.dev/api/auth/details", {
+    const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
