@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mai-cache-v8.1.7';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.7';
+const CACHE_NAME = 'mai-cache-v8.1.8';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v8.1.8';
 const STATIC_FILES = ['/offline.html'];
 
 self.addEventListener('install', (event) => {
@@ -31,7 +31,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.includes('https://mai.fly.dev/api/auth/login')) {
+  if (event.request.url.includes('https://maicoin-41vo.onrender.com/api/auth/login')) {
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {

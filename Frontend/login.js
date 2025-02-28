@@ -13,6 +13,7 @@ const passwordRegisterInput = document.getElementById("password-register");
 const miningPageLink = document.createElement("a"); //Link to mining page
 const userNameDisplay = document.getElementById("username-display");
 const minedBalanceDisplay = document.getElementById("mined-balance");
+const dashboard = document.getElementById("dashboard");
 
 // Create and style the "Go to mining page" link
 miningPageLink.textContent = "Go to mining page";
@@ -46,7 +47,7 @@ authForm.addEventListener("submit", async (e) => {
   try {
     // Send request to the backend
     const response = await fetch(
-      `https://mai.fly.dev/api/auth/${isRegistering ? "register" : "login"}`,
+      `https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -80,9 +81,9 @@ authForm.addEventListener("submit", async (e) => {
         // Show the dashboard and hide the login form
         formContainer.classList.add("hidden");
         dashboard.classList.remove("hidden");
-
+/**
         // Restore the mining session if it exists
-        restoreMiningSession();
+        restoreMiningSession();**/
       }
     } else {
       // Handle errors
@@ -93,6 +94,21 @@ authForm.addEventListener("submit", async (e) => {
     alert("Something went wrong!");
   }
 });
+function handleCredentialResponse(response) {
+    const jwtToken = response.credential;
+    
+    // Decode the JWT token to get user details
+    const userData = JSON.parse(atob(jwtToken.split('.')[1]));
+
+    console.log("User Data:", userData);
+    
+    // Example: Display user info
+    document.getElementById("user-info").innerHTML = `
+        <h3>Welcome, ${userData.name}</h3>
+        <img src="${userData.picture}" alt="Profile Image">
+        <p>Email: ${userData.email}</p>
+    `;
+}
 
 // **Switch Between Login and Registration Forms**
 function switchForm() {
@@ -199,7 +215,7 @@ if (token){
     
     formContainer.classList.add("hidden")
 };
-
+/**
 const footer = document.getElementById("footer");
 let lastScrollPosition = window.scrollY;
 
@@ -213,8 +229,8 @@ window.addEventListener("scroll", () => {
   // Hide footer when scrolling up
   else {
     footer.classList.remove("visible");
-  }
+  } 
 
   // Update the last scroll position
   lastScrollPosition = currentScrollPosition;
-});
+});**/

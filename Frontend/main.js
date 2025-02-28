@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const miningDuration = 60 * 60 * 1000; // 1 hour
+            const miningDuration = 60 * 180 * 1000; // 3 hour
             const miningEndTime = Date.now() + miningDuration;
             const miningStartTime = Date.now();
 
@@ -424,43 +424,44 @@ function resetMiningSession(userId, showAlert = true) {
 }
 
 // Start Countdown Timer and Update Mining Progress
+  // Start Countdown Timer and Update Mining Progress
 function startCountdown(remainingTime) {
     const userId = getUserId();
     if (!userId) return;
-    
+
     if (countdownInterval) clearInterval(countdownInterval);
-    
+
     const miningCountdown = document.getElementById("mining-countdown");
     const progressCircle = document.getElementById("progress-circle");
-    
+
     const endTime = Date.now() + remainingTime;
-    const totalTime = 60 * 60 * 1000; // 1 hour
-    
+    const totalTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+
     countdownInterval = setInterval(() => {
         const currentTime = Date.now();
         const timeLeft = endTime - currentTime;
 
         if (timeLeft <= 0) {
             clearInterval(countdownInterval);
-            
+
             if (miningCountdown) {
                 miningCountdown.textContent = "Next session available!";
             }
-            
+
             if (progressCircle) {
-                progressCircle.style.background = `conic-gradient(#2C3E30 100%, #718074 100%)`;
-            }
-            
-            resetMiningSession(userId, true);
-        } else {
-            const minutes = Math.floor(timeLeft / (60 * 1000));
-            const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
-            
-            if (miningCountdown) {
-                miningCountdown.textContent = `Next session: ${minutes}m ${seconds}s`;
+                progressCircle.style.background = `conic-gradient(#2C3E50 100%, #718074 100%)`;
             }
 
-            // Calculate progress percentage
+            resetMiningSession(userId, true);
+        } else {
+            const hours = Math.floor(timeLeft / (60 * 60 * 1000)); // Calculate hours
+const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000)); // Calculate minutes
+const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000); // Calculate seconds
+
+if (miningCountdown) {
+    miningCountdown.textContent = `Next session: ${hours}h ${minutes}m ${seconds}s`;
+}
+          // Calculate progress percentage
             const progressPercentage = 100 - ((timeLeft / totalTime) * 100);
             
             if (progressCircle) {
