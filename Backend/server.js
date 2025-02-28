@@ -20,13 +20,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS Middleware
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "https://mai-psi.vercel.app" || "https://www.maichain.site",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "https://mai-psi.vercel.app",
+  "https://www.maichain.site",
+];
+
+const origin = allowedOrigins.find((url) => url) || "https://mai-psi.vercel.app";
 
 // Debugging Middleware
 app.use((req, res, next) => {
