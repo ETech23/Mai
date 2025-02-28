@@ -26,8 +26,10 @@ const allowedOrigins = [
   "https://www.maichain.site",
 ];
 
+
 const corsOptions = {
   origin: (origin, callback) => {
+    // Allow requests from allowedOrigins or if the origin is undefined (e.g., same-origin requests)
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true); // Allow the request
     } else {
