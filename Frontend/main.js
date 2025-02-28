@@ -270,7 +270,7 @@ async function getBackendBalance() {
     if (!token) return null;
     
     try {
-        const response = await fetch("https://mai.fly.dev/api/auth/details", {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -513,7 +513,7 @@ async function updateMiningBalance(userId) {
     if (!token) return;
 
     try {
-        const response = await fetch("https://mai.fly.dev/api/auth/details", {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -565,7 +565,7 @@ async function syncBalanceWithBackend(balance, isPriority = false) {
     console.log(`Attempting to sync balance for user ${userId}: ${balance.toFixed(4)} (Priority: ${isPriority})`);
 
     try {
-        const response = await fetch("https://mai.fly.dev/api/mining/update", {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,

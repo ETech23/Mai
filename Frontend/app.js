@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const response = await fetch("https://mai.fly.dev/api/auth/details", {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -633,7 +633,7 @@ function continueMining(savedProgress, remainingTime) {
       clearInterval(miningInterval);
       isMiningActive = false;
       miningProgress = 100;
-      activateMiningButton.disabled = false;
+            activateMiningButton.disabled = false;
       activateMiningButton.textContent = "Activate Mining";
 
       alert("Mining session completed!");
@@ -900,6 +900,7 @@ if (taskButton) {
     window.location.href = "task.html";
   });
 }
+
   
 
 // Close the Task section
@@ -1338,7 +1339,7 @@ menuIcon.addEventListener("click", async () => {
 
     // Construct referral link
 
-const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://mai-psi.vercel.app/register?ref=${referralCode}`;
+const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/register?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
 
   // Default mining rate
@@ -1502,7 +1503,7 @@ if (shareButton) {
       const copyLinkButton = document.getElementById("copy-link");
       if (copyLinkButton) {
         copyLinkButton.addEventListener("click", () => {
-          navigator.clipboard
+                navigator.clipboard
             .writeText(referralLink)
             .then(() => alert("Referral link copied to clipboard!"))
             .catch((err) => console.error("Failed to copy referral link:", err));
@@ -1650,5 +1651,3 @@ document.getElementById("ai-btn").addEventListener("click", () => {
 //document.getElementById("wallet-btn").addEventListener("click", () => {
 //window.location.href = ""; // Navigate to Wallet
 //});
-  
-    
