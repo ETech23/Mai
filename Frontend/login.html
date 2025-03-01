@@ -17,25 +17,84 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
       function handleCredentialResponse(response) {
-    const jwtToken = response.credential;
-    
+    const token = response.credential;
+    console.log("JWT Token:", token); // Log the token
+
+    // Validate JWT token structure
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+        console.error("Invalid JWT token structure");
+        return;
+    }
+
     // Decode the JWT token to get user details
-    const userData = JSON.parse(atob(jwtToken.split('.')[1]));
+    const userData = decodeJWT(token);
+
+    if (!userData || !userData.name || !userData.picture || !userData.email) {
+        console.error("Invalid or incomplete user data:", userData);
+        return;
+    }
 
     console.log("User Data:", userData);
-    
-    // Example: Display user info
-    document.getElementById("user-info").innerHTML = `
-        <h3>Welcome, ${userData.name}</h3>
-        <img src="${userData.picture}" alt="Profile Image">
-        <p>Email: ${userData.email}</p>
-    `;
+
+    // Send the token to the backend for verification
+    sendTokenToBackend(token);
+}
+
+/**
+ * Decode a JWT token and return the payload.
+ * @param {string} token - The JWT token.
+ * @returns {object|null} - The decoded payload or null if invalid.
+ */
+function decodeJWT(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        return payload;
+    } catch (error) {
+        console.error("Error decoding JWT:", error);
+        return null;
+    }
+}
+
+/**
+ * Send the JWT token to the backend for verification.
+ * @param {string} token - The JWT token.
+ */
+function sendTokenToBackend(token) {
+    fetch("https://maicoin-41vo.onrender.com/api/auth/google/callback", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Backend request failed");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("Backend response:", data);
+
+            // Save the backend token to localStorage
+            localStorage.setItem("backendToken", data.token);
+
+            // Redirect to the mining page
+            window.location.href = "index.html";
+        })
+        .catch((error) => {
+            console.error("Error sending token to backend:", error);
+            alert("An error occurred during login. Please try again.");
+        });
 }
   </script>
   <style>
      /* Custom background color for the button */
   .g_id_signin {
-    background-color: #121212 !important; /* Dark background */
+   /** background-color: #121212 !important; /* Dark background */
     border: 1px solid #333 !important; /* Dark border */
     border-radius: 4px !important; /* Rounded corners */
   }
@@ -47,7 +106,7 @@
 
   /* Custom hover effect */
   .g_id_signin:hover {
-    background-color: #1e1e1e !important; /* Slightly lighter on hover */
+    background-color: #111823 !important; /* Slightly lighter on hover */
   }
     
     /* Custom CSS for animations and transitions */
@@ -105,17 +164,17 @@
      data-callback="handleCredentialResponse">
 </div>
 
-<div
-  class="g_id_signin"
-  data-type="standard"
-  data-size="large"
-  
-  data-text="sign_in_with"
-  data-shape="rectangular"
-  data-logo_alignment="left"
-  data-width="300"
->
-</div>
+ <div
+    class="g_id_signin"
+    data-type="standard"
+    data-size="large"
+    data-theme="filled_blue" 
+    data-text="sign_in_with"
+    data-shape="rectangular"
+    data-logo_alignment="left"
+    data-width="300"
+  >
+  </div>
     </form>
     
 
@@ -149,36 +208,7 @@
     </div>
   </section>
 
-  <!-- Footer Navigation -->
-  <nav>
-  <footer id="footer" class="fixed-footer bg-gray-800 p-4 flex justify-around items-center transition-transform duration-300">
-    <!-- Home Button -->
-    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
-      <i class="fas fa-cogs text-2xl"></i>
-      <span class="text-sm mt-1">POW</span>
-    </button>
-    <!-- News Button -->
-    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
-      <i class="fas fa-newspaper text-2xl"></i>
-      <span class="text-sm mt-1">News</span>
-    </button>
-    <!-- Mai AI Button -->
-    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
-      <i class="fas fa-robot text-2xl"></i>
-      <span class="text-sm mt-1">Mai AI</span>
-    </button>
-    <!-- Wallet Button -->
-    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
-      <i class="fas fa-wallet text-2xl"></i>
-      <span class="text-sm mt-1">Wallet</span>
-    </button>
-    <!-- Menu Button -->
-    <button class="footer-btn flex flex-col items-center text-gray-400 hover:text-white">
-      <i class="fas fa-bars text-2xl"></i>
-      <span class="text-sm mt-1">More</span>
-    </button>
-  </footer>
-</nav>
+ 
 
   <script src="login.js"></script>
 </body>
