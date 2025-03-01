@@ -22,7 +22,7 @@ body, h1, h2, h3, p, ul, ol, figure {
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: #2C3E30;
+  background: #111827;
   color: #8C9F92;
   margin: 0;
 }
@@ -31,6 +31,7 @@ body {
     max-width: 600px; /* Set maximum width for the container */
     margin: 0 auto; /* Center the container horizontally */
         padding: 15px;
+   
 }
 
 .container {
@@ -47,10 +48,11 @@ header h1 {
 /* News Section */
 .news-section {
   background-color: #998c5e;
-  padding: 50px 20px;
+  padding:  20px;
   margin-top: 40px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  
 }
 .news-section h2 {
   font-size: 2rem;
