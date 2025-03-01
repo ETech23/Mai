@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mai-cache-v9.0.7';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.0.7';
+const CACHE_NAME = 'mai-cache-v9.0.8';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.0.8';
 const STATIC_FILES = [
   '/offline.html',
   '/social/MAI_logo2.png', // Add the image to static files
