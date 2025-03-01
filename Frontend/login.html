@@ -49,28 +49,7 @@
     }
   
   /* Footer container */
-.fixed-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  transition: transform 0.3s ease-in-out;
-  transform: translateY(100%); /* Initially hidden */
-  font-size: 14px;
-  margin-top: 0;
-  padding: 2px;
-}
 
-.fixed-footer.visible {
-  transform: translateY(0); /* Show footer */
-}
-
-/* Add spacing for icons */
-.footer-btn span {
-  margin-top: 2px;
-  font-size: 12px;
-}
   </style>
 </head>
 <body class="bg-gray-900 text-white font-inter">
@@ -109,8 +88,17 @@
      data-callback="handleCredentialResponse">
 </div>
 
-<div class="g_id_signin"
-     data-type="standard"></div>
+<div
+  class="g_id_signin"
+  data-type="standard"
+  data-size="large"
+  data-theme="filled_blue"
+  data-text="sign_in_with"
+  data-shape="rectangular"
+  data-logo_alignment="left"
+  data-width="300"
+>
+</div>
     </form>
     
 

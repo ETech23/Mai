@@ -17,6 +17,23 @@
   <link rel="icon" href="./social/mai_co.png" type="image/png">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
+      function handleCredentialResponse(response) {
+    const jwtToken = response.credential;
+    
+    // Decode the JWT token to get user details
+    const userData = JSON.parse(atob(jwtToken.split('.')[1]));
+
+    console.log("User Data:", userData);
+    
+    // Example: Display user info
+    document.getElementById("user-info").innerHTML = `
+        <h3>Welcome, ${userData.name}</h3>
+        <img src="${userData.picture}" alt="Profile Image">
+        <p>Email: ${userData.email}</p>
+    `;
+}
+  </script>
+  <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {

@@ -1,6 +1,9 @@
-const CACHE_NAME = 'mai-cache-v9.0.0';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.0.0';
-const STATIC_FILES = ['/offline.html'];
+const CACHE_NAME = 'mai-cache-v9.0.1';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.0.1';
+const STATIC_FILES = [
+  '/offline.html',
+  '/images/mai_logo.png', // Add the image to static files
+];
 
 self.addEventListener('install', (event) => {
   console.log('Service Worker installing...');
