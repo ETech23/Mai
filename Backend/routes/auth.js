@@ -2,6 +2,9 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { OAuth2Client } = require("google-auth-library");
+
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;             const client = new OAuth2Client(CLIENT_ID);
 
 const router = express.Router();
 const auth = require("../middleware/auth"); // Import auth middleware
@@ -115,5 +118,62 @@ router.get("/details", auth, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+// Google Sign-In Callback
+router.post("/google/callback", async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        // Verify the Google ID token
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        console.log("User verified:", payload);
+
+        // Check if the user already exists in the database
+        let user = await User.findOne({ email: payload.email });
+
+        if (!user) {
+            // User does not exist: Create a new account
+            user = new User({
+                name: payload.name,
+                email: payload.email,
+                username: payload.email.split("@")[0], // Use email prefix as username
+                password: "google-sign-in", // Placeholder password
+                picture: payload.picture,
+            });
+
+            await user.save();
+        }
+
+        // Generate a JWT token for your app
+        const backendToken = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        // Return the token and user data
+        res.json({
+            success: true,
+            token: backendToken,
+            user: {
+                name: user.name,
+                email: user.email,
+                picture: user.picture,
+                balance: user.balance,
+                isAdmin: user.isAdmin,
+            },
+        });
+    } catch (error) {
+        console.error("Error verifying token:", error);
+        res.status(400).json({ success: false, error: "Invalid token" });
+    }
+});
+
 
 module.exports = router;
