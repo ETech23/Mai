@@ -1,8 +1,8 @@
-const CACHE_NAME = 'mai-cache-v9.0.5';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.0.5';
+const CACHE_NAME = 'mai-cache-v9.0.6';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.0.6';
 const STATIC_FILES = [
   '/offline.html',
-  '/images/mai_logo.png', // Add the image to static files
+  '/social/MAI_logo2.png', // Add the image to static files
 ];
 
 self.addEventListener('install', (event) => {
