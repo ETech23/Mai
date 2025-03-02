@@ -9,7 +9,16 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background-color: #111827;
+      
+  background: linear-gradient(
+    to right,
+    #1A2233,
+    #232B3C,
+    #232B3C,
+    #0A101D,
+    #050811
+  );
+
       display: flex;
       justify-content: center;
       align-items: center;
@@ -50,7 +59,7 @@
       background-color: #2C3E30;
     }
   button {
-    background-color: red;
+    background-color: #B22222;
     border-radius: 5px;
     padding: 8px;
     font-size: 18px;
@@ -62,8 +71,8 @@
 <body>
   <div class="offline-container">
     <h1 style="color: white;">Logout Your Account and Take a Rest?</h1>
-    <p>You're about log out of the system. Ensure you remember your login details before logging out. If you don't, quickly contact the support team to help you confirm your details.</p>
-    <button onclick="confirmLogout()">Logout</button>
+    <p>You're about logging out of the system. Ensure you remember your login details before logging out. <br><small style="color: gold">You may lose your current session and mined balance!</small></p>
+    <button onclick="confirmLogout()">Proceed</button>
 
 <script>
 async function confirmLogout() {

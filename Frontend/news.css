@@ -47,7 +47,14 @@ header h1 {
 
 /* News Section */
 .news-section {
-  background-color: #111827;
+  background: linear-gradient(
+    to right,
+    #1A2233,
+    #232B3C,
+    #232B3C,
+    #0A101D,
+    #050811
+  );
   padding:  20px;
   margin-top: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -200,14 +207,14 @@ li {
   margin-top: 20px;
 }
 .news-section {
-  padding: 20px;
+  padding: 15px;
   font-family: Arial, sans-serif;
 }
 
 /* News Article Container */
 .news-article {
   margin-bottom: 10px;
-  padding: 15px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #f9f9f9;
