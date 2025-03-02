@@ -22,7 +22,7 @@ body, h1, h2, h3, p, ul, ol, figure {
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: #111827;
+  background: #121212;
   color: #8C9F92;
   margin: 0;
 }
@@ -30,7 +30,7 @@ body {
  .contain {
     max-width: 600px; /* Set maximum width for the container */
     margin: 0 auto; /* Center the container horizontally */
-        padding: 15px;
+        padding: 10px;
    
 }
 
@@ -47,17 +47,17 @@ header h1 {
 
 /* News Section */
 .news-section {
-  background-color: #998c5e;
+  background-color: #111827;
   padding:  20px;
-  margin-top: 40px;
+  margin-top: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  
+  transition: all 0.3s ease;
 }
 .news-section h2 {
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: white;
   text-align: center;
   margin-bottom: 30px;
 }
@@ -206,10 +206,10 @@ li {
 
 /* News Article Container */
 .news-article {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: #f9f9f9;
   overflow: hidden;
 }
