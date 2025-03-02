@@ -832,14 +832,14 @@ if (shareButton) {
       existingShareOptions.remove();
     } else {
       // If share options do not exist, show them directly below the share button
-      const shareOptions = `          <button id="copy-link">Copy Link</button>
-        </div>
-      `;
-        /** <div id="share-options" style="margin-top: 10px;">
+      const shareOptions = `
+        <div id="share-options" style="margin-top: 10px;">
           <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
           <a href="#" id="whatsapp-share">Share on WhatsApp</a><br>
-          <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br> **/
-
+          <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br> 
+<button id="copy-link">Copy Link</button>
+        </div>
+      `;
 
       // Insert the share options directly below the share button
       shareButton.insertAdjacentHTML("afterend", shareOptions);
