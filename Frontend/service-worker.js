@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mai-cache-v9.4.0';
-const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.4.0';
+const CACHE_NAME = 'mai-cache-v9.5.0';
+const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.5.0';
 const STATIC_FILES = [
   '/offline.html',
   '/social/MAI_logo2.png',
@@ -13,6 +13,7 @@ const STATIC_FILES = [
   'login.js',
   'more.css',
   'news.css',
+  'task.html',
 ];
 
 // Install Event: Cache static files
