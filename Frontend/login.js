@@ -25,6 +25,23 @@ miningPageLink.style.display = "none"; // Initially hidden
 formContainer.appendChild(miningPageLink);
 
 // **Handle Form Submission**
+// DOM Elements
+const notification = document.getElementById("notification");
+const notificationMessage = document.getElementById("notification-message");
+
+// Function to show notification
+function showNotification(message, isSuccess) {
+  notificationMessage.textContent = message;
+  notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
+  notification.style.display = 'block';
+
+  // Hide the notification after 3 seconds
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000);
+}
+
+// **Handle Form Submission**
 authForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -60,12 +77,12 @@ authForm.addEventListener("submit", async (e) => {
     if (response.ok) {
       if (isRegistering) {
         // Handle successful registration
-        alert("Registration successful! You can now log in.");
+        showNotification("Registration successful! You can now log in.", true);
         // Optionally, switch to the login form after registration
         switchForm();
       } else {
         // Handle successful login
-        alert("Logged in successfully!");
+        showNotification("Logged in successfully!", true);
 
         // Save user data to localStorage
         localStorage.setItem("token", data.token);
@@ -73,7 +90,7 @@ authForm.addEventListener("submit", async (e) => {
         localStorage.setItem("email", data.email);
         localStorage.setItem("minedBalance", data.balance.toFixed(4));
 
-          window.location.href="index.html";
+        window.location.href = "index.html";
         // Update UI with user data
         userNameDisplay.textContent = data.username;
         minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
@@ -81,19 +98,17 @@ authForm.addEventListener("submit", async (e) => {
         // Show the dashboard and hide the login form
         formContainer.classList.add("hidden");
         dashboard.classList.remove("hidden");
-/**
-        // Restore the mining session if it exists
-        restoreMiningSession();**/
       }
     } else {
       // Handle errors
-      alert(data.message || "Something went wrong!");
+      showNotification(data.message || "Something went wrong!", false);
     }
   } catch (error) {
     console.error("Error:", error);
-    alert("Something went wrong!");
+    showNotification("Something went wrong!", false);
   }
 });
+
 function handleCredentialResponse(response) {
     const jwtToken = response.credential;
     

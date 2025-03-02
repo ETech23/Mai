@@ -70,22 +70,60 @@
   </div>
   <script>
   // Function to check network connectivity
-    function checkNetwork() {
-      fetch('/') // Try to fetch the root page or any lightweight resource
-        .then(() => {
-          // If the fetch succeeds, the network is back
-          console.log('Network is back. Reloading page...');
-          window.location.reload(); // Reload the page
-        })
-        .catch(() => {
-          // If the fetch fails, the network is still down
-          console.log('Still offline. Retrying in 5 seconds...');
-          setTimeout(checkNetwork, 5000); // Retry after 5 seconds
-        });
-    }
+    // Function to check network connectivity
+function checkNetwork() {
+  if (navigator.onLine) {
+    console.log('Online');
+    // Perform any deferred actions (e.g., token validation, API calls)
+    validateToken(); // Validate the token when back online
+  } else {
+    console.log('Offline');
+    // Retry after 5 seconds
+    setTimeout(checkNetwork, 5000);
+  }
+}
 
-    // Start checking for network connectivity
-    checkNetwork();
+// Listen for network changes
+window.addEventListener('online', () => {
+  console.log('Network is back. Performing deferred actions...');
+  checkNetwork();
+});
+
+window.addEventListener('offline', () => {
+  console.log('Network is down. Deferring actions...');
+});
+
+// Start checking for network connectivity
+checkNetwork();
+  
+  // Function to validate token (deferred until online)
+function validateToken() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    fetch('https://maicoin-41vo.onrender.com/api/auth/validate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('Token is valid');
+        } else {
+          console.log('Token is invalid');
+          localStorage.removeItem('token'); // Clear invalid token
+          localStorage.removeItem('username');
+          localStorage.removeItem('email');
+          localStorage.removeItem('minedBalance');
+          window.location.reload(); // Refresh the page to show the login form
+        }
+      })
+      .catch((error) => {
+        console.error('Error validating token:', error);
+      });
+  }
+}
 
   </script>
 </body>
