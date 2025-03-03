@@ -10,242 +10,128 @@ const nameInput = document.getElementById("name");
 const usernameInput = document.getElementById("username");
 const emailInput = document.getElementById("email");
 const passwordRegisterInput = document.getElementById("password-register");
-const miningPageLink = document.createElement("a"); //Link to mining page
-const userNameDisplay = document.getElementById("username-display");
-const minedBalanceDisplay = document.getElementById("mined-balance");
-const dashboard = document.getElementById("dashboard");
+const passwordConfirmInput = document.getElementById("password-confirm");
+const referralInput = document.getElementById("referral-input");
+const identifierInput = document.getElementById("identifier");
+const passwordInput = document.getElementById("password");
 
-// Create and style the "Go to mining page" link
-miningPageLink.textContent = "Go to mining page";
-miningPageLink.href = "index.html"; // Update with your mining page URL
-miningPageLink.className = "block text-center mt-4 text-blue-500 hover:underline";
-miningPageLink.style.display = "none"; // Initially hidden
-
-// Append the link to the form container
-formContainer.appendChild(miningPageLink);
-
-// **Handle Form Submission**
-// DOM Elements
 const notification = document.getElementById("notification");
 const notificationMessage = document.getElementById("notification-message");
 
 // Function to show notification
 function showNotification(message, isSuccess) {
-  notificationMessage.textContent = message;
-  notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
-  notification.style.display = 'block';
+    notificationMessage.textContent = message;
+    notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
+    notification.style.display = 'block';
 
-  // Hide the notification after 3 seconds
-  setTimeout(() => {
-    notification.style.display = 'none';
-  }, 3000);
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
 }
 
-// **Handle Form Submission**
+// Switch Between Login and Registration Forms
+function switchForm(toRegister = false) {
+    const isRegistering = toRegister || formTitle.textContent === "Register";
+
+    formTitle.textContent = isRegistering ? "Register" : "Login";
+    authSubmit.textContent = isRegistering ? "Register" : "Login";
+
+    loginFields.classList.toggle("hidden", isRegistering);
+    registerFields.classList.toggle("hidden", !isRegistering);
+
+    if (isRegistering) {
+        nameInput.setAttribute("required", true);
+        usernameInput.setAttribute("required", true);
+        emailInput.setAttribute("required", true);
+        passwordRegisterInput.setAttribute("required", true);
+        passwordConfirmInput.setAttribute("required", true);
+
+        identifierInput.removeAttribute("required");
+        passwordInput.removeAttribute("required");
+    } else {
+        identifierInput.setAttribute("required", true);
+        passwordInput.setAttribute("required", true);
+
+        nameInput.removeAttribute("required");
+        usernameInput.removeAttribute("required");
+        emailInput.removeAttribute("required");
+        passwordRegisterInput.removeAttribute("required");
+        passwordConfirmInput.removeAttribute("required");
+    }
+
+    authForm.reset();
+}
+
+// Handle Form Submission
 authForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    
+    const isRegistering = formTitle.textContent === "Register";
 
-  // Get form values
-  const identifier = document.getElementById("identifier").value.trim();
-  const password = document.getElementById("password").value.trim();
-  const isRegistering = formTitle.textContent === "Register";
+    if (isRegistering) {
+        if (passwordRegisterInput.value.trim() !== passwordConfirmInput.value.trim()) {
+            showNotification("Passwords do not match!", false);
+            return;
+        }
+    }
 
-  // Prepare payload based on whether the user is registering or logging in
-  const payload = isRegistering
-    ? {
+    const payload = isRegistering ? {
         name: nameInput.value.trim(),
         email: emailInput.value.trim(),
         username: usernameInput.value.trim(),
         password: passwordRegisterInput.value.trim(),
-        referredBy: document.getElementById("referral-input").value.trim(),
-      }
-    : { identifier, password };
+        referredBy: referralInput.value.trim(), // Include referral code
+    } : {
+        identifier: identifierInput.value.trim(),
+        password: passwordInput.value.trim(),
+    };
 
-  try {
-    // Send request to the backend
-    const response = await fetch(
-      `https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }
-    );
+    try {
+        const response = await fetch(`https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (response.ok) {
-      if (isRegistering) {
-        // Handle successful registration
-        showNotification("Registration successful! You can now log in.", true);
-        // Optionally, switch to the login form after registration
-        switchForm();
-      } else {
-        // Handle successful login
-        showNotification("Logged in successfully!", true);
-
-        // Save user data to localStorage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("email", data.email);
-        localStorage.setItem("minedBalance", data.balance.toFixed(4));
-
-        window.location.href = "index.html";
-        // Update UI with user data
-        userNameDisplay.textContent = data.username;
-        minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
-
-        // Show the dashboard and hide the login form
-        formContainer.classList.add("hidden");
-        dashboard.classList.remove("hidden");
-      }
-    } else {
-      // Handle errors
-      showNotification(data.message || "Something went wrong!", false);
+        if (response.ok) {
+            if (isRegistering) {
+                showNotification("Registration successful! You can now log in.", true);
+                switchForm(false); // Switch to login form after successful registration
+            } else {
+                showNotification("Logged in successfully!", true);
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("email", data.email);
+                localStorage.setItem("minedBalance", data.balance.toFixed(4));
+                window.location.href = "index.html";
+            }
+        } else {
+            showNotification(data.message || "Something went wrong!", false);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        showNotification("Something went wrong!", false);
     }
-  } catch (error) {
-    console.error("Error:", error);
-    showNotification("Something went wrong!", false);
-  }
 });
 
-function handleCredentialResponse(response) {
-    const jwtToken = response.credential;
-    
-    // Decode the JWT token to get user details
-    const userData = JSON.parse(atob(jwtToken.split('.')[1]));
-
-    console.log("User Data:", userData);
-    
-    // Example: Display user info
-    document.getElementById("user-info").innerHTML = `
-        <h3>Welcome, ${userData.name}</h3>
-        <img src="${userData.picture}" alt="Profile Image">
-        <p>Email: ${userData.email}</p>
-    `;
-}
-
-// **Switch Between Login and Registration Forms**
-function switchForm() {
-  const isRegistering = formTitle.textContent === "Register";
-
-  // Toggle form title and button text
-  formTitle.textContent = isRegistering ? "Login" : "Register";
-  submitButton.textContent = isRegistering ? "Login" : "Register";
-
-  // Toggle visibility of additional registration fields
-  nameInput.parentElement.classList.toggle("hidden", !isRegistering);
-  emailInput.parentElement.classList.toggle("hidden", !isRegistering);
-  usernameInput.parentElement.classList.toggle("hidden", !isRegistering);
-  passwordRegisterInput.parentElement.classList.toggle("hidden", !isRegistering);
-  referralInput.parentElement.classList.toggle("hidden", !isRegistering);
-
-  // Clear form fields
-  authForm.reset();
-}
-
-// **Add Event Listener to Switch Form Link**
-const switchFormLink = document.getElementById("switch-form-link");
-if (switchFormLink) {
-  switchFormLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    switchForm();
-  });
-}
-
-// **Toggle Between Login and Registration Form**
-toggleFormText.addEventListener("click", () => {
-  if (formTitle.textContent === "Login") {
-    // Switch to Registration Form
-    formTitle.textContent = "Register";
-    authSubmit.textContent = "Register";
-    loginFields.classList.add("hidden");
-    registerFields.classList.remove("hidden");
-
-    // Add required attributes to registration fields
-    document.getElementById("name").setAttribute("required", true);
-    document.getElementById("username").setAttribute("required", true);
-    document.getElementById("email").setAttribute("required", true);
-    document.getElementById("password-register").setAttribute("required", true);
-
-    // Remove required attributes from login fields
-    document.getElementById("identifier").removeAttribute("required");
-    document.getElementById("password").removeAttribute("required");
-
-    toggleFormText.innerHTML = 'Already have an account? <span>Login here</span>';
-  } else {
-    // Switch to Login Form
-    formTitle.textContent = "Login";
-    authSubmit.textContent = "Login";
-    loginFields.classList.remove("hidden");
-    registerFields.classList.add("hidden");
-
-    // Add required attributes to login fields
-    document.getElementById("identifier").setAttribute("required", true);
-    document.getElementById("password").setAttribute("required", true);
-
-    // Remove required attributes from registration fields
-    document.getElementById("name").removeAttribute("required");
-    document.getElementById("username").removeAttribute("required");
-    document.getElementById("email").removeAttribute("required");
-    document.getElementById("password-register").removeAttribute("required");
-
-    toggleFormText.innerHTML = 'Don’t have an account? <span>Register here</span>';
-  }
-});
-
-// Automatically Switch to Registration Form if Referral Code Exists
+// Auto Switch to Registration if Referral Code Exists
 const urlParams = new URLSearchParams(window.location.search);
 const referralCode = urlParams.get("ref");
 
 if (referralCode) {
-  console.log("Referral Code Detected:", referralCode);
-
-  // Switch to Registration Form
-  formTitle.textContent = "Register";
-  authSubmit.textContent = "Register";
-  loginFields.classList.add("hidden");
-  registerFields.classList.remove("hidden");
-
-  // Add required attributes to registration fields
-  document.getElementById("name").setAttribute("required", true);
-  document.getElementById("username").setAttribute("required", true);
-  document.getElementById("email").setAttribute("required", true);
-  document.getElementById("password-register").setAttribute("required", true);
-
-  // Remove required attributes from login fields
-  document.getElementById("identifier").removeAttribute("required");
-  document.getElementById("password").removeAttribute("required");
-
-  // Prefill the referral code
-  const referralInput = document.getElementById("referral-input");
-  if (referralInput) {
+    switchForm(true); // Force open the registration form
     referralInput.value = referralCode;
-  }
 }
 
+// Add Click Event to Toggle Form
+toggleFormText.addEventListener("click", () => {
+    switchForm();
+});
 
+// Auto-hide form if user is already logged in
 const token = localStorage.getItem("token");
-if (token){
-    
-    formContainer.classList.add("hidden")
-};
-/**
-const footer = document.getElementById("footer");
-let lastScrollPosition = window.scrollY;
-
-window.addEventListener("scroll", () => {
-  const currentScrollPosition = window.scrollY;
-
-  // Show footer when scrolling down
-  if (currentScrollPosition > lastScrollPosition) {
-    footer.classList.add("visible");
-  } 
-  // Hide footer when scrolling up
-  else {
-    footer.classList.remove("visible");
-  } 
-
-  // Update the last scroll position
-  lastScrollPosition = currentScrollPosition;
-});**/
+if (token) {
+    formContainer.classList.add("hidden");
+}
