@@ -29,50 +29,52 @@ function showNotification(message, isSuccess) {
     }, 3000);
 }
 
-// Switch Between Login and Registration Forms
-function switchForm(toRegister = false) {
-    const isRegistering = toRegister || formTitle.textContent === "Register";
+// Function to switch between login and registration form
+function switchForm(toRegister) {
+    if (toRegister) {
+        formTitle.textContent = "Register";
+        authSubmit.textContent = "Register";
+        loginFields.classList.add("hidden");
+        registerFields.classList.remove("hidden");
 
-    formTitle.textContent = isRegistering ? "Register" : "Login";
-    authSubmit.textContent = isRegistering ? "Register" : "Login";
-
-    loginFields.classList.toggle("hidden", isRegistering);
-    registerFields.classList.toggle("hidden", !isRegistering);
-
-    if (isRegistering) {
         nameInput.setAttribute("required", true);
         usernameInput.setAttribute("required", true);
         emailInput.setAttribute("required", true);
         passwordRegisterInput.setAttribute("required", true);
         passwordConfirmInput.setAttribute("required", true);
-
         identifierInput.removeAttribute("required");
         passwordInput.removeAttribute("required");
+
+        toggleFormText.innerHTML = 'Already have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Login here</span>';
     } else {
+        formTitle.textContent = "Login";
+        authSubmit.textContent = "Login";
+        loginFields.classList.remove("hidden");
+        registerFields.classList.add("hidden");
+
         identifierInput.setAttribute("required", true);
         passwordInput.setAttribute("required", true);
-
         nameInput.removeAttribute("required");
         usernameInput.removeAttribute("required");
         emailInput.removeAttribute("required");
         passwordRegisterInput.removeAttribute("required");
         passwordConfirmInput.removeAttribute("required");
+
+        toggleFormText.innerHTML = 'Don’t have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Register here</span>';
     }
 
     authForm.reset();
 }
 
-// Handle Form Submission
+// Handle form submission
 authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    
+
     const isRegistering = formTitle.textContent === "Register";
 
-    if (isRegistering) {
-        if (passwordRegisterInput.value.trim() !== passwordConfirmInput.value.trim()) {
-            showNotification("Passwords do not match!", false);
-            return;
-        }
+    if (isRegistering && passwordRegisterInput.value.trim() !== passwordConfirmInput.value.trim()) {
+        showNotification("Passwords do not match!", false);
+        return;
     }
 
     const payload = isRegistering ? {
@@ -116,18 +118,18 @@ authForm.addEventListener("submit", async (e) => {
     }
 });
 
-// Auto Switch to Registration if Referral Code Exists
+// Automatically switch to registration if referral code exists in URL
 const urlParams = new URLSearchParams(window.location.search);
 const referralCode = urlParams.get("ref");
 
 if (referralCode) {
-    switchForm(true); // Force open the registration form
+    switchForm(true); // Open registration form
     referralInput.value = referralCode;
 }
 
-// Add Click Event to Toggle Form
+// Toggle between login and registration form when clicking the switch link
 toggleFormText.addEventListener("click", () => {
-    switchForm();
+    switchForm(formTitle.textContent === "Login");
 });
 
 // Auto-hide form if user is already logged in
