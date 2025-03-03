@@ -372,6 +372,66 @@
   .g_id_signin:hover {
     background-color: #1e1e1e !important; /* Slightly lighter on hover */
   }
+    
+/* Container for the notification icon */
+.notification-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Bell icon */
+.bell {
+  font-size: 17px; /* Adjust size as needed */
+  display: inline-block; /* Required for animations */
+}
+
+/* Notification badge */
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: #FF4757; /* Red color for the badge */
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 1px 3px;
+  border-radius: 50%;
+  display: none; /* Hidden by default */
+}
+
+/* Bell shake animation */
+@keyframes shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: rotate(-15deg);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(15deg);
+  }
+}
+
+/* Badge pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Class to enable shake animation */
+.shake {
+  animation: shake 1.5s infinite;
+}
+
+/* Class to enable pulse animation */
+.pulse {
+  animation: pulse 1.5s infinite;
+}
   </style>
 </head>
 <body class="dark min-h-screen bg-gradient-to-b from-dark to-dark-200 text-gray-100 no-select">
@@ -417,12 +477,17 @@
           <!-- POW Information -->
         <div class="mt-4 text-center">
           
-          <p class="text-sm text-gray-400" id="display-username"></p>
+          <p class="text-sm text-gray-400" id="display-username" style="display: none;"></p>
+                        <div class="notification-icon">
+  <span class="bell"><a href="news.html">🔔</a></span>
+  <span class="badge">0</span> <!-- Initial count is 0 -->
+</div>
           
           <div id="dashboard" class="hid den">
-  <h2><span id="username-display"></span></h2>
+  <h2><span id="display-username" class="hidden"></span></h2>
   <p>Bal: <span id="mined-balance"></span></p>
 </div>
+
           <!-- Message Box -->
           <div class="message hidden mt-3 mx-auto max-w-lg bg-dark-200 border border-dark-300 rounded-lg p-3 text-sm text-gray-300" id="message-box">
             <!--  Your activities demonstrate your Proof of Work. The more mining tasks you complete, the greater your rewards.-->
@@ -483,7 +548,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
             <h3 class="text-sm text-gray-400 mb-1">Average Daily Earnings</h3>
-            <p class="text-2xl font-bold text-white">16.20 <span class="text-gold text-lg">MAI</span></p>
+            <p class="text-2xl font-bold text-white">11.45 <span class="text-gold text-lg">MAI</span></p>
             <div class="mt-2 h-1 w-full bg-dark-300 rounded-full overflow-hidden">
               <div class="h-full bg-gradient-to-r from-mining-green to-gold w-2/5 rounded-full"></div>
             </div>

@@ -12,7 +12,33 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => {
             console.error('Service Worker registration failed:', error);
         });
-     /**  
+    
+    // Function to update the notification count
+function updateNotificationCount(count) {
+  const badge = document.querySelector('.badge');
+  const bell = document.querySelector('.bell');
+
+  // Update the badge text
+  badge.textContent = count;
+
+  // Show/hide the badge and toggle animations
+  if (count > 0) {
+    badge.style.display = 'block';
+    bell.classList.add('shake'); // Add shake animation
+    badge.classList.add('pulse'); // Add pulse animation
+  } else {
+    badge.style.display = 'none';
+    bell.classList.remove('shake'); // Remove shake animation
+    badge.classList.remove('pulse'); // Remove pulse animation
+  }
+}
+
+// Example: Update count to 5
+updateNotificationCount(3);
+
+// Example: Reset count to 0 after 60 seconds
+setTimeout(() => updateNotificationCount(0), 60000);
+       
     let miningInterval;
     let countdownInterval;
     let isInitialSync = true; // Flag to track initial sync
@@ -171,8 +197,8 @@ document.addEventListener("DOMContentLoaded", () => {
         restoreMiningSession(userId);
         isInitialSync = false;
     }
-}); **/
-
+});
+/**
 let miningInterval;
 let countdownInterval;
 let isInitialSync = true; // Flag to track initial sync
@@ -388,7 +414,7 @@ async function initializeApp() {
     isInitialSync = false;
 }
 });
-
+**/
 // USER-SPECIFIC STORAGE FUNCTIONS
 
 // Get the current user ID from token
