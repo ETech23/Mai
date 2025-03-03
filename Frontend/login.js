@@ -82,7 +82,7 @@ authForm.addEventListener("submit", async (e) => {
         email: emailInput.value.trim(),
         username: usernameInput.value.trim(),
         password: passwordRegisterInput.value.trim(),
-        referredBy: referralInput.value.trim(), // Include referral code
+        referredBy: referralInput.value.trim() || null, // Ensure referral code is included
     } : {
         identifier: identifierInput.value.trim(),
         password: passwordInput.value.trim(),
@@ -107,7 +107,11 @@ authForm.addEventListener("submit", async (e) => {
                 localStorage.setItem("username", data.username);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("minedBalance", data.balance.toFixed(4));
-                window.location.href = "index.html";
+                
+                // Redirect only after successful login
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 1000);
             }
         } else {
             showNotification(data.message || "Something went wrong!", false);
@@ -124,7 +128,7 @@ const referralCode = urlParams.get("ref");
 
 if (referralCode) {
     switchForm(true); // Open registration form
-    referralInput.value = referralCode;
+    referralInput.value = referralCode; // Prefill referral input
 }
 
 // Toggle between login and registration form when clicking the switch link
