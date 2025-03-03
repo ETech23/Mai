@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch((error) => {
             console.error('Service Worker registration failed:', error);
         });
-       
+     /**  
     let miningInterval;
     let countdownInterval;
     let isInitialSync = true; // Flag to track initial sync
@@ -171,6 +171,222 @@ document.addEventListener("DOMContentLoaded", () => {
         restoreMiningSession(userId);
         isInitialSync = false;
     }
+}); **/
+
+let miningInterval;
+let countdownInterval;
+let isInitialSync = true; // Flag to track initial sync
+
+// Add a debounce function to prevent excessive API calls
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+// Create a more robust sync function that handles failures
+async function robustSync(userId) {
+    if (!navigator.onLine) {
+        console.log("Offline: Saving for later sync");
+        return false;
+    }
+    
+    try {
+        const pendingBalance = getUserPendingBalance(userId);
+        if (pendingBalance) {
+            const result = await syncPendingBalances(userId);
+            console.log("Sync result:", result);
+            return result;
+        }
+        return true;
+    } catch (error) {
+        console.error("Sync failed:", error);
+        return false;
+    }
+}
+
+// Better network status handler with retry logic
+function handleNetworkStatusChange() {
+    const userId = getUserId();
+    if (!userId) return;
+    
+    if (navigator.onLine) {
+        console.log("Online: Attempting to sync pending data");
+        robustSync(userId);
+    } else {
+        console.log("Offline: Mining will continue locally");
+        // Save current timestamp to accurately calculate offline mining later
+        updateUserMiningData(userId, { lastUpdateTime: Date.now().toString() });
+    }
+}
+
+// Setup network status listener
+window.addEventListener('online', handleNetworkStatusChange);
+window.addEventListener('offline', handleNetworkStatusChange);
+
+// Optimize the visibility change handler with debounced sync
+const debouncedSync = debounce(robustSync, 2000);
+
+// Proper sequence for app initialization
+initializeApp();
+
+// Attach Click Event to Mining Button
+if (activateMiningButton) {
+    activateMiningButton.addEventListener("click", () => {
+        const userId = getUserId();
+        if (!userId) {
+            alert("Please log in to start mining.");
+            return;
+        }
+
+        if (getUserMiningStatus(userId)) {
+            alert("Mining is already active!");
+            return;
+        }
+
+        const miningDuration = 60 * 180 * 1000; // 3 hour
+        const miningEndTime = Date.now() + miningDuration;
+        const miningStartTime = Date.now();
+
+        setUserMiningData(userId, {
+            isMiningActive: true,
+            miningProgress: "0",
+            miningEndTime: miningEndTime.toString(),
+            miningStartTime: miningStartTime.toString(),
+            lastUpdateTime: Date.now().toString()
+        });
+
+        startCountdown(miningDuration);
+        startMiningProcess(miningDuration);
+    });
+} else {
+    console.error("Mining button not found! Ensure the button ID is correct.");
+}
+
+// Handle when user comes back to the app
+document.addEventListener("visibilitychange", () => {
+    const userId = getUserId();
+    if (!userId) return;
+    
+    if (document.visibilityState === "visible") {
+        console.log("App is visible again. Syncing data...");
+        
+        // Calculate offline mining first (works even offline)
+        const offlineMined = calculateOfflineMining(userId);
+        const currentBalance = parseFloat(getUserMinedBalance(userId)) || 0;
+        const newBalance = currentBalance + offlineMined;
+        
+        if (offlineMined > 0) {
+            console.log(`Mined ${offlineMined} while away`);
+            setUserMinedBalance(userId, newBalance.toFixed(4));
+            updateUIBalance(newBalance);
+            
+            // Save for later sync if offline
+            if (!navigator.onLine) {
+                savePendingBalance(userId, newBalance);
+            }
+        }
+        
+        // Then attempt backend sync if online
+        if (navigator.onLine) {
+            getBackendBalance().then(backendBalance => {
+                if (backendBalance !== null) {
+                    // If we got a valid backend balance and mined offline
+                    if (offlineMined > 0) {
+                        syncBalanceWithBackend(newBalance, true);
+                    } else {
+                        // Just update UI with backend balance if nothing mined offline
+                        setUserMinedBalance(userId, backendBalance.toFixed(4));
+                        updateUIBalance(backendBalance);
+                    }
+                }
+                
+                // Restore UI state
+                restoreMiningSession(userId);
+            }).catch(error => {
+                console.error("Backend sync failed:", error);
+                // Still restore UI even if backend sync fails
+                restoreMiningSession(userId);
+            });
+        } else {
+            // If offline, just restore the mining session UI
+            restoreMiningSession(userId);
+        }
+        
+        // Update timestamp
+        updateUserMiningData(userId, { lastUpdateTime: Date.now().toString() });
+    } else {
+        // Save last update time when user leaves
+        updateUserMiningData(userId, { lastUpdateTime: Date.now().toString() });
+    }
+});
+
+// Regular check for offline mining and network status - run every 15 seconds
+// Using debounce to prevent too many sync attempts
+const syncCheck = debounce(() => {
+    const userId = getUserId();
+    if (!userId) return;
+    
+    if (document.visibilityState === "visible" && navigator.onLine) {
+        // When visible and online, periodically sync with backend
+        const pendingBalance = getUserPendingBalance(userId);
+        if (pendingBalance) {
+            debouncedSync(userId);
+        }
+    }
+}, 1000);
+
+setInterval(syncCheck, 15000);
+
+// Main App Initialization Function
+async function initializeApp() {
+    const userId = getUserId();
+    if (!userId) {
+        console.log("No user logged in");
+        return;
+    }
+    
+    // First try to get the balance from backend
+    if (navigator.onLine) {
+        try {
+            const backendBalance = await getBackendBalance();
+            
+            if (backendBalance !== null) {
+                // Calculate any offline mining
+                const offlineMined = calculateOfflineMining(userId);
+                console.log(`Backend balance: ${backendBalance}, Offline mined: ${offlineMined}`);
+                
+                // Set the new total balance
+                const newTotalBalance = backendBalance + offlineMined;
+                setUserMinedBalance(userId, newTotalBalance.toFixed(4));
+                
+                // Update UI with the combined balance
+                updateUIBalance(newTotalBalance);
+                
+                // Sync back to backend if we mined while offline
+                if (offlineMined > 0) {
+                    await syncBalanceWithBackend(newTotalBalance, true);
+                }
+            } else {
+                // If backend balance fetch failed, use local
+                updateUIFromStoredValues(userId);
+            }
+        } catch (error) {
+            console.error("Failed to initialize app with backend data:", error);
+            updateUIFromStoredValues(userId);
+        }
+    } else {
+        // Offline mode - just use local storage
+        calculateOfflineMining(userId);
+        updateUIFromStoredValues(userId);
+    }
+    
+    // Always restore mining session
+    restoreMiningSession(userId);
+    isInitialSync = false;
+}
 });
 
 // USER-SPECIFIC STORAGE FUNCTIONS
