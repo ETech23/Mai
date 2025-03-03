@@ -747,7 +747,7 @@ menuIcon.addEventListener("click", async (event) => {  // Add (event) here
 
       // Construct referral link
 
-const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/register?ref=${referralCode}`;
+const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
 
   // Default mining rate
@@ -872,7 +872,7 @@ userInfoDropdown.innerHTML = `
 
 // Define shareOnWhatsApp in the global scope
 function shareOnWhatsApp() {
-  const message = encodeURIComponent("Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: " + referralLink);
+  const message = encodeURIComponent("" + referralLink);
   const whatsappUrl = `whatsapp://send?text=${message}`;
 
   // Try opening WhatsApp directly

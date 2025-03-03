@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mai-cache-v9.10.0';
+const CACHE_NAME = 'mai-cache-v9.11.0';
 const DYNAMIC_CACHE_NAME = 'dynamic-cache-v9.10.0';
 const STATIC_FILES = [
   '/offline.html',
