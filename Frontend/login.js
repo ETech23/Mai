@@ -1,11 +1,18 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const authForm = document.getElementById("auth-form");
+
+    if (localStorage.getItem("token") && authForm) {
+        authForm.classList.add("hidden");
+    }
+});
+
 // DOM Elements
-const formContainer = document.getElementById("form-container");
 const authForm = document.getElementById("auth-form");
-const toggleFormText = document.getElementById("toggle-form");
+const formTitle = document.getElementById("form-title");
 const loginFields = document.getElementById("login-fields");
 const registerFields = document.getElementById("register-fields");
 const authSubmit = document.getElementById("auth-submit");
-const formTitle = document.getElementById("form-title");
+const toggleFormText = document.getElementById("toggle-form");
 const nameInput = document.getElementById("name");
 const usernameInput = document.getElementById("username");
 const emailInput = document.getElementById("email");
@@ -14,7 +21,6 @@ const passwordConfirmInput = document.getElementById("password-confirm");
 const referralInput = document.getElementById("referral-input");
 const identifierInput = document.getElementById("identifier");
 const passwordInput = document.getElementById("password");
-
 const notification = document.getElementById("notification");
 const notificationMessage = document.getElementById("notification-message");
 
@@ -29,7 +35,7 @@ function showNotification(message, isSuccess) {
     }, 3000);
 }
 
-// Function to switch between login and registration form
+// Toggle between login and registration form
 function switchForm(toRegister) {
     if (toRegister) {
         formTitle.textContent = "Register";
@@ -66,7 +72,7 @@ function switchForm(toRegister) {
     authForm.reset();
 }
 
-// Handle form submission
+// Handle login & registration submission
 authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -82,7 +88,7 @@ authForm.addEventListener("submit", async (e) => {
         email: emailInput.value.trim(),
         username: usernameInput.value.trim(),
         password: passwordRegisterInput.value.trim(),
-        referredBy: referralInput.value.trim() || null, // Ensure referral code is included
+        referredBy: referralInput.value.trim() || null,
     } : {
         identifier: identifierInput.value.trim(),
         password: passwordInput.value.trim(),
@@ -93,6 +99,7 @@ authForm.addEventListener("submit", async (e) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
+            credentials: "include"
         });
 
         const data = await response.json();
@@ -100,15 +107,16 @@ authForm.addEventListener("submit", async (e) => {
         if (response.ok) {
             if (isRegistering) {
                 showNotification("Registration successful! You can now log in.", true);
-                switchForm(false); // Switch to login form after successful registration
+                switchForm(false);
             } else {
                 showNotification("Logged in successfully!", true);
+
+                // ✅ Save token properly
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("username", data.username);
                 localStorage.setItem("email", data.email);
                 localStorage.setItem("minedBalance", data.balance.toFixed(4));
-                
-                // Redirect only after successful login
+
                 setTimeout(() => {
                     window.location.href = "index.html";
                 }, 1000);
@@ -122,22 +130,16 @@ authForm.addEventListener("submit", async (e) => {
     }
 });
 
-// Automatically switch to registration if referral code exists in URL
-const urlParams = new URLSearchParams(window.location.search);
-const referralCode = urlParams.get("ref");
-
-if (referralCode) {
-    switchForm(true); // Open registration form
-    referralInput.value = referralCode; // Prefill referral input
-}
-
-// Toggle between login and registration form when clicking the switch link
+// Toggle form switch event
 toggleFormText.addEventListener("click", () => {
     switchForm(formTitle.textContent === "Login");
 });
 
-// Auto-hide form if user is already logged in
-const token = localStorage.getItem("token");
-if (token) {
-    formContainer.classList.add("hidden");
+// Auto-switch to registration if referral code exists
+const urlParams = new URLSearchParams(window.location.search);
+const referralCode = urlParams.get("ref");
+
+if (referralCode) {
+    switchForm(true);
+    referralInput.value = referralCode;
 }

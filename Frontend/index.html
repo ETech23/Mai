@@ -456,7 +456,7 @@
   </button>
   
   <!-- Main Dashboard -->
-  <div class="dashboard hidden w-full min-h-screen flex flex-col" id="dashboard">
+  <div class="dashboard hid den w-full min-h-screen flex flex-col" id="dashboard">
     <!-- Header Section -->
     <header class="bg-dark-100 border-b border-dark-300 p-4 shadow-md">
       <div class="container mx-auto">
@@ -607,14 +607,7 @@
   <div class="form-container hidden" id="form-container"></div>
   
     
-     <!-- Mobile Banner --
-    <div id="mobile-banner">
-        <p>Get the best experience by using our app!</p>
-        <button onclick="redirectToAppOrStore()">Open App</button>
-        <button onclick="window.location.href='https://play.google.com/store/apps/details?id=com.yourapp.package'">Download from Play Store</button>
-        <button onclick="window.location.href='https://yourwebsite.com/path/to/your/app.apk'">Download APK</button>
-    </div>
--->
+     
     
     <script>
      // Retrieve the username from localStorage
@@ -627,42 +620,7 @@
     } else {
       displayUsername.textContent = "Guest"; // Fallback if no username is found
     }
-
-        // Function to check if the user is using a browser
-        function isUsingBrowser() {
-            // Check if the user agent is not a WebView
-            return !/WebView|Android.*wv|iPhone.*wv/i.test(navigator.userAgent);
-        }
-
-        // Function to redirect to the app or app store
-        function redirectToAppOrStore() {
-            const appDeepLink = "yourapp://open"; // Replace with your app's deep link
-            const playStoreLink = "https://play.google.com/store/apps/details?id=com.yourapp.package"; // Replace with your Play Store link
-            const apkDownloadLink = "https://yourwebsite.com/path/to/your/app.apk"; // Replace with your APK download link
-
-            // Attempt to open the app
-            window.location.href = appDeepLink;
-
-            // If the app is not installed, redirect to the Play Store or APK download link after a delay
-            setTimeout(function() {
-                if (confirm("You don't have the app installed. Would you like to download it?")) {
-                    if (navigator.userAgent.includes("Android")) {
-                        window.location.href = playStoreLink; // Redirect to Play Store for Android
-                    } else if (navigator.userAgent.includes("iPhone") || navigator.userAgent.includes("iPad")) {
-                        window.location.href = "https://apps.apple.com/app/id123456789"; // Replace with your App Store link
-                    } else {
-                        window.location.href = apkDownloadLink; // Redirect to APK download for other devices
-                    }
-                }
-            }, 1000); // Wait 1 second before checking if the app opened
-        }
-
-        // Show the banner if the user is using a browser
-        if (isUsingBrowser()) {
-            document.getElementById("mobile-banner").style.display = "block";
-        }
-
-
+                        
 </script>
   <!-- Theme toggle functionality - isolated from your main JavaScript -->
   <script src="main.js"></script>
@@ -1069,39 +1027,113 @@ if (taskButton) {
   let miningProgress = 0;
   let miningInterval;
   let countdownInterval;
-  
-  // **Persistent Login Check**
-  async function checkPersistentLogin() {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await response.json();
-        if (response.ok) {
-          userNameDisplay.textContent = data.username;
-          minedBalanceDisplay.textContent = `${data.balance.toFixed(4)} MAI`;
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("email", data.email);
-          localStorage.setItem("minedBalance", data.balance.toFixed(4));
-          localStorage.setItem("name", data.name);
-          formContainer.classList.add("hidden");
-          dashboard.classList.remove("hidden");
-          restoreMiningSession();
-        } else {
-          alert("Session expired. Please log in again.");
-          localStorage.clear();
-          window.location.reload();
-        }
-      } catch (error) {
-        console.error("Error restoring session:", error);
-        localStorage.clear();
-        window.location.reload();
-      }
+    
+    function restoreMiningSession(userId) {
+    const miningEndTime = parseInt(getUserMiningData(userId, "miningEndTime")) || 0;
+    const now = Date.now();
+
+    if (miningEndTime > now && getUserMiningStatus(userId)) {
+        const remainingTime = miningEndTime - now;
+        startCountdown(remainingTime);
+        startMiningProcess(remainingTime);
+    } else if (miningEndTime <= now && getUserMiningStatus(userId)) {
+        // Mining should have finished while app was closed
+        resetMiningSession(userId, false); // Don't show alert for expired sessions
     }
-  }
+}
+    
+  
+// ✅ Always allow login if token exists in localStorage
+function checkPersistentLogin() {
+    let token = localStorage.getItem("token");
+
+    if (!token) {
+        console.warn("No access token found. User must log in.");
+        return;
+    }
+
+    // ✅ Directly allow user access if token is present
+    document.getElementById("form-container").classList.add("hidden");
+    dashboard.classList.remove("hidden");
+
+    // ✅ Background sync: Fetch latest user data
+    syncUserData();
+}
+
+// ✅ Function to sync user data with backend
+async function syncUserData() {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    try {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            console.warn("Failed to sync user data.");
+            return;
+        }
+
+        const userData = await response.json();
+        localStorage.setItem("username", userData.username);
+        localStorage.setItem("email", userData.email);
+        localStorage.setItem("minedBalance", userData.balance.toFixed(4));
+
+        userNameDisplay.textContent = userData.username;
+        minedBalanceDisplay.textContent = `${userData.balance.toFixed(4)} MAI`;
+
+    } catch (error) {
+        console.error("Error syncing user data:", error);
+    }
+}
+
+
+// ✅ Function to refresh token when it expires
+async function refreshAuthToken() {
+    try {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/refresh", {
+            method: "POST",
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            console.warn("Refresh token request failed.");
+            return null;
+        }
+
+        const data = await response.json();
+        if (data.token) {
+            localStorage.setItem("token", data.token); // Save new access token
+            console.log("Token refreshed successfully.");
+            return data.token;
+        }
+        return null;
+
+    } catch (error) {
+        console.error("Error refreshing token:", error);
+        return null;
+    }
+}
+
+// ✅ Function to check if JWT token is expired
+function isTokenValid(token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expiry = payload.exp * 1000; // Convert to milliseconds
+        return Date.now() < expiry;
+    } catch (error) {
+        console.error("Invalid token format:", error);
+        return false;
+    }
+}
+
   
   // Redirect for desktop users
   const isDesktop = window.innerWidth > 768;
