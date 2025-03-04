@@ -80,7 +80,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "576h" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "90d" });
 
     res.json({
       token,
@@ -154,7 +154,7 @@ router.post("/google/callback", async (req, res) => {
         const backendToken = jwt.sign(
             { userId: user._id },
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "90d" }
         );
 
         // Return the token and user data
