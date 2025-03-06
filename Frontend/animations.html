@@ -3,28 +3,354 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI & Crypto Animations</title>
-  <link rel="stylesheet" href="animations.css">
-  <script src="https://cdn.jsdelivr.net/npm/three@0.138.3/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <title>News Articles</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tiny.cloud/1/YOUR_API_KEY/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .prose img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+    .prose a {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
+    .prose a:hover {
+      color: #2563eb;
+    }
+    .article-card {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      background-color: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .article-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .img-container {
+      overflow: hidden;
+      border-radius: 8px;
+      flex-shrink: 0;
+      width: 5rem;
+      height: 5rem;
+    }
+    .article-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .article-description {
+      color: #4b5563;
+      font-size: 1rem;
+      line-height: 1.5;
+      overflow: visible;
+      display: block;
+      text-overflow: ellipsis;
+    }
+    .article-description::after {
+      content: "...";
+    }
+    body {
+      background-color: #1a202c;
+      color: #e2e8f0;
+    }
+    .main-container {
+      max-width: 36rem;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    .page-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      margin: 1rem 0 2rem 0;
+    }
+  </style>
 </head>
 <body>
-  <div id="animation-container">
-    <!-- AI Animation Section -->
-    <section id="ai-animation">
-      <h2>Artificial Intelligence</h2>
-      <p>Empowering the future with intelligent solutions</p>
-      <div id="ai-particle"></div>
-    </section>
-
-    <!-- Crypto Animation Section -->
-    <section id="crypto-animation">
-      <h2>Cryptocurrency</h2>
-      <p>Revolutionizing the financial world</p>
-      <div id="crypto-particle"></div>
-    </section>
+  <!-- Admin Button -->
+  <div id="admin-button" class="fixed bottom-6 right-6 hidden z-10">
+    <button onclick="openArticleForm()" class="bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition flex items-center">
+      <i class="fas fa-plus mr-2"></i> Create Article
+    </button>
   </div>
 
-  <script src="animations.js"></script>
+  <!-- Article Submission Form (Hidden by Default) -->
+  <div id="article-form-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Create New Article</h2>
+        <button onclick="closeArticleForm()" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <form id="article-form" class="space-y-5">
+        <div>
+          <label for="article-title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+          <input type="text" id="article-title" class="block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required />
+        </div>
+        <div>
+          <label for="article-editor" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+          <textarea id="article-editor" class="block w-full p-3 border border-gray-300 rounded-lg"></textarea>
+        </div>
+        <div>
+          <label for="article-description" class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+          <textarea id="article-description" class="block w-full p-3 border border-gray-300 rounded-lg" rows="3"></textarea>
+        </div>
+        <div>
+          <label for="article-image" class="block text-sm font-medium text-gray-700 mb-1">Image URL (Optional)</label>
+          <input type="text" id="article-image" class="block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+        </div>
+        <div class="flex justify-end space-x-3 mt-8">
+          <button type="button" onclick="closeArticleForm()" class="bg-gray-100 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-200 transition">Cancel</button>
+          <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">Publish Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <h1 class="page-title">Recent News/Updates</h1>
+    
+    <div id="articles" class="space-y-4">
+      <!-- Articles will be dynamically inserted here -->
+    </div>
+    
+    <div class="text-center mt-6 text-blue-400 cursor-pointer" onclick="loadMoreArticles()">
+      <p>More...</p>
+    </div>
+  </div>
+
+  <!-- Article Detail Modal (Hidden by Default) -->
+  <div id="article-detail-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-40 overflow-y-auto">
+    <div class="min-h-screen px-4 text-center">
+      <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform w-full max-w-4xl my-8 mx-auto">
+        <div class="relative p-6">
+          <button onclick="closeArticleDetail()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+          
+          <div class="mb-4">
+            <button onclick="closeArticleDetail()" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition">
+              <i class="fas fa-arrow-left mr-2"></i> Back to articles
+            </button>
+          </div>
+          
+          <h2 id="detail-title" class="text-3xl font-bold mb-3 mt-2 text-gray-800"></h2>
+          <p id="detail-date" class="text-sm text-gray-500 mb-6"></p>
+          
+          <div id="detail-image-container" class="mb-6 hidden">
+            <img id="detail-image" src="" alt="" class="w-full max-h-96 object-cover rounded-lg" />
+          </div>
+          
+          <div id="detail-content" class="prose max-w-none text-gray-800"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample data matching the image
+    const mockArticles = [
+      {
+        id: 1,
+        title: "The Rise of AI Agents: A New Era of Automation",
+        image: "https://via.placeholder.com/128",
+        date: new Date().toISOString(),
+        shortDescription: "The tech world is on the verge of a paradigm shift, with AI agents poised to revolutionize how we work and interact with technology. Unlike traditional automation tools, which often rely on rigid rules",
+        content: "Full article content here..."
+      },
+      {
+        id: 2,
+        title: "The Rise of AI-Generated Art: A New Era of Creativity",
+        image: "https://via.placeholder.com/128",
+        date: new Date().toISOString(),
+        shortDescription: "Artificial intelligence is rapidly transforming the art world, with AI-powered tools now capable of generating stunning and innovative visual works. This technological leap has sparked",
+        content: "Full article content here..."
+      },
+      {
+        id: 3,
+        title: "The Impact of Artificial Intelligence: Transforming Lives, Businesses, and the Global Economy",
+        image: "https://via.placeholder.com/128",
+        date: new Date().toISOString(),
+        shortDescription: "Artificial Intelligence (AI) has rapidly evolved from a futuristic concept to an integral part of daily life, influencing how we live, work, and interact. Its transformative power extends across various",
+        content: "Full article content here..."
+      },
+      {
+        id: 4,
+        title: "Donald Trump as US president and the Impart on crypto and AI Industries",
+        image: "https://via.placeholder.com/128",
+        date: new Date().toISOString(),
+        shortDescription: "Donald Trump's victory in the 2024 U.S. presidential election has sparked significant discussion about its potential effects on the cryptocurrency and artificial intelligence (AI) industries",
+        content: "Full article content here..."
+      },
+      {
+        id: 5,
+        title: "The Mai Project: Rewarding Early Adoption Through AI-Powered Mining",
+        image: "https://via.placeholder.com/128",
+        date: new Date().toISOString(),
+        shortDescription: "The Mai Project represents a groundbreaking venture into the world of artificial intelligence, blockchain, and community-driven platforms. Designed to onboard users seamlessly while rewarding",
+        content: "Full article content here..."
+      }
+    ];
+
+    // Initialize TinyMCE
+    tinymce.init({
+      selector: '#article-editor',
+      height: 400,
+      plugins: 'advlist link image lists code table',
+      toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code',
+      menubar: 'file edit view insert format tools table',
+      content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; }'
+    });
+
+    // Check if user is admin (for demo purposes, hardcoded)
+    const isAdmin = true; // Set this dynamically based on user role
+    if (isAdmin) {
+      document.getElementById('admin-button').classList.remove('hidden');
+    }
+
+    // Open article form
+    function openArticleForm() {
+      document.getElementById('article-form-modal').classList.remove('hidden');
+      document.getElementById('article-form-modal').classList.add('flex');
+    }
+
+    // Close article form
+    function closeArticleForm() {
+      document.getElementById('article-form-modal').classList.add('hidden');
+      document.getElementById('article-form-modal').classList.remove('flex');
+    }
+
+    // Handle form submission
+    document.getElementById('article-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('article-title').value;
+      const content = tinymce.get('article-editor').getContent();
+      const shortDescription = document.getElementById('article-description').value.trim();
+      const image = document.getElementById('article-image').value.trim();
+
+      try {
+        // For demo purposes, we'll just add to our mock data and refresh
+        mockArticles.unshift({
+          id: mockArticles.length + 1,
+          title,
+          content,
+          shortDescription,
+          image: image || "https://via.placeholder.com/128",
+          date: new Date().toISOString()
+        });
+        
+        alert('Article published successfully!');
+        closeArticleForm();
+        document.getElementById('article-title').value = '';
+        tinymce.get('article-editor').setContent('');
+        document.getElementById('article-description').value = '';
+        document.getElementById('article-image').value = '';
+        displayArticles(); // Refresh the article list
+      } catch (error) {
+        console.error('Error submitting article:', error);
+        alert('An error occurred while publishing the article.');
+      }
+    });
+
+    // Function to display articles
+    function displayArticles() {
+      const articlesSection = document.getElementById('articles');
+      articlesSection.innerHTML = ''; // Clear existing articles
+
+      mockArticles.forEach((article) => {
+        const articleElement = document.createElement('div');
+        articleElement.className = 'article-card cursor-pointer';
+        
+        articleElement.innerHTML = `
+          <div class="flex space-x-4">
+            <div class="img-container">
+              <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover" />
+            </div>
+            <div class="article-text">
+              <h3 class="text-xl font-bold mb-2 text-gray-800">${article.title}</h3>
+              <p class="article-description">${article.shortDescription}</p>
+            </div>
+          </div>
+        `;
+        
+        articleElement.addEventListener('click', () => openArticleDetail(article.id));
+        articlesSection.appendChild(articleElement);
+      });
+    }
+
+    // Open article detail
+    function openArticleDetail(articleId) {
+      const article = mockArticles.find(a => a.id === articleId);
+      
+      if (article) {
+        // Set article details
+        document.getElementById('detail-title').textContent = article.title;
+        document.getElementById('detail-date').textContent = new Date(article.date).toLocaleDateString('en-US', {
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric'
+        });
+        document.getElementById('detail-content').innerHTML = article.content;
+        
+        // Handle image display
+        const imageContainer = document.getElementById('detail-image-container');
+        const detailImage = document.getElementById('detail-image');
+        
+        if (article.image) {
+          detailImage.src = article.image;
+          detailImage.alt = article.title;
+          imageContainer.classList.remove('hidden');
+        } else {
+          imageContainer.classList.add('hidden');
+        }
+        
+        // Show the modal
+        document.getElementById('article-detail-modal').classList.remove('hidden');
+        document.getElementById('article-detail-modal').classList.add('flex');
+        
+        // Prevent body scrolling when modal is open
+        document.body.style.overflow = 'hidden';
+      } else {
+        alert('Article not found');
+      }
+    }
+
+    // Close article detail
+    function closeArticleDetail() {
+      document.getElementById('article-detail-modal').classList.add('hidden');
+      document.getElementById('article-detail-modal').classList.remove('flex');
+      
+      // Re-enable body scrolling
+      document.body.style.overflow = '';
+    }
+
+    // Load more articles
+    function loadMoreArticles() {
+      // This would typically fetch more articles from an API
+      alert('This would load more articles in a real application');
+    }
+
+    // Handle Escape key to close modals
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeArticleForm();
+        closeArticleDetail();
+      }
+    });
+
+    // Display articles on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      displayArticles();
+    });
+  </script>
 </body>
 </html>

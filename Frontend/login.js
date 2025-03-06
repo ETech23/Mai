@@ -6,6 +6,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// Extract query parameters from the URL
+const urlParams = new URLSearchParams(window.location.search);
+const referralCode = urlParams.get('ref');
+const redirectToPlayStore = urlParams.get('redirect') === 'playstore';
+
+if (referralCode) {
+  // Save the referral code to local storage or send it to your backend
+  localStorage.setItem('referralCode', referralCode);
+  console.log("Referral code saved:", referralCode);
+
+  if (redirectToPlayStore) {
+    // Redirect to Google Play Store with the referral code
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.example.mai&referrer=${referralCode}`;
+    console.log("Redirecting to Play Store:", playStoreUrl);
+    window.location.href = playStoreUrl;
+  }
+}
+
 // DOM Elements
 const authForm = document.getElementById("auth-form");
 const formTitle = document.getElementById("form-title");
@@ -135,6 +153,7 @@ toggleFormText.addEventListener("click", () => {
     switchForm(formTitle.textContent === "Login");
 });
 
+/**
 // Auto-switch to registration if referral code exists
 const urlParams = new URLSearchParams(window.location.search);
 const referralCode = urlParams.get("ref");
@@ -142,4 +161,4 @@ const referralCode = urlParams.get("ref");
 if (referralCode) {
     switchForm(true);
     referralInput.value = referralCode;
-}
+}**/

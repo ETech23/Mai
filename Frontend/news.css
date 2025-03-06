@@ -1,4 +1,4 @@
-.no-select {
+no-select {
   user-select: none !important; /* Standard property */
   -webkit-user-select: none !important; /* Safari */
   -ms-user-select: none !important; /* Internet Explorer */
@@ -6,9 +6,27 @@
 }
 
 /* Ensure buttons inside non-selectable areas remain clickable */
-.no-select button,
-.no-select a {
+no-select button,
+no-select a {
   pointer-events: auto !important; /* Restore pointer events for buttons and links */
+}
+
+.close-btn {
+  position: absolute;
+  top: 3px;
+  right: 23px;
+  padding: 0 5px;
+  background: #282828;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.close-btn:hover {
+  background: darkred;
 }
 
 .toggle-button {

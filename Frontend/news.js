@@ -115,20 +115,15 @@ async function updatePoints(increment) {
   if (isDesktop && footer) {
     footer.style.display = "none"; // Hide the footer for desktop users
   }
-
 // Toggle full article visibility and handle image resizing
 function toggleFullArticle(article) {
-  // Find the content area and expand it
+  // Find elements
   const content = article.querySelector(".content");
-  if (content) {
-    content.classList.toggle("expanded");
-  }
-
-  // Get the short and full descriptions, image, and title
   const shortDescription = article.querySelector("#short-description");
   const fullDescription = article.querySelector("#full-description");
   const image = article.querySelector("img");
-  
+  let closeButton = article.querySelector(".close-btn");
+
   if (!shortDescription || !fullDescription || !image) {
     console.error("Required elements not found!");
     return;
@@ -136,13 +131,25 @@ function toggleFullArticle(article) {
 
   // Toggle visibility and layout
   if (fullDescription.style.display === "none" || !fullDescription.style.display) {
-    // Show full description
+    // Show full description and expand to full screen
     shortDescription.style.display = "none";
     fullDescription.style.display = "block";
 
+    // Make article take full screen
+    article.style.position = "fixed";
+    article.style.top = "0";
+    article.style.left = "0";
+    article.style.width = "100vw";
+    article.style.height = "100vh";
+    article.style.background = "white";
+    article.style.overflowY = "auto";
+    article.style.zIndex = "1000";
+    article.style.padding = "20px";
+    article.style.boxSizing = "border-box";
+
     // Update image layout for full description
     image.style.width = "100%";
-    image.style.height = "150px";
+    image.style.height = "auto";
     image.style.float = "none";
     image.style.marginRight = "0";
     image.style.marginTop = "10px";
@@ -150,10 +157,31 @@ function toggleFullArticle(article) {
     // Add full-view class
     article.classList.remove("short-view");
     article.classList.add("full-view");
+
+    // Add a close button if it doesn’t exist
+    if (!closeButton) {
+      closeButton = document.createElement("button");
+      closeButton.textContent = "x";
+      closeButton.classList.add("close-btn");
+      closeButton.onclick = () => foldBackContent(event);
+      article.appendChild(closeButton);
+    }
   } else {
-    // Show short description
+    // Show short description and revert layout
     shortDescription.style.display = "block";
     fullDescription.style.display = "none";
+
+    // Reset article layout
+    article.style.position = "";
+    article.style.top = "";
+    article.style.left = "";
+    article.style.width = "";
+    article.style.height = "";
+    article.style.background = "";
+    article.style.overflowY = "";
+    article.style.zIndex = "";
+    article.style.padding = "";
+    article.style.boxSizing = "";
 
     // Update image layout for short description
     image.style.width = "150px";
@@ -165,9 +193,13 @@ function toggleFullArticle(article) {
     // Add short-view class
     article.classList.remove("full-view");
     article.classList.add("short-view");
+
+    // Remove the close button
+    if (closeButton) {
+      closeButton.remove();
+    }
   }
 }
-
 // Attach click event listener to the entire article (except like/love buttons)
 document.querySelectorAll(".news-article").forEach(article => {
   article.addEventListener("click", function(event) {

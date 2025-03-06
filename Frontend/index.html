@@ -16,23 +16,7 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="./social/MaiLogo175.png" type="image/png">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script>
-      function handleCredentialResponse(response) {
-    const jwtToken = response.credential;
-    
-    // Decode the JWT token to get user details
-    const userData = JSON.parse(atob(jwtToken.split('.')[1]));
 
-    console.log("User Data:", userData);
-    
-    // Example: Display user info
-    document.getElementById("user-info").innerHTML = `
-        <h3>Welcome, ${userData.name}</h3>
-        <img src="${userData.picture}" alt="Profile Image">
-        <p>Email: ${userData.email}</p>
-    `;
-}
-  </script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -256,7 +240,15 @@
   position: fixed;
   bottom: 60px;
   right: 20px;
-  background-color: #28a745; /* Green background */
+  background: linear-gradient(
+    to right,
+    #28a745,
+    #232B3C,
+    #FFD700,
+    #0A101D,
+    #28a745
+  );
+  backgroundcolor: #28a745; /* Green background */
   color: white;
   border: none;
   border-radius: 50%;
@@ -294,84 +286,9 @@
     .no-select a {
       pointer-events: auto !important;
     }
-  
-   /* General styles for the banner */
-        #mobile-banner {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #0a3d1e, #1a1c2e);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
 
-        #mobile-banner p {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-            font-weight: bold;
-        }
 
-        /* Button styles */
-        #mobile-banner button {
-            background: white;
-            color: #1a5c2e;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        #mobile-banner button:hover {
-            background: #f0f0f0;
-            transform: scale(1.05);
-        }
-
-        #mobile-banner button:active {
-            transform: scale(0.95);
-        }
-
-        /* Responsive design */
-        @media (max-width: 600px) {
-            #mobile-banner {
-                padding: 10px;
-            }
-
-            #mobile-banner p {
-                font-size: 14px;
-            }
-
-            #mobile-banner button {
-                padding: 8px 16px;
-                font-size: 12px;
-            }
-        }
-
-    
-  /* Custom background color for the button */
-  .g_id_signin {
-    background-color: #121212 !important; /* Dark background */
-    border: 1px solid #333 !important; /* Dark border */
-    border-radius: 4px !important; /* Rounded corners */
-  }
-
-  /* Custom text color */
-  .g_id_signin div {
-    color: #ffffff !important; /* White text */
-  }
-
-  /* Custom hover effect */
-  .g_id_signin:hover {
-    background-color: #1e1e1e !important; /* Slightly lighter on hover */
-  }
+ 
     
 /* Container for the notification icon */
 .notification-icon {
@@ -579,9 +496,8 @@
           <p id="mining-countdown" class="text-xl font-medium text-center">Next session in: --:--:--</p>
           
           <!-- Mining Button -->
-          <button id="activate-mining" class="bg-gradient-to-r from-mining-green to-mining-accent text-white py-3 px-8 rounded-full font-medium text-lg shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-3">
-            <i class="fa-solid fa-bolt"></i>
-            Activate Mining
+          <button id="activate-mining" class="bg-gradient-to-r from-mining-green to-mining-accent text-white py-3 px-5 rounded-full font-medium text-lg shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-1">
+            <i class="fa-solid fa-bolt"></i>Activate Mining
           </button>
         </div>
         <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
@@ -620,6 +536,8 @@
     } else {
       displayUsername.textContent = "Guest"; // Fallback if no username is found
     }
+  
+  
                         
 </script>
   <!-- Theme toggle functionality - isolated from your main JavaScript -->
@@ -704,9 +622,12 @@ menuIcon.addEventListener("click", async (event) => {  // Add (event) here
     else streakLevel = "Master";
 
       // Construct referral link
-
+const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}&redirect=playstore`;
+console.log("Referral link constructed:", referralLink);
+      
+      /**
 const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}`;
-    console.log("Referral link constructed:", referralLink);
+    console.log("Referral link constructed:", referralLink);**/
 
   // Default mining rate
 const defaultRate = 0.0005;
