@@ -50,6 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const MINING_DURATION = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
     const SYNC_INTERVAL = 30 * 1000; // Sync every 30 seconds
     const UPDATE_INTERVAL = 1000; // Update UI every second
+    const MAX_RETRIES = 5; // Maximum number of retries for priority sync
+    const RETRY_DELAY = 5000; // Delay between retries in milliseconds
     
     // Setup network status listener
     window.addEventListener('online', handleNetworkStatusChange);
@@ -535,58 +537,68 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Enhanced Sync Balance with Backend with priority flag
-    async function syncBalanceWithBackend(balance, isPriority = false) {
-        const token = localStorage.getItem("token");
-        const userId = getUserId();
-        if (!token || !userId) return false;
-        
-        // Skip if balance is invalid
-        if (isNaN(balance) || balance < 0) {
-            console.error(`Invalid balance for sync: ${balance}`);
-            return false;
-        }
-        
-        // Log sync attempt
-        console.log(`Attempting to sync balance for user ${userId}: ${balance.toFixed(4)} (Priority: ${isPriority})`);
+    
 
-        try {
-            const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ balance: parseFloat(balance.toFixed(4)) }),
-            });
-
-            if (!response.ok) {
-                console.error(`Backend update failed with status: ${response.status}`);
-                throw new Error("Backend update failed");
-            }
-
-            console.log(`Balance successfully updated to backend for user ${userId}: ${balance.toFixed(4)}`);
-            removeUserPendingBalance(userId);
-            
-            // Record last successful sync time
-            updateUserMiningData(userId, { lastSuccessfulSync: Date.now().toString() });
-            
-            return true;
-        } catch (error) {
-            console.error(`Failed to sync balance with backend for user ${userId}:`, error);
-            savePendingBalance(userId, balance);
-            
-            // If this was a priority sync, try again after a short delay
-            if (isPriority && navigator.onLine) {
-                console.log(`Will retry priority sync for user ${userId} after 5 seconds`);
-                setTimeout(() => {
-                    syncBalanceWithBackend(balance, true);
-                }, 5000);
-            }
-            
-            return false;
-        }
+// Enhanced Sync Balance with Backend with retry mechanism
+async function syncBalanceWithBackend(balance, isPriority = false, retryCount = 0, maxRetries = 5) {
+    const token = localStorage.getItem("token");
+    const userId = getUserId();
+    if (!token || !userId) return false;
+    
+    // Skip if balance is invalid
+    if (isNaN(balance) || balance < 0) {
+        console.error(`Invalid balance for sync: ${balance}`);
+        return false;
     }
+    
+    // Log sync attempt with retry information
+    console.log(`Attempting to sync balance for user ${userId}: ${balance.toFixed(4)} (Priority: ${isPriority}, Attempt: ${retryCount + 1}/${maxRetries + 1})`);
+
+    try {
+        const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ balance: parseFloat(balance.toFixed(4)) }),
+        });
+
+        if (!response.ok) {
+            console.error(`Backend update failed with status: ${response.status}`);
+            throw new Error(`Backend update failed with status: ${response.status}`);
+        }
+
+        console.log(`Balance successfully updated to backend for user ${userId}: ${balance.toFixed(4)}`);
+        removeUserPendingBalance(userId);
+        
+        // Record last successful sync time
+        updateUserMiningData(userId, { lastSuccessfulSync: Date.now().toString() });
+        
+        return true;
+    } catch (error) {
+        console.error(`Failed to sync balance with backend for user ${userId} (Attempt ${retryCount + 1}/${maxRetries + 1}):`, error);
+        savePendingBalance(userId, balance);
+        
+        // Retry logic - either for priority sync or if within retry limits
+        if (navigator.onLine && (isPriority || retryCount < maxRetries)) {
+            const nextRetryCount = retryCount + 1;
+            const isStillPriority = isPriority && nextRetryCount >= maxRetries;
+            
+            console.log(`Will retry sync for user ${userId} after 5 seconds (Attempt ${nextRetryCount + 1}/${maxRetries + 1})`);
+            
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(syncBalanceWithBackend(balance, isStillPriority, nextRetryCount, maxRetries));
+                }, 5000);
+            });
+        }
+        
+        return false;
+    }
+}
+
+syncBalanceWithBackend(balance, true); 
 
     // Enhanced Save Pending Balance
     function savePendingBalance(userId, balance) {

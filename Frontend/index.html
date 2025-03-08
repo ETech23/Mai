@@ -520,7 +520,15 @@
   <p class="text-lg font-medium text-white flex items-center">
     <span class="w-3 h-3 rounded-full bg-mining-green mr-2 animate-pulse"></span>
     Active
-    <span class="ml-auto underline text-mining-green"><a href="token.html" style="color: #CCAA00;">Tokenomics</a></span>
+    <span class="ml-auto underline text-mining-green">
+  <a href="token.html" style="color: #CCAA00;" class="flex items-center gap-1">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign">
+      <line x1="12" y1="1" x2="12" y2="23"></line>
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+    </svg>
+    Tokenomics
+  </a>
+</span>
   </p>
 </div>
       </div>
@@ -654,8 +662,9 @@ const defaultRate = 0.0005;
 // Calculate the bonus multiplier based on referrals (5% per referral)
 const referralBonus = 1 + (referralCount * 0.05); // 5% boost per referral
       
-      // Optional: Cap the referral bonus multiplier to prevent extreme boosts
-const cappedReferralBonus = Math.min(referralBonus, 2); // Max 100% bonus
+       
+// Optional: Cap the referral bonus multiplier to prevent extreme boosts
+const cappedReferralBonus = Math.min(referralBonus, 5); // Max 500% bonus (5x multiplier)
 
 // Calculate the dynamic mining rate
 const miningRate = defaultRate * cappedReferralBonus;
