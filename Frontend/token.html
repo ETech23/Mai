@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Mining Works on the MAI Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #111827;
+    }
+    .article-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    h1, h2, h3 {
+      color: green;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.75rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    p, li {
+      color: #374151;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    .math {
+      font-size: 1rem;
+      color: #CCAA00;
+      background-color: #f3f4f6;
+      padding: 0;
+      border-radius: 0.375rem;
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      margin: 0.5rem 0;
+    }
+    .example {
+      background-color: #f3f4f6;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+    .example p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="article-container">
+    <h1>How Mining Works on the MAI Platform</h1>
+    <p>The MAI Platform introduces a unique mining mechanism designed to reward early adopters while ensuring a fair and sustainable distribution of MAI tokens. This article provides a detailed explanation of the mining process, including the base rate, referral bonuses, and rate adjustments based on user milestones.</p>
+
+    <h2>Base Mining Rate</h2>
+    <p>The mining process begins with a <strong>base rate</strong> of <strong>0.0005 MAI tokens per mining action</strong>. This rate is fixed for the first <strong>100,000 users</strong> on the platform. Each user earns tokens based on their mining activity, with the base rate serving as the starting point for all calculations.</p>
+
+    <h2>Referral Bonuses</h2>
+    <p>To incentivize user growth and community engagement, the MAI Platform offers a <strong>5% referral bonus</strong> for each successful referral. This bonus is applied to the base rate, increasing the mining rate for users who actively invite others to join the platform.</p>
+    <p>The mining rate for a user with referrals can be calculated using the following formula:</p>
+    <div class="math">
+      \[
+      \begin{split}
+      \text{Mining Rate} &= \text{Base Rate} \\
+      &\quad \times (1 + 0.05 \times \text{Number of Referrals})
+      \end{split}
+      \]
+    </div>
+    <div class="example">
+      <p><strong>Example:</strong></p>
+      <p>If a user has <strong>3 referrals</strong>, their mining rate would be:</p>
+      <div class="math">
+        \[
+        \begin{split}
+        \text{Mining Rate} &= 0.0005 \\
+        &\quad \times (1 + 0.05 \times 3) \\
+        &= 0.0005 \times 1.15 \\
+        &= 0.000575 \, \text{MAI per mining action}
+        \end{split}
+        \]
+      </div>
+    </div>
+
+    <h2>Rate Adjustments Based on User Milestones</h2>
+    <p>To ensure a fair distribution of tokens and align with the platform’s long-term sustainability, the mining rate is adjusted in a <strong>descending order</strong> as the number of users grows. These adjustments occur at specific user milestones:</p>
+    <ul>
+      <li><strong>First 100,000 Users:</strong> Base Rate: <strong>0.0005 MAI per mining action</strong>.</li>
+      <li><strong>100,001 to 1,000,000 Users:</strong> Base Rate: <strong>0.00025 MAI per mining action</strong>.</li>
+      <li><strong>1,000,001 to 5,000,000 Users:</strong> Base Rate: <strong>0.000125 MAI per mining action</strong>.</li>
+      <li><strong>Beyond 5,000,000 Users:</strong> The base rate will continue to adjust in a similar descending pattern until the <strong>total supply of 10 billion MAI tokens</strong> is reached.</li>
+    </ul>
+    <div class="example">
+      <p><strong>Example:</strong></p>
+      <p>If a user joins when the platform has <strong>150,000 users</strong>, their base rate would be <strong>0.00025 MAI per mining action</strong>. If they have <strong>2 referrals</strong>, their mining rate would be:</p>
+      <div class="math">
+        \[
+        \begin{split}
+        \text{Mining Rate} &= 0.00025 \\
+        &\quad \times (1 + 0.05 \times 2) \\
+        &= 0.00025 \times 1.10 \\
+        &= 0.000275 \, \text{MAI per mining action}
+        \end{split}
+        \]
+      </div>
+    </div>
+
+    <h2>Total Supply and Sustainability</h2>
+    <p>The MAI Platform is designed with a <strong>total supply of 10 billion MAI tokens</strong>. The mining mechanism ensures that tokens are distributed gradually and fairly, with rate adjustments preventing rapid depletion of the supply. This approach balances early adopter rewards with long-term platform sustainability.</p>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>The <strong>base mining rate</strong> starts at <strong>0.0005 MAI per mining action</strong> for the first 100,000 users.</li>
+      <li>Users can increase their mining rate by <strong>5% per referral</strong>, calculated using the formula:
+        <div class="math">
+          \[
+          \begin{split}
+          \text{Mining Rate} &= \text{Base Rate} \\
+          &\quad \times (1 + 0.05 \times \text{Number of Referrals})
+          \end{split}
+          \]
+        </div>
+      </li>
+      <li>The base rate adjusts in a <strong>descending order</strong> at user milestones (e.g., 100,000, 1,000,000, 5,000,000) to ensure fair distribution.</li>
+      <li>The total supply is capped at <strong>10 billion MAI tokens</strong>, with the mining mechanism designed to sustain token distribution over time.</li>
+    </ul>
+    <!--
+    <h2>Conclusion</h2>
+    <p>The MAI Platform’s mining mechanism is a carefully designed system that rewards early adopters, encourages community growth through referrals, and ensures a sustainable token distribution model. By adjusting the mining rate at key user milestones, the platform maintains a balance between incentivizing participation and preserving the long-term value of MAI tokens.</p>
+    <p>For more information, visit the MAI Platform and start mining today!</p>-->
+  </div>
+</body>
+</html>

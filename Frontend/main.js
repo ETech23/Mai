@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
     
+    
     // Function to update the notification count
     function updateNotificationCount(count) {
         const badge = document.querySelector('.badge');
