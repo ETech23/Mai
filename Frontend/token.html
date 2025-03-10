@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAI Platform Mining App</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -35,9 +35,22 @@
     .sliding-enter.active {
       max-height: 500px;
     }
+  
+  /* Disable text selection */
+    .no-select {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -ms-user-select: none !important;
+      -moz-user-select: none !important;
+    }
+    /* Ensure buttons remain clickable */
+    .no-select button,
+    .no-select a {
+      pointer-events: auto !important;
+    }
   </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 no-select">
   <div class="max-w-4xl mx-auto pb-16">
     <!-- App Header -->
     <header class="b g-green-600 text-white p-4 rounded-b-lg shadow-md" style="background-color: #050811">
