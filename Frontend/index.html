@@ -16,54 +16,6 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="./social/MaiLogo175.png" type="image/png">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            dark: {
-              DEFAULT: '#121212',
-              100: '#1a1a1a',
-              200: '#282828',
-              300: '#3d3d3d',
-            },
-            gold: {
-              DEFAULT: '#FFD700',
-              100: '#FFF0A0',
-              200: '#B8860B',
-            },
-            silver: {
-              DEFAULT: '#C0C0C0',
-              100: '#E6E6E6',
-              200: '#A9A9A9',
-            },
-            copper: {
-              DEFAULT: '#B87333',
-              100: '#CD7F32',
-              200: '#A55D35',
-            },
-            mining: {
-              green: '#4caf50',
-              accent: '#2C3E30',
-            }
-          },
-          animation: {
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'float': 'floating 3s ease-in-out infinite',
-          },
-          keyframes: {
-            floating: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-10px)' },
-            }
-          }
-        }
-      }
-    }
-  
-  </script>
   <style>
     /* Custom styles that complement Tailwind */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -514,7 +466,9 @@
           <button id="activate-mining" class="bg-gradient-to-r from-mining-green to-mining-accent text-white py-3 px-5 rounded-full font-medium text-lg shadow-lg transform transition-all duration-300 hover:scale-105 flex items-center gap-1">
             <i class="fa-solid fa-bolt"></i>Activate Mining
           </button>
+          
         </div>
+        <small style="padding: 12px;">Learn blockchain concepts through simulated mining.</small>
         <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
   <h3 class="text-sm text-gray-400 mb-1">Network status</h3>
   <p class="text-lg font-medium text-white flex items-center">

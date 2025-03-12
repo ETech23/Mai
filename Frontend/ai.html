@@ -1,33 +1,1530 @@
+<!--
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI & Crypto Animations</title>
-  <link rel="stylesheet" href="ai.css">
-  <script src="ai.js" defer></script>
+  <title>Mai Miner - Advanced Blockchain Mining Simulator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff9500;
+      --primary-dark: #e67700;
+      --secondary: #0066ff;
+      --dark: #121212;
+      --darker: #0a0a0a;
+      --card: #1e1e1e;
+      --card-hover: #252525;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: var(--text-primary);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 149, 0, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(0, 102, 255, 0.05) 0%, transparent 20%);
+      background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background-color: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+      transform: translateY(-2px);
+      background-color: var(--card-hover);
+    }
+
+    .card-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-primary {
+      background-color: rgba(255, 149, 0, 0.15);
+      color: var(--primary);
+    }
+
+    .badge-secondary {
+      background-color: rgba(0, 102, 255, 0.15);
+      color: var(--secondary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      gap: 0.5rem;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #000;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .progress-container {
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      width: 0%;
+      transition: width 0.5s linear;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .mining-rig {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto;
+    }
+
+    .mining-rig img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    @keyframes mining-active {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(255, 149, 0, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 149, 0, 0);
+      }
+    }
+
+    .mining-active .mining-rig::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: transparent;
+      animation: mining-active 2s infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .spin {
+      animation: spin 10s linear infinite;
+    }
+
+    .mining-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mining-active .mining-overlay {
+      opacity: 1;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .leaderboard-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .leaderboard-rank {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-right: 1rem;
+    }
+
+    .rank-1 {
+      background-color: rgba(255, 215, 0, 0.15);
+      color: gold;
+    }
+
+    .rank-2 {
+      background-color: rgba(192, 192, 192, 0.15);
+      color: silver;
+    }
+
+    .rank-3 {
+      background-color: rgba(205, 127, 50, 0.15);
+      color: #cd7f32;
+    }
+
+    .rank-other {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Token animation */
+    @keyframes tokenFall {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+    }
+
+    .token-particle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      opacity: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Custom tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 1rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Upgrade items */
+    .upgrade-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.03);
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .upgrade-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .upgrade-icon {
+      width: 48px;
+      height: 48px;
+      background-color: rgba(255, 149, 0, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .upgrade-info {
+      flex: 1;
+    }
+
+    .upgrade-cost {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--card);
+      color: var(--text-primary);
+      text-align: center;
+      border-radius: 8px;
+      padding: 0.5rem;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Notifications */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--card);
+      border-left: 4px solid var(--primary);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      max-width: 300px;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: var(--card);
+      border-radius: 16px;
+      max-width: 500px;
+      width: 90%;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    .close-button:hover {
+      color: var(--text-primary);
+    }
+
+    /* Toast notification for tokens */
+    .token-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--card);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .token-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .token-toast-icon {
+      background-color: rgba(255, 149, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Dark mode toggle */
+    .theme-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+    }
+
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .theme-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .theme-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .theme-slider {
+      background-color: var(--primary);
+    }
+
+    input:checked + .theme-slider:before {
+      transform: translateX(24px);
+    }
+  </style>
 </head>
-<body>
-  <div class="no-select">
-  <div class="animation-container">
-    <br>
-    <h4>Coming Soon...</h4>
-    <!-- AI Animation Section -->
-    <section class="ai-section">
-      <h1>The Future of AI & Crypto</h1><br>
-      <div class="ai-animation"></div><br>
-      <p>Experience the power of artificial intelligence and blockchain technology.</p>
-    </section>
-    
-    <!-- Ice Falling Animation Container -->
-    <div class="ice-container"></div>
-    
-    <!-- Interactive Call to Action -->
-    <section class="cta-section">
-      <h3>Join the Future Today</h3>
-      <button id="explore-button">Explore Now</button>
-    </section>
+<body class="min-h-screen">
+  <div id="notification" class="notification">
+    <div class="flex items-center gap-3">
+      <i class="fas fa-info-circle text-yellow-500"></i>
+      <div>
+        <h4 class="font-semibold text-sm">Notification</h4>
+        <p id="notification-message" class="text-gray-400 text-xs"></p>
+      </div>
+    </div>
   </div>
+
+  <div id="token-toast" class="token-toast">
+    <div class="token-toast-icon">
+      <i class="fas fa-coins"></i>
+    </div>
+    <div>
+      <div class="font-medium">+<span id="earned-tokens">0</span> MAI Tokens</div>
+      <div class="text-sm text-gray-400">Added to your wallet</div>
+    </div>
   </div>
+
+  <nav class="bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg py-4 sticky top-0 z-10 border-b border-white border-opacity-5">
+    <div class="app-container flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center">
+          <i class="fas fa-microchip text-black"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-white">Mai<span class="text-yellow-500">Miner</span></h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="badge badge-primary" id="online-users">
+          <i class="fas fa-users mr-2"></i> 258 Miners Online
+        </div>
+        <label class="theme-switch">
+          <input type="checkbox" id="theme-toggle" checked>
+          <span class="theme-slider"></span>
+        </label>
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-container py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column - Mining Rig -->
+      <div class="lg:col-span-2">
+        <section class="mb-6">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-lg font-semibold">Mining Operation</h2>
+              <div class="badge badge-primary" id="mining-status">
+                <i class="fas fa-circle text-xs mr-1"></i> Idle
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div id="mining-container" class="mining-rig">
+                    <img src="https://i.imgur.com/VGE2JIr.png" alt="Mining Rig" class="spin">
+                    <div class="mining-overlay">
+                      <i class="fas fa-bolt text-yellow-500 text-2xl"></i>
+                    </div>
+                  </div>
+                  <div class="text-center mt-4">
+                    <h3 class="text-lg font-medium" id="rig-name">Basic Mining Rig</h3>
+                    <p class="text-gray-400 text-sm">Level <span id="rig-level">1</span></p>
+                  </div>
+                </div>
+                <div class="flex flex-col justify-between">
+                  <div>
+                    <div class="flex justify-between items-center mb-2">
+                      <div class="text-gray-400 text-sm">Mining Progress</div>
+                      <div class="text-sm font-medium"><span id="mining-timer">0</span>s</div>
+                    </div>
+                    <div class="progress-container mb-4">
+                      <div id="mining-progress" class="progress-bar"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <div class="text-xs text-gray-400 mb-1">Mining Rate</div>
+                        <div class="font-semibold"><span id="mining-rate">0.0005</span> MAI/s</div>
+                      </div>
+                      <div>
+                        <div class="text-xs text-gray-400 mb-1">Efficiency</div>
+                        <div class="font-semibold"><span id="efficiency">100</span>%</div>
+                      </div>
+                      <div>
+                        <div class="text-xs text-gray-400 mb-1">Network Difficulty</div>
+                        <div class="font-semibold" id="difficulty">Low</div>
+                      </div>
+                      <div>
+                        <div class="text-xs text-gray-400 mb-1">Power Usage</div>
+                        <div class="font-semibold" id="power-usage">150W</div>
+                      </div>
+                    </div>
+                  </div>
+                  <button id="mine-button" class="btn btn-primary w-full">
+                    <i class="fas fa-play-circle mr-2"></i> Start Mining
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-6">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-lg font-semibold">Upgrades & Research</h2>
+              <div class="badge badge-secondary">
+                <i class="fas fa-bolt mr-1"></i> Boost Productivity
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="tabs">
+                <div class="tab active" data-tab="hardware">Hardware</div>
+                <div class="tab" data-tab="software">Software</div>
+                <div class="tab" data-tab="research">Research</div>
+              </div>
+              
+              <div id="hardware" class="tab-content active">
+                <div class="upgrade-item" data-upgrade="gpu">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-microchip"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">GPU Upgrade</div>
+                      <div class="upgrade-cost">50 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+15% mining speed</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="cooling">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-wind"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Cooling System</div>
+                      <div class="upgrade-cost">75 MAI</div>
+                    </div>
+                  <!--  <div class="text-sm text-gray-400 mt-1">+10% efficiency, -5% power usage</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="power">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-bolt"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Power Supply</div>
+                      <div class="upgrade-cost">100 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+20% stability, +5% mining speed</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="software" class="tab-content">
+                <div class="upgrade-item" data-upgrade="driver">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-code"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Driver Optimization</div>
+                      <div class="upgrade-cost">30 MAI</div>
+                    </div> -->
+                    <!--   <div class="text-sm text-gray-400 mt-1">+8% mining speed</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="algorithm">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-calculator"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Algorithm Optimization</div>
+                      <div class="upgrade-cost">60 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+12% efficiency</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="research" class="tab-content">
+                <div class="upgrade-item" data-upgrade="blockchain">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-cubes"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Blockchain Research</div>
+                      <div class="upgrade-cost">120 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+15% earnings from mining</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="quantum">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-atom"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Quantum Computing</div>
+                      <div class="upgrade-cost">250 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+25% mining speed, +10% efficiency</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div> -->
+<div class="text-sm text-gray-400 mt-1">+10% efficiency, -5% power usage</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="power">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-bolt"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Power Supply</div>
+                      <div class="upgrade-cost">100 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+20% mining capacity, +5% efficiency</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="software" class="tab-content">
+                <div class="upgrade-item" data-upgrade="algorithm">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-code"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Mining Algorithm</div>
+                      <div class="upgrade-cost">60 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+12% mining speed, +5% token reward</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="optimization">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-chart-line"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">System Optimization</div>
+                      <div class="upgrade-cost">90 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+15% efficiency, -10% power usage</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="research" class="tab-content">
+                <div class="upgrade-item" data-upgrade="advanced">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-atom"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Advanced Materials</div>
+                      <div class="upgrade-cost">150 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+25% mining capacity, +10% efficiency</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="upgrade-item" data-upgrade="quantum">
+                  <div class="upgrade-icon">
+                    <i class="fas fa-network-wired"></i>
+                  </div>
+                  <div class="upgrade-info">
+                    <div class="flex justify-between">
+                      <div class="font-medium">Quantum Processing</div>
+                      <div class="upgrade-cost">250 MAI</div>
+                    </div>
+                    <div class="text-sm text-gray-400 mt-1">+50% mining speed, +25% token reward</div>
+                    <div class="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden w-full">
+                      <div class="h-full bg-yellow-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      
+      <!-- Right Column - Stats and Leaderboard -->
+      <div>
+        <!-- Wallet -->
+        <section class="mb-6">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-lg font-semibold">Your Wallet</h2>
+              <div class="tooltip">
+                <i class="fas fa-info-circle text-gray-400"></i>
+                <span class="tooltip-text">MAI tokens can be used for upgrades and trading</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="flex flex-col items-center">
+                <div class="mining-rig" style="width: 100px; height: 100px;">
+                  <img src="https://i.imgur.com/8rXcml5.png" alt="MAI Token" class="w-full h-full">
+                </div>
+                <div class="mt-4 text-center">
+                  <div class="text-xs text-gray-400">BALANCE</div>
+                  <div class="stat-value" id="token-balance">0.0000</div>
+                  <div class="text-sm text-gray-400 mt-1">MAI Token</div>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4 mt-6">
+                <button class="btn btn-outline w-full">
+                  <i class="fas fa-exchange-alt mr-2"></i> Trade
+                </button>
+                <button class="btn btn-outline w-full">
+                  <i class="fas fa-arrow-up mr-2"></i> Deposit
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Stats -->
+        <section class="mb-6">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-lg font-semibold">Mining Stats</h2>
+              <div class="badge badge-secondary">
+                <i class="fas fa-chart-bar mr-1"></i> Analytics
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="grid grid-cols-2 gap-6">
+                <div class="text-center">
+                  <div class="text-xs text-gray-400 mb-1">Total Mined</div>
+                  <div class="font-semibold text-xl" id="total-mined">0.0000</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-xs text-gray-400 mb-1">Daily Potential</div>
+                  <div class="font-semibold text-xl" id="daily-potential">0.0000</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-xs text-gray-400 mb-1">Blocks Found</div>
+                  <div class="font-semibold text-xl" id="blocks-found">0</div>
+                  <div class="text-xs text-gray-400">Blocks</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-xs text-gray-400 mb-1">Uptime</div>
+                  <div class="font-semibold text-xl" id="uptime">0:00:00</div>
+                  <div class="text-xs text-gray-400">HH:MM:SS</div>
+                </div>
+              </div>
+              <div class="mt-6">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="text-xs text-gray-400">Network Hashrate</div>
+                  <div class="text-xs font-medium" id="network-hashrate">2.5 TH/s</div>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: 65%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Leaderboard -->
+        <section class="mb-6">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="text-lg font-semibold">Top Miners</h2>
+              <div class="badge badge-primary">
+                <i class="fas fa-trophy mr-1"></i> Leaderboard
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank rank-1">1</div>
+                <div class="avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium">CryptoKing</div>
+                  <div class="text-xs text-gray-400">Level 32 Miner</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-semibold">128.4500</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+              </div>
+              
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank rank-2">2</div>
+                <div class="avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium">BlockQueen</div>
+                  <div class="text-xs text-gray-400">Level 29 Miner</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-semibold">98.7321</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+              </div>
+              
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank rank-3">3</div>
+                <div class="avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium">HashMaster</div>
+                  <div class="text-xs text-gray-400">Level 26 Miner</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-semibold">87.1245</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+              </div>
+              
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank rank-other">4</div>
+                <div class="avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium">BlockExplorer</div>
+                  <div class="text-xs text-gray-400">Level 22 Miner</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-semibold">65.9872</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+              </div>
+              
+              <div class="leaderboard-item">
+                <div class="leaderboard-rank rank-other">5</div>
+                <div class="avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium">MiningPro</div>
+                  <div class="text-xs text-gray-400">Level 19 Miner</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-semibold">52.4481</div>
+                  <div class="text-xs text-gray-400">MAI</div>
+                </div>
+              </div>
+              
+              <div class="mt-4 text-center">
+                <button class="btn btn-outline w-full">
+                  <i class="fas fa-users mr-2"></i> View All Miners
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div id="upgrade-modal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="text-lg font-semibold" id="modal-title">Upgrade</h3>
+        <button class="close-button" id="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="modal-description">Are you sure you want to purchase this upgrade?</p>
+        <div class="mt-4 border-t border-gray-700 pt-4">
+          <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-400">Current Balance:</div>
+            <div class="font-medium" id="modal-balance">0.0000 MAI</div>
+          </div>
+          <div class="flex justify-between items-center mt-2">
+            <div class="text-sm text-gray-400">Upgrade Cost:</div>
+            <div class="font-medium text-yellow-500" id="modal-cost">0.0000 MAI</div>
+          </div>
+          <div class="flex justify-between items-center mt-2 border-t border-gray-700 pt-2">
+            <div class="text-sm text-gray-400">Remaining Balance:</div>
+            <div class="font-medium" id="modal-remaining">0.0000 MAI</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="cancel-upgrade">Cancel</button>
+        <button class="btn btn-primary" id="confirm-upgrade">Confirm Purchase</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Game state
+    const state = {
+      tokens: 0,
+      totalMined: 0,
+      mining: false,
+      miningRate: 0.0005,
+      miningTimer: 0,
+      efficiency: 100,
+      rigLevel: 1,
+      power: 150,
+      upgrades: {
+        gpu: 0,
+        cooling: 0,
+        power: 0,
+        algorithm: 0,
+        optimization: 0,
+        advanced: 0,
+        quantum: 0
+      },
+      blocksFound: 0,
+      uptimeSeconds: 0
+    };
+    
+    // DOM Elements
+    const mineButton = document.getElementById('mine-button');
+    const miningContainer = document.getElementById('mining-container');
+    const miningStatus = document.getElementById('mining-status');
+    const miningProgress = document.getElementById('mining-progress');
+    const miningTimer = document.getElementById('mining-timer');
+    const tokenBalance = document.getElementById('token-balance');
+    const miningRate = document.getElementById('mining-rate');
+    const efficiency = document.getElementById('efficiency');
+    const rigLevel = document.getElementById('rig-level');
+    const powerUsage = document.getElementById('power-usage');
+    const totalMined = document.getElementById('total-mined');
+    const dailyPotential = document.getElementById('daily-potential');
+    const blocksFound = document.getElementById('blocks-found');
+    const uptime = document.getElementById('uptime');
+    const notification = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notification-message');
+    const tokenToast = document.getElementById('token-toast');
+    const earnedTokens = document.getElementById('earned-tokens');
+    const upgradeModal = document.getElementById('upgrade-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const modalBalance = document.getElementById('modal-balance');
+    const modalCost = document.getElementById('modal-cost');
+    const modalRemaining = document.getElementById('modal-remaining');
+    const closeModal = document.getElementById('close-modal');
+    const cancelUpgrade = document.getElementById('cancel-upgrade');
+    const confirmUpgrade = document.getElementById('confirm-upgrade');
+    const tabButtons = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const upgradeItems = document.querySelectorAll('.upgrade-item');
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Upgrade data
+    const upgrades = {
+      gpu: {
+        name: 'GPU Upgrade',
+        description: 'Advanced graphics processing unit that increases mining speed.',
+        cost: 50,
+        maxLevel: 5,
+        effects: {
+          miningRate: 0.15
+        }
+      },
+      cooling: {
+        name: 'Cooling System',
+        description: 'Improved thermal management to increase efficiency and reduce power usage.',
+        cost: 75,
+        maxLevel: 3,
+        effects: {
+          efficiency: 0.10,
+          power: -0.05
+        }
+      },
+      power: {
+        name: 'Power Supply',
+        description: 'Enhanced power delivery for increased stability and mining capacity.',
+        cost: 100,
+        maxLevel: 3,
+        effects: {
+          miningRate: 0.20,
+          efficiency: 0.05
+        }
+      },
+      algorithm: {
+        name: 'Mining Algorithm',
+        description: 'Optimized code for better hash calculations and token rewards.',
+        cost: 60,
+        maxLevel: 4,
+        effects: {
+          miningRate: 0.12,
+          tokenBonus: 0.05
+        }
+      },
+      optimization: {
+        name: 'System Optimization',
+        description: 'Fine-tuned system performance for better efficiency and reduced power consumption.',
+        cost: 90,
+        maxLevel: 3,
+        effects: {
+          efficiency: 0.15,
+          power: -0.10
+        }
+      },
+      advanced: {
+        name: 'Advanced Materials',
+        description: 'Cutting-edge components that dramatically increase mining capacity.',
+        cost: 150,
+        maxLevel: 2,
+        effects: {
+          miningRate: 0.25,
+          efficiency: 0.10
+        }
+      },
+      quantum: {
+        name: 'Quantum Processing',
+        description: 'Next-generation technology that revolutionizes mining capabilities.',
+        cost: 250,
+        maxLevel: 1,
+        effects: {
+          miningRate: 0.50,
+          tokenBonus: 0.25
+        }
+      }
+    };
+    
+    // Initialization
+    function init() {
+      updateUI();
+      
+      // Set up event listeners
+      mineButton.addEventListener('click', toggleMining);
+      
+      // Tab switching
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          button.classList.add('active');
+          document.getElementById(button.dataset.tab).classList.add('active');
+        });
+      });
+      
+      // Upgrade items
+      upgradeItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const upgradeType = item.dataset.upgrade;
+          openUpgradeModal(upgradeType);
+        });
+      });
+      
+      // Modal events
+      closeModal.addEventListener('click', closeUpgradeModal);
+      cancelUpgrade.addEventListener('click', closeUpgradeModal);
+      confirmUpgrade.addEventListener('click', purchaseUpgrade);
+      
+      // Theme toggle
+      themeToggle.addEventListener('change', toggleTheme);
+      
+      // Start the game loop
+      setInterval(gameLoop, 1000);
+      setInterval(updateRandomStats, 5000);
+      
+      // Show welcome notification
+      showNotification('Welcome to MaiMiner! Start mining to earn MAI tokens.');
+    }
+    
+    // Game loop (runs every second)
+    function gameLoop() {
+      if (state.mining) {
+        state.miningTimer++;
+        state.uptimeSeconds++;
+        
+        // Calculate tokens earned
+        const tokensEarned = calculateTokensPerSecond();
+        state.tokens += tokensEarned;
+        state.totalMined += tokensEarned;
+        
+        // Update mining progress
+        const progressPercentage = (state.miningTimer % 60) / 60 * 100;
+        miningProgress.style.width = `${progressPercentage}%`;
+        
+        // Check for completed mining cycle (every minute)
+        if (state.miningTimer % 60 === 0) {
+          // Chance to find a block
+          if (Math.random() < 0.1) {
+            const blockReward = 0.5 + (Math.random() * 0.5);
+            state.tokens += blockReward;
+            state.blocksFound++;
+            showTokenToast(blockReward.toFixed(4));
+            showNotification(`Block found! You earned ${blockReward.toFixed(4)} MAI tokens.`);
+          }
+        }
+        
+        updateUI();
+      }
+    }
+    
+    // Toggle mining state
+    function toggleMining() {
+      state.mining = !state.mining;
+      
+      if (state.mining) {
+        mineButton.innerHTML = '<i class="fas fa-stop-circle mr-2"></i> Stop Mining';
+        miningContainer.classList.add('mining-active');
+        miningStatus.innerHTML = '<i class="fas fa-circle text-xs mr-1"></i> Active';
+        miningStatus.classList.remove('badge-primary');
+        miningStatus.classList.add('badge-secondary');
+        showNotification('Mining operation started. Generating MAI tokens...');
+      } else {
+        mineButton.innerHTML = '<i class="fas fa-play-circle mr-2"></i> Start Mining';
+        miningContainer.classList.remove('mining-active');
+        miningStatus.innerHTML = '<i class="fas fa-circle text-xs mr-1"></i> Idle';
+        miningStatus.classList.remove('badge-secondary');
+        miningStatus.classList.add('badge-primary');
+        showNotification('Mining operation stopped.');
+      }
+    }
+    
+    // Calculate tokens earned per second based on mining rate and upgrades
+    function calculateTokensPerSecond() {
+      // Base mining rate affected by efficiency
+      return state.miningRate * (state.efficiency / 100);
+    }
+    
+    // Update all UI elements
+    function updateUI() {
+      // Update mining stats
+      miningTimer.textContent = state.miningTimer % 60;
+      miningRate.textContent = state.miningRate.toFixed(4);
+      efficiency.textContent = state.efficiency;
+      rigLevel.textContent = state.rigLevel;
+      powerUsage.textContent = `${state.power}W`;
+      
+      // Update wallet and stats
+      tokenBalance.textContent = state.tokens.toFixed(4);
+      totalMined.textContent = state.totalMined.toFixed(4);
+      dailyPotential.textContent = (calculateTokensPerSecond() * 86400).toFixed(4);
+      blocksFound.textContent = state.blocksFound;
+      
+      // Format uptime
+      const hours = Math.floor(state.uptimeSeconds / 3600);
+      const minutes = Math.floor((state.uptimeSeconds % 3600) / 60);
+      const seconds = state.uptimeSeconds % 60;
+      uptime.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      // Update upgrade progress bars
+      upgradeItems.forEach(item => {
+        const upgradeType = item.dataset.upgrade;
+        const level = state.upgrades[upgradeType];
+        const maxLevel = upgrades[upgradeType].maxLevel;
+        const progressBar = item.querySelector('.bg-yellow-500');
+        progressBar.style.width = `${(level / maxLevel) * 100}%`;
+      });
+    }
+    
+    // Update random stats for visual interest
+    function updateRandomStats() {
+      // Randomly fluctuate network hashrate
+      const hashrate = (2 + Math.random()).toFixed(1);
+      document.getElementById('network-hashrate').textContent = `${hashrate} TH/s`;
+      
+      // Randomly update online users
+      const users = 200 + Math.floor(Math.random() * 100);
+      document.getElementById('online-users').innerHTML = `<i class="fas fa-users mr-2"></i> ${users} Miners Online`;
+    }
+    
+    // Show notification
+    function showNotification(message) {
+      notificationMessage.textContent = message;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 5000);
+    }
+    
+    // Show token earned toast
+    function showTokenToast(amount) {
+      earnedTokens.textContent = amount;
+      tokenToast.classList.add('show');
+      
+      setTimeout(() => {
+        tokenToast.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Open upgrade modal
+    function openUpgradeModal(upgradeType) {
+      const upgrade = upgrades[upgradeType];
+      const level = state.upgrades[upgradeType];
+      
+      if (level >= upgrade.maxLevel) {
+        showNotification('This upgrade is already at maximum level!');
+        return;
+      }
+      
+      const cost = upgrade.cost * (level + 1);
+      
+      modalTitle.textContent = upgrade.name;
+      modalDescription.textContent = `${upgrade.description} (Level ${level + 1}/${upgrade.maxLevel})`;
+      modalBalance.textContent = `${state.tokens.toFixed(4)} MAI`;
+      modalCost.textContent = `${cost.toFixed(4)} MAI`;
+      modalRemaining.textContent = `${(state.tokens - cost).toFixed(4)} MAI`;
+      
+      // Store the current upgrade type for the purchase function
+      upgradeModal.dataset.upgradeType = upgradeType;
+      
+      // Show the modal
+      upgradeModal.classList.add('active');
+      
+      // Disable the confirm button if can't afford
+      if (state.tokens < cost) {
+        confirmUpgrade.disabled = true;
+        confirmUpgrade.classList.add('opacity-50');
+      } else {
+        confirmUpgrade.disabled = false;
+        confirmUpgrade.classList.remove('opacity-50');
+      }
+    }
+    
+    // Close upgrade modal
+    function closeUpgradeModal() {
+      upgradeModal.classList.remove('active');
+    }
+    
+    // Purchase upgrade
+    function purchaseUpgrade() {
+      const upgradeType = upgradeModal.dataset.upgradeType;
+      const upgrade = upgrades[upgradeType];
+      const level = state.upgrades[upgradeType];
+      const cost = upgrade.cost * (level + 1);
+      
+      if (state.tokens >= cost) {
+        // Deduct tokens
+        state.tokens -= cost;
+        
+        // Increase upgrade level
+        state.upgrades[upgradeType]++;
+        
+        // Apply upgrade effects
+        for (const [effect, value] of Object.entries(upgrade.effects)) {
+          if (effect === 'miningRate') {
+            state.miningRate += state.miningRate * value;
+          } else if (effect === 'efficiency') {
+            state.efficiency += state.efficiency * value;
+          } else if (effect === 'power') {
+            state.power += state.power * value;
+          }
+        }
+        
+        // Increase rig level for certain upgrades
+        if (['gpu', 'power', 'advanced', 'quantum'].includes(upgradeType)) {
+          state.rigLevel++;
+        }
+        
+        showNotification(`Upgrade successful! ${upgrade.name} is now level ${state.upgrades[upgradeType]}.`);
+        updateUI();
+      } else {
+        showNotification('Not enough tokens for this upgrade!');
+      }
+      
+      closeUpgradeModal();
+    }
+    
+    // Toggle between light and dark theme
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+    }
+    
+    // Start the game
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>
