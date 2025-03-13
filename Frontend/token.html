@@ -4,155 +4,298 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MAI Platform Mining App</title>
-  <link href="output.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      color: #1e293b;
     }
-    .math {
-      color: #CCAA00;
-      padding: 5px;
-      border-radius: 8px;
-      margin: 10px 0;
-      font-size: 10px;
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    .card {
+    
+    .card-shadow {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #050811 0%, #0a1023 100%);
+    }
+    
+    .primary-button {
+      background: linear-gradient(135deg, #4caf50 0%, #3a9d3e 100%);
       transition: all 0.3s ease;
     }
-    .card:hover {
-      transform: translateY(-3px);
+    
+    .primary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
     }
-    .sliding-enter {
+    
+    .secondary-button {
+      background: linear-gradient(135deg, #B8860B 0%, #A67908 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .secondary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+    }
+    
+    .dark-button {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .dark-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.3);
+    }
+    
+    .custom-range {
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 5px;
+      background: #e2e8f0;
+      outline: none;
+    }
+    
+    .custom-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4caf50;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .custom-range::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4caf50;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .sliding-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.5s ease;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .sliding-enter.active {
-      max-height: 500px;
+    
+    .sliding-panel.active {
+      max-height: 800px;
     }
-  
-  /* Disable text selection */
-    .no-select {
-      user-select: none !important;
-      -webkit-user-select: none !important;
-      -ms-user-select: none !important;
-      -moz-user-select: none !important;
+    
+    .section-indicator {
+      transition: transform 0.3s ease;
     }
-    /* Ensure buttons remain clickable */
-    .no-select button,
-    .no-select a {
-      pointer-events: auto !important;
+    
+    .section-indicator.active {
+      transform: rotate(180deg);
+    }
+    
+    .stat-card {
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .user-select-none {
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
+    }
+    
+    a {
+      color: inherit;
+      text-decoration: none;
     }
   </style>
 </head>
-<body class="bg-gray-50 no-select">
-  <div class="max-w-4xl mx-auto pb-16">
+<body class="user-select-none">
+  <div class="max-w-4xl mx-auto pb-16 px-4 sm:px-6">
     <!-- App Header -->
-    <header class="b g-green-600 text-white p-4 rounded-b-lg shadow-md" style="background-color: #050811">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <i data-feather="cpu" class="w-6 h-6"></i>
-          <h1 class="text-2xl font-bold">MAI Mining Platform</h1>
+    <header class="rounded-lg shadow-lg my-4 overflow-hidden">
+      <div class="bg-gray-900 text-white p-6 relative">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10">
+          <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"></div>
         </div>
-        <div class="flex items-center space-x-2">
-          <i data-feather="package" class="w-5 h-5"></i>
-          <span>10B Total Supply</span>
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between relative z-10">
+          <div class="flex items-center space-x-4">
+            <div class="bg-green-500 p-3 rounded-lg">
+              <i data-feather="cpu" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold">MAI Mining Platform</h1>
+              <p class="text-green-300 text-sm mt-1">Advanced Decentralized Mining</p>
+            </div>
+          </div>
+          <div class="mt-4 md:mt-0 flex items-center space-x-4">
+            <div class="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full">
+              <i data-feather="package" class="w-5 h-5 text-green-400"></i>
+              <span class="text-green-100">10B Total Supply</span>
+            </div>
+            <div id="network-status" class="flex items-center space-x-2 bg-green-500 bg-opacity-20 px-3 py-1 rounded-full">
+              <div class="w-2 h-2 rounded-full bg-green-500 pulsate"></div>
+              <span class="text-sm text-green-300">Network Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Bar -->
+      <div class="bg-white border-b border-gray-200 px-6 py-3">
+        <div class="flex flex-wrap justify-between">
+          <div class="flex items-center space-x-2 px-3">
+            <i data-feather="activity" class="w-4 h-4 text-gray-500"></i>
+            <span class="text-sm font-medium text-gray-700">Mining Rate: <span id="miningRate" class="text-green-600 font-semibold">0.0005</span> MAI/sec</span>
+          </div>
+          <div class="flex items-center space-x-2 px-3">
+            <i data-feather="users" class="w-4 h-4 text-gray-500"></i>
+            <span class="text-sm font-medium text-gray-700">Active Miners: <span id="activeUsers" class="text-gray-900 font-semibold">52,412</span></span>
+          </div>
+          <div class="flex items-center space-x-2 px-3">
+            <i data-feather="award" class="w-4 h-4 text-gray-500"></i>
+            <span class="text-sm font-medium text-gray-700">Your Referrals: <span id="referrals" class="text-amber-600 font-semibold">0</span></span>
+          </div>
         </div>
       </div>
     </header>
-
+    
     <!-- Mining Calculator Card -->
-    <div class="bg-white m-4 p-6 rounded-lg shadow-md card">
-      <div class="flex items-center space-x-2 text-green-600 mb-4">
-        <i data-feather="calculator" class="w-5 h-5"></i>
-        <h2 class="text-xl font-semibold">Mining Calculator</h2>
+    <div class="glass-card card-shadow rounded-2xl mb-6 overflow-hidden">
+      <div class="px-6 pt-5 pb-2">
+        <div class="flex items-center space-x-2 text-green-600 mb-4">
+          <div class="bg-green-50 p-1.5 rounded-lg">
+            <i data-feather="calculator" class="w-5 h-5"></i>
+          </div>
+          <h2 class="text-lg font-semibold">Mining Calculator</h2>
+        </div>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Platform Users</label>
-          <div class="flex items-center space-x-2">
-            <i data-feather="users" class="w-5 h-5 text-gray-400"></i>
-            <input id="userCount" type="range" min="1000" max="10000000" value="50000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+      <div class="px-6 pb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Platform Users</label>
+            <div class="flex items-center space-x-2 mb-1">
+              <div class="bg-gray-100 p-1.5 rounded-lg">
+                <i data-feather="users" class="w-4 h-4 text-gray-500"></i>
+              </div>
+              <input id="userCount" type="range" min="1000" max="10000000" value="50000" 
+                     class="w-full custom-range">
+            </div>
+            <div class="flex justify-between mt-2">
+              <span class="text-xs text-gray-500">1K</span>
+              <span id="userCountValue" class="text-sm font-medium bg-gray-100 px-2 py-0.5 rounded-full">50,000 users</span>
+              <span class="text-xs text-gray-500">10M</span>
+            </div>
           </div>
-          <div class="flex justify-between mt-2">
-            <span class="text-xs text-gray-500">1K</span>
-            <span id="userCountValue" class="text-sm font-medium">50,000 users</span>
-            <span class="text-xs text-gray-500">10M</span>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Your Referrals</label>
+            <div class="flex items-center">
+              <div class="bg-gray-100 p-1.5 rounded-lg mr-3">
+                <i data-feather="user-plus" class="w-4 h-4 text-gray-500"></i>
+              </div>
+              <div class="relative flex items-center">
+                <input id="referralCount" type="number" min="0" max="100" value="0" 
+                       class="w-16 p-2 border border-gray-300 rounded-lg text-center">
+                <span class="ml-3 text-gray-600 text-sm">(+5% per referral)</span>
+              </div>
+            </div>
           </div>
         </div>
         
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Your Referrals</label>
-          <div class="flex items-center">
-            <i data-feather="user-plus" class="w-5 h-5 text-gray-400 mr-2"></i>
-            <input id="referralCount" type="number" min="0" max="100" value="0" class="w-16 p-2 border border-gray-300 rounded-md text-center">
-            <span class="ml-2 text-gray-500">(+5% per referral)</span>
-          </div>
+<div class="mt-6 p-4 bg-gray-50 rounded-lg">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="card p-3 rounded-md border-l-4 border-green-400 border border-gray-200 border-opacity-500 mb-4">
+      <div class="text-sm text-gray-500 mb-1">Base Rate</div>
+      <div class="flex items-center">
+        <div class="bg-green-50 p-1 rounded mr-2">
+          <i data-feather="trending-up" class="w-4 h-4 text-green-500"></i>
         </div>
-      </div>
-      
-      <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-white p-3 rounded-md shadow-sm border border-gray-100">
-            <div class="text-sm text-gray-500 mb-1">Base Rate</div>
-            <div class="flex items-center">
-              <i data-feather="trending-up" class="w-4 h-4 text-green-500 mr-1"></i>
-              <span id="baseRate" class="text-lg font-semibold">0.0005</span>
-              <span class="text-gray-500 ml-1">MAI/sec</span>
-            </div>
-          </div>
-          
-          <div class="bg-white p-3 rounded-md shadow-sm border border-gray-100">
-            <div class="text-sm text-gray-500 mb-1">Referral Bonus</div>
-            <div class="flex items-center">
-              <i data-feather="gift" class="w-4 h-4 text-purple-500 mr-1"></i>
-              <span id="referralBonus" class="text-lg font-semibold">+0%</span>
-            </div>
-          </div>
-          
-          <div class="bg-white p-3 rounded-md shadow-sm border border-green-200">
-            <div class="text-sm text-gray-500 mb-1">Your Mining Rate</div>
-            <div class="flex items-center">
-              <i data-feather="zap" class="w-4 h-4 text-yellow-500 mr-1"></i>
-              <span id="miningRate" class="text-lg font-semibold text-green-600">0.0005</span>
-              <span class="text-gray-500 ml-1">MAI/sec</span>
-            </div>
-          </div>
-        </div>
+        <span id="baseRate" class="text-lg font-semibold">0.0005</span>
+        <span class="text-gray-500 ml-1 text-sm">MAI/sec</span>
       </div>
     </div>
+  </div>
+
+      
+            
+            <div class="card p-3 rounded-md border-l-4 border-amber-400 border border-amber-200 border-opacity-500 mb-4">
+              <div class="text-sm text-gray-500 mb-1">Referral Bonus</div>
+              <div class="flex items-center">
+                <div class="bg-yellow-50 p-1 rounded mr-2">
+                  <i data-feather="gift" class="w-4 h-4 text-yellow-600"></i>
+                </div>
+                <span id="referralBonus" class="text-lg font-semibold">+0%</span>
+              </div>
+            </div>
+            
+            <div class="card p-3 rounded-md border-l-4 border-blue-400 bg-green-50 border border-amber-200 border-opacity-500">
+              <div class="text-sm text-gray-500 mb-1">Your Mining Rate</div>
+              <div class="flex items-center">
+                <div class="bg-blue-50 p-1 rounded mr-2">
+                  <i data-feather="zap" class="w-4 h-4 text-blue-500"></i>
+                </div>
+                <span id="MiningRate" class="text-lg font-semibold text-green-600">0.0005</span>
+                <span class="text-gray-500 ml-1 text-sm">MAI/sec</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
     
     <!-- Information Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
       <!-- Base Mining Rate Card -->
-      <div class="bg-white p-4 rounded-lg shadow-md card">
-        <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('base-rate')">
+      <div class="glass-card card-shadow rounded-2xl overflow-hidden">
+        <div class="px-5 py-4 flex items-center justify-between cursor-pointer" 
+             onclick="toggleSection('base-rate')">
           <div class="flex items-center space-x-2 text-green-600">
-            <i data-feather="bar-chart-2" class="w-5 h-5"></i>
-            <h3 class="font-semibold">Base Mining Rate</h3>
+            <div class="bg-green-50 p-1.5 rounded-lg">
+              <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+            </div>
+            <h3 class="font-medium">Base Mining Rate</h3>
+            
           </div>
-          <i data-feather="chevron-down" id="base-rate-icon" class="w-5 h-5 text-gray-400"></i>
+          <i data-feather="chevron-down" id="base-rate-icon" class="w-5 h-5 text-gray-400 section-indicator"></i>
         </div>
         
-        <div id="base-rate-content" class="mt-4 sliding-enter">
-          <p class="text-gray-600 text-sm">The mining process begins with a <strong>base rate</strong> determined by the total number of users on the platform.</p>
+        <div id="base-rate-content" class="sliding-panel active px-5 pb-5">
+<br><p class="text-gray-600 text-sm leading-relaxed">
+            The mining process begins with a <strong>base rate</strong> determined by the total number of users on the platform.
+          </p>
           
-          <div class="mt-4 bg-gray-50 p-3 rounded-md">
-            <div class="flex items-center mb-2">
+          <div class="mt-4 bg-gray-50 p-4 rounded-xl">
+            <div class="flex items-center mb-3">
               <div class="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
               <span class="text-sm"><strong>First 100K Users:</strong> 0.0005 MAI</span>
             </div>
-            <div class="flex items-center mb-2">
+            <div class="flex items-center mb-3">
               <div class="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
               <span class="text-sm"><strong>100K - 1M Users:</strong> 0.00025 MAI</span>
             </div>
-            <div class="flex items-center mb-2">
+            <div class="flex items-center mb-3">
               <div class="w-3 h-3 rounded-full bg-green-300 mr-2"></div>
               <span class="text-sm"><strong>1M - 5M Users:</strong> 0.000125 MAI</span>
             </div>
@@ -165,28 +308,32 @@
       </div>
       
       <!-- Referral System Card -->
-      <div class="bg-white p-4 rounded-lg shadow-md card">
-        <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('referral')">
-          <div class="flex items-center space-x-2 text-purple-600">
-            <i data-feather="users" class="w-5 h-5"></i>
-            <h3 class="font-semibold" style="color: #B8860B";>Referral System</h3>
+      <div class="glass-card card-shadow rounded-2xl overflow-hidden">
+        <div class="px-5 py-4 flex items-center justify-between cursor-pointer" 
+             onclick="toggleSection('referral')">
+          <div class="flex items-center space-x-2">
+            <div class="bg-yellow-50 p-1.5 rounded-lg">
+              <i data-feather="users" class="w-4 h-4 text-yellow-600"></i>
+            </div>
+            <h3 class="font-medium text-yellow-800">Referral System</h3>
           </div>
-          <i data-feather="chevron-down" id="referral-icon" class="w-5 h-5 text-gray-400"></i>
+          <i data-feather="chevron-down" id="referral-icon" class="w-5 h-5 text-gray-400 section-indicator"></i>
         </div>
         
-        <div id="referral-content" class="mt-4 sliding-enter">
-          <p class="text-gray-600 text-sm">Earn a <strong>5% increase</strong> to your mining rate for each person you refer to the platform.</p>
+        <div id="referral-content" class="sliding-panel px-5 pb-5">
+          <br>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Earn a <strong>5% increase</strong> to your mining rate for each person you refer to the platform.
+          </p>
           
-          <div class="mt-4 bg-gray-50 p-3 rounded-md">
-            <div class="math">
-              \begin{align}
-              \text{Mining Rate} &= \text{Base Rate} \times (1 + 0.05 \times \text{Referrals})
-              \end{align}
+          <div class="mt-4 bg-gray-50 p-4 rounded-xl">
+            <div class="p-3 bg-yellow-50 rounded-lg text-yellow-800 text-sm font-mono">
+              Mining Rate = Base Rate × (1 + 0.05 × Referrals)
             </div>
             
             <div class="mt-3 text-sm text-gray-600">
               <strong>Example:</strong> With 3 referrals and a base rate of 0.0005, your mining rate would be:
-              <div class="p-2 bg-gray-100 rounded mt-1">
+              <div class="p-3 bg-gray-100 rounded-lg mt-2 font-mono text-sm">
                 0.0005 × (1 + 0.05 × 3) = 0.000575 MAI
               </div>
             </div>
@@ -195,116 +342,79 @@
       </div>
       
       <!-- Supply Info Card -->
-      <div class="bg-white p-4 rounded-lg shadow-md card col-span-1 md:col-span-2">
-        <div class="flex items-center justify-between cursor-pointer" onclick="toggleSection('supply')">
-          <div class="flex items-center space-x-2 text-blue-600">
-            <i data-feather="package" class="w-5 h-5"></i>
-            <h3 class="font-semibold" style="color: #121212;">Total Supply & Sustainability</h3>
+      <div class="glass-card card-shadow rounded-2xl col-span-1 md:col-span-2 overflow-hidden">
+        <div class="px-5 py-4 flex items-center justify-between cursor-pointer" 
+             onclick="toggleSection('supply')">
+          <div class="flex items-center space-x-2">
+            <div class="bg-blue-50 p-1.5 rounded-lg">
+              <i data-feather="package" class="w-4 h-4 text-blue-600"></i>
+            </div>
+            <h3 class="font-medium text-gray-800">Total Supply & Sustainability</h3>
           </div>
-          <i data-feather="chevron-down" id="supply-icon" class="w-5 h-5 text-gray-400"></i>
+          <i data-feather="chevron-down" id="supply-icon" class="w-5 h-5 text-gray-400 section-indicator"></i>
         </div>
         
-        <div id="supply-content" class="mt-4 sliding-enter">
-          <p class="text-gray-600 text-sm">The MAI Platform has a <strong>total supply of 10 billion MAI tokens</strong>. The decreasing mining rate ensures sustainable distribution over time.</p>
+        <div id="supply-content" class="sliding-panel px-5 pb-5">
+<br><p class="text-gray-600 text-sm leading-relaxed">
+            The MAI Platform has a <strong>total supply of 10 billion MAI tokens</strong>. The decreasing mining rate ensures sustainable distribution over time.
+          </p>
           
           <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-blue-50 p-3 rounded-md">
+            <div class="bg-blue-50 p-4 rounded-xl">
               <div class="flex items-center text-blue-700 mb-2">
-                <i data-feather="award" class="w-5 h-5 mr-2"></i>
-                <span class="font-medium" style="color: #121212;">Early Adopter Rewards</span>
+                <div class="bg-blue-100 p-1 rounded mr-2">
+                  <i data-feather="award" class="w-4 h-4 text-blue-600"></i>
+                </div>
+                <span class="font-medium text-gray-800">Early Adopter Rewards</span>
               </div>
-              <p class="text-sm text-gray-600">Higher rates for early users incentivize platform adoption while ensuring fair token distribution.</p>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Higher rates for early users incentivize platform adoption while ensuring fair token distribution.
+              </p>
             </div>
             
-            <div class="bg-green-50 p-3 rounded-md">
+            <div class="bg-green-50 p-4 rounded-xl">
               <div class="flex items-center text-green-700 mb-2">
-                <i data-feather="trending-up" class="w-5 h-5 mr-2"></i>
-                <span class="font-medium">Long-term Sustainability</span>
+                <div class="bg-green-100 p-1 rounded mr-2">
+                  <i data-feather="trending-up" class="w-4 h-4 text-green-600"></i>
+                </div>
+                <span class="font-medium text-gray-800">Long-term Sustainability</span>
               </div>
-              <p class="text-sm text-gray-600">Decreasing mining rates prevent supply depletion and maintain token value over time.</p>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Decreasing mining rates prevent supply depletion and maintain token value over time.
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Mining Actions -->
-<div class="bg-white m-4 p-4 rounded-lg shadow-md card">
-  <div class="flex justify-between gap-2">
-    <button class="b g-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg transition flex items-center justify-center space-x-1 text-sm" style="background-color: #4caf50;">
-      <i data-feather="cpu" class="w-4 h-4"></i>
-      <span><a href="index.html">Mine Now</a></span>
-    </button>
-    
-    <button class="b g-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition flex items-center justify-center space-x-1 text-sm" id="copy-link" style="background-color: #B8860B;">
-      <i data-feather="user-plus" class="w-4 h-4"></i>
-      <span>Invite Friends</span>
-    </button>
-    
-    <button class="b bg-gray-900 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition flex items-center justify-center space-x-1 text-sm" style="color: bg-gray-900;">
-      <i data-feather="activity" class="w-4 h-4"></i>
-      <span>View Stats</span>
-    </button>
+<!-- Mining Actions -->
+<div class="glass-card card-shadow rounded-2xl overflow-hidden">
+  <div class="p-5">
+    <div class="flex flex-wrap gap-3">
+      <!-- Mine Now Button -->
+      <a href="index.html" class="primary-button text-white font-medium py-1.5 px-3 rounded-lg flex-1 flex items-center justify-center space-x-2 text-sm">
+        <i data-feather="cpu" class="w-4 h-4"></i>
+        <span>Mine Now</span>
+      </a>
+      
+      <!-- Invite Friends Button -->
+      <button id="copy-link" class="secondary-button text-white font-medium py-1.5 px-3 rounded-lg flex-1 flex items-center justify-center space-x-2 text-sm">
+        <i data-feather="user-plus" class="w-4 h-4"></i>
+        <span>Invite Friends</span>
+      </button>
+      
+      <!-- View Stats Button -->
+      <button class="dark-button text-white font-medium py-1.5 px-3 rounded-lg flex-1 flex items-center justify-center space-x-2 text-sm">
+        <i data-feather="activity" class="w-4 h-4"></i>
+        <span>View Stats</span>
+      </button>
+    </div>
   </div>
 </div>
   </div>
 
   <script>
-   // Properly handle the asynchronous fetch with async/await
-async function fetchUserDetails() {
-  try {
-    // Retrieve token from localStorage
-    const token = localStorage.getItem("token");
-    
-    if (!token) {
-      console.log("No token found in localStorage");
-      return;
-    }
-    
-    // Fetch user details from backend - using await to wait for the response
-    const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    
-    if (!response.ok) {
-      alert("Failed to fetch user details. Please log in again.");
-      localStorage.clear();
-      window.location.href = '/login.html'; // Redirect to login page instead of reload
-      return;
-    }
-    
-    // Await the JSON parsing
-    const user = await response.json();
-    console.log("User details fetched:", user);
-
-    const { username, email, balance, referrals, referralCode, name } = user;
-  
-    // Construct referral link
-    const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}&redirect=playstore`;
-    console.log("Referral link constructed:", referralLink);
-  
-    // Set up copy link button
-    const copyLinkButton = document.getElementById("copy-link");
-    if (copyLinkButton) {
-      copyLinkButton.addEventListener("click", () => {
-        navigator.clipboard
-          .writeText(referralLink)
-          .then(() => alert("Referral link copied to clipboard!"))
-          .catch((err) => console.error("Failed to copy referral link:", err));
-      });
-    }
-  } catch (error) {
-    console.error("Error fetching user details:", error);
-    alert("An error occurred. Please try again later.");
-  }
-}
-
-// Call the function
-fetchUserDetails();
-
     // Initialize Feather icons after the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize feather icons
@@ -312,11 +422,11 @@ fetchUserDetails();
         feather.replace();
       }
       
-      // Set initial state for sections
-      document.getElementById('base-rate-content').classList.add('active');
-      
       // Calculate initial values
       updateCalculations();
+      
+      // Fetch user details
+      fetchUserDetails();
     });
     
     // Toggle section visibility
@@ -326,15 +436,10 @@ fetchUserDetails();
       
       if (content.classList.contains('active')) {
         content.classList.remove('active');
-        icon.setAttribute('data-feather', 'chevron-down');
+        icon.classList.remove('active');
       } else {
         content.classList.add('active');
-        icon.setAttribute('data-feather', 'chevron-up');
-      }
-      
-      // Make sure feather is defined before calling replace
-      if (typeof feather !== 'undefined') {
-        feather.replace();
+        icon.classList.add('active');
       }
     }
     
@@ -344,7 +449,7 @@ fetchUserDetails();
     const referralCountInput = document.getElementById('referralCount');
     const baseRateElement = document.getElementById('baseRate');
     const referralBonusElement = document.getElementById('referralBonus');
-    const miningRateElement = document.getElementById('miningRate');
+    const miningRateElement = document.getElementById('MiningRate');
     
     // Add event listeners
     if (userCountInput) {
@@ -394,6 +499,62 @@ fetchUserDetails();
         miningRateElement.textContent = miningRate.toFixed(6);
       }
     }
+  
+  //Referrals
+  const referrals = localStorage.getItem("referralCount");
+  const Referrals = document.getElementById("referrals");
+  // Check if the value exists
+if (referrals) {
+  // Update the inner HTML of the element
+  Referrals.innerHTML = `${referrals}`;
+} else {
+  // Handle the case where "miningRate" is not found in Local Storage
+  Referrals.innerHTML = "0";
+}
+  
+  //Mining Rate
+  const MiningRate = document.getElementById("miningRate");
+
+// Retrieve the value from Local Storage
+const miningRate = localStorage.getItem("miningRate");
+
+// Check if the value exists
+if (miningRate) {
+  // Update the inner HTML of the element
+  MiningRate.innerHTML = `${miningRate}`;
+} else {
+  // Handle the case where "miningRate" is not found in Local Storage
+  MiningRate.innerHTML = "Null";
+}
+  
+  /** Referral Link**/
+  const referralLink = localStorage.getItem("referralLink");
+  // Set up copy link button
+        const copyLinkButton = document.getElementById("copy-link");
+        if (copyLinkButton) {
+          copyLinkButton.addEventListener("click", () => {
+            navigator.clipboard
+              .writeText(referralLink)
+              .then(() => {
+                // Create a temporary notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white py-2 px-4 rounded-lg shadow-lg z-50 text-sm';
+                notification.textContent = 'Referral link copied!';
+                document.body.appendChild(notification);
+                
+// Remove the notification after 2 seconds
+                setTimeout(() => {
+                  notification.style.opacity = '0';
+                  notification.style.transition = 'opacity 0.5s ease';
+                  setTimeout(() => {
+                    document.body.removeChild(notification);
+                  }, 500);
+                }, 2000);
+              })
+              .catch((err) => console.error("Failed to copy referral link:", err));
+          });
+        }
+   
   </script>
 </body>
 </html>

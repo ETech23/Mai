@@ -591,6 +591,7 @@ menuIcon.addEventListener("click", async (event) => {  // Add (event) here
     const { username, email, balance, referrals, referralCode, name } = user;
 
     const referralCount = referrals.length;
+    localStorage.setItem("referralCount", referralCount);
     let streakLevel;
     if (referralCount < 5) streakLevel = "Regular";
     else if (referralCount < 10) streakLevel = "Intermediate";
@@ -602,6 +603,7 @@ menuIcon.addEventListener("click", async (event) => {  // Add (event) here
       // Construct referral link
 const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}&redirect=playstore`;
 console.log("Referral link constructed:", referralLink);
+      localStorage.setItem("referralLink", referralLink);
       
       /**
 const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}`;
@@ -622,6 +624,7 @@ const cappedReferralBonus = Math.min(referralBonus, 5); // Max 500% bonus (5x mu
 
 // Calculate the dynamic mining rate
 const miningRate = defaultRate * cappedReferralBonus;
+      localStorage.setItem("miningRate", miningRate);
 
 // Display mining rate
 const miningRateDisplay = document.getElementById("mining-rate");
@@ -846,6 +849,8 @@ async function fetchUserData() {
     const referrals = userData.referrals || []; // Fallback to empty array if not found
     // Now calculate the streak level dynamically based on referral count
     const referralCount = referrals.length;
+    localStorage.setItem("referralCount", referralCount);
+    
     let streakLevel;
     if (referralCount < 5) streakLevel = "Regular";
     else if (referralCount < 10) streakLevel = "Intermediate";

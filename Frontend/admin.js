@@ -1,4 +1,4 @@
-const BASE_URL = "https://mai.fly.dev";
+const BASE_URL = "https://maicoin-41vo.onrender.com;
 const adminToken = localStorage.getItem("token");
 
 if (!adminToken) {
