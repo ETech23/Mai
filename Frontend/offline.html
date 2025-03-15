@@ -5,67 +5,134 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>You're Offline</title>
   <style>
-    body {
-      background-color: #f4f4f4;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      color: #333;
+    :root {
+      --primary-color: #2C3E20;
+      --secondary-color: #2C3E30;
+      --light-bg: #f9f9f9;
+      --dark-text: #333;
+      --medium-text: #555;
+      --light-text: #777;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      --border-radius: 12px;
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     
-    .container {
+    body {
+      background-color: var(--light-bg);
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      color: var(--dark-text);
+      line-height: 1.6;
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      text-align: center;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 460px;
+      padding: 0 20px;
     }
 
     .offline-container {
-      max-width: 400px;
-      padding: 20px;
       background: white;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      box-shadow: var(--shadow);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      text-align: center;
+      overflow: hidden;
+      transition: var(--transition);
     }
 
     .offline-container h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-      color: #2C3E30;
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--secondary-color);
     }
 
     .offline-container p {
       font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    .offline-container a {
-      text-decoration: none;
-      background-color: #998e5c;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
-    .offline-container a:hover {
-      background-color: #2C3E30;
+      margin-bottom: 24px;
+      color: var(--medium-text);
     }
     
-    /* Loading spinner styles */
+    .button {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      width: 140px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 15px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      outline: none;
+      text-align: center;
+    }
+
+    .button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button-secondary {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+    
+    .button-secondary:hover {
+      background-color: rgba(153, 142, 92, 0.1);
+      color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+    
+    .button-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+      width: 100%;
+    }
+    
+    @media (max-width: 400px) {
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .button {
+        width: 100%;
+      }
+    }
+    
+    /* Improved loading spinner */
+    .loader-container {
+      margin: 20px 0 30px;
+      position: relative;
+    }
+    
     .loader {
       display: inline-block;
-      width: 50px;
-      height: 50px;
-      border: 3px solid rgba(153, 142, 92, 0.3);
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(153, 142, 92, 0.2);
       border-radius: 50%;
-      border-top-color: #998e5c;
-      animation: spin 1.5s linear infinite;
-      margin-bottom: 15px;
+      border-top-color: var(--primary-color);
+      animation: spin 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      will-change: transform;
     }
     
     @keyframes spin {
@@ -75,14 +142,88 @@
     
     .reconnecting {
       font-size: 14px;
-      color: #666;
-      margin-top: 15px;
+      color: var(--light-text);
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .reconnecting::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
     }
     
     .logo {
-      max-height: 50px;
-      margin-top: 20px;
+      max-height: 60px;
+      margin-bottom: 20px;
     }
+    
+    /* News section styling */
+    .news-container {
+      text-align: left;
+    }
+    
+    .news-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .last-updated {
+      font-size: 13px;
+      color: var(--light-text);
+      font-style: italic;
+    }
+    
+    .news-item {
+      background: var(--light-bg);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--primary-color);
+      transition: var(--transition);
+    }
+    
+    .news-item:hover {
+      transform: translateX(2px);
+    }
+    
+    .news-item h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--secondary-color);
+    }
+    
+    .news-item p {
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     /* Disable text selection */
     .no-select {
       user-select: none !important;
@@ -98,45 +239,132 @@
   </style>
 </head>
 <body class="no-select">
-  <!--<img class="logo" src="social/MAI_logo2.png" alt="MAI Logo">-->
   <div class="container">
-    <div class="offline-container">
-      <h1>You're Offline</h1>
-      <p>It looks like you're not connected to the internet. Don't worry, your mining session and balance is intact.</p>
-      <div class="loader"></div>
-      <div><a href="news.html">Check Latest Updates</a></div>
-      <div class="reconnecting">Attempting to reconnect...</div>
+    <div class="offline-container fade-in" id="main-content">
+      <div class="status-page">
+        <!-- Uncomment and update src when you have a logo -->
+        <!-- <img class="logo" src="social/MAI_logo2.png" alt="MAI Logo"> -->
+        <h1>You're Offline</h1>
+        <p>It looks like you're not connected to the internet. Don't worry, your mining session and balance is intact.</p>
+        
+        <div class="loader-container">
+          <div class="loader"></div>
+        </div>
+        
+        <a href="#" class="button" style="width: 180px;" onclick="loadOfflineNews(event)">Check Latest Updates</a>
+        
+        <div class="reconnecting">Attempting to reconnect...</div>
+      </div>
     </div>
   </div>
   
   <script>
+    // Cache for offline news
+    let cachedNews = {
+      lastUpdated: "Unknown",
+      items: [
+        { 
+          title: "System Maintenance Complete", 
+          content: "Recent system upgrades have improved mining efficiency by 12%. All nodes are operating at optimal capacity."
+        },
+        { 
+          title: "Network Status", 
+          content: "All systems operational. Mining rewards system is working normally. Check back when online for real-time updates."
+        },
+        {
+          title: "New Features Coming Soon",
+          content: "We're working on exciting new features for the mining dashboard. Stay tuned for updates."
+        }
+      ]
+    };
+
+    // Function to load offline news
+    function loadOfflineNews(event) {
+      event.preventDefault();
+      
+      const container = document.getElementById('main-content');
+      
+      // Create news content HTML
+      const newsHTML = `
+        <div class="news-container fade-in">
+          <div class="news-header">
+            <h1>Latest Updates</h1>
+            <span class="last-updated">Last cached: ${cachedNews.lastUpdated}</span>
+          </div>
+          
+          ${cachedNews.items.map(item => `
+            <div class="news-item">
+              <h3>${item.title}</h3>
+              <p>${item.content}</p>
+            </div>
+          `).join('')}
+          
+          <div class="button-group">
+            <a href="#" class="button button-secondary" onclick="goBack(event)">Back to Status</a>
+            <a href="index.html" class="button">Go to Dashboard</a>
+          </div>
+        </div>
+      `;
+      
+      // Apply fade-out effect before replacing content
+      container.classList.remove('fade-in');
+      container.classList.add('fade-out');
+      
+      setTimeout(() => {
+        container.innerHTML = newsHTML;
+        container.classList.remove('fade-out');
+        container.classList.add('fade-in');
+      }, 300);
+    }
+
+    // Function to go back to the main offline screen
+    function goBack(event) {
+      event.preventDefault();
+      location.reload();
+    }
+
     // Function to check network connectivity
-function checkNetwork() {
-  if (navigator.onLine) {
-    console.log('Online');
-    // Directly redirect to index page when back online
-    window.location.href = 'index.html';
-  } else {
-    console.log('Offline');
-    // Retry after 5 seconds
-    setTimeout(checkNetwork, 5000);
-  }
-}
+    function checkNetwork() {
+      if (navigator.onLine) {
+        console.log('Online');
+        // Directly redirect to index page when back online
+        window.location.href = 'index.html';
+      } else {
+        console.log('Offline');
+        // Retry after 5 seconds
+        setTimeout(checkNetwork, 5000);
+      }
+    }
 
-// Listen for network changes
-window.addEventListener('online', () => {
-  console.log('Network is back. Redirecting...');
-  document.querySelector('.reconnecting').textContent = 'Connected! Redirecting...';
-  checkNetwork();
-});
+    // Listen for network changes
+    window.addEventListener('online', () => {
+      console.log('Network is back. Redirecting...');
+      document.querySelector('.reconnecting').textContent = 'Connected! Redirecting...';
+      // Add a nice fade effect before redirecting
+      document.querySelector('.offline-container').style.opacity = '0.5';
+      setTimeout(() => {
+        checkNetwork();
+      }, 800);
+    });
 
-window.addEventListener('offline', () => {
-  console.log('Network is down. Deferring actions...');
-  document.querySelector('.reconnecting').textContent = 'Attempting to reconnect...';
-});
+    window.addEventListener('offline', () => {
+      console.log('Network is down. Deferring actions...');
+      document.querySelector('.reconnecting').textContent = 'Attempting to reconnect...';
+    });
 
-// Start checking for network connectivity
-checkNetwork();
+    // Start checking for network connectivity
+    checkNetwork();
+    
+    // Store the current date as the last update time
+    const now = new Date();
+    cachedNews.lastUpdated = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+    
+    // Add CSS animation classes
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelector('.offline-container').classList.add('fade-in');
+      }, 100);
+    });
   </script>
 </body>
 </html>
