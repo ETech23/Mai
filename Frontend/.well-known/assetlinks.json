@@ -1,0 +1,8 @@
+[{
+       "relation": ["delegate_permission/common.handle_all_urls"],
+       "target": {
+         "namespace": "android_app",
+         "package_name": "com.mai.app",
+         "sha256_cert_fingerprints": ["31FBD92DDD266E63BE54901657B2EBE5F866623B9D482C9B89167C59D721892E"]
+       }
+     }]

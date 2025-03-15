@@ -83,9 +83,21 @@
       max-height: 50px;
       margin-top: 20px;
     }
+    /* Disable text selection */
+    .no-select {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -ms-user-select: none !important;
+      -moz-user-select: none !important;
+    }
+    /* Ensure buttons remain clickable */
+    .no-select button,
+    .no-select a {
+      pointer-events: auto !important;
+    }
   </style>
 </head>
-<body>
+<body class="no-select">
   <!--<img class="logo" src="social/MAI_logo2.png" alt="MAI Logo">-->
   <div class="container">
     <div class="offline-container">
