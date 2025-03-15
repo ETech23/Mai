@@ -101,34 +101,6 @@
       }
     }
 
-    .loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80px; /* Ensures the loader remains centered */
-  margin-bottom: 30px;
-}
-
-.loader {
-  width: 60px;
-  height: 60px;
-  border: 3px solid rgba(153, 142, 92, 0.2);
-  border-radius: 50%;
-  border-top-color: var(--primary-color);
-  animation: spin 1.5s linear infinite;
-}
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .reconnecting {
-      font-size: 14px;
-      color: var(--light-text);
-      margin-top: 20px;
-    }
-
     .fade-in {
       animation: fadeIn 0.5s ease-in;
     }
@@ -150,12 +122,8 @@
       <h1>You're Offline</h1>
       <p>No internet connection detected. Your mining session and balance remain intact.</p>
       
-      <div class="loader-container">
-        <div class="loader"></div>
-      </div>
-      
       <a href="#" class="button" onclick="loadOfflineNews(event)">Check Latest Updates</a>
-      <div class="reconnecting">Attempting to reconnect...</div>
+      <div class="reconnecting" id="reconnect-text">Attempting to reconnect...</div>
     </div>
   </div>
 
@@ -189,12 +157,19 @@
 
     function goBack(event) {
       event.preventDefault();
-      location.reload();
+      document.getElementById('main-content').innerHTML = `
+        <div class="offline-container fade-in">
+          <h1>You're Offline</h1>
+          <p>No internet connection detected. Your mining session and balance remain intact.</p>
+          <a href="#" class="button" onclick="loadOfflineNews(event)">Check Latest Updates</a>
+          <div class="reconnecting" id="reconnect-text">Attempting to reconnect...</div>
+        </div>
+      `;
     }
 
     function checkNetwork() {
       if (navigator.onLine) {
-        document.querySelector('.reconnecting').textContent = 'Connected! Redirecting...';
+        document.getElementById('reconnect-text').textContent = 'Connected! Redirecting...';
         setTimeout(() => { window.location.href = 'index.html'; }, 800);
       } else {
         setTimeout(checkNetwork, 5000);
@@ -202,13 +177,12 @@
     }
 
     window.addEventListener('online', () => {
-      document.querySelector('.reconnecting').textContent = 'Connected! Redirecting...';
-      document.querySelector('.offline-container').style.opacity = '0.5';
+      document.getElementById('reconnect-text').textContent = 'Connected! Redirecting...';
       setTimeout(() => { window.location.href = 'index.html'; }, 800);
     });
 
     window.addEventListener('offline', () => {
-      document.querySelector('.reconnecting').textContent = 'Attempting to reconnect...';
+      document.getElementById('reconnect-text').textContent = 'Attempting to reconnect...';
     });
 
     checkNetwork();
