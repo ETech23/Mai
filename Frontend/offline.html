@@ -12,8 +12,8 @@
       --dark-text: #333;
       --medium-text: #555;
       --light-text: #777;
-      --shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-      --border-radius: 12px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --border-radius: 10px;
       --transition: all 0.3s ease;
     }
     
@@ -51,58 +51,72 @@
     }
 
     .offline-container h1 {
-      font-size: 26px;
-      font-weight: 600;
-      margin-bottom: 12px;
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 10px;
       color: var(--secondary-color);
     }
 
     .offline-container p {
-      font-size: 16px;
-      margin-bottom: 24px;
+      font-size: 14px;
+      margin-bottom: 20px;
       color: var(--medium-text);
     }
 
-    .button {
+    .refresh-btn {
       display: inline-block;
       background-color: var(--primary-color);
       color: white;
-      width: 180px;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 8px;
-      font-weight: 500;
-      font-size: 15px;
-      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
       cursor: pointer;
       transition: var(--transition);
       border: none;
       outline: none;
       text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .button:hover {
+    .refresh-btn:hover {
       background-color: var(--secondary-color);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .check-updates {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--medium-text);
+      text-decoration: none;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: var(--transition);
+    }
+
+    .check-updates:hover {
+      color: var(--dark-text);
+      text-decoration: underline;
     }
 
     .button-group {
       display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 20px;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 14px;
+      gap: 6px;
     }
 
     @media (max-width: 400px) {
       .button-group {
-        flex-direction: column;
-      }
-      .button {
-        width: 100%;
+        gap: 10px;
       }
     }
 
     .fade-in {
-      animation: fadeIn 0.5s ease-in;
+      animation: fadeIn 0.4s ease-in;
     }
 
     @keyframes fadeIn {
@@ -110,7 +124,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Disable text selection */
     .no-select {
       user-select: none;
     }
@@ -122,8 +135,12 @@
       <h1>You're Offline</h1>
       <p>No internet connection detected. Your mining session and balance remain intact.</p>
       
-      <a href="#" class="button" onclick="loadOfflineNews(event)">Check Latest Updates</a>
-      <div class="reconnecting" id="reconnect-text">Attempting to reconnect...</div>
+      <div class="button-group">
+        <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a>
+        <button class="refresh-btn" onclick="refreshPage(event)">Refresh Page</button>
+      </div>
+
+      <div class="reconnecting" id="network-status">Reconnect when you're back online.</div>
     </div>
   </div>
 
@@ -141,51 +158,27 @@
       event.preventDefault();
       
       const container = document.getElementById('main-content');
-      const newsHTML = `
+      container.innerHTML = `
         <div class="fade-in">
           <h1>Latest Updates</h1>
           <p class="last-updated">Last cached: ${cachedNews.lastUpdated}</p>
           ${cachedNews.items.map(item => `<h3>${item.title}</h3><p>${item.content}</p>`).join('')}
           <div class="button-group">
-            <a href="#" class="button" onclick="goBack(event)">Back</a>
+            <a href="#" class="check-updates" onclick="goBack(event)">Back</a>
           </div>
         </div>
       `;
-
-      container.innerHTML = newsHTML;
     }
 
     function goBack(event) {
       event.preventDefault();
-      document.getElementById('main-content').innerHTML = `
-        <div class="offline-container fade-in">
-          <h1>You're Offline</h1>
-          <p>No internet connection detected. Your mining session and balance remain intact.</p>
-          <a href="#" class="button" onclick="loadOfflineNews(event)">Check Latest Updates</a>
-          <div class="reconnecting" id="reconnect-text">Attempting to reconnect...</div>
-        </div>
-      `;
+      location.reload();
     }
 
-    function checkNetwork() {
-      if (navigator.onLine) {
-        document.getElementById('reconnect-text').textContent = 'Connected! Redirecting...';
-        setTimeout(() => { window.location.href = 'index.html'; }, 800);
-      } else {
-        setTimeout(checkNetwork, 5000);
-      }
+    function refreshPage(event) {
+      event.preventDefault();
+      location.reload();
     }
-
-    window.addEventListener('online', () => {
-      document.getElementById('reconnect-text').textContent = 'Connected! Redirecting...';
-      setTimeout(() => { window.location.href = 'index.html'; }, 800);
-    });
-
-    window.addEventListener('offline', () => {
-      document.getElementById('reconnect-text').textContent = 'Attempting to reconnect...';
-    });
-
-    checkNetwork();
 
     cachedNews.lastUpdated = new Date().toLocaleString();
   </script>
