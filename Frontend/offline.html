@@ -63,33 +63,11 @@
       color: var(--medium-text);
     }
 
-    .refresh-btn {
-      display: inline-block;
-      background-color: var(--primary-color);
-      color: white;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 400;
-      cursor: pointer;
-      transition: var(--transition);
-      border: none;
-      outline: none;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .refresh-btn:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    }
-
     .check-updates {
       display: inline-block;
       font-size: 14px;
       font-weight: 400;
-      color: var(--medium-text);
+      color: white;
       text-decoration: none;
       cursor: pointer;
       padding: 8px 0;
@@ -102,17 +80,12 @@
     }
 
     .button-group {
+      
       display: flex;
       flex-direction: column;
       align-items: center;
       margin-top: 14px;
       gap: 6px;
-    }
-
-    @media (max-width: 400px) {
-      .button-group {
-        gap: 10px;
-      }
     }
 
     .fade-in {
@@ -127,6 +100,12 @@
     .no-select {
       user-select: none;
     }
+
+    .reconnecting {
+      margin-top: 15px;
+      font-size: 13px;
+      color: var(--light-text);
+    }
   </style>
 </head>
 <body class="no-select">
@@ -136,11 +115,11 @@
       <p>No internet connection detected. Your mining session and balance remain intact.</p>
       
       <div class="button-group">
-        <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a>
-        <button class="refresh-btn" onclick="refreshPage(event)">Refresh Page</button>
+        <button style=" background-color: #2C3E20; border-radius: 5px; padding: 4px;">
+        <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a></button>
       </div>
 
-      <div class="reconnecting" id="network-status">Reconnect when you're back online.</div>
+      <div class="reconnecting" id="network-status">Reconnecting...</div>
     </div>
   </div>
 
@@ -164,7 +143,7 @@
           <p class="last-updated">Last cached: ${cachedNews.lastUpdated}</p>
           ${cachedNews.items.map(item => `<h3>${item.title}</h3><p>${item.content}</p>`).join('')}
           <div class="button-group">
-            <a href="#" class="check-updates" onclick="goBack(event)">Back</a>
+            <a href="#" style=" background-color: #2C3E20; border-radius: 5px; padding: 4px;" class="check-updates" onclick="goBack(event)">Back</a>
           </div>
         </div>
       `;
@@ -175,10 +154,21 @@
       location.reload();
     }
 
-    function refreshPage(event) {
-      event.preventDefault();
-      location.reload();
+    function checkConnection() {
+      if (navigator.onLine) {
+        document.getElementById("network-status").innerText = "Reconnected! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "index.html"; // Redirect to index.html when back online
+        }, 1000);
+      } else {
+        document.getElementById("network-status").innerText = "Reconnecting...";
+      }
     }
+
+    window.addEventListener("online", checkConnection);
+    window.addEventListener("offline", () => {
+      document.getElementById("network-status").innerText = "Still offline...";
+    });
 
     cachedNews.lastUpdated = new Date().toLocaleString();
   </script>
