@@ -40,47 +40,37 @@
       max-width: 460px;
       padding: 0 20px;
     }
+    .check-updates {
+      color: white;
+      font-size: 15px;
+    }
+    a {
+      text-decoration: none;
+    }
 
     .offline-container {
       background: white;
       box-shadow: var(--shadow);
       border-radius: var(--border-radius);
-      padding: 30px;
+      padding: 20px;
       text-align: center;
       transition: var(--transition);
     }
 
     .offline-container h1 {
-      font-size: 22px;
+      font-size: 30px;
       font-weight: 500;
       margin-bottom: 10px;
       color: var(--secondary-color);
     }
 
     .offline-container p {
-      font-size: 14px;
+      font-size: 15px;
       margin-bottom: 20px;
       color: var(--medium-text);
     }
 
-    .check-updates {
-      display: inline-block;
-      font-size: 14px;
-      font-weight: 400;
-      color: white;
-      text-decoration: none;
-      cursor: pointer;
-      padding: 8px 0;
-      transition: var(--transition);
-    }
-
-    .check-updates:hover {
-      color: var(--dark-text);
-      text-decoration: underline;
-    }
-
     .button-group {
-      
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -103,7 +93,7 @@
 
     .reconnecting {
       margin-top: 15px;
-      font-size: 13px;
+      font-size: 17px;
       color: var(--light-text);
     }
   </style>
@@ -111,12 +101,13 @@
 <body class="no-select">
   <div class="container">
     <div class="offline-container fade-in" id="main-content">
-      <h1>You're Offline</h1>
+      <h1><strong>You're Offline</strong></h1>
       <p>No internet connection detected. Your mining session and balance remain intact.</p>
       
       <div class="button-group">
-        <button style=" background-color: #2C3E20; border-radius: 5px; padding: 4px;">
-        <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a></button>
+        <button style="background-color: #2C3E20; border-radius: 5px; padding: 4px;">
+          <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a>
+        </button>
       </div>
 
       <div class="reconnecting" id="network-status">Reconnecting...</div>
@@ -125,52 +116,79 @@
 
   <script>
     let cachedNews = {
-      lastUpdated: "Unknown",
-      items: [
-        { title: "System Maintenance Complete", content: "Recent upgrades have improved mining efficiency by 12%." },
-        { title: "Network Status", content: "All systems operational. Mining rewards are functioning normally." },
-        { title: "New Features Coming Soon", content: "We're working on exciting new features for the dashboard!" }
-      ]
-    };
+  lastUpdated: "Unknown",
+  items: [
+    { title: "System Maintenance Complete", content: "Recent upgrades have improved mining efficiency by 12%." },
+    { title: "Network Status", content: "All systems operational. Mining rewards are functioning normally." },
+    { title: "New Features Coming Soon", content: "We're working on exciting new features for the dashboard!" }
+  ]
+};
 
-    function loadOfflineNews(event) {
-      event.preventDefault();
-      
-      const container = document.getElementById('main-content');
-      container.innerHTML = `
-        <div class="fade-in">
-          <h1>Latest Updates</h1>
-          <p class="last-updated">Last cached: ${cachedNews.lastUpdated}</p>
-          ${cachedNews.items.map(item => `<h3>${item.title}</h3><p>${item.content}</p>`).join('')}
-          <div class="button-group">
-            <a href="#" style=" background-color: #2C3E20; border-radius: 5px; padding: 4px;" class="check-updates" onclick="goBack(event)">Back</a>
-          </div>
-        </div>
-      `;
-    }
+function loadOfflineNews(event) {
+  event.preventDefault();
 
-    function goBack(event) {
-      event.preventDefault();
-      location.reload();
-    }
+  const container = document.getElementById("main-content");
+  container.innerHTML = `
+    <div class="fade-in">
+      <h1>Latest Updates</h1>
+      <p class="last-updated">Last cached: ${cachedNews.lastUpdated}</p>
+      ${cachedNews.items.map(item => `<h3>${item.title}</h3><p>${item.content}</p>`).join('')}
+      <div class="button-group">
+        <a href="#" style="background-color: #2C3E20; border-radius: 5px; padding: 4px;" class="check-updates" onclick="goBack(event)">Back</a>
+      </div>
+    </div>
+  `;
+}
 
-    function checkConnection() {
-      if (navigator.onLine) {
-        document.getElementById("network-status").innerText = "Reconnected! Redirecting...";
-        setTimeout(() => {
-          window.location.href = "index.html"; // Redirect to index.html when back online
-        }, 1000);
+function goBack(event) {
+  event.preventDefault();
+
+  // Restore the original offline message
+  const container = document.getElementById("main-content");
+  container.innerHTML = `
+    <h1>You're Offline</h1>
+    <p>No internet connection detected. Your mining session and balance remain intact.</p>
+    <div class="button-group">
+      <button style="background-color: #2C3E20; border-radius: 5px; padding: 4px;">
+        <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a>
+      </button>
+    </div>
+    <div class="reconnecting" id="network-status">Reconnecting...</div>
+  `;
+
+  // Check if the internet is already restored after returning
+  checkConnection();
+}
+
+function checkConnection() {
+  if (navigator.onLine) {
+    document.getElementById("network-status").innerText = "Reconnected! Redirecting...";
+    console.log("Internet connection restored. Redirecting to index.html...");
+    
+    setTimeout(() => {
+      if (window.AndroidInterface) {
+        console.log("Redirecting via Android WebView...");
+        window.AndroidInterface.redirectToIndex();
       } else {
-        document.getElementById("network-status").innerText = "Reconnecting...";
+        console.log("Redirecting via window.location.replace...");
+        window.location.replace("index.html");
       }
-    }
+    }, 3000);
+  } else {
+    document.getElementById("network-status").innerText = "Reconnecting...";
+    console.log("Still offline...");
+  }
+}
 
-    window.addEventListener("online", checkConnection);
-    window.addEventListener("offline", () => {
-      document.getElementById("network-status").innerText = "Still offline...";
-    });
+// Listen for connection changes
+window.addEventListener("online", checkConnection);
+window.addEventListener("offline", () => {
+  document.getElementById("network-status").innerText = "Still offline...";
+  console.log("User is offline.");
+});
 
-    cachedNews.lastUpdated = new Date().toLocaleString();
+// Set last updated time
+cachedNews.lastUpdated = new Date().toLocaleString();
   </script>
 </body>
 </html>
