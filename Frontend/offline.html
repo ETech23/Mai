@@ -115,7 +115,7 @@
   </div>
 
   <script>
-    let cachedNews = {
+  let cachedNews = {
   lastUpdated: "Unknown",
   items: [
     { title: "System Maintenance Complete", content: "Recent upgrades have improved mining efficiency by 12%." },
@@ -156,7 +156,7 @@ function goBack(event) {
     <div class="reconnecting" id="network-status">Reconnecting...</div>
   `;
 
-  // Check if the internet is already restored after returning
+  // Check if internet is restored after returning
   checkConnection();
 }
 
@@ -164,7 +164,7 @@ function checkConnection() {
   if (navigator.onLine) {
     document.getElementById("network-status").innerText = "Reconnected! Redirecting...";
     console.log("Internet connection restored. Redirecting to index.html...");
-    
+
     setTimeout(() => {
       if (window.AndroidInterface) {
         console.log("Redirecting via Android WebView...");
@@ -180,7 +180,14 @@ function checkConnection() {
   }
 }
 
-// Listen for connection changes
+// Periodically check connection status (fix for WebView)
+setInterval(() => {
+  if (navigator.onLine) {
+    checkConnection();
+  }
+}, 3000);
+
+// Listen for connection changes (browser support)
 window.addEventListener("online", checkConnection);
 window.addEventListener("offline", () => {
   document.getElementById("network-status").innerText = "Still offline...";
