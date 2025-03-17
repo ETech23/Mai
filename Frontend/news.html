@@ -61,6 +61,141 @@
   </div>
 </div>-->
     
+         
+
+
+  <!-- Toggle Button --
+  <button class="toggle-button" onclick="toggleFullArticle(this)">Read More</button>
+
+  <!-- Reaction Buttons --
+  <div class="reaction-buttons">
+    <p class="view-count">📊 <span class="views">0</span></p>
+    <button class="like-btn">👍 <span class="like-count">0</span></button>
+    <button class="dislike-btn">❤️ <span class="dislike-count">0</span></button>
+  </div>
+</div>-->
+    <div style="background-color: #1e293b; padding: 1rem; border-radius: 12px; border: 1px solid gold; margin-bottom: 1.5rem; top: 0; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+     onclick="toggleDescription()">
+  
+  <!-- Header -->
+  <h4 style="font-size: 1.5rem; font-weight: 500; color: #fbbf24; margin-bottom: 1rem; margin-top: 0;">
+    Exciting Update: Mining Rate Boosted for Testers!
+  </h4>
+  <img src="img/land.webp" alt="The Mai Project Image" style="display: none;">
+
+  <!-- Short Description -->
+  <p id="short-description" style="color: #e5e7eb; line-height: 1.2; font-size: 13px; padding: 0; margin-bottom: 1rem;">
+    We’re thrilled to announce a major update to <strong style="color: #fbbf24;">Maichain</strong> as part of our ongoing testing phase. To show our appreciation for your support and feedback, we’ve <strong style="color: #fbbf24;">boosted</strong> the mining rate for all testers! Here’s everything you need to know about this exciting change...
+  </p>
+
+  <!-- Full Description (Initially Hidden) -->
+  <div id="full-description" style="display: none; position: fixed; top: 0; left: 0; width: 80%; height: 100%; background-color: #1e293b; padding: 0 2rem; overflow-y: auto; z-index: 1000; margin-top: 0;">
+    <h4 style="font-size: 1.5rem; font-weight: 700; color: #fbbf24; margin-bottom: 1rem;">
+    Exciting Update: Mining Rate Boosted for Testers!
+  </h4>
+    <!-- Close Button -->
+    <button onclick="closeFullDescription(event)" style="position: absolute; top: 1rem; right: 1rem; background-color: #fbbf24; color: #1e293b; border: none; padding: 0 1rem; border-radius: 0.5rem; cursor: pointer; font-weight: 600;">
+      x
+    </button>
+    <p style="color: #9ca3af; font-size: 0.875rem; margin-bottom: 1rem;">
+      March 17, 2025
+    </p>
+    <p style="color: #e5e7eb; line-height: 1.6; margin-bottom: 1rem;">
+      We’ve adjusted the mining rate to <strong style="color: #fbbf24;">0.0010 MAI per second</strong> for all users participating in the testing phase. This means you can now earn <strong style="color: #fbbf24;">double the tokens</strong> compared to the previous rate of 0.0005 MAI/sec.
+    </p>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #fbbf24; margin-bottom: 0.75rem;">
+      Why the Change?
+    </h3>
+    <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Reward Early Adopters</strong>: We want to thank you for being part of our journey and helping us improve the app.
+      </li>
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Encourage Engagement</strong>: The higher mining rate makes it even more rewarding to explore the app’s features and provide feedback.
+      </li>
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Test the System</strong>: This adjustment helps us evaluate the app’s performance under higher token generation rates.
+      </li>
+    </ul>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #fbbf24; margin-bottom: 0.75rem;">
+      How Does This Affect You?
+    </h3>
+    <p style="color: #e5e7eb; line-height: 1.6; margin-bottom: 1rem;">
+      For testers, this means you’ll accumulate tokens faster, giving you more opportunities to explore the app’s features. For future users, this boosted mining rate is a <strong style="color: #fbbf24;">limited-time offer</strong> for testers only. Once the testing phase ends, the rate will return to its original value.
+    </p>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #fbbf24; margin-bottom: 0.75rem;">
+      What’s Next?
+    </h3>
+    <p style="color: #e5e7eb; line-height: 1.6; margin-bottom: 1rem;">
+      We’re constantly working to improve <strong style="color: #fbbf24;">Maichain</strong> and make it the best platform for learning about blockchain, AI, and cryptocurrency. Here’s what you can look forward to in the coming weeks:
+    </p>
+    <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">New Features</strong>: Enhanced AI tools, community-driven updates, and more.
+      </li>
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Bug Fixes</strong>: We’re addressing all reported issues to ensure a smooth user experience.
+      </li>
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Your Feedback Matters</strong>: Keep sharing your thoughts and suggestions—they directly influence our development roadmap.
+      </li>
+    </ul>
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #fbbf24; margin-bottom: 0.75rem;">
+      How to Get the Most Out of the Update
+    </h3>
+    <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Use the App Daily</strong>: The more you mine, the more tokens you’ll earn!
+      </li>
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Invite Friends</strong>: Share your referral link to boost your mining rate even further.
+      </li>
+      <li style="color: #e5e7eb; margin-bottom: 0.5rem;">
+        <strong style="color: #fbbf24;">Provide Feedback</strong>: Let us know what you think about the new mining rate and other features.
+      </li>
+    </ul>
+    <p style="color: #e5e7eb; line-height: 1.6; margin-bottom: 1rem;">
+      We’re incredibly grateful to have such an engaged and supportive community. Your participation in the testing phase is helping us build a platform that truly meets your needs. Keep mining, keep exploring, and don’t forget to share your feedback!
+    </p>
+    <p style="color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem;">
+      Happy mining,
+    </p>
+    <p style="color: #fbbf24; font-weight: 600; margin-bottom: 1rem;">
+      The Maichain Team
+    </p>
+    <p style="color: #9ca3af; font-style: italic;">
+      P.S. Don’t miss out on this limited-time opportunity to earn more tokens. Start mining today and let us know what you think!
+    </p>
+  </div>
+</div>
+
+<!-- Inline JavaScript for Toggling and Closing -->
+<script>
+  function toggleDescription() {
+    const shortDescription = document.getElementById("short-description");
+    const fullDescription = document.getElementById("full-description");
+
+    if (fullDescription.style.display === "none") {
+      // Show full description
+      fullDescription.style.display = "block";
+      shortDescription.style.display = "none";
+    } else {
+      // Show short description
+      fullDescription.style.display = "none";
+      shortDescription.style.display = "block";
+    }
+  }
+
+  function closeFullDescription(event) {
+    event.stopPropagation(); // Prevent the parent div's onclick event from firing
+    const shortDescription = document.getElementById("short-description");
+    const fullDescription = document.getElementById("full-description");
+
+    // Hide full description and show short description
+    fullDescription.style.display = "none";
+    shortDescription.style.display = "block";
+  }
+</script>
     
      <div class="news-article short-view" data-title="The Mai Project Progress" >
   <h4>Mastering Prompt Engineering: Unlocking the Power of AI</h4>

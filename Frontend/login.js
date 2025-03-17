@@ -18,7 +18,7 @@ if (referralCode) {
 
   if (redirectToPlayStore) {
     // Redirect to Google Play Store with the referral code
-    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.example.mai&referrer=${referralCode}`;
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.mai.app&referrer=${referralCode}`;
     console.log("Redirecting to Play Store:", playStoreUrl);
     window.location.href = playStoreUrl;
   }
