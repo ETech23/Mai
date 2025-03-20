@@ -4,42 +4,234 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-  <div id="admin-dashboard">
-    <!-- Header -->
-    <header>
-      <button id="back-button" class="icon-button">↩️</button>
-      <h1>Admin Dashboard</h1>
-    </header>
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>MaiCoin</h2>
+        <span class="admin-badge">Admin</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="nav-item active" data-section="user-section">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+          </li>
+          <li class="nav-item" data-section="message-section">
+            <i class="fas fa-envelope"></i>
+            <span>Messages</span>
+          </li>
+          <li class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+          </li>
+          <li class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button id="logout-button">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
 
-    <!-- User Section -->
-    <h2 id="user-section-title">Users »»</h2>
-<section id="user-section">
-   <!-- Add id for the clickable title -->
-  <div class="filters">
-    <input type="number" id="min-balance" placeholder="Min Balance">
-    <input type="number" id="max-balance" placeholder="Max Balance">
-    <input type="number" id="min-referrals" placeholder="Min Referrals">
-    <input type="number" id="max-referrals" placeholder="Max Referrals">
-    <button id="apply-filters" class="primary-button">Apply Filters</button>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search..." class="search-input">
+        </div>
+        
+        <div class="user-profile">
+          <div class="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">3</span>
+          </div>
+          <div class="profile-info">
+            <img src="https://via.placeholder.com/40" alt="Admin" class="profile-image">
+            <span>Admin User</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-content">
+        <!-- Users Section -->
+        <section id="user-section" class="dashboard-section active">
+          <div class="section-header">
+            <h2>User Management</h2>
+            <div class="section-actions">
+              <button class="action-button">
+                <i class="fas fa-plus"></i> Add User
+              </button>
+              <button class="action-button">
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>User Filters</h3>
+              <button id="toggle-filters" class="toggle-button">
+                <i class="fas fa-filter"></i>
+              </button>
+            </div>
+            
+            <div class="filter-panel">
+              <div class="filter-row">
+                <div class="filter-group">
+                  <label>Balance Range</label>
+                  <div class="input-group">
+                    <input type="number" id="min-balance" placeholder="Min">
+                    <span class="separator">to</span>
+                    <input type="number" id="max-balance" placeholder="Max">
+                  </div>
+                </div>
+                
+                <div class="filter-group">
+                  <label>Referrals Range</label>
+                  <div class="input-group">
+                    <input type="number" id="min-referrals" placeholder="Min">
+                    <span class="separator">to</span>
+                    <input type="number" id="max-referrals" placeholder="Max">
+                  </div>
+                </div>
+                
+                <button id="apply-filters" class="primary-button">
+                  <i class="fas fa-check"></i> Apply
+                </button>
+                
+                <button id="reset-filters" class="secondary-button">
+                  <i class="fas fa-times"></i> Reset
+                </button>
+              </div>
+            </div>
+            
+            <div class="user-stats">
+              <div class="stat-card">
+                <i class="fas fa-user stat-icon"></i>
+                <div class="stat-info">
+                  <h4>Total Users</h4>
+                  <p id="total-users">Loading...</p>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <i class="fas fa-user-check stat-icon"></i>
+                <div class="stat-info">
+                  <h4>Active</h4>
+                  <p id="active-users">--</p>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <i class="fas fa-user-lock stat-icon"></i>
+                <div class="stat-info">
+                  <h4>Suspended</h4>
+                  <p id="suspended-users">--</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Balance</th>
+                    <th>Referrals</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="user-list">
+                  <!-- User data will be inserted here via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="pagination-controls" id="user-pagination">
+              <!-- Pagination buttons will be inserted here via JavaScript -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Messages Section -->
+        <section id="message-section" class="dashboard-section">
+          <div class="section-header">
+            <h2>Message Center</h2>
+            <div class="section-actions">
+              <button class="action-button">
+                <i class="fas fa-envelope"></i> Send Broadcast
+              </button>
+              <button class="action-button">
+                <i class="fas fa-check-double"></i> Mark All Read
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>User Messages</h3>
+              <div class="message-filters">
+                <select class="filter-select" id="message-filter">
+                  <option value="all">All Messages</option>
+                  <option value="unread">Unread</option>
+                  <option value="responded">Responded</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="message-container" id="message-list">
+              <!-- Message items will be inserted here via JavaScript -->
+            </div>
+            
+            <div class="pagination-controls" id="message-pagination">
+              <!-- Pagination buttons will be inserted here via JavaScript -->
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   </div>
-  <div id="user-list" class="list-container"></div>
-  <div class="pagination" id="user-pagination"></div>
-  <p id="total-users"></p>
-</section>
-    
-    <div id="filter-by"></div>
-    <div id="sort-order"></div>
 
-    <!-- Message Section -->
-    <h2 id="message-section-title">Messages »»</h2>
-    <section id="message-section">
-   <!-- Add id for the clickable title -->
-  <div id="message-list" class="list-container"></div>
-  <div class="message-pagination" id="message-pagination"></div>
-</section>
+  <!-- Modal Templates -->
+  <div class="modal-container" id="response-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Respond to Message</h3>
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="message-preview">
+          <p><strong>From:</strong> <span id="modal-user-name"></span></p>
+          <p><strong>Message:</strong> <span id="modal-message-text"></span></p>
+        </div>
+        <div class="response-form">
+          <label for="response-text">Your Response</label>
+          <textarea id="response-text" rows="4" placeholder="Type your response here..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="secondary-button cancel-button">Cancel</button>
+        <button class="primary-button send-button" id="send-response-button">Send Response</button>
+      </div>
+    </div>
   </div>
 
   <script src="admin.js"></script>
