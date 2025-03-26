@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const emailDisplay = document.getElementById("emailDisplay");
   const statusDisplay = document.getElementById("statusDisplay");
   const verificationIcon = document.getElementById("verificationIcon");
+  const emailVerificationSection = document.querySelector('.email-verification-section');
+
+  // Hide email verification section by default
+  if (emailVerificationSection) {
+    emailVerificationSection.style.display = 'none';
+  }
 
   // Email Verification Request
   if (verifyEmailBtn) {
@@ -116,8 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const verificationData = await verificationResponse.json();
 
       if (verificationData.isVerified) {
-        // Hide email verification input section if already verified
-        const emailVerificationSection = document.querySelector('.email-verification-section');
+        // Hide email verification input section for verified users
         if (emailVerificationSection) {
           emailVerificationSection.style.display = 'none';
         }
@@ -127,6 +132,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         verificationIcon.setAttribute("data-feather", "check-circle");
         verificationIcon.classList.add("verified");
       } else {
+        // Show email verification section for unverified users
+        if (emailVerificationSection) {
+          emailVerificationSection.style.display = 'block';
+        }
+
         statusDisplay.textContent = "Not Verified";
         statusDisplay.classList.add("unverified");
         verificationIcon.setAttribute("data-feather", "x-circle");

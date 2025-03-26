@@ -798,9 +798,17 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update dropdown content
 userInfoDropdown.innerHTML = `
   <p class="text-center mb-2"><strong>MAI Chain</strong></p>
+     <!-- <p class="mb-2">
+    <i class="fas fa-id-card me-2"></i> 
+    <a href="profile.html" class="text-decoration-none text-white">
+        <strong>Profile</strong>
+    </a>
+</p>-->
   <p class="mb-2"><i class="fas fa-user me-2"></i> <strong>${name}</strong></p>
   <p class="mb-2"><i class="fas fa-user-tag me-2"></i> <strong>${username}</strong></p>
-  <p class="mb-2"><i class="fas fa-envelope me-2"></i> <strong>${email}</strong></p>
+  <p class="mb-2"><i class="fas fa-envelope me-2"></i> 
+      <a href="profile.html" class="text-decoration-none text-white">
+      <strong>${email}</strong></p></a>
   <p class="mb-2"><i class="fas fa-fire me-2"></i> <strong>${streakLevel}</strong></p>
   <p class="mb-2"><i class="fas fa-cogs me-2"></i> <strong>${miningRate.toFixed(5)} MAI/sec</strong></p>
   <p class="mb-2"><i class="fas fa-wallet me-2"></i> <strong>${balance.toFixed(5)} MAI</strong></p>
