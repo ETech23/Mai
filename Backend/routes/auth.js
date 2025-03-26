@@ -145,7 +145,7 @@ router.post("/forgot-password", async (req, res) => {
   user.resetTokenExpires = Date.now() + 3600000; // Token expires in 1 hour
   await user.save();
 
-  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password.html?token=${token}`;
 
   await transporter.sendMail({
     from: process.env.ZOHO_EMAIL,
