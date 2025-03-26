@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <style>
+    .verification-badge {
+      transition: all 0.3s ease;
+    }
+    .verification-badge.verified {
+      color: #10B981; /* Emerald green for verified status */
+    }
+    .verification-badge.unverified {
+      color: #EF4444; /* Red for unverified status */
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-md rounded-lg p-8 w-96">
+    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Email Verification</h2>
+    
+    <div class="mb-4">
+      <label for="emailInput" class="block text-gray-700 mb-2">Email Address</label>
+      <input 
+        type="email" 
+        id="emailInput" 
+        placeholder="Enter your email" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+    </div>
+    
+    <button 
+      id="verifyEmailBtn" 
+      class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300 mb-4"
+    >
+      Verify Email
+    </button>
+    
+    <p id="message" class="text-center text-sm text-gray-600 mt-2"></p>
+
+    <div class="mt-6 bg-gray-50 rounded-md p-4">
+      <h3 class="text-lg font-semibold mb-2 text-gray-800">Your Profile</h3>
+      <div class="flex items-center justify-between">
+        <span class="text-gray-700">Email:</span>
+        <span id="emailDisplay" class="font-medium text-gray-900"></span>
+      </div>
+      <div class="flex items-center justify-between mt-2">
+        <span class="text-gray-700">Status:</span>
+        <div class="flex items-center">
+          <span id="statusDisplay" class="mr-2 verification-badge"></span>
+          <i id="verificationIcon" class="verification-badge"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script2.js"></script>
+  <script>
+    // Initialize Feather icons
+    feather.replace();
+  </script>
+</body>
+</html>

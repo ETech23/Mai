@@ -182,6 +182,62 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+const { sendVerificationEmail } = require("../emailService");
+
+// Request email verification
+router.post("/request-email-verification", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) return res.status(400).json({ message: "User not found" });
+
+  if (user.isVerified) return res.status(400).json({ message: "Email already verified" });
+
+  const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "24h" });
+
+  user.verificationToken = token;
+  user.verificationTokenExpires = Date.now() + 24 * 3600000; // 24 hours expiry
+  await user.save();
+
+  await sendVerificationEmail(email, token);
+
+  res.json({ message: "Verification email sent! Check your inbox." });
+});
+
+// Verify email
+router.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: decoded.email });
+
+    if (!user || user.isVerified || user.verificationToken !== token || Date.now() > user.verificationTokenExpires) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpires = null;
+    await user.save();
+
+    res.redirect(`${process.env.FRONTEND_URL}/email-verified.html`);
+  } catch (error) {
+    res.status(400).json({ message: "Invalid token" });
+  }
+});
+
+// Get verification status
+router.get("/verification-status", async (req, res) => {
+  const { email } = req.query;
+  const user = await User.findOne({ email });
+
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  res.json({ isVerified: user.isVerified });
+});
+
+
 // Google Sign-In Callback
 router.post("/google/callback", async (req, res) => {
     const { token } = req.body;
