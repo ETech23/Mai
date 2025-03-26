@@ -5,6 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  resetToken: String,
+  resetTokenExpires: Date,
   balance: { type: Number, default: 0 }, // Mining balance
   isAdmin: { type: Boolean, default: false }, // Admin
   referralCode: { type: String, unique: true }, // Unique referral code

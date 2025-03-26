@@ -3,11 +3,25 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { OAuth2Client } = require("google-auth-library");
+const nodemailer = require("nodemailer");
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;             const client = new OAuth2Client(CLIENT_ID);
 
 const router = express.Router();
 const auth = require("../middleware/auth"); // Import auth middleware
+
+// Nodemailer setup with Zoho Mail
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.zoho.com",  // Zoho SMTP server
+  port: 465,              // Secure SSL port
+  secure: true,           // Use SSL
+  auth: {
+    user: process.env.ZOHO_EMAIL,       // Your Zoho email
+    pass: process.env.ZOHO_PASSWORD,    // Your Zoho App Password
+  },
+});
 
 // Register a user
 router.post("/register", async (req, res) => {
@@ -119,6 +133,55 @@ router.get("/details", auth, async (req, res) => {
   }
 });
 
+// **1. Request Password Reset**
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) return res.status(400).json({ message: "User not found" });
+
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+  user.resetToken = token;
+  user.resetTokenExpires = Date.now() + 3600000; // Token expires in 1 hour
+  await user.save();
+
+  const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+  await transporter.sendMail({
+    from: process.env.ZOHO_EMAIL,
+    to: email,
+    subject: "Password Reset Request",
+    html: `<p>Click the link below to reset your password:</p>
+           <a href="${resetLink}">${resetLink}</a>
+           <p>This link expires in 1 hour.</p>`,
+  });
+
+  res.json({ message: "Password reset email sent!" });
+});
+
+// **2. Reset Password**
+router.post("/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ _id: decoded.userId, resetToken: token });
+
+    if (!user || user.resetTokenExpires < Date.now()) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetToken = null;
+    user.resetTokenExpires = null;
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid token" });
+  }
+});
 
 // Google Sign-In Callback
 router.post("/google/callback", async (req, res) => {
