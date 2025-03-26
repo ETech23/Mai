@@ -681,6 +681,13 @@ menuIcon.addEventListener("click", async (event) => {  // Add (event) here
 
     const { username, email, balance, referrals, referralCode, name } = user;
 
+    // Store the entire user object as JSON
+localStorage.setItem("userData", JSON.stringify(user));
+
+// Or store individual values with clear key names
+localStorage.setItem("userEmail", email);
+localStorage.setItem("username", username);
+localStorage.setItem("balance", balance);
     const referralCount = referrals.length;
     localStorage.setItem("referralCount", referralCount);
     let streakLevel;

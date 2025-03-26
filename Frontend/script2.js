@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const emailInput = document.getElementById("emailInput");
   const verifyEmailBtn = document.getElementById("verifyEmailBtn");
   const messageElement = document.getElementById("message");
@@ -18,9 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch("https://your-backend.com/auth/request-email-verification", {
+        const token = localStorage.getItem('token'); // Optional token handling
+        const response = await fetch("https://mai-vmox.onrender.com/api/auth/request-email-verification", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            ...(token ? { "Authorization": `Bearer ${token}` } : {})
+          },
           body: JSON.stringify({ email }),
         });
 
@@ -30,6 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           messageElement.textContent = data.message;
           messageElement.className = "text-center text-green-500 mt-2";
+          
+          // Optional: Clear input after successful request
+          emailInput.value = '';
         } else {
           messageElement.textContent = data.message || "Verification request failed";
           messageElement.className = "text-center text-red-500 mt-2";
@@ -46,55 +53,97 @@ document.addEventListener("DOMContentLoaded", () => {
   const token = urlParams.get("token");
 
   if (token) {
-    fetch(`https://your-backend.com/auth/verify-email?token=${token}`)
-      .then(res => res.json())
-      .then(data => {
-        const verifyMessage = document.getElementById("message");
+    try {
+      const res = await fetch(`https://mai-vmox.onrender.com/api/auth/verify-email?token=${token}`);
+      const data = await res.json();
+      
+      const verifyMessage = document.getElementById("message");
+      
+      if (data.message.toLowerCase().includes("successfully")) {
+        verifyMessage.textContent = data.message;
+        verifyMessage.className = "text-center text-green-500 mt-2";
         
-        if (data.message.toLowerCase().includes("successfully")) {
-          verifyMessage.textContent = data.message;
-          verifyMessage.className = "text-center text-green-500 mt-2";
-        } else {
-          verifyMessage.textContent = data.message;
-          verifyMessage.className = "text-center text-red-500 mt-2";
-        }
-      })
-      .catch(error => {
-        const verifyMessage = document.getElementById("message");
-        verifyMessage.textContent = "Verification failed. Please try again.";
+        // Reload profile page after successful verification
+        setTimeout(() => {
+          window.location.href = 'profile.html';
+        }, 2000); // 2-second delay to show success message
+      } else {
+        verifyMessage.textContent = data.message;
         verifyMessage.className = "text-center text-red-500 mt-2";
-      });
+      }
+    } catch (error) {
+      const verifyMessage = document.getElementById("message");
+      verifyMessage.textContent = "Verification failed. Please try again.";
+      verifyMessage.className = "text-center text-red-500 mt-2";
+    }
   }
 
   // Fetch and Display Verification Status
   if (statusDisplay && verificationIcon) {
-    // In a real app, replace with actual email retrieval method
-    const email = "user@example.com"; 
-    
-    fetch(`https://your-backend.com/auth/verification-status?email=${email}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.isVerified) {
-          statusDisplay.textContent = "Verified";
-          statusDisplay.classList.add("verified");
-          verificationIcon.setAttribute("data-feather", "check-circle");
-          verificationIcon.classList.add("verified");
-        } else {
-          statusDisplay.textContent = "Not Verified";
-          statusDisplay.classList.add("unverified");
-          verificationIcon.setAttribute("data-feather", "x-circle");
-          verificationIcon.classList.add("unverified");
-        }
-        
-        // Refresh Feather icons after dynamic insertion
-        feather.replace();
-      })
-      .catch(error => {
-        statusDisplay.textContent = "Status Unavailable";
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Fetch user details from backend
+      const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
+        method: "GET",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      if (!response.ok) {
+        // Improved error handling without automatic logout
+        statusDisplay.textContent = "Unable to fetch user details";
         statusDisplay.classList.add("unverified");
         verificationIcon.setAttribute("data-feather", "alert-circle");
         verificationIcon.classList.add("unverified");
         feather.replace();
-      });
+        
+        console.error("Failed to fetch user details:", response.status);
+        return;
+      }
+      
+      const user = await response.json();
+      console.log("User details fetched:", user);
+
+      const { username, email, balance, referrals, referralCode, name } = user;
+      
+      // Update email display
+      if (emailDisplay) {
+        emailDisplay.textContent = email;
+      }
+
+      // Check verification status
+      const verificationResponse = await fetch(`https://mai-vmox.onrender.com/api/auth/verification-status?email=${email}`);
+      const verificationData = await verificationResponse.json();
+
+      if (verificationData.isVerified) {
+        // Hide email verification input section if already verified
+        const emailVerificationSection = document.querySelector('.email-verification-section');
+        if (emailVerificationSection) {
+          emailVerificationSection.style.display = 'none';
+        }
+
+        statusDisplay.textContent = "Verified";
+        statusDisplay.classList.add("verified");
+        verificationIcon.setAttribute("data-feather", "check-circle");
+        verificationIcon.classList.add("verified");
+      } else {
+        statusDisplay.textContent = "Not Verified";
+        statusDisplay.classList.add("unverified");
+        verificationIcon.setAttribute("data-feather", "x-circle");
+        verificationIcon.classList.add("unverified");
+      }
+      
+      // Refresh Feather icons after dynamic insertion
+      feather.replace();
+
+    } catch (error) {
+      console.error("Error fetching user details or verification status:", error);
+      
+      statusDisplay.textContent = "Status Unavailable";
+      statusDisplay.classList.add("unverified");
+      verificationIcon.setAttribute("data-feather", "alert-circle");
+      verificationIcon.classList.add("unverified");
+      feather.replace();
+    }
   }
 });
