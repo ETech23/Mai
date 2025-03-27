@@ -862,7 +862,11 @@ function setupCourseButtons() {
     });
 }
 
-// Modified loadLessons function
+
+        
+
+        
+    // Modified loadLessons function
 async function loadLessons(course, level) {
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
@@ -873,11 +877,14 @@ async function loadLessons(course, level) {
         
         // Populate sidebar lessons
         lessonsList.innerHTML = courseData.lessons.map((lesson, index) => {
+            // Extract the first line as the main lesson title
+            const firstLine = lesson.content.split("\n")[0] || "Untitled Lesson";
+            
             // Check if lesson is completed
             const isCompleted = progressManager.isLessonCompleted(course, level, index);
             return `
                 <div class="lesson-item ${isCompleted ? 'completed' : ''} ${index === 0 ? 'active' : ''}" data-index="${index}">
-                    <i>${isCompleted ? '✅' : '📚'}</i> ${lesson.title}
+                    <i>${isCompleted ? '✅' : '📚'}</i> ${firstLine}
                 </div>
             `;
         }).join('');
@@ -916,15 +923,15 @@ function loadLessonContent(index) {
     const lesson = courseData.lessons[index];
     if (!lesson) return;
 
+    // Split the content into lines and use the first as the title
+    const lines = lesson.content.split("\n").filter(line => line.trim() !== "");
+    const mainTitle = lines[0] || "Untitled Lesson";
+    const formattedContent = lines.slice(1).map(line => `<p>${line}</p>`).join('');
+
     lessonContent.innerHTML = `
-        <h2>${lesson.title}</h2>
+        <h2>${mainTitle}</h2>
         <div class="lesson-sections">
-            ${lesson.sections.map(section => `
-                <h3>${section.title}</h3>
-                <ul>
-                    ${section.points.map(point => `<li>${point}</li>`).join('')}
-                </ul>
-            `).join('')}
+            ${formattedContent}
         </div>
     `;
 
@@ -932,8 +939,8 @@ function loadLessonContent(index) {
     progressManager.updateCourseProgress(currentCourse, currentLevel, index);
     document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
 
-        // Update progress bar
-        updateProgressBar();
+    // Update progress bar
+    updateProgressBar();
 }
     
 /** async function loadLessons(course, level) {
