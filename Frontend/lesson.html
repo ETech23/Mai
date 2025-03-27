@@ -662,7 +662,7 @@ body {
         }
 
         // Submit Quiz with Level Progression
-        function submitQuiz() {
+      /**  function submitQuiz() {
             const quiz = courseData.lessons[currentLessonIndex].quiz;
             let correctAnswers = 0;
             let totalQuestions = quiz.length;
@@ -693,7 +693,44 @@ body {
                 `;
                 quizResult.classList.remove('fail');
                 quizResult.classList.add('pass');
-                submitQuizBtn.style.display = 'none';
+                submitQuizBtn.style.display = 'none';**/
+    function submitQuiz() {
+    const quiz = courseData.lessons[currentLessonIndex].quiz;
+    let correctAnswers = 0;
+    let totalQuestions = quiz.length;
+
+    // Check answers
+    quiz.forEach((question, qIndex) => {
+        const selectedOption = document.querySelector(
+            `.quiz-option[data-question="${qIndex}"].selected`
+        );
+        
+        if (selectedOption && 
+            parseInt(selectedOption.dataset.option) === question.correctAnswer) {
+            correctAnswers++;
+        }
+    });
+
+    // Calculate score
+    const score = (correctAnswers / totalQuestions) * 100;
+    quizAttempts++;
+
+    // Display result
+    quizResult.style.display = 'block';
+    
+    if (score >= 70) {
+        quizResult.innerHTML = `
+            <h4>Congratulations! 🎉</h4>
+            <p>You passed the quiz with ${score.toFixed(0)}% (${correctAnswers}/${totalQuestions} correct).</p>
+        `;
+        quizResult.classList.remove('fail');
+        quizResult.classList.add('pass');
+        submitQuizBtn.style.display = 'none';
+        nextLessonBtn.style.display = 'block'; 
+        quizResult.classList.remove('pass');
+        quizResult.classList.add('fail');
+        submitQuizBtn.style.display = 'block';
+        nextLessonBtn.style.display = 'none';
 
                 // Update level progression
                 if (currentLevel === 'beginner') {
