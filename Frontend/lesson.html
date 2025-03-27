@@ -685,12 +685,31 @@ class ProgressManager {
     loadProgress() {
         try {
             const savedProgress = localStorage.getItem(this.storageKey);
+            return savedProgress ? JSON.parse(savedProgress) : {
+                completedLessons: {},
+                quizPassed: {},
+                courseAccess: {}
+            };
+        } catch (error) {
+            console.error('Error loading progress:', error);
+            return {
+                completedLessons: {},
+                quizPassed: {},
+                courseAccess: {}
+            };
+        }
+    }
+
+    // Load progress state
+  /**  loadProgress() {
+        try {
+            const savedProgress = localStorage.getItem(this.storageKey);
             return savedProgress ? JSON.parse(savedProgress) : null;
         } catch (error) {
             console.error('Error loading progress:', error);
             return null;
         }
-    }
+    }**/
 
     // Update specific course and level progress
     updateCourseProgress(course, level, lessonIndex, completedLessons = []) {
@@ -721,19 +740,19 @@ class ProgressManager {
 
     // Mark a lesson as completed
     markLessonCompleted(course, level, lessonIndex) {
-        const progress = this.loadProgress() || {};
+        const progress = this.loadProgress();
         
-        if (!progress[course]) {
-            progress[course] = {};
+        // Initialize nested objects if they don't exist
+        if (!progress.completedLessons[course]) {
+            progress.completedLessons[course] = {};
         }
-
-        if (!progress[course][level]) {
-            progress[course][level] = { completedLessons: [] };
+        if (!progress.completedLessons[course][level]) {
+            progress.completedLessons[course][level] = [];
         }
 
         // Add lesson to completed list if not already there
-        if (!progress[course][level].completedLessons.includes(lessonIndex)) {
-            progress[course][level].completedLessons.push(lessonIndex);
+        if (!progress.completedLessons[course][level].includes(lessonIndex)) {
+            progress.completedLessons[course][level].push(lessonIndex);
         }
 
         this.saveProgress(progress);
@@ -742,11 +761,61 @@ class ProgressManager {
     // Check if a lesson is completed
     isLessonCompleted(course, level, lessonIndex) {
         const progress = this.loadProgress();
-        return progress && 
-               progress[course] && 
-               progress[course][level] && 
-               progress[course][level].completedLessons &&
-               progress[course][level].completedLessons.includes(lessonIndex);
+        return progress.completedLessons[course] && 
+               progress.completedLessons[course][level] && 
+               progress.completedLessons[course][level].includes(lessonIndex);
+    }
+
+    // Mark quiz as passed for a specific lesson
+    markQuizPassed(course, level, lessonIndex) {
+        const progress = this.loadProgress();
+        
+        // Initialize nested objects if they don't exist
+        if (!progress.quizPassed[course]) {
+            progress.quizPassed[course] = {};
+        }
+        if (!progress.quizPassed[course][level]) {
+            progress.quizPassed[course][level] = [];
+        }
+
+        // Add lesson to passed quiz list if not already there
+        if (!progress.quizPassed[course][level].includes(lessonIndex)) {
+            progress.quizPassed[course][level].push(lessonIndex);
+        }
+
+        this.saveProgress(progress);
+    }
+
+    // Check if quiz is passed for a specific lesson
+    isQuizPassed(course, level, lessonIndex) {
+        const progress = this.loadProgress();
+        return progress.quizPassed[course] && 
+               progress.quizPassed[course][level] && 
+               progress.quizPassed[course][level].includes(lessonIndex);
+    }
+
+    // Grant access to a course level
+    grantCourseAccess(course, level) {
+        const progress = this.loadProgress();
+        
+        // Initialize nested objects if they don't exist
+        if (!progress.courseAccess[course]) {
+            progress.courseAccess[course] = {};
+        }
+
+        // Mark level as accessible
+        progress.courseAccess[course][level] = true;
+
+        this.saveProgress(progress);
+    }
+
+    // Check if a course level is accessible
+    isCourseAccessible(course, level) {
+        const progress = this.loadProgress();
+        
+        // Check if the specific course and level are accessible
+        return progress.courseAccess[course] && 
+               progress.courseAccess[course][level] === true;
     }
 
     // Clear all progress
@@ -759,10 +828,39 @@ class ProgressManager {
     }
 }
 
-// Initialize Progress Manager
+
 const progressManager = new ProgressManager();
 
-// Modify existing functions to use progress tracking
+// Modify course selection to check accessibility
+function setupCourseButtons() {
+    courseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const course = this.dataset.course;
+            const initialLevel = 'beginner';
+
+            // Check if the course is accessible
+            if (!progressManager.isCourseAccessible(course, initialLevel) && course !== 'ai') {
+                showNotification('You must complete the AI course at the beginner level first!');
+                return;
+            }
+
+            // Remove active from all buttons
+            courseButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active to clicked button
+            this.classList.add('active');
+
+            // Update current course
+            currentCourse = course;
+            
+            // Update page title
+            courseTitle.textContent = `${currentCourse.toUpperCase()} Course - Beginner Level`;
+
+            // Load lessons for selected course
+            loadLessons(currentCourse, initialLevel);
+        });
+    });
+}
 
 // Modified loadLessons function
 async function loadLessons(course, level) {
@@ -770,25 +868,21 @@ async function loadLessons(course, level) {
         const response = await fetch(`${course}_${level}_lessons.json`);
         courseData = await response.json();
 
-        // Check for saved progress
-        const savedProgress = progressManager.getCourseProgress(course, level);
-        
         // Populate sidebar lessons
         lessonsList.innerHTML = courseData.lessons.map((lesson, index) => {
             // Check if lesson is completed
             const isCompleted = progressManager.isLessonCompleted(course, level, index);
+            const isQuizPassed = progressManager.isQuizPassed(course, level, index);
+            
             return `
-                <div class="lesson-item ${isCompleted ? 'completed' : ''} ${index === 0 ? 'active' : ''}" data-index="${index}">
-                    <i>${isCompleted ? '✅' : '📚'}</i> ${lesson.title}
+                <div class="lesson-item 
+                    ${isCompleted ? 'completed' : ''} 
+                    ${index === 0 ? 'active' : ''}" 
+                    data-index="${index}">
+                    <i>${isQuizPassed ? '✅' : '📚'}</i> ${lesson.title}
                 </div>
             `;
         }).join('');
-
-        // Determine which lesson to load
-        let initialLessonIndex = 0;
-        if (savedProgress && savedProgress.currentLessonIndex !== undefined) {
-            initialLessonIndex = savedProgress.currentLessonIndex;
-        }
 
         // Add event listeners to lesson items
         document.querySelectorAll('.lesson-item').forEach(item => {
@@ -802,18 +896,11 @@ async function loadLessons(course, level) {
                 // Load lesson content
                 currentLessonIndex = parseInt(item.dataset.index);
                 loadLessonContent(currentLessonIndex);
-
-                // Save current progress
-                progressManager.updateCourseProgress(
-                    currentCourse, 
-                    currentLevel, 
-                    currentLessonIndex
-                );
             });
         });
 
-        // Load initial lesson
-        document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
+        // Load first lesson by default
+        document.querySelector('.lesson-item[data-index="0"]').click();
 
         // Update progress bar
         updateProgressBar();
@@ -822,6 +909,43 @@ async function loadLessons(course, level) {
         lessonContentArea.innerHTML = `<p>Error loading lessons: ${error.message}</p>`;
     }
 }
+
+// Modified loadLessonContent function
+function loadLessonContent(index) {
+    const lesson = courseData.lessons[index];
+    
+    // Update lesson content
+    lessonContentArea.innerHTML = `
+        <h2>${lesson.title}</h2>
+        <p>${lesson.content}</p>
+    `;
+
+    // Show/hide quiz if present
+    if (lesson.quiz) {
+        quizContainer.style.display = 'block';
+        renderQuiz(lesson.quiz);
+
+        // Check if quiz is already passed
+        const isQuizPassed = progressManager.isQuizPassed(
+            currentCourse, 
+            currentLevel, 
+            index
+        );
+
+        // Update next lesson button visibility
+        nextLessonBtn.style.display = isQuizPassed ? 'block' : 'none';
+        submitQuizBtn.style.display = isQuizPassed ? 'none' : 'block';
+    } else {
+        quizContainer.style.display = 'none';
+        nextLessonBtn.style.display = 'block';
+        submitQuizBtn.style.display = 'none';
+    }
+
+    // Enable/disable navigation buttons
+    prevLessonBtn.disabled = index === 0;
+    nextLessonBtn.disabled = index === courseData.lessons.length - 1;
+}
+        
 
 // Modified submitQuiz function
 function submitQuiz() {
@@ -858,8 +982,13 @@ function submitQuiz() {
         submitQuizBtn.style.display = 'none';
         nextLessonBtn.style.display = 'block'; 
 
-        // Mark lesson as completed
+        // Mark lesson as completed and quiz as passed
         progressManager.markLessonCompleted(
+            currentCourse, 
+            currentLevel, 
+            currentLessonIndex
+        );
+        progressManager.markQuizPassed(
             currentCourse, 
             currentLevel, 
             currentLessonIndex
@@ -875,6 +1004,8 @@ function submitQuiz() {
         // Update level progression
         if (currentLevel === 'beginner') {
             levelProgress.beginner = true;
+            // Grant access to AI course
+            progressManager.grantCourseAccess('ai', 'beginner');
         } else if (currentLevel === 'intermediate') {
             levelProgress.intermediate = true;
         } else if (currentLevel === 'advanced') {
@@ -905,31 +1036,156 @@ function submitQuiz() {
             nextLessonBtn.style.display = 'none';
         }
     }
-
-    // Save progress after quiz submission
-    progressManager.updateCourseProgress(
-        currentCourse, 
-        currentLevel, 
-        currentLessonIndex
-    );
 }
 
+// Modify the initialization to setup course buttons
+document.addEventListener('DOMContentLoaded', () => {
+    // Setup course buttons with access control
+    setupCourseButtons();
+
+    // Initial load of AI course at beginner level
+    loadLessons('ai', 'beginner');
+});
+
+
+
+    
+
 // Add a clear progress button (optional)
+// First, add the CSS for notifications
+const style = document.createElement('style');
+style.textContent = `
+.notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.notification-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    max-width: 80%;
+    text-align: center;
+}
+
+.notification-message {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.notification-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.notification-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.notification-button.ok {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.notification-button.cancel {
+    background-color: #f44336;
+    color: white;
+}
+`;
+document.head.appendChild(style);
+
+// Custom notification function
+function showNotification(message, isConfirm = false) {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'notification-overlay';
+        
+        const box = document.createElement('div');
+        box.className = 'notification-box';
+        
+        const messageEl = document.createElement('div');
+        messageEl.className = 'notification-message';
+        messageEl.textContent = message;
+        
+        box.appendChild(messageEl);
+        
+        if (isConfirm) {
+            const buttons = document.createElement('div');
+            buttons.className = 'notification-buttons';
+            
+            const okButton = document.createElement('button');
+            okButton.className = 'notification-button ok';
+            okButton.textContent = 'OK';
+            okButton.onclick = () => {
+                document.body.removeChild(overlay);
+                resolve(true);
+            };
+            
+            const cancelButton = document.createElement('button');
+            cancelButton.className = 'notification-button cancel';
+            cancelButton.textContent = 'Cancel';
+            cancelButton.onclick = () => {
+                document.body.removeChild(overlay);
+                resolve(false);
+            };
+            
+            buttons.appendChild(okButton);
+            buttons.appendChild(cancelButton);
+            box.appendChild(buttons);
+        } else {
+            const okButton = document.createElement('button');
+            okButton.className = 'notification-button ok';
+            okButton.textContent = 'OK';
+            okButton.onclick = () => {
+                document.body.removeChild(overlay);
+                resolve();
+            };
+            
+            box.appendChild(okButton);
+        }
+        
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+    });
+}
+
+// Modified clear progress button with notification confirmation
 function createClearProgressButton() {
     const clearBtn = document.createElement('button');
     clearBtn.textContent = 'Clear Progress';
     clearBtn.classList.add('clear-progress-btn');
-    clearBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to clear all your progress? This cannot be undone.')) {
+    clearBtn.addEventListener('click', async () => {
+        const confirmed = await showNotification(
+            'Are you sure you want to clear all your progress? This cannot be undone.', 
+            true
+        );
+        if (confirmed) {
             progressManager.clearAllProgress();
             // Reload the page to reset everything
             window.location.reload();
         }
     });
-
-    // Append to an appropriate container, e.g., 
+    
+    // Append to an appropriate container
     document.querySelector('.level-selector-container').appendChild(clearBtn);
+    
+    return clearBtn; // Still return it in case you need reference elsewhere
 }
+
 
 // Call this when the page loads
 document.addEventListener('DOMContentLoaded', () => {
