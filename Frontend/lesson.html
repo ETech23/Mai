@@ -880,7 +880,7 @@ function setupCourseButtons() {
 
         
     // Modified loadLessons function
-async function loadLessons(course, level) {
+/**async function loadLessons(course, level) {
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
         courseData = await response.json();
@@ -954,9 +954,9 @@ function loadLessonContent(index) {
 
     // Update progress bar
     updateProgressBar();
-}
+}**/
     
-/** async function loadLessons(course, level) {
+ async function loadLessons(course, level) {
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
         courseData = await response.json();
@@ -1001,10 +1001,10 @@ function loadLessonContent(index) {
                     currentLessonIndex
                 );
             });
-        });**/
+        });
 
         // Load initial lesson
-  /**      document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
+       document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
 
         // Update progress bar
         updateProgressBar();
@@ -1012,7 +1012,7 @@ function loadLessonContent(index) {
         console.error('Error loading lessons:', error);
         lessonContentArea.innerHTML = `<p>Error loading lessons: ${error.message}</p>`;
     }
-}**/
+}
 
 // Modified loadLessonContent function
 function loadLessonContent(index) {
