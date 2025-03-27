@@ -1,31 +1,118 @@
 {
   "lessons": [
     {
-      "title": "Introduction to Artificial Intelligence",
-      "content": "Artificial Intelligence (AI) is revolutionizing how machines perceive, reason, and interact with the world. This foundational lesson explores:\n\n1. Fundamental Concepts\n   - Formal definitions from Turing to modern interpretations\n   - Cognitive capabilities: learning, reasoning, self-correction\n   - The AI spectrum: from rule-based systems to autonomous agents\n\n2. Historical Evolution\n   - 1940s-50s: Foundational theories (McCarthy, Minsky)\n   - 1980s: Expert systems and early machine learning\n   - 2010s: Deep learning renaissance\n   - 2020s: Generative AI and large language models\n\n3. AI Classification\n   - Narrow AI: Specialized systems (Siri, recommendation engines)\n   - General AI: Theoretical human-equivalent intelligence\n   - Superintelligence: Philosophical considerations\n\n4. Core Technologies\n   - Machine learning paradigms\n   - Knowledge representation techniques\n   - Planning and decision-making algorithms\n   - Sensory processing systems\n\n5. Ethical Framework\n   - Bias mitigation strategies\n   - Transparency requirements\n   - Accountability mechanisms\n   - Societal impact assessments",
-      "quiz": [
-        {
-          "text": "Which capability distinguishes General AI from Narrow AI?",
-          "options": [
-            "Faster processing speed",
-            "Ability to transfer learning across domains",
-            "Lower energy consumption",
-            "Specialized hardware requirements"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What was the significance of the 2012 ImageNet competition?",
-          "options": [
-            "First AI to pass the Turing Test",
-            "Demonstrated the power of deep convolutional networks",
-            "Created the first self-driving car",
-            "Developed initial expert systems"
-          ],
-          "correctAnswer": 1
-        }
-      ]
+  "title": "Introduction to Artificial Intelligence",
+  "content": "Artificial Intelligence (AI) is revolutionizing how machines perceive, reason, and interact with the world.\\n\\n\
+  1. <b>Fundamental Concepts</b>\\n\\n\
+  <b>Definitions of AI</b>\\n\
+  - Alan Turing's test for machine intelligence\\n\
+  - John McCarthy's formal definition\\n\
+  - Modern perspectives on AI capabilities\\n\\n\
+  <b>Cognitive Capabilities of AI</b>\\n\
+  - Learning: Supervised, unsupervised, and reinforcement learning\\n\
+  - Reasoning: Logical inference and probabilistic models\\n\
+  - Self-correction: Adaptive algorithms and optimization\\n\\n\
+  <b>AI Spectrum</b>\\n\
+  - Rule-based systems: Traditional expert systems\\n\
+  - Machine learning: Data-driven models\\n\
+  - Autonomous agents: Robotics and self-learning AI\\n\\n\
+  2. <b>Historical Evolution of AI</b>\\n\\n\
+  <b>1940s-1950s: Theoretical Foundations</b>\\n\
+  - Turing's groundwork on computation and intelligence\\n\
+  - Early neural networks: Perceptron model\\n\\n\
+  <b>1960s-1970s: Symbolic AI</b>\\n\
+  - Introduction of LISP and early AI programming languages\\n\
+  - Problem-solving approaches in AI research\\n\\n\
+  <b>1980s: Rise of Expert Systems</b>\\n\
+  - Knowledge-based decision-making\\n\
+  - Practical applications in medicine and business\\n\\n\
+  <b>1990s-2000s: Machine Learning Growth</b>\\n\
+  - Statistical AI and Bayesian networks\\n\
+  - Evolution of neural networks and support vector machines\\n\\n\
+  <b>2010s: Deep Learning Revolution</b>\\n\
+  - Breakthroughs in deep neural networks\\n\
+  - Convolutional and recurrent neural networks (CNNs & RNNs)\\n\\n\
+  <b>2020s: Generative AI & Large Models</b>\\n\
+  - Transformer-based architectures (GPT, BERT)\\n\
+  - AI in creative domains: Art, music, and text generation\\n\\n\
+  3. <b>AI Classification</b>\\n\\n\
+  <b>Narrow AI (Weak AI)</b>\\n\
+  - Specialized systems (Siri, recommendation engines, AlphaGo)\\n\\n\
+  <b>General AI (Strong AI)</b>\\n\
+  - Hypothetical human-equivalent intelligence\\n\
+  - Research challenges and limitations\\n\\n\
+  <b>Superintelligence</b>\\n\
+  - Ethical and philosophical considerations\\n\
+  - The Singularity hypothesis\\n\\n\
+  4. <b>Core AI Technologies</b>\\n\\n\
+  <b>Machine Learning</b>\\n\
+  - Supervised, unsupervised, and reinforcement learning\\n\
+  - Neural networks and deep learning\\n\\n\
+  <b>Knowledge Representation</b>\\n\
+  - Symbolic logic and ontologies\\n\
+  - Probabilistic reasoning and semantic networks\\n\\n\
+  <b>Planning and Decision-Making</b>\\n\
+  - Search algorithms (A*, minimax, Monte Carlo methods)\\n\
+  - Markov decision processes and reinforcement learning\\n\\n\
+  <b>Sensory Processing</b>\\n\
+  - Computer vision and image recognition\\n\
+  - Natural language processing (NLP) and speech recognition\\n\\n\
+  5. <b>Ethical Framework in AI</b>\\n\\n\
+  <b>Bias and Fairness</b>\\n\
+  - Algorithmic bias and mitigation strategies\\n\
+  - Ensuring diversity in AI datasets\\n\\n\
+  <b>Transparency and Explainability</b>\\n\
+  - Black-box models vs. interpretable AI\\n\
+  - The importance of explainable AI (XAI)\\n\\n\
+  <b>Accountability and Regulation</b>\\n\
+  - AI governance and ethical guidelines\\n\
+  - International regulations and policies\\n\\n\
+  <b>Societal Impact</b>\\n\
+  - Economic disruptions and job displacement\\n\
+  - The role of AI in global development",
+  "quiz": [
+    {
+      "text": "Which capability distinguishes General AI from Narrow AI?",
+      "options": [
+        "Faster processing speed",
+        "Ability to transfer learning across domains",
+        "Lower energy consumption",
+        "Specialized hardware requirements"
+      ],
+      "correctAnswer": 1
     },
+    {
+      "text": "What was the significance of the 2012 ImageNet competition?",
+      "options": [
+        "First AI to pass the Turing Test",
+        "Demonstrated the power of deep convolutional networks",
+        "Created the first self-driving car",
+        "Developed initial expert systems"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "text": "Which of the following is NOT a characteristic of deep learning?",
+      "options": [
+        "Feature extraction is automated",
+        "Requires large amounts of labeled data",
+        "Strictly rule-based decision-making",
+        "Uses multi-layer neural networks"
+      ],
+      "correctAnswer": 2
+    },
+    {
+      "text": "What is a primary ethical concern in AI development?",
+      "options": [
+        "Faster computation speed",
+        "Bias in training data",
+        "Increased storage capacity",
+        "Higher energy consumption"
+      ],
+      "correctAnswer": 1
+    }
+  ]
+},
     {
       "title": "Machine Learning Fundamentals",
       "content": "Machine Learning enables systems to learn from data without explicit programming:\n\n1. Learning Paradigms\n   - Supervised: Predictive modeling with labeled data\n   - Unsupervised: Pattern discovery in raw data\n   - Reinforcement: Reward-driven decision making\n   - Self-supervised: Emerging paradigm for unlabeled data\n\n2. Model Development Lifecycle\n   - Data pipeline construction\n   - Feature engineering techniques\n   - Algorithm selection framework\n   - Hyperparameter optimization methods\n   - Production deployment strategies\n\n3. Core Algorithms\n   - Linear models: Regression and classification variants\n   - Decision trees: CART, ID3, and ensemble methods\n   - Support Vector Machines: Kernel trick applications\n   - Neural networks: Basic architectures\n\n4. Practical Applications\n   - Predictive analytics in healthcare\n   - Fraud detection in finance\n   - Quality control in manufacturing\n   - Personalized education systems\n\n5. Performance Considerations\n   - Bias-variance tradeoff analysis\n   - Overfitting prevention techniques\n   - Computational efficiency metrics\n   - Explainability requirements",
