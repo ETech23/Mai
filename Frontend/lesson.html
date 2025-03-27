@@ -716,6 +716,35 @@
                 loadLessons(currentCourse, currentLevel);
             });
         });
+    
+    // Update Progress Bar
+        function updateProgressBar() {
+            if (courseData && courseData.lessons) {
+                const progressPercentage = 
+                    ((currentLessonIndex + 1) / courseData.lessons.length) * 100;
+                progressBarFill.style.width = `${progressPercentage}%`;
+            }
+        }
+
+        // Course Selector Functionality
+        courseButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active from all buttons
+                courseButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active to clicked button
+                this.classList.add('active');
+
+                // Update current course
+                currentCourse = this.dataset.course;
+                
+                // Update page title
+                courseTitle.textContent = `${currentCourse.toUpperCase()} Course - Beginner Level`;
+
+                // Load lessons for selected course
+                loadLessons(currentCourse, currentLevel);
+            });
+        });
                     
         // Navigation Button Listeners
         prevLessonBtn.addEventListener('click', () => {
