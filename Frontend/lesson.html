@@ -605,28 +605,41 @@ body {
             });
         }
     
-    // Load Lesson Content
-        function loadLessonContent(index) {
-            const lesson = courseData.lessons[index];
-            
-            // Update lesson content
-            lessonContentArea.innerHTML = `
-                <h2>${lesson.title}</h2>
-                <p>${lesson.content}</p>
-            `;
+// Load Lesson Content
+function loadLessonContent(index) {
+    const lesson = courseData.lessons[index];
+    if (!lesson) return;
 
-            // Show/hide quiz if present
-            if (lesson.quiz) {
-                quizContainer.style.display = 'block';
-                renderQuiz(lesson.quiz);
-            } else {
-                quizContainer.style.display = 'none';
-            }
+    // Ensure lesson.content is a string, fallback to empty string
+    const content = lesson.content || ""; 
 
-            // Enable/disable navigation buttons
-            prevLessonBtn.disabled = index === 0;
-            nextLessonBtn.disabled = index === courseData.lessons.length - 1;
-        }
+    // Split content into lines, remove empty ones
+    const lines = content.split("\n").filter(line => line.trim() !== "");
+
+    // Extract first title and remaining content
+    const firstTitle = lines.length > 0 ? lines[0] : lesson.title || "Untitled Lesson";
+    const remainingContent = lines.slice(1).map(line => `<p>${line}</p>`).join('');
+
+    // Update lesson content
+    lessonContentArea.innerHTML = `
+        <h2>${firstTitle}</h2>
+        <div class="lesson-body">
+            ${remainingContent}
+        </div>
+    `;
+
+    // Show/hide quiz if present
+    if (lesson.quiz) {
+        quizContainer.style.display = 'block';
+        renderQuiz(lesson.quiz);
+    } else {
+        quizContainer.style.display = 'none';
+    }
+
+    // Enable/disable navigation buttons
+    prevLessonBtn.disabled = index === 0;
+    nextLessonBtn.disabled = index === courseData.lessons.length - 1;
+}
 
         // Load Lessons from JSON
       /**  async function loadLessons(course, level) {
