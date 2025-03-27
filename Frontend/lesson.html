@@ -524,6 +524,29 @@
                 advancedLevel.disabled = false;
             }
         }
+    
+    // Load Lesson Content
+        function loadLessonContent(index) {
+            const lesson = courseData.lessons[index];
+            
+            // Update lesson content
+            lessonContentArea.innerHTML = `
+                <h2>${lesson.title}</h2>
+                <p>${lesson.content}</p>
+            `;
+
+            // Show/hide quiz if present
+            if (lesson.quiz) {
+                quizContainer.style.display = 'block';
+                renderQuiz(lesson.quiz);
+            } else {
+                quizContainer.style.display = 'none';
+            }
+
+            // Enable/disable navigation buttons
+            prevLessonBtn.disabled = index === 0;
+            nextLessonBtn.disabled = index === courseData.lessons.length - 1;
+        }
 
         // Load Lessons from JSON
         async function loadLessons(course, level) {
