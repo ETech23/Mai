@@ -763,6 +763,22 @@ body {
                 }
             }
         }
+    
+    function resetQuiz() {
+    // Unselect all quiz options
+    document.querySelectorAll('.quiz-option.selected').forEach(option => {
+        option.classList.remove('selected');
+    });
+
+    // Reset quiz result display
+    quizResult.style.display = 'none';
+    quizResult.innerHTML = '';
+    quizResult.classList.remove('pass', 'fail');
+
+    // Reset buttons
+    submitQuizBtn.style.display = 'block';
+    nextLessonBtn.style.display = 'none';
+}
 
         // Level Selector Functionality
         document.querySelectorAll('.level-btn').forEach(button => {
@@ -831,6 +847,7 @@ body {
                 currentLessonIndex--;
                 document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
             }
+            resetQuiz(); // Reset the quiz state
         });
 
         nextLessonBtn.addEventListener('click', () => {
@@ -838,6 +855,7 @@ body {
                 currentLessonIndex++;
                 document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
             }
+                resetQuiz(); // Reset the quiz state
         });
 
         // Quiz Submit Listener
