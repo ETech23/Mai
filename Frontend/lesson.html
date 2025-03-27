@@ -863,8 +863,80 @@ function setupCourseButtons() {
 }
 
 // Modified loadLessons function
-
 async function loadLessons(course, level) {
+    try {
+        const response = await fetch(`${course}_${level}_lessons.json`);
+        courseData = await response.json();
+
+        // Check for saved progress
+        const savedProgress = progressManager.getCourseProgress(course, level);
+        
+        // Populate sidebar lessons
+        lessonsList.innerHTML = courseData.lessons.map((lesson, index) => {
+            // Check if lesson is completed
+            const isCompleted = progressManager.isLessonCompleted(course, level, index);
+            return `
+                <div class="lesson-item ${isCompleted ? 'completed' : ''} ${index === 0 ? 'active' : ''}" data-index="${index}">
+                    <i>${isCompleted ? '✅' : '📚'}</i> ${lesson.title}
+                </div>
+            `;
+        }).join('');
+
+        // Determine which lesson to load
+        let initialLessonIndex = savedProgress?.currentLessonIndex ?? 0;
+
+        // Add event listeners to lesson items
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active from all lessons
+                document.querySelectorAll('.lesson-item').forEach(el => el.classList.remove('active'));
+                
+                // Add active to clicked lesson
+                item.classList.add('active');
+                
+                // Load lesson content
+                currentLessonIndex = parseInt(item.dataset.index);
+                loadLessonContent(currentLessonIndex);
+
+                // Save current progress
+                progressManager.updateCourseProgress(course, level, currentLessonIndex);
+            });
+        });
+
+        // Load the initially selected lesson
+        loadLessonContent(initialLessonIndex);
+
+    } catch (error) {
+        console.error("Error loading lessons:", error);
+        lessonContentArea.innerHTML = `<p>Error loading lessons: ${error.message}</p>`;
+    }
+}
+
+function loadLessonContent(index) {
+    const lesson = courseData.lessons[index];
+    if (!lesson) return;
+
+    lessonContent.innerHTML = `
+        <h2>${lesson.title}</h2>
+        <div class="lesson-sections">
+            ${lesson.sections.map(section => `
+                <h3>${section.title}</h3>
+                <ul>
+                    ${section.points.map(point => `<li>${point}</li>`).join('')}
+                </ul>
+            `).join('')}
+        </div>
+    `;
+
+    // Update progress in local storage
+    progressManager.updateCourseProgress(currentCourse, currentLevel, index);
+    document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
+
+        // Update progress bar
+        updateProgressBar();
+}
+    
+/** async function loadLessons(course, level) {
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
         courseData = await response.json();
@@ -909,10 +981,10 @@ async function loadLessons(course, level) {
                     currentLessonIndex
                 );
             });
-        });
+        });**/
 
         // Load initial lesson
-        document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
+  /**      document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
 
         // Update progress bar
         updateProgressBar();
@@ -920,7 +992,7 @@ async function loadLessons(course, level) {
         console.error('Error loading lessons:', error);
         lessonContentArea.innerHTML = `<p>Error loading lessons: ${error.message}</p>`;
     }
-}
+}**/
 
 // Modified loadLessonContent function
 function loadLessonContent(index) {

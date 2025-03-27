@@ -1,0 +1,247 @@
+{
+  "lessons": [
+    {
+  "title": "Introduction to Artificial Intelligence",
+  "content": "Artificial Intelligence (AI) is revolutionizing how machines perceive, reason, and interact with the world.\\n\\n\
+  1. <b>Fundamental Concepts</b>\\n\\n\
+  <b>Definitions of AI</b>\\n\
+  - Alan Turing's test for machine intelligence\\n\
+  - John McCarthy's formal definition\\n\
+  - Modern perspectives on AI capabilities\\n\\n\
+  <b>Cognitive Capabilities of AI</b>\\n\
+  - Learning: Supervised, unsupervised, and reinforcement learning\\n\
+  - Reasoning: Logical inference and probabilistic models\\n\
+  - Self-correction: Adaptive algorithms and optimization\\n\\n\
+  <b>AI Spectrum</b>\\n\
+  - Rule-based systems: Traditional expert systems\\n\
+  - Machine learning: Data-driven models\\n\
+  - Autonomous agents: Robotics and self-learning AI\\n\\n\
+  2. <b>Historical Evolution of AI</b>\\n\\n\
+  <b>1940s-1950s: Theoretical Foundations</b>\\n\
+  - Turing's groundwork on computation and intelligence\\n\
+  - Early neural networks: Perceptron model\\n\\n\
+  <b>1960s-1970s: Symbolic AI</b>\\n\
+  - Introduction of LISP and early AI programming languages\\n\
+  - Problem-solving approaches in AI research\\n\\n\
+  <b>1980s: Rise of Expert Systems</b>\\n\
+  - Knowledge-based decision-making\\n\
+  - Practical applications in medicine and business\\n\\n\
+  <b>1990s-2000s: Machine Learning Growth</b>\\n\
+  - Statistical AI and Bayesian networks\\n\
+  - Evolution of neural networks and support vector machines\\n\\n\
+  <b>2010s: Deep Learning Revolution</b>\\n\
+  - Breakthroughs in deep neural networks\\n\
+  - Convolutional and recurrent neural networks (CNNs & RNNs)\\n\\n\
+  <b>2020s: Generative AI & Large Models</b>\\n\
+  - Transformer-based architectures (GPT, BERT)\\n\
+  - AI in creative domains: Art, music, and text generation\\n\\n\
+  3. <b>AI Classification</b>\\n\\n\
+  <b>Narrow AI (Weak AI)</b>\\n\
+  - Specialized systems (Siri, recommendation engines, AlphaGo)\\n\\n\
+  <b>General AI (Strong AI)</b>\\n\
+  - Hypothetical human-equivalent intelligence\\n\
+  - Research challenges and limitations\\n\\n\
+  <b>Superintelligence</b>\\n\
+  - Ethical and philosophical considerations\\n\
+  - The Singularity hypothesis\\n\\n\
+  4. <b>Core AI Technologies</b>\\n\\n\
+  <b>Machine Learning</b>\\n\
+  - Supervised, unsupervised, and reinforcement learning\\n\
+  - Neural networks and deep learning\\n\\n\
+  <b>Knowledge Representation</b>\\n\
+  - Symbolic logic and ontologies\\n\
+  - Probabilistic reasoning and semantic networks\\n\\n\
+  <b>Planning and Decision-Making</b>\\n\
+  - Search algorithms (A*, minimax, Monte Carlo methods)\\n\
+  - Markov decision processes and reinforcement learning\\n\\n\
+  <b>Sensory Processing</b>\\n\
+  - Computer vision and image recognition\\n\
+  - Natural language processing (NLP) and speech recognition\\n\\n\
+  5. <b>Ethical Framework in AI</b>\\n\\n\
+  <b>Bias and Fairness</b>\\n\
+  - Algorithmic bias and mitigation strategies\\n\
+  - Ensuring diversity in AI datasets\\n\\n\
+  <b>Transparency and Explainability</b>\\n\
+  - Black-box models vs. interpretable AI\\n\
+  - The importance of explainable AI (XAI)\\n\\n\
+  <b>Accountability and Regulation</b>\\n\
+  - AI governance and ethical guidelines\\n\
+  - International regulations and policies\\n\\n\
+  <b>Societal Impact</b>\\n\
+  - Economic disruptions and job displacement\\n\
+  - The role of AI in global development",
+  "quiz": [
+    {
+      "text": "Which capability distinguishes General AI from Narrow AI?",
+      "options": [
+        "Faster processing speed",
+        "Ability to transfer learning across domains",
+        "Lower energy consumption",
+        "Specialized hardware requirements"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "text": "What was the significance of the 2012 ImageNet competition?",
+      "options": [
+        "First AI to pass the Turing Test",
+        "Demonstrated the power of deep convolutional networks",
+        "Created the first self-driving car",
+        "Developed initial expert systems"
+      ],
+      "correctAnswer": 1
+    },
+    {
+      "text": "Which of the following is NOT a characteristic of deep learning?",
+      "options": [
+        "Feature extraction is automated",
+        "Requires large amounts of labeled data",
+        "Strictly rule-based decision-making",
+        "Uses multi-layer neural networks"
+      ],
+      "correctAnswer": 2
+    },
+    {
+      "text": "What is a primary ethical concern in AI development?",
+      "options": [
+        "Faster computation speed",
+        "Bias in training data",
+        "Increased storage capacity",
+        "Higher energy consumption"
+      ],
+      "correctAnswer": 1
+    }
+  ]
+},
+    {
+      "title": "Machine Learning Fundamentals",
+      "content": "Machine Learning enables systems to learn from data without explicit programming:\n\n1. Learning Paradigms\n   - Supervised: Predictive modeling with labeled data\n   - Unsupervised: Pattern discovery in raw data\n   - Reinforcement: Reward-driven decision making\n   - Self-supervised: Emerging paradigm for unlabeled data\n\n2. Model Development Lifecycle\n   - Data pipeline construction\n   - Feature engineering techniques\n   - Algorithm selection framework\n   - Hyperparameter optimization methods\n   - Production deployment strategies\n\n3. Core Algorithms\n   - Linear models: Regression and classification variants\n   - Decision trees: CART, ID3, and ensemble methods\n   - Support Vector Machines: Kernel trick applications\n   - Neural networks: Basic architectures\n\n4. Practical Applications\n   - Predictive analytics in healthcare\n   - Fraud detection in finance\n   - Quality control in manufacturing\n   - Personalized education systems\n\n5. Performance Considerations\n   - Bias-variance tradeoff analysis\n   - Overfitting prevention techniques\n   - Computational efficiency metrics\n   - Explainability requirements",
+      "quiz": [
+        {
+          "text": "Which statement about reinforcement learning is accurate?",
+          "options": [
+            "Requires complete labeled datasets",
+            "Learns through trial-and-error with rewards",
+            "Only applicable to robotics",
+            "Doesn't involve decision making"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "text": "What's the primary purpose of feature engineering?",
+          "options": [
+            "Reduce model accuracy",
+            "Transform raw data into meaningful representations",
+            "Increase computational costs",
+            "Eliminate all data preprocessing"
+          ],
+          "correctAnswer": 1
+        }
+      ]
+    },
+    {
+      "title": "Neural Networks and Deep Learning",
+      "content": "Deep Learning mimics the brain's neural structure for complex pattern recognition:\n\n1. Biological Inspiration\n   - Neuron-synapse analogies\n   - Hebbian learning principles\n   - Cortical column organization\n\n2. Architectural Components\n   - Layer types: Dense, convolutional, recurrent\n   - Activation functions: LeakyReLU, Swish, GELU\n   - Normalization techniques: Batch, Layer, Group\n   - Attention mechanisms: Key-query-value systems\n\n3. Advanced Architectures\n   - Transformers: Self-attention mechanisms\n   - GANs: Generator-discriminator dynamics\n   - Diffusion Models: Progressive denoising\n   - Spiking Neural Networks: Biological timing\n\n4. Training Methodologies\n   - Backpropagation through time (BPTT)\n   - Curriculum learning strategies\n   - Federated learning approaches\n   - Quantization-aware training\n\n5. Cutting-edge Applications\n   - Medical imaging diagnostics\n   - Real-time language translation\n   - Autonomous vehicle perception\n   - Material science discovery",
+      "quiz": [
+        {
+          "text": "What problem does batch normalization address?",
+          "options": [
+            "Data storage limitations",
+            "Internal covariate shift during training",
+            "Overfitting in small datasets",
+            "Hardware compatibility issues"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "text": "Why do transformers outperform RNNs for long sequences?",
+          "options": [
+            "They have greater memory capacity",
+            "Attention mechanisms capture distant dependencies",
+            "They require less training data",
+            "They use simpler architectures"
+          ],
+          "correctAnswer": 1
+        }
+      ]
+    },
+    {
+      "title": "Natural Language Processing (NLP)",
+      "content": "NLP bridges human communication with machine understanding:\n\n1. Foundational Techniques\n   - Tokenization: WordPiece, SentencePiece methods\n   - Syntax analysis: Dependency parsing\n   - Semantic understanding: Word sense disambiguation\n   - Pragmatics: Contextual interpretation\n\n2. Representation Learning\n   - Word embeddings: Word2Vec, GloVe\n   - Contextual embeddings: ELMo, BERT\n   - Knowledge-enhanced representations\n   - Multilingual embedding spaces\n\n3. Modern Architectures\n   - Transformer variants: BERT, GPT, T5\n   - Retrieval-augmented models\n   - Sparse attention mechanisms\n   - Mixture-of-experts approaches\n\n4. Application Domains\n   - Conversational AI: Dialogue systems\n   - Text summarization: Abstractive vs extractive\n   - Sentiment analysis: Aspect-based approaches\n   - Knowledge extraction: Relation mining\n\n5. Current Challenges\n   - Low-resource language processing\n   - Commonsense reasoning\n   - Multimodal understanding\n   - Ethical text generation",
+      "quiz": [
+        {
+          "text": "What breakthrough did BERT introduce?",
+          "options": [
+            "First RNN architecture",
+            "Bidirectional context understanding",
+            "Image processing capabilities",
+            "Reinforcement learning for text"
+          ],
+          "correctAnswer": 1
+        },
+        {
+          "text": "Why is coreference resolution challenging?",
+          "options": [
+            "Requires world knowledge",
+            "Only works with short sentences",
+            "Doesn't need contextual understanding",
+            "All languages handle it identically"
+          ],
+          "correctAnswer": 0
+        }
+      ]
+    },
+    {
+      "title": "AI Ethics and Societal Impact",
+      "content": "Responsible AI development requires addressing complex ethical dimensions:\n\n1. Ethical Principles\n   - Fairness: Demographic parity metrics\n   - Accountability: Audit trail requirements\n   - Transparency: Model documentation standards\n   - Privacy: Differential privacy implementations\n\n2. Governance Frameworks\n   - EU AI Act compliance\n   - Algorithmic impact assessments\n   - Certification processes\n   - International cooperation mechanisms\n\n3. Societal Implications\n   - Labor market transformations\n   - Educational system adaptations\n   - Healthcare accessibility improvements\n   - Environmental monitoring applications\n\n4. Risk Mitigation\n   - Adversarial attack prevention\n   - Value alignment techniques\n   - Fail-safe mechanisms\n   - Continuous monitoring protocols\n\n5. Future Considerations\n   - AI for social good initiatives\n   - Digital divide reduction\n   - Sustainable AI development\n   - Human-AI collaboration models",
+      "quiz": [
+        {
+          "text": "What does 'right to explanation' refer to?",
+          "options": [
+            "Users understanding AI decisions",
+            "Developers keeping algorithms secret",
+            "Only technical documentation",
+            "Non-essential for high-risk systems"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "text": "Which technique helps reduce algorithmic bias?",
+          "options": [
+            "Using more homogeneous data",
+            "Representative dataset collection",
+            "Ignoring demographic variables",
+            "Reducing model complexity"
+          ],
+          "correctAnswer": 1
+        }
+      ]
+    },
+    {
+      "title": "AI Applications and Future Trends",
+      "content": "Emerging AI applications are transforming every industry sector:\n\n1. Industry Transformations\n   - Healthcare: Drug discovery acceleration\n   - Finance: Algorithmic trading systems\n   - Agriculture: Precision farming techniques\n   - Energy: Smart grid optimization\n\n2. Emerging Technologies\n   - Quantum machine learning\n   - Neuromorphic computing chips\n   - Edge AI deployment\n   - Explainable AI (XAI) systems\n\n3. Research Frontiers\n   - Multimodal foundation models\n   - Causal reasoning frameworks\n   - Continual learning systems\n   - Embodied AI agents\n\n4. Breakthrough Applications\n   - Climate modeling predictions\n   - Personalized medicine\n   - Autonomous scientific discovery\n   - Space exploration systems\n\n5. Implementation Challenges\n   - Energy efficiency requirements\n   - Real-time processing demands\n   - Safety-critical certifications\n   - Human-AI trust building",
+      "quiz": [
+        {
+          "text": "What distinguishes edge AI from cloud AI?",
+          "options": [
+            "Edge processes data on local devices",
+            "Cloud requires physical hardware",
+            "Edge has unlimited compute power",
+            "Cloud cannot use neural networks"
+          ],
+          "correctAnswer": 0
+        },
+        {
+          "text": "Why is continual learning important?",
+          "options": [
+            "Reduces initial training costs",
+            "Allows adaptation to new data without forgetting",
+            "Eliminates need for any training data",
+            "Works only for static environments"
+          ],
+          "correctAnswer": 1
+        }
+      ]
+    }
+  ]
+}
