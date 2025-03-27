@@ -694,7 +694,9 @@ body {
                 quizResult.classList.remove('fail');
                 quizResult.classList.add('pass');
                 submitQuizBtn.style.display = 'none';**/
-    function submitQuiz() {
+    
+    // SubmitQuiz function
+function submitQuiz() {
     const quiz = courseData.lessons[currentLessonIndex].quiz;
     let correctAnswers = 0;
     let totalQuestions = quiz.length;
@@ -727,47 +729,46 @@ body {
         quizResult.classList.add('pass');
         submitQuizBtn.style.display = 'none';
         nextLessonBtn.style.display = 'block'; 
-        quizResult.classList.remove('pass');
-        quizResult.classList.add('fail');
-        submitQuizBtn.style.display = 'block';
-        nextLessonBtn.style.display = 'none';
 
-                // Update level progression
-                if (currentLevel === 'beginner') {
-                    levelProgress.beginner = true;
-                } else if (currentLevel === 'intermediate') {
-                    levelProgress.intermediate = true;
-                } else if (currentLevel === 'advanced') {
-                    levelProgress.advanced = true;
-                }
-
-                // Update level buttons
-                updateLevelButtons();
-            } else {
-                if (quizAttempts < MAX_QUIZ_ATTEMPTS) {
-                    quizResult.innerHTML = `
-                        <h4>Try Again</h4>
-                        <p>You scored ${score.toFixed(0)}% (${correctAnswers}/${totalQuestions} correct).</p>
-                        <p>Attempt ${quizAttempts} of ${MAX_QUIZ_ATTEMPTS}. Keep studying!</p>
-                    `;
-                    quizResult.classList.remove('pass');
-                    quizResult.classList.add('fail');
-                } else {
-                    quizResult.innerHTML = `
-                        <h4>Quiz Attempts Exhausted</h4>
-                        <p>You've used all ${MAX_QUIZ_ATTEMPTS} attempts. Please review the lesson materials.</p>
-                    `;
-                    quizResult.classList.remove('pass');
-                    quizResult.classList.add('fail');
-                    submitQuizBtn.style.display = 'none';
-                }
-            }
+        // Update level progression
+        if (currentLevel === 'beginner') {
+            levelProgress.beginner = true;
+        } else if (currentLevel === 'intermediate') {
+            levelProgress.intermediate = true;
+        } else if (currentLevel === 'advanced') {
+            levelProgress.advanced = true;
         }
+
+        // Update level buttons
+        updateLevelButtons();
+    } else {
+        if (quizAttempts < MAX_QUIZ_ATTEMPTS) {
+            quizResult.innerHTML = `
+                <h4>Try Again</h4>
+                <p>You scored ${score.toFixed(0)}% (${correctAnswers}/${totalQuestions} correct).</p>
+                <p>Attempt ${quizAttempts} of ${MAX_QUIZ_ATTEMPTS}. Keep studying!</p>
+            `;
+            quizResult.classList.remove('pass');
+            quizResult.classList.add('fail');
+            submitQuizBtn.style.display = 'block';
+            nextLessonBtn.style.display = 'none';
+        } else {
+            quizResult.innerHTML = `
+                <h4>Quiz Attempts Exhausted</h4>
+                <p>You've used all ${MAX_QUIZ_ATTEMPTS} attempts. Please review the lesson materials.</p>
+            `;
+            quizResult.classList.remove('pass');
+            quizResult.classList.add('fail');
+            submitQuizBtn.style.display = 'none';
+            nextLessonBtn.style.display = 'none';
+        }
+    }
+}
     
     // Reset quiz
     function resetQuiz() {
-    // Store the current visibility state of nextLessonBtn
-    const wasNextLessonBtnVisible = nextLessonBtn.style.display === 'block';
+    // Reset quiz attempts
+    quizAttempts = 0;
 
     // Unselect all quiz options
     document.querySelectorAll('.quiz-option.selected').forEach(option => {
@@ -782,8 +783,13 @@ body {
     // Reset submit quiz button
     submitQuizBtn.style.display = 'block';
 
-    // Restore nextLessonBtn visibility if it was previously visible
-    nextLessonBtn.style.display = wasNextLessonBtnVisible ? 'block' : 'none';
+    // Reset next lesson button based on current lesson's quiz status
+    const currentLesson = courseData.lessons[currentLessonIndex];
+    if (currentLesson.quiz) {
+        nextLessonBtn.style.display = 'none';
+    } else {
+        nextLessonBtn.style.display = 'block';
+    }
 }
 
         // Level Selector Functionality
@@ -848,21 +854,26 @@ body {
         });
                     
         // Navigation Button Listeners
-        prevLessonBtn.addEventListener('click', () => {
-            if (currentLessonIndex > 0) {
-                currentLessonIndex--;
-                document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
-            }
-            resetQuiz(); // Reset the quiz state
-        });
+        // Modify the nextLessonBtn and prevLessonBtn event listeners
+nextLessonBtn.addEventListener('click', () => {
+    if (currentLessonIndex < courseData.lessons.length - 1) {
+        currentLessonIndex++;
+        document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
+        
+        // Reset quiz-related elements
+        resetQuiz();
+    }
+});
 
-        nextLessonBtn.addEventListener('click', () => {
-            if (currentLessonIndex < courseData.lessons.length - 1) {
-                currentLessonIndex++;
-                document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
-            }
-                resetQuiz(); // Reset the quiz state
-        });
+prevLessonBtn.addEventListener('click', () => {
+    if (currentLessonIndex > 0) {
+        currentLessonIndex--;
+        document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
+        
+        // Reset quiz-related elements
+        resetQuiz();
+    }
+});
 
         // Quiz Submit Listener
         submitQuizBtn.addEventListener('click', submitQuiz);
