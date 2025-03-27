@@ -863,26 +863,31 @@ function setupCourseButtons() {
 }
 
 // Modified loadLessons function
+
 async function loadLessons(course, level) {
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
         courseData = await response.json();
 
+        // Check for saved progress
+        const savedProgress = progressManager.getCourseProgress(course, level);
+        
         // Populate sidebar lessons
         lessonsList.innerHTML = courseData.lessons.map((lesson, index) => {
             // Check if lesson is completed
             const isCompleted = progressManager.isLessonCompleted(course, level, index);
-            const isQuizPassed = progressManager.isQuizPassed(course, level, index);
-            
             return `
-                <div class="lesson-item 
-                    ${isCompleted ? 'completed' : ''} 
-                    ${index === 0 ? 'active' : ''}" 
-                    data-index="${index}">
-                    <i>${isQuizPassed ? '✅' : '📚'}</i> ${lesson.title}
+                <div class="lesson-item ${isCompleted ? 'completed' : ''} ${index === 0 ? 'active' : ''}" data-index="${index}">
+                    <i>${isCompleted ? '✅' : '📚'}</i> ${lesson.title}
                 </div>
             `;
         }).join('');
+
+        // Determine which lesson to load
+        let initialLessonIndex = 0;
+        if (savedProgress && savedProgress.currentLessonIndex !== undefined) {
+            initialLessonIndex = savedProgress.currentLessonIndex;
+        }
 
         // Add event listeners to lesson items
         document.querySelectorAll('.lesson-item').forEach(item => {
@@ -896,11 +901,18 @@ async function loadLessons(course, level) {
                 // Load lesson content
                 currentLessonIndex = parseInt(item.dataset.index);
                 loadLessonContent(currentLessonIndex);
+
+                // Save current progress
+                progressManager.updateCourseProgress(
+                    currentCourse, 
+                    currentLevel, 
+                    currentLessonIndex
+                );
             });
         });
 
-        // Load first lesson by default
-        document.querySelector('.lesson-item[data-index="0"]').click();
+        // Load initial lesson
+        document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
 
         // Update progress bar
         updateProgressBar();
