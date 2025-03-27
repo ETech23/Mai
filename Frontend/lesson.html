@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechLearn Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #34d399;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --sidebar-width: 280px;
+            --card-shadow: 0 10px 25px rgba(74, 108, 247, 0.1);
+        }
+    
+           * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .course-selector {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            background-color: #f0f4ff;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .course-btn {
+            flex-grow: 1;
+            padding: 10px 15px;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .course-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(74, 108, 247, 0.3);
+        }
+
+        .course-btn:not(.active) {
+            background-color: transparent;
+            color: var(--text-color);
+        }
+
+        .sidebar-lessons {
+            flex-grow: 1;
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-item:hover {
+            background-color: #f0f4ff;
+        }
+
+        .lesson-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .lesson-item i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-color: var(--background-color);
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .lesson-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .lesson-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e6ed;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .lesson-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f0f4ff;
+            color: var(--primary-color);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .quiz-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                align-items: center;
+                padding: 10px;
+            }
+        }
+    
+
+ .level-selector-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .level-selector-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #f0f4ff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .level-selector-header i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .level-selector-header.expanded i {
+            transform: rotate(180deg);
+        }
+
+        .level-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+            margin-top: 10px;
+        }
+
+        .level-dropdown.show {
+            display: block;
+        }
+
+        .level-btn {
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .level-btn:hover {
+            background-color: #f0f4ff;
+        }
+
+        .level-btn.locked {
+            color: #aaa;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .level-btn.locked::after {
+            content: '🔒';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f4ff;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .quiz-result.pass {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .quiz-result.fail {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .code-snippet {
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .interactive-challenge {
+            background-color: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .challenge-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+        }
+
+        .challenge-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .challenge-feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .challenge-feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                TechLearn
+            </div>
+
+            <!-- Course Selector -->
+            <div class="course-selector">
+                <button class="course-btn active" data-course="ai">AI Course</button>
+                <button class="course-btn" data-course="crypto">Crypto Course</button>
+            </div>
+
+            <!-- Level Selector with Dropdown -->
+            <div class="level-selector-container">
+                <div class="level-selector-header">
+                    <span id="currentLevelDisplay">Beginner Level</span>
+                    <i>▼</i>
+                </div>
+                <div class="level-dropdown" id="levelDropdown">
+                    <button class="level-btn active" data-level="beginner">Beginner</button>
+                    <button class="level-btn" data-level="intermediate" id="intermediateLevel">Intermediate</button>
+                    <button class="level-btn" data-level="advanced" id="advancedLevel">Advanced</button>
+                </div>
+            </div>
+
+            <!-- Lessons Container -->
+            <div class="sidebar-lessons" id="lessonsList">
+                <!-- Lessons will be dynamically populated here -->
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="main-header">
+                <h1 id="courseTitle">AI Course - Beginner Level</h1>
+                <div>
+                    <button class="btn btn-primary" id="startLearningBtn">Start Learning</button>
+                </div>
+            </div>
+
+            <!-- Lesson Content -->
+            <div class="lesson-content">
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+
+                <div class="lesson-card" id="lessonContentArea">
+                    <!-- Lesson content will be dynamically populated here -->
+                </div>
+
+                <!-- Quiz Section -->
+                <div class="lesson-card quiz-container" id="quizContainer" style="display: none;">
+                    <h3 id="quizTitle">Quiz</h3>
+                    <div id="quizQuestions">
+                        <!-- Quiz questions will be dynamically populated here -->
+                    </div>
+                    <button class="btn btn-primary" id="submitQuizBtn">Submit Quiz</button>
+                    <div id="quizResult" class="quiz-result" style="display: none;"></div>
+                </div>
+
+                <!-- Interactive Challenge -->
+                <div class="lesson-card interactive-challenge" id="interactiveChallengeArea" style="display: none;">
+                    <h3 id="challengeTitle">Interactive Challenge</h3>
+                    <div id="challengeContent"></div>
+                    <input type="text" class="challenge-input" id="challengeInput" placeholder="Type your solution here">
+                    <button class="btn btn-primary" id="checkChallengeBtn">Check Solution</button>
+                    <div id="challengeFeedback" class="challenge-feedback" style="display: none;"></div>
+                </div>
+
+                <!-- Lesson Navigation -->
+                <div class="lesson-navigation">
+                    <button class="btn btn-secondary" id="prevLessonBtn">Previous Lesson</button>
+                    <button class="btn btn-primary" id="nextLessonBtn">Next Lesson</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+              // Global state
+        let currentCourse = 'ai';
+        let currentLevel = 'beginner';
+        let currentLessonIndex = 0;
+        let courseData = null;
+        let quizAttempts = 0;
+        const MAX_QUIZ_ATTEMPTS = 3;
+
+        // Level progression tracking
+        const levelProgress = {
+            beginner: false,
+            intermediate: false,
+            advanced: false
+        };
+
+        // DOM Elements
+        const courseButtons = document.querySelectorAll('.course-btn');
+        const levelSelectorHeader = document.querySelector('.level-selector-header');
+        const levelDropdown = document.getElementById('levelDropdown');
+        const currentLevelDisplay = document.getElementById('currentLevelDisplay');
+        const intermediateLevel = document.getElementById('intermediateLevel');
+        const advancedLevel = document.getElementById('advancedLevel');
+        const lessonsList = document.getElementById('lessonsList');
+        const courseTitle = document.getElementById('courseTitle');
+        const lessonContentArea = document.getElementById('lessonContentArea');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizQuestions = document.getElementById('quizQuestions');
+        const quizResult = document.getElementById('quizResult');
+        const submitQuizBtn = document.getElementById('submitQuizBtn');
+        const interactiveChallengeArea = document.getElementById('interactiveChallengeArea');
+        const challengeContent = document.getElementById('challengeContent');
+        const challengeInput = document.getElementById('challengeInput');
+        const checkChallengeBtn = document.getElementById('checkChallengeBtn');
+        const challengeFeedback = document.getElementById('challengeFeedback');
+        const prevLessonBtn = document.getElementById('prevLessonBtn');
+        const nextLessonBtn = document.getElementById('nextLessonBtn');
+        const progressBarFill = document.getElementById('progressBarFill');
+
+        // Toggle Level Selector Dropdown
+        levelSelectorHeader.addEventListener('click', () => {
+            levelSelectorHeader.classList.toggle('expanded');
+            levelDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!levelSelectorHeader.contains(event.target) && 
+                !levelDropdown.contains(event.target)) {
+                levelSelectorHeader.classList.remove('expanded');
+                levelDropdown.classList.remove('show');
+            }
+        });
+
+        // Update level selector buttons based on progress
+        function updateLevelButtons() {
+            // Intermediate level locked if beginner not completed
+            if (!levelProgress.beginner) {
+                intermediateLevel.classList.add('locked');
+                intermediateLevel.disabled = true;
+            } else {
+                intermediateLevel.classList.remove('locked');
+                intermediateLevel.disabled = false;
+            }
+
+            // Advanced level locked if intermediate not completed
+            if (!levelProgress.intermediate) {
+                advancedLevel.classList.add('locked');
+                advancedLevel.disabled = true;
+            } else {
+                advancedLevel.classList.remove('locked');
+                advancedLevel.disabled = false;
+            }
+        }
+
+        // Load Lessons from JSON
+        async function loadLessons(course, level) {
+            try {
+                const response = await fetch(`${course}_${level}_lessons.json`);
+                courseData = await response.json();
+
+                // Populate sidebar lessons
+                lessonsList.innerHTML = courseData.lessons.map((lesson, index) => `
+                    <div class="lesson-item ${index === 0 ? 'active' : ''}" data-index="${index}">
+                        <i>📚</i> ${lesson.title}
+                    </div>
+                `).join('');
+
+                // Add event listeners to lesson items
+                document.querySelectorAll('.lesson-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        // Remove active from all lessons
+                        document.querySelectorAll('.lesson-item').forEach(el => el.classList.remove('active'));
+                        
+                        // Add active to clicked lesson
+                        item.classList.add('active');
+                        
+                        // Load lesson content
+                        currentLessonIndex = parseInt(item.dataset.index);
+                        loadLessonContent(currentLessonIndex);
+                    });
+                });
+
+                // Load first lesson by default
+                loadLessonContent(0);
+
+                // Update progress bar
+                updateProgressBar();
+            } catch (error) {
+                console.error('Error loading lessons:', error);
+                lessonContentArea.innerHTML = `<p>Error loading lessons: ${error.message}</p>`;
+            }
+        }
+
+        // Submit Quiz with Level Progression
+        function submitQuiz() {
+            const quiz = courseData.lessons[currentLessonIndex].quiz;
+            let correctAnswers = 0;
+            let totalQuestions = quiz.length;
+
+            // Check answers
+            quiz.forEach((question, qIndex) => {
+                const selectedOption = document.querySelector(
+                    `.quiz-option[data-question="${qIndex}"].selected`
+                );
+                
+                if (selectedOption && 
+                    parseInt(selectedOption.dataset.option) === question.correctAnswer) {
+                    correctAnswers++;
+                }
+            });
+
+            // Calculate score
+            const score = (correctAnswers / totalQuestions) * 100;
+            quizAttempts++;
+
+            // Display result
+            quizResult.style.display = 'block';
+            
+            if (score >= 70) {
+                quizResult.innerHTML = `
+                    <h4>Congratulations! 🎉</h4>
+                    <p>You passed the quiz with ${score.toFixed(0)}% (${correctAnswers}/${totalQuestions} correct).</p>
+                `;
+                quizResult.classList.remove('fail');
+                quizResult.classList.add('pass');
+                submitQuizBtn.style.display = 'none';
+
+                // Update level progression
+                if (currentLevel === 'beginner') {
+                    levelProgress.beginner = true;
+                } else if (currentLevel === 'intermediate') {
+                    levelProgress.intermediate = true;
+                } else if (currentLevel === 'advanced') {
+                    levelProgress.advanced = true;
+                }
+
+                // Update level buttons
+                updateLevelButtons();
+            } else {
+                if (quizAttempts < MAX_QUIZ_ATTEMPTS) {
+                    quizResult.innerHTML = `
+                        <h4>Try Again</h4>
+                        <p>You scored ${score.toFixed(0)}% (${correctAnswers}/${totalQuestions} correct).</p>
+                        <p>Attempt ${quizAttempts} of ${MAX_QUIZ_ATTEMPTS}. Keep studying!</p>
+                    `;
+                    quizResult.classList.remove('pass');
+                    quizResult.classList.add('fail');
+                } else {
+                    quizResult.innerHTML = `
+                        <h4>Quiz Attempts Exhausted</h4>
+                        <p>You've used all ${MAX_QUIZ_ATTEMPTS} attempts. Please review the lesson materials.</p>
+                    `;
+                    quizResult.classList.remove('pass');
+                    quizResult.classList.add('fail');
+                    submitQuizBtn.style.display = 'none';
+                }
+            }
+        }
+
+        // Level Selector Functionality
+        document.querySelectorAll('.level-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Check if level is locked
+                if (this.classList.contains('locked')) {
+                    return;
+                }
+
+                // Remove active from all buttons
+                document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+                
+                // Add active to clicked button
+                this.classList.add('active');
+
+                // Update current level
+                currentLevel = this.dataset.level;
+                
+                // Update level display
+                currentLevelDisplay.textContent = `${currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)} Level`;
+                
+                // Update page title
+                courseTitle.textContent = `${currentCourse.toUpperCase()} Course - ${currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)} Level`;
+
+                // Close dropdown
+                levelSelectorHeader.classList.remove('expanded');
+                levelDropdown.classList.remove('show');
+
+                // Load lessons for selected level
+                loadLessons(currentCourse, currentLevel);
+            });
+        });
+                    
+        // Navigation Button Listeners
+        prevLessonBtn.addEventListener('click', () => {
+            if (currentLessonIndex > 0) {
+                currentLessonIndex--;
+                document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
+            }
+        });
+
+        nextLessonBtn.addEventListener('click', () => {
+            if (currentLessonIndex < courseData.lessons.length - 1) {
+                currentLessonIndex++;
+                document.querySelector(`.lesson-item[data-index="${currentLessonIndex}"]`).click();
+            }
+        });
+
+        // Quiz Submit Listener
+        submitQuizBtn.addEventListener('click', submitQuiz);
+
+        // Interactive Challenge Listener
+        /**checkChallengeBtn.addEventListener('click', checkInteractiveChallenge);**/
+
+        // Initial load
+        loadLessons(currentCourse, currentLevel);
+    </script>
+</body>
+</html>
