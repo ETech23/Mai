@@ -764,7 +764,11 @@ body {
             }
         }
     
+    // Reset quiz
     function resetQuiz() {
+    // Store the current visibility state of nextLessonBtn
+    const wasNextLessonBtnVisible = nextLessonBtn.style.display === 'block';
+
     // Unselect all quiz options
     document.querySelectorAll('.quiz-option.selected').forEach(option => {
         option.classList.remove('selected');
@@ -775,9 +779,11 @@ body {
     quizResult.innerHTML = '';
     quizResult.classList.remove('pass', 'fail');
 
-    // Reset buttons
+    // Reset submit quiz button
     submitQuizBtn.style.display = 'block';
-    nextLessonBtn.style.display = 'none';
+
+    // Restore nextLessonBtn visibility if it was previously visible
+    nextLessonBtn.style.display = wasNextLessonBtnVisible ? 'block' : 'none';
 }
 
         // Level Selector Functionality
