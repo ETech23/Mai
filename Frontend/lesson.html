@@ -128,6 +128,64 @@ body {
     background-color: white;
     box-shadow: 0 2px 15px rgba(0,0,0,0.04);
 }
+    
+    .lesson {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4a4a4a;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+        .key-topics {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .quiz-section {
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .quiz-question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f1f8ff;
+            border-radius: 5px;
+        }
+        ul {
+            padding-left: 30px;
+        }
+        .options {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .options li {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f8f8f8;
+            border-radius: 3px;
+        }
+    #loading {
+            text-align: center;
+            color: #666;
+            margin-top: 50px;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 50px;
+        }
 
 .lesson-content {
     padding: 15px;
@@ -414,6 +472,7 @@ body {
 
             <!-- Lessons Container -->
             <div class="sidebar-lessons" id="lessonsList">
+                
                 <!-- Lessons will be dynamically populated here -->
             </div>
         </div>
@@ -430,6 +489,7 @@ body {
 
             <!-- Lesson Content -->
             <div class="lesson-content">
+<div id="loading">Loading lessons...</div>
                 <div class="progress-bar">
                     <div class="progress-bar-fill" id="progressBarFill"></div>
                 </div>
@@ -550,7 +610,89 @@ body {
             }
         });**/
     
-    
+    // Function to create lesson HTML (same as previous example)
+        function createLessonHTML(lesson) {
+            // Create lesson container
+            const lessonDiv = document.createElement('div');
+            lessonDiv.className = 'lesson';
+
+            // Add lesson title
+            const titleH1 = document.createElement('h1');
+            titleH1.textContent = lesson.title;
+            lessonDiv.appendChild(titleH1);
+
+            // Add lesson content
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'lesson-content';
+            
+            // Split content into paragraphs
+            const paragraphs = lesson.content.split('\n\n');
+            paragraphs.forEach(para => {
+                const p = document.createElement('p');
+                p.textContent = para;
+                contentDiv.appendChild(p);
+            });
+
+            // Add key topics section
+            const keyTopicsDiv = document.createElement('div');
+            keyTopicsDiv.className = 'key-topics';
+            const keyTopicsH2 = document.createElement('h2');
+            keyTopicsH2.textContent = 'Key Topics Covered:';
+            keyTopicsDiv.appendChild(keyTopicsH2);
+
+            // Create key topics list
+            const keyTopicsList = document.createElement('ul');
+            const topicLines = lesson.content.split('\n');
+            const topicSections = topicLines.filter(line => 
+                line.match(/^\d+\.\s/) || line.match(/^\s*-\s/)
+            );
+
+            topicSections.forEach(line => {
+                const li = document.createElement('li');
+                li.textContent = line.trim();
+                keyTopicsList.appendChild(li);
+            });
+
+            keyTopicsDiv.appendChild(keyTopicsList);
+            lessonDiv.appendChild(contentDiv);
+            lessonDiv.appendChild(keyTopicsDiv);
+
+            // Add quiz section
+            const quizDiv = document.createElement('div');
+            quizDiv.className = 'quiz-section';
+            const quizH2 = document.createElement('h2');
+            quizH2.textContent = 'Quiz:';
+            quizDiv.appendChild(quizH2);
+
+            // Add quiz questions
+            lesson.quiz.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${question.text}`;
+                questionDiv.appendChild(questionText);
+
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+                question.options.forEach((option, optIndex) => {
+                    const optionLi = document.createElement('li');
+                    optionLi.textContent = option;
+                    optionLi.dataset.index = optIndex;
+                    if (optIndex === question.correctAnswer) {
+                        optionLi.style.backgroundColor = '#e6f2e6';
+                    }
+                    optionsList.appendChild(optionLi);
+                });
+
+                questionDiv.appendChild(optionsList);
+                quizDiv.appendChild(questionDiv);
+            });
+
+            lessonDiv.appendChild(quizDiv);
+
+            return lessonDiv;
+        }
 
         // Update level selector buttons based on progress
         function updateLevelButtons() {
@@ -957,9 +1099,12 @@ function loadLessonContent(index) {
 }**/
     
  async function loadLessons(course, level) {
+     const loadingIndicator = document.getElementById('loading');
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
         courseData = await response.json();
+        // Clear loading indicator
+                loadingIndicator.style.display = 'none';
 
         // Check for saved progress
         const savedProgress = progressManager.getCourseProgress(course, level);
