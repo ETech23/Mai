@@ -984,14 +984,14 @@ class ProgressManager {
 }
 
 
-const progressManager = new ProgressManager();
+/**const progressManager = new ProgressManager();**/
 
 // Modify course selection to check accessibility
 function setupCourseButtons() {
     courseButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const course = this.dataset.course;
-            const initialLevel = 'beginner';
+           /** const course = this.dataset.course;
+            const initialLevel = 'beginner';**/
 
             // Check if the course is accessible
             if (!progressManager.isCourseAccessible(course, initialLevel) && course !== 'ai') {
@@ -1098,7 +1098,7 @@ function loadLessonContent(index) {
     updateProgressBar();
 }**/
     
- async function loadLessons(course, level) {
+ /**async function loadLessons(course, level) {
      const loadingIndicator = document.getElementById('loading');
     try {
         const response = await fetch(`${course}_${level}_lessons.json`);
@@ -1157,7 +1157,178 @@ function loadLessonContent(index) {
         console.error('Error loading lessons:', error);
         lessonContentArea.innerHTML = `<p>Error loading lessons: ${error.message}</p>`;
     }
+}**/
+    
+    // Function to create lesson HTML element
+function createLessonHTML(lesson) {
+    const lessonElement = document.createElement('div');
+    lessonElement.classList.add('lesson');
+    
+    lessonElement.innerHTML = `
+        <h2>${lesson.title}</h2>
+        <div class="lesson-content">
+            ${lesson.content.map(section => {
+                if (section.type === 'paragraph') {
+                    return `<p>${section.text}</p>`;
+                } else if (section.type === 'code') {
+                    return `<pre><code>${section.code}</code></pre>`;
+                } else if (section.type === 'heading') {
+                    return `<h3>${section.text}</h3>`;
+                }
+                return '';
+            }).join('')}
+        </div>
+        ${lesson.exercise ? `
+        <div class="exercise">
+            <h3>Exercise</h3>
+            <p>${lesson.exercise.prompt}</p>
+            ${lesson.exercise.hint ? `<p class="hint">Hint: ${lesson.exercise.hint}</p>` : ''}
+        </div>
+        ` : ''}
+    `;
+    
+    return lessonElement;
 }
+
+// Progress Manager (you might want to implement this more robustly)
+const progressManager = {
+    getCourseProgress: (course, level) => {
+        const savedProgress = localStorage.getItem(`progress_${course}_${level}`);
+        return savedProgress ? JSON.parse(savedProgress) : null;
+    },
+    
+    updateCourseProgress: (course, level, lessonIndex) => {
+        const progress = {
+            course,
+            level,
+            currentLessonIndex: lessonIndex
+        };
+        localStorage.setItem(`progress_${course}_${level}`, JSON.stringify(progress));
+    },
+    
+    isLessonCompleted: (course, level, lessonIndex) => {
+        // Implement your completion tracking logic here
+        // For now, we'll return false
+        return false;
+    }
+};
+
+// Global variables
+//let currentCourse = '';
+//let currentLevel = '';
+//let currentLessonIndex = 0;
+//let courseData = null;
+
+// Function to update progress bar
+function updateProgressBar() {
+    if (!courseData) return;
+    
+    const progressBar = document.getElementById('progress-bar');
+    const totalLessons = courseData.lessons.length;
+    const completedLessons = courseData.lessons.filter((_, index) => 
+        progressManager.isLessonCompleted(currentCourse, currentLevel, index)
+    ).length;
+    
+    const progressPercentage = (completedLessons / totalLessons) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+}
+
+// Function to load lesson content
+function loadLessonContent(lessonIndex) {
+    const lessonContentArea = document.getElementById('lesson-content');
+    lessonContentArea.innerHTML = ''; // Clear previous content
+    
+    if (courseData && courseData.lessons[lessonIndex]) {
+        const lesson = courseData.lessons[lessonIndex];
+        lessonContentArea.appendChild(createLessonHTML(lesson));
+    }
+}
+
+// Main function to load lessons
+async function loadLessons(course, level) {
+    currentCourse = course;
+    currentLevel = level;
+    
+    const loadingIndicator = document.getElementById('loading');
+    const lessonsList = document.getElementById('lessons-list');
+    const lessonContentArea = document.getElementById('lesson-content');
+    
+    try {
+        const response = await fetch(`${course}_${level}_lessons.json`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        courseData = await response.json();
+        
+        // Clear loading indicator
+        loadingIndicator.style.display = 'none';
+        
+        // Check for saved progress
+        const savedProgress = progressManager.getCourseProgress(course, level);
+        
+        // Populate sidebar lessons
+        lessonsList.innerHTML = courseData.lessons.map((lesson, index) => {
+            // Check if lesson is completed
+            const isCompleted = progressManager.isLessonCompleted(course, level, index);
+            return `
+                <div class="lesson-item ${isCompleted ? 'completed' : ''} ${index === 0 ? 'active' : ''}" data-index="${index}">
+                    <i>${isCompleted ? '✅' : '📚'}</i> ${lesson.title}
+                </div>
+            `;
+        }).join('');
+        
+        // Determine which lesson to load
+        let initialLessonIndex = 0;
+        if (savedProgress && savedProgress.currentLessonIndex !== undefined) {
+            initialLessonIndex = savedProgress.currentLessonIndex;
+        }
+        
+        // Add event listeners to lesson items
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active from all lessons
+                document.querySelectorAll('.lesson-item').forEach(el => el.classList.remove('active'));
+                
+                // Add active to clicked lesson
+                item.classList.add('active');
+                
+                // Load lesson content
+                currentLessonIndex = parseInt(item.dataset.index);
+                loadLessonContent(currentLessonIndex);
+                
+                // Save current progress
+                progressManager.updateCourseProgress(
+                    currentCourse, 
+                    currentLevel, 
+                    currentLessonIndex
+                );
+                
+                // Update progress bar
+                updateProgressBar();
+            });
+        });
+        
+        // Load initial lesson
+        document.querySelector(`.lesson-item[data-index="${initialLessonIndex}"]`).click();
+        
+    } catch (error) {
+        console.error('Error loading lessons:', error);
+        loadingIndicator.innerHTML = `
+            <div class="error">
+                Error loading lessons: ${error.message}<br>
+                Please check the JSON source and try again.
+            </div>
+        `;
+    }
+}
+
+// Add event listener to load lessons when page loads
+/**document.addEventListener('DOMContentLoaded', () => {
+    // Example usage - you'd replace these with actual course and level
+    loadLessons('javascript', 'beginner');
+});**/
 
 // Modified loadLessonContent function
 function loadLessonContent(index) {
