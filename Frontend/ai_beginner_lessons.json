@@ -1,220 +1,38 @@
-{
-  "lessons": [
-    {
-      "title": "Introduction to Artificial Intelligence",
-      "content": "Artificial Intelligence (AI) is a transformative field of computer science that aims to create intelligent machines capable of simulating human-like cognitive processes. This comprehensive lesson provides a deep dive into the fundamental concepts, historical development, and core principles of AI.\n\nKey Topics Covered:\n1. Definition and Scope of AI\n   - Core concepts of intelligent systems\n   - Difference between human and artificial intelligence\n\n2. Historical Evolution\n   - Early conceptual foundations\n   - Major milestones in AI development\n   - Breakthrough moments in machine intelligence\n\n3. Types of AI\n   - Narrow AI (Weak AI)\n   - General AI (Strong AI)\n   - Artificial Superintelligence\n\n4. Core AI Branches\n   - Machine Learning\n   - Natural Language Processing\n   - Computer Vision\n   - Robotics\n\n5. Ethical Considerations\n   - Societal impact\n   - Potential risks and challenges\n   - Responsible AI development principles",
-      "quiz": [
-        {
-          "text": "What is the primary goal of Artificial Intelligence?",
-          "options": [
-            "To replace human workers",
-            "To create intelligent systems that can learn and solve complex problems",
-            "To develop faster computer hardware",
-            "To create more advanced computer games"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What distinguishes Narrow AI from General AI?",
-          "options": [
-            "Narrow AI is more expensive",
-            "Narrow AI is designed for specific tasks, while General AI aims to replicate human-like intelligence across multiple domains",
-            "Narrow AI is always more accurate",
-            "General AI is currently in widespread use"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "Which of the following is NOT a core branch of AI?",
-          "options": [
-            "Machine Learning",
-            "Natural Language Processing",
-            "Database Management",
-            "Computer Vision"
-          ],
-          "correctAnswer": 2
-        }
-      ]
-    },
-    {
-      "title": "Machine Learning Fundamentals",
-      "content": "Machine Learning (ML) is a core subset of Artificial Intelligence that enables computers to learn and improve from experience without being explicitly programmed. This lesson provides a comprehensive exploration of machine learning concepts, techniques, and real-world applications.\n\nKey Topics Covered:\n1. Machine Learning Paradigms\n   - Supervised Learning\n   - Unsupervised Learning\n   - Reinforcement Learning\n\n2. Machine Learning Workflow\n   - Data Collection\n   - Data Preprocessing\n   - Model Selection\n   - Training\n   - Evaluation\n\n3. Key Algorithms\n   - Linear Regression\n   - Decision Trees\n   - Neural Networks\n   - Support Vector Machines\n\n4. Practical Applications\n   - Predictive Analytics\n   - Image Recognition\n   - Natural Language Processing\n   - Recommendation Systems\n\n5. Challenges and Limitations\n   - Overfitting\n   - Bias in Machine Learning\n   - Computational Complexity\n   - Interpretability",
-      "quiz": [
-        {
-          "text": "What is the primary difference between supervised and unsupervised learning?",
-          "options": [
-            "Supervised learning uses more complex algorithms",
-            "Unsupervised learning requires labeled data",
-            "Supervised learning uses labeled training data, while unsupervised learning works with unlabeled data",
-            "Supervised learning is always more accurate"
-          ],
-          "correctAnswer": 2
-        },
-        {
-          "text": "What is overfitting in machine learning?",
-          "options": [
-            "When a model performs perfectly on training data but poorly on new data",
-            "When a model is too simple to capture data patterns",
-            "When a model requires too much computational power",
-            "When a model uses too many features"
-          ],
-          "correctAnswer": 0
-        },
-        {
-          "text": "Which machine learning technique learns through interaction with an environment?",
-          "options": [
-            "Supervised Learning",
-            "Unsupervised Learning",
-            "Reinforcement Learning",
-            "Deep Learning"
-          ],
-          "correctAnswer": 2
-        }
-      ]
-    },
-    {
-      "title": "Neural Networks and Deep Learning",
-      "content": "Deep Learning represents the cutting edge of artificial intelligence, inspired by the structure and function of the human brain. This lesson explores the intricate world of neural networks, their architecture, and revolutionary impact across various domains.\n\nKey Topics Covered:\n1. Biological Inspiration\n   - Neural network structure\n   - Brain-inspired computing\n   - Neuron and connection analogies\n\n2. Neural Network Architecture\n   - Input Layer\n   - Hidden Layers\n   - Output Layer\n   - Activation Functions\n\n3. Advanced Network Types\n   - Convolutional Neural Networks (CNNs)\n   - Recurrent Neural Networks (RNNs)\n   - Long Short-Term Memory (LSTM) Networks\n   - Transformer Networks\n\n4. Training Techniques\n   - Backpropagation\n   - Gradient Descent\n   - Regularization\n   - Transfer Learning\n\n5. Real-World Applications\n   - Image Recognition\n   - Natural Language Processing\n   - Speech Recognition\n   - Autonomous Vehicles",
-      "quiz": [
-        {
-          "text": "What is the primary purpose of activation functions in neural networks?",
-          "options": [
-            "To slow down the network processing",
-            "To introduce non-linearity and help the network learn complex patterns",
-            "To reduce the number of neurons",
-            "To increase computational complexity"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What makes Convolutional Neural Networks (CNNs) particularly effective for image processing?",
-          "options": [
-            "They use more computational power",
-            "They have a special architecture that can detect spatial hierarchies",
-            "They are faster than other network types",
-            "They require less training data"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What is backpropagation in neural networks?",
-          "options": [
-            "A method to add more layers to the network",
-            "A technique to calculate and propagate errors backward through the network",
-            "A way to reduce network complexity",
-            "A method to increase network speed"
-          ],
-          "correctAnswer": 1
-        }
-      ]
-    },
-    {
-      "title": "Natural Language Processing (NLP)",
-      "content": "Natural Language Processing (NLP) bridges the gap between human communication and computer understanding. This lesson delves into the sophisticated techniques for analyzing, understanding, and generating human language.\n\nKey Topics Covered:\n1. Fundamental NLP Techniques\n   - Tokenization\n   - Part-of-Speech Tagging\n   - Named Entity Recognition\n   - Sentiment Analysis\n\n2. Language Representation\n   - Word Embeddings\n   - Semantic Representation\n   - Context Understanding\n\n3. Advanced NLP Models\n   - Transformer Architecture\n   - BERT (Bidirectional Encoder Representations)\n   - GPT (Generative Pre-trained Transformer)\n   - Large Language Models\n\n4. Practical Applications\n   - Machine Translation\n   - Chatbots and Virtual Assistants\n   - Text Summarization\n   - Content Generation\n\n5. Challenges in NLP\n   - Contextual Nuances\n   - Multilingual Processing\n   - Bias and Fairness",
-      "quiz": [
-        {
-          "text": "What is tokenization in NLP?",
-          "options": [
-            "Encrypting text data",
-            "Breaking text into smaller units like words or subwords",
-            "Translating text to another language",
-            "Removing punctuation from text"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What do word embeddings represent?",
-          "options": [
-            "Physical positions of words in a document",
-            "Numerical representations of words capturing semantic meaning",
-            "The grammatical structure of sentences",
-            "The frequency of words in a corpus"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What is the primary advantage of transformer-based models?",
-          "options": [
-            "They are cheaper to train",
-            "They can better capture contextual relationships in language",
-            "They work only with English language",
-            "They require less computational power"
-          ],
-          "correctAnswer": 1
-        }
-      ]
-    },
-    {
-      "title": "AI Ethics and Societal Impact",
-      "content": "As AI becomes increasingly integrated into society, understanding its ethical implications is crucial. This lesson explores the complex ethical landscape surrounding artificial intelligence.\n\nKey Topics Covered:\n1. Ethical Considerations\n   - Bias and Fairness\n   - Privacy Concerns\n   - Transparency and Accountability\n   - Potential Job Displacement\n\n2. AI Governance\n   - Regulatory Frameworks\n   - Ethical Guidelines\n   - International Cooperation\n   - Responsible AI Development\n\n3. Societal Implications\n   - Economic Impact\n   - Healthcare Transformations\n   - Educational Opportunities\n   - Social Justice Considerations\n\n4. Potential Risks\n   - Algorithmic Bias\n   - Privacy Violations\n   - Autonomous Weapon Systems\n   - Existential Risks of Advanced AI\n\n5. Mitigation Strategies\n   - Diverse and Inclusive Development Teams\n   - Robust Testing and Validation\n   - Continuous Monitoring\n   - Ethical Decision-Making Frameworks",
-      "quiz": [
-        {
-          "text": "What is algorithmic bias?",
-          "options": [
-            "A deliberate attempt to manipulate AI systems",
-            "Unintended discrimination resulting from biased training data",
-            "A technical glitch in machine learning algorithms",
-            "A method of improving AI accuracy"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What is a key principle of responsible AI development?",
-          "options": [
-            "Maximizing computational efficiency",
-            "Minimizing development costs",
-            "Ensuring transparency, fairness, and accountability",
-            "Rapid technological advancement at any cost"
-          ],
-          "correctAnswer": 2
-        },
-        {
-          "text": "What is a primary concern regarding AI's impact on employment?",
-          "options": [
-            "AI will create more jobs than it eliminates",
-            "Potential large-scale job displacement across various industries",
-            "AI has no impact on employment",
-            "Only low-skilled jobs will be affected"
-          ],
-          "correctAnswer": 1
-        }
-      ]
-    },
-    {
-      "title": "AI Applications and Future Trends",
-      "content": "This final lesson explores the current and emerging applications of AI across various industries, providing a forward-looking perspective on the technology's potential and future developments.\n\nKey Topics Covered:\n1. Industry Transformations\n   - Healthcare\n   - Finance\n   - Transportation\n   - Education\n   - Environmental Sciences\n\n2. Emerging Technologies\n   - Quantum Machine Learning\n   - Edge AI\n   - Explainable AI (XAI)\n   - AI in Augmented Reality\n   - Neuromorphic Computing\n\n3. Future Research Directions\n   - Artificial General Intelligence (AGI)\n   - Human-AI Collaboration\n   - Ethical AI Development\n   - Advanced Learning Algorithms\n\n4. Potential Breakthrough Areas\n   - Personalized Medicine\n   - Climate Change Modeling\n   - Space Exploration\n   - Scientific Discovery\n\n5. Challenges and Limitations\n   - Computational Constraints\n   - Ethical and Social Challenges\n   - Interdisciplinary Integration\n   - Continuous Learning and Adaptation",
-      "quiz": [
-        {
-          "text": "What is Edge AI?",
-          "options": [
-            "AI systems located at the geographical edges of networks",
-            "AI processing that occurs on local devices rather than in the cloud",
-            "Advanced AI algorithms for network security",
-            "A type of quantum computing"
-          ],
-          "correctAnswer": 1
-        },
-        {
-          "text": "What does Explainable AI (XAI) aim to achieve?",
-          "options": [
-            "Making AI systems faster",
-            "Reducing AI development costs",
-            "Helping humans understand how AI makes decisions",
-            "Creating more complex AI models"
-          ],
-          "correctAnswer": 2
-        },
-        {
-          "text": "What is a key focus of future AI research?",
-          "options": [
-            "Developing faster hardware",
-            "Creating Artificial General Intelligence (AGI)",
-            "Reducing computational costs",
-            "Limiting AI capabilities"
-          ],
-          "correctAnswer": 1
-        }
-      ]
-    }
-  ]
-}
+"lessons": [
+                {
+                    "title": "Introduction to Artificial Intelligence",
+                    "content": "Artificial Intelligence (AI) is a transformative field of computer science that aims to create intelligent machines capable of simulating human-like cognitive processes. This comprehensive lesson provides a deep dive into the fundamental concepts, historical development, and core principles of AI.\n\nKey Topics Covered:\n1. Definition and Scope of AI\n   - Core concepts of intelligent systems\n   - Difference between human and artificial intelligence\n\n2. Historical Evolution\n   - Early conceptual foundations\n   - Major milestones in AI development\n   - Breakthrough moments in machine intelligence\n\n3. Types of AI\n   - Narrow AI (Weak AI)\n   - General AI (Strong AI)\n   - Artificial Superintelligence\n\n4. Core AI Branches\n   - Machine Learning\n   - Natural Language Processing\n   - Computer Vision\n   - Robotics\n\n5. Ethical Considerations\n   - Societal impact\n   - Potential risks and challenges\n   - Responsible AI development principles",
+                    "quiz": [
+                        {
+                            "text": "What is the primary goal of Artificial Intelligence?",
+                            "options": [
+                                "To replace human workers",
+                                "To create intelligent systems that can learn and solve complex problems",
+                                "To develop faster computer hardware",
+                                "To create more advanced computer games"
+                            ],
+                            "correctAnswer": 1
+                        },
+                        {
+                            "text": "What distinguishes Narrow AI from General AI?",
+                            "options": [
+                                "Narrow AI is more expensive",
+                                "Narrow AI is designed for specific tasks, while General AI aims to replicate human-like intelligence across multiple domains",
+                                "Narrow AI is always more accurate",
+                                "General AI is currently in widespread use"
+                            ],
+                            "correctAnswer": 1
+                        },
+                        {
+                            "text": "Which of the following is NOT a core branch of AI?",
+                            "options": [
+                                "Machine Learning",
+                                "Natural Language Processing",
+                                "Database Management",
+                                "Computer Vision"
+                            ],
+                            "correctAnswer": 2
+                        }
+                    ]
+                }
+            ]
