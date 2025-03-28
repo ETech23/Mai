@@ -2,7 +2,10 @@
     "lessons": [
         {
             "title": "Introduction to Artificial Intelligence",
-            "content": "Artificial Intelligence (AI) is a transformative field of computer science that aims to create intelligent machines capable of simulating human-like cognitive processes. This comprehensive lesson provides a deep dive into the fundamental concepts, historical development, and core principles of AI.\n\nKey Topics Covered:\n1. Definition and Scope of AI\n   - Core concepts of intelligent systems\n   - Difference between human and artificial intelligence\n\n2. Historical Evolution\n   - Early conceptual foundations\n   - Major milestones in AI development\n   - Breakthrough moments in machine intelligence\n\n3. Types of AI\n   - Narrow AI (Weak AI)\n   - General AI (Strong AI)\n   - Artificial Superintelligence\n\n4. Core AI Branches\n   - Machine Learning\n   - Natural Language Processing\n   - Computer Vision\n   - Robotics\n\n5. Ethical Considerations\n   - Societal impact\n   - Potential risks and challenges\n   - Responsible AI development principles",
+            "content": "Artificial Intelligence (AI) is a transformative field of computer science that aims to create intelligent machines capable of simulating human-like cognitive processes. This comprehensive lesson provides a deep dive into the fundamental concepts, historical development, and core principles of AI.\n\n",
+	    "subtopic":"Key Topics Covered:\n",
+	    "content":"1. Definition and Scope of AI\n",  
+	    "content":"- Core concepts of intelligent systems\n   - Difference between human and artificial intelligence\n\n2. Historical Evolution\n   - Early conceptual foundations\n   - Major milestones in AI development\n   - Breakthrough moments in machine intelligence\n\n3. Types of AI\n   - Narrow AI (Weak AI)\n   - General AI (Strong AI)\n   - Artificial Superintelligence\n\n4. Core AI Branches\n   - Machine Learning\n   - Natural Language Processing\n   - Computer Vision\n   - Robotics\n\n5. Ethical Considerations\n   - Societal impact\n   - Potential risks and challenges\n   - Responsible AI development principles",
             "quiz": [
                 {
                     "text": "What is the primary goal of Artificial Intelligence?",

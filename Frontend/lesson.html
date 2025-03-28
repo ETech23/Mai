@@ -612,7 +612,7 @@ body {
     
     // Function to create lesson HTML (same as previous example)
     // Function to create lesson HTML element
-function createLessonHTML(lesson) {
+/**function createLessonHTML(lesson) {
     const lessonElement = document.createElement('div');
     lessonElement.classList.add('lesson');
     
@@ -693,7 +693,7 @@ function createLessonHTML(lesson) {
     }
     
     return lessonElement;
-}
+}**/
 
 // Rest of the previous code remains the same (including progressManager, loadLessons, etc.)
 // ... (paste the entire pr
@@ -1425,6 +1425,7 @@ function loadLessonContent(index) {
     lessonContentArea.innerHTML = `
         <h2>${lesson.title}</h2>
         <p>${lesson.content}</p>
+        <h3>${subtitle.content}</h3>
     `;
 
     // Show/hide quiz if present
