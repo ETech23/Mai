@@ -611,7 +611,93 @@ body {
         });**/
     
     // Function to create lesson HTML (same as previous example)
-        function createLessonHTML(lesson) {
+    // Function to create lesson HTML element
+function createLessonHTML(lesson) {
+    const lessonElement = document.createElement('div');
+    lessonElement.classList.add('lesson');
+    
+    // Convert content to HTML with line breaks and formatting
+    const formattedContent = lesson.content.split('\n\n').map(paragraph => {
+        // Check if paragraph starts with a number (for topics/sections)
+        if (/^\d+\./.test(paragraph)) {
+            const lines = paragraph.split('\n');
+            const mainTopic = lines[0];
+            const subTopics = lines.slice(1);
+            
+            return `
+                <h3>${mainTopic}</h3>
+                <ul>
+                    ${subTopics.map(topic => `<li>${topic.trim()}</li>`).join('')}
+                </ul>
+            `;
+        }
+        return `<p>${paragraph}</p>`;
+    }).join('');
+    
+    // Create quiz HTML
+    const quizHTML = lesson.quiz ? `
+        <div class="quiz">
+            <h3>Quiz</h3>
+            ${lesson.quiz.map((question, qIndex) => `
+                <div class="quiz-question">
+                    <p>${question.text}</p>
+                    <div class="quiz-options">
+                        ${question.options.map((option, oIndex) => `
+                            <label>
+                                <input type="radio" name="question-${qIndex}" value="${oIndex}">
+                                ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+            <button class="submit-quiz">Submit Quiz</button>
+        </div>
+    ` : '';
+    
+    // Combine content and quiz
+    lessonElement.innerHTML = `
+        <h2>${lesson.title}</h2>
+        <div class="lesson-content">
+            ${formattedContent}
+        </div>
+        ${quizHTML}
+    `;
+    
+    // Add quiz functionality
+    if (lesson.quiz) {
+        const submitButton = lessonElement.querySelector('.submit-quiz');
+        submitButton.addEventListener('click', () => {
+            const questions = lessonElement.querySelectorAll('.quiz-question');
+            let score = 0;
+            
+            questions.forEach((question, qIndex) => {
+                const selectedOption = question.querySelector(`input[name="question-${qIndex}"]:checked`);
+                if (selectedOption) {
+                    const selectedValue = parseInt(selectedOption.value);
+                    if (selectedValue === lesson.quiz[qIndex].correctAnswer) {
+                        score++;
+                        selectedOption.closest('label').classList.add('correct');
+                    } else {
+                        selectedOption.closest('label').classList.add('incorrect');
+                        // Highlight the correct answer
+                        const correctOptionIndex = lesson.quiz[qIndex].correctAnswer;
+                        question.querySelectorAll('label')[correctOptionIndex].classList.add('correct-answer');
+                    }
+                }
+            });
+            
+            // Show score
+            alert(`You scored ${score} out of ${lesson.quiz.length}`);
+        });
+    }
+    
+    return lessonElement;
+}
+
+// Rest of the previous code remains the same (including progressManager, loadLessons, etc.)
+// ... (paste the entire pr
+      /**  function createLessonHTML(lesson) {
             // Create lesson container
             const lessonDiv = document.createElement('div');
             lessonDiv.className = 'lesson';
@@ -692,7 +778,7 @@ body {
             lessonDiv.appendChild(quizDiv);
 
             return lessonDiv;
-        }
+        }**/
 
         // Update level selector buttons based on progress
         function updateLevelButtons() {
