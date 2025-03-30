@@ -1,0 +1,26 @@
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; background-color: #f4f4f4; }
+
+.container { display: flex; width: 100%; }
+
+.sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; height: 100vh; position: fixed; }
+
+.sidebar h2 { text-align: center; }
+
+.sidebar nav ul { list-style: none; padding: 0; }
+
+.sidebar nav ul li { margin: 20px 0; }
+
+.sidebar nav ul li a { color: white; text-decoration: none; display: block; padding: 10px; transition: 0.3s; }
+
+.sidebar nav ul li a:hover { background: #34495e; }
+
+.content { margin-left: 270px; padding: 20px; flex-grow: 1; }
+
+.progress { display: flex; gap: 10px; }
+
+.progress-bar { background: #27ae60; color: white; text-align: center; padding: 5px; border-radius: 5px; width: 50%; }
+
+#themeToggle { background: #3498db; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; margin-top: 20px; }
+
+#themeToggle:hover { background: #2980b9; }
+

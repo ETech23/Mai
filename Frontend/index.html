@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Mai AI Token" />
-  <meta property="og:description" content="Join the project today and get rewarded with digital money; Mai Crypto Token." />
+  <meta property="og:description" content="Mai is an AI-powered learning assistant that rewards your curiosity! Complete daily AI lessons, explore crypto concepts, and earn Mai tokens as you grow. Join now to explore the platform and start earning while you learn!/>
   <meta property="og:image" content="https://www.maichain.site/social/MaiLogo175.png" />
   <meta property="og:url" content="https://www.maichain.site" />
   <meta property="og:type" content="website" />
@@ -726,7 +726,7 @@ localStorage.setItem("balance", balance);
     else streakLevel = "Master";
 
       // Construct referral link
-const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/login.html?ref=${referralCode}&redirect=playstore`;
+const referralLink = `Mai is an AI-powered learning assistant that rewards your curiosity! Complete daily AI lessons, explore crypto concepts, and earn Mai tokens as you grow. Join now using my referral link to start earning while you learn!: https://www.maichain.site/login.html?ref=${referralCode}&redirect=playstore`;
 console.log("Referral link constructed:", referralLink);
       localStorage.setItem("referralLink", referralLink);
       
@@ -852,8 +852,8 @@ userInfoDropdown.innerHTML = `
       <p><i class="fas fa-question-circle"></i> <strong><a href="more.html#fag">FAQs</a></strong></p>
   <p><i class="fas fa-shield-alt"></i> <strong><a href="more.html#privacy-policy">Privacy Policy</a></strong></p>
       <hr>
-      <p><i class="fas fa-link"></i> <strong>Referral Link:</strong></p>
-  <button id="share-button"><i class="fas fa-share-alt"></i> Share</button>
+      <p><i class="fas fa-link"></i><strong><button id="share-button">Referral Link</button></strong></p>
+  <!--<button id="share-button"><i class="fas fa-share-alt"></i> Share</button>-->
   <button ><a style="color: white;" href="logout.html"><i class="fas fa-sign-out-alt"></i> Log Out</a></button>
       <br>
       <br>
@@ -893,7 +893,7 @@ if (shareButton) {
       // If share options do not exist, show them directly below the share button
       const shareOptions = `
         <div id="share-options" style="margin-top: 10px;">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>
+         <!-- <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}" target="_blank">Share on Facebook</a><br>-->
           <a href="#" id="whatsapp-share">Share on WhatsApp</a><br>
           <a href="https://www.instagram.com/" target="_blank">Share on Instagram</a><br> 
 <button id="copy-link">Copy Link</button>
