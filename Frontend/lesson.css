@@ -1045,3 +1045,17 @@ body {
    [data-theme="dark"] ::-webkit-scrollbar-thumb {
      background: var(--secondary-color);
    }
+
+.course-card {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+.continue-course {
+  width: 100%;
+  margin-top: auto;
+}

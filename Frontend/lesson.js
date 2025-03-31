@@ -26,8 +26,19 @@ class LearningPlatform {
     await this.loadCourseData();
     this.setupEventListeners();
     this.applyTheme();
+    
+    // Initialize current section from URL or default to dashboard
+    const hash = window.location.hash.substring(1);
+    this.currentSection = hash && [
+      'dashboard', 
+      'ai-courses', 
+      'crypto-courses', 
+      'achievements', 
+      'resources'
+    ].includes(hash) ? hash : 'dashboard';
+    
     this.render();
-  }
+}
 
   async loadCourseData() {
     try {
@@ -132,6 +143,57 @@ document.querySelectorAll('.main-nav a').forEach(link => {
       }
     });
   }
+  
+ setupInteractiveElements() {
+    // Handle lesson toggles
+    document.querySelectorAll('.lesson-title').forEach(title => {
+      title.addEventListener('click', (e) => {
+        this.toggleLessonContent(e.target.closest('.lesson'));
+      });
+    });
+
+    // Handle mark complete buttons
+    document.querySelectorAll('.mark-complete').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.markLessonComplete(
+          button.dataset.course,
+          button.dataset.module,
+          button.dataset.lesson
+        );
+      });
+    });
+
+    // Handle quiz submission
+    document.querySelectorAll('.submit-quiz').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const moduleTitle = button.closest('.quiz-container').querySelector('h4').textContent.replace('Module Quiz', '').trim();
+        this.submitQuiz(moduleTitle);
+      });
+    });
+
+    // Handle exam start
+    document.querySelectorAll('.start-exam').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const levelName = button.closest('.exam-container').querySelector('h4').textContent.replace('Exam', '').trim();
+        this.startExam(levelName);
+      });
+    });
+
+    // Handle certificate download
+    document.querySelectorAll('.download-certificate').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const certTitle = button.closest('.exam-container').querySelector('h4').textContent.replace('Exam', '').trim() + ' Certificate';
+        this.generateCertificate(certTitle);
+      });
+    });
+
+    // Handle course continuation
+    this.setupCourseButtons();
+}
 
   navigateTo(sectionId) {
     this.currentSection = sectionId;
@@ -140,9 +202,7 @@ document.querySelectorAll('.main-nav a').forEach(link => {
   }
 
   render() {
-  const mainContent = document.querySelector('.main-content');
-  
-  
+    const mainContent = document.querySelector('.main-content');
     
     switch (this.currentSection) {
       case 'dashboard':
@@ -164,9 +224,34 @@ document.querySelectorAll('.main-nav a').forEach(link => {
         mainContent.innerHTML = this.renderDashboard();
     }
 
-  this.updateActiveNav(); // Update nav after rendering content
+    this.updateActiveNav();
+    this.setupCourseButtons();
+    
+    // Only setup interactive elements after DOM is updated
+    setTimeout(() => {
+      this.setupInteractiveElements();
+    }, 50);
 }
+  
 
+  renderContinueLearning() {
+    const availableCourses = [
+      'AI Fundamentals',
+      'Crypto Fundamentals',
+      ...this.state.user.progress.inProgressCourses
+    ].filter((v, i, a) => a.indexOf(v) === i); // Remove duplicates
+
+    return `
+      <div class="continue-learning">
+        <h3>Continue Learning</h3>
+        <div class="course-cards">
+          ${availableCourses.length > 0 ? 
+            availableCourses.map(course => this.renderCourseCard(course)).join('') :
+            '<p>No courses available. Please check back later.</p>'}
+        </div>
+      </div>
+    `;
+}
     
 // Update active nav item
 updateActiveNav() {
@@ -483,28 +568,32 @@ updateActiveNav() {
   renderLevelProgress(level, trackId, index, totalLevels) {
     const levelStatus = this.getLevelStatus(level.name, trackId);
     const isLast = index === totalLevels - 1;
+    const levelName = level.name.split(':')[0].trim();
     
     return `
       <div class="level ${levelStatus}">
         <div class="level-icon"><i class="fas ${this.getStatusIcon(levelStatus)}"></i></div>
         <div class="level-details">
-          <h4>${level.name.split(':')[0].trim()}</h4>
+          <h4>${levelName}</h4>
           <p>${level.name.split(':')[1].trim()}</p>
         </div>
         ${!isLast ? '<div class="track-connector"></div>' : ''}
         <button class="btn btn-small ${levelStatus === 'completed' ? '' : 
           levelStatus === 'in-progress' ? 'btn-primary' : ''}" 
-          ${levelStatus === 'locked' ? 'disabled' : ''}>
+          ${levelStatus === 'locked' ? 'disabled' : ''}
+          data-course="${trackId}"
+          data-level="${level.name}">
           ${levelStatus === 'completed' ? 'Review' : 
            levelStatus === 'in-progress' ? 'Continue' : 'Locked'}
         </button>
       </div>
     `;
-  }
+}
 
   renderCourseCard(courseTitle) {
     const progress = this.calculateCourseProgress(courseTitle);
     const courseType = courseTitle.includes('AI') ? 'ai' : 'crypto';
+    const courseId = courseType;
     
     return `
       <div class="course-card">
@@ -517,11 +606,42 @@ updateActiveNav() {
           <div class="progress-container">
             <div class="progress-bar" style="width: ${progress}%">${progress}%</div>
           </div>
-          <button class="btn btn-primary">Continue</button>
+          <button class="btn btn-primary continue-course" 
+                  data-course="${courseId}"
+                  data-module="${courseTitle}">
+            ${progress > 0 ? 'Continue' : 'Start'}
+          </button>
         </div>
       </div>
     `;
-  }
+}
+  
+  setupCourseButtons() {
+    document.querySelectorAll('.continue-course').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const courseId = e.target.dataset.course;
+        const moduleTitle = e.target.dataset.module;
+        
+        this.navigateTo(`${courseId}-courses`);
+        
+        // Scroll to module after render
+        setTimeout(() => {
+          if (moduleTitle) {
+            const moduleElement = document.querySelector(`[data-module="${moduleTitle}"]`);
+            if (moduleElement) {
+              moduleElement.scrollIntoView({ behavior: 'smooth' });
+              // Open the module if it exists
+              const content = document.getElementById(`module-${this.slugify(moduleTitle)}`);
+              if (content) {
+                content.style.display = 'block';
+              }
+            }
+          }
+        }, 100);
+      });
+    });
+}
 
   renderAchievements() {
     const badges = [
@@ -683,7 +803,25 @@ updateActiveNav() {
     if (content) {
       content.style.display = content.style.display === 'none' ? 'block' : 'none';
     }
-  }
+}
+
+submitQuiz(moduleTitle) {
+    // Implementation for quiz submission
+    console.log(`Submitting quiz for ${moduleTitle}`);
+    // Add your quiz submission logic here
+}
+
+startExam(levelName) {
+    // Implementation for starting exam
+    console.log(`Starting exam for ${levelName}`);
+    // Add your exam start logic here
+}
+
+generateCertificate(certTitle) {
+    // Implementation for certificate generation
+    console.log(`Generating certificate: ${certTitle}`);
+    // Add your certificate generation logic here
+}
 
   markLessonComplete(courseId, moduleTitle, lessonTitle) {
     // Initialize module progress if not exists
