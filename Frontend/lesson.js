@@ -104,14 +104,16 @@ class LearningPlatform {
     });
 
     // Navigation
-    document.querySelectorAll('.main-nav a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const sectionId = e.target.getAttribute('href').substring(1);
-        this.navigateTo(sectionId);
-      });
-    });
-
+    // In setupEventListeners()
+document.querySelectorAll('.main-nav a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sectionId = e.target.getAttribute('href').substring(1);
+    this.navigateTo(sectionId);
+    this.updateActiveNav(); // Explicitly call this after navigation
+  });
+});
+    
     // Event delegation for dynamic content
     document.querySelector('.main-content').addEventListener('click', (e) => {
       // Handle lesson toggles
@@ -138,7 +140,9 @@ class LearningPlatform {
   }
 
   render() {
-    const mainContent = document.querySelector('.main-content');
+  const mainContent = document.querySelector('.main-content');
+  
+  
     
     switch (this.currentSection) {
       case 'dashboard':
@@ -160,12 +164,29 @@ class LearningPlatform {
         mainContent.innerHTML = this.renderDashboard();
     }
 
-    // Update active nav item
-    document.querySelectorAll('.main-nav li').forEach(li => {
-      li.classList.remove('active');
-    });
-    document.querySelector(`.main-nav a[href="#${this.currentSection}"]`).parentElement.classList.add('active');
+  this.updateActiveNav(); // Update nav after rendering content
+}
+
+    
+// Update active nav item
+updateActiveNav() {
+  const navItems = document.querySelectorAll('.main-nav li');
+  const currentNavLink = document.querySelector(`.main-nav a[href="#${this.currentSection}"]`);
+  
+  navItems.forEach(li => {
+    li.classList.remove('active');
+  });
+  
+  if (currentNavLink && currentNavLink.parentElement) {
+    currentNavLink.parentElement.classList.add('active');
+  } else {
+    // Fallback to dashboard if no matching section found
+    const dashboardLink = document.querySelector('.main-nav a[href="#dashboard"]');
+    if (dashboardLink && dashboardLink.parentElement) {
+      dashboardLink.parentElement.classList.add('active');
+    }
   }
+}
 
   renderDashboard() {
     const totalCourses = this.calculateTotalCourses();
