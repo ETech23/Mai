@@ -145,6 +145,25 @@ document.querySelectorAll('.main-nav a').forEach(link => {
   }
   
  setupInteractiveElements() {
+    // Handle module toggles
+    document.querySelectorAll('.module-header').forEach(header => {
+      const module = header.closest('.module');
+      if (!module.classList.contains('locked')) {
+        header.addEventListener('click', () => {
+          const moduleId = header.getAttribute('data-module');
+          const content = document.getElementById(`module-${moduleId}`);
+          if (content) {
+            const isHidden = content.style.display === 'none';
+            content.style.display = isHidden ? 'block' : 'none';
+            const chevron = header.querySelector('.fa-chevron-down');
+            if (chevron) {
+              chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0)';
+            }
+          }
+        });
+      }
+    });
+
     // Handle lesson toggles
     document.querySelectorAll('.lesson-title').forEach(title => {
       title.addEventListener('click', (e) => {
@@ -163,6 +182,16 @@ document.querySelectorAll('.main-nav a').forEach(link => {
         );
       });
     });
+
+    // Handle exam buttons
+    document.querySelectorAll('.start-exam:not([disabled])').forEach(button => {
+      button.addEventListener('click', () => {
+        const levelName = button.closest('.exam-container').querySelector('h4').textContent
+          .replace('Exam', '').trim();
+        this.startExam(levelName);
+      });
+    });
+
 
     // Handle quiz submission
     document.querySelectorAll('.submit-quiz').forEach(button => {
@@ -417,7 +446,7 @@ updateActiveNav() {
     return `
       <div class="module ${moduleStatus}">
         <div class="module-header" data-module="${this.slugify(module.title)}" 
-             ${isLocked ? 'style="cursor: not-allowed; opacity: 0.7;"' : ''}>
+             ${isLocked ? 'style="cursor: not-allowed;"' : 'style="cursor: pointer;"'}>
           <h4>${module.title}</h4>
           <div class="module-status">
             <span><i class="fas ${this.getStatusIcon(moduleStatus)}"></i> ${this.formatStatus(moduleStatus)}</span>
@@ -425,7 +454,7 @@ updateActiveNav() {
           </div>
         </div>
         ${!isLocked ? `
-          <div class="module-content" id="module-${this.slugify(module.title)}">
+          <div class="module-content" id="module-${this.slugify(module.title)}" style="display: none;">
             ${this.renderLessons(module.lessons, courseId, module.title)}
             ${module.quiz ? this.renderQuiz(module.quiz, module.title) : ''}
           </div>
@@ -512,7 +541,9 @@ updateActiveNav() {
 
  renderExam(exam, levelName) {
     const levelCompleted = this.isLevelCompleted(levelName);
-    const examStatus = levelCompleted ? 'passed' : 'unattempted';
+    const examTaken = this.state.user.progress.examResults[levelName];
+    const examStatus = examTaken?.passed ? 'passed' : 
+                      examTaken ? 'failed' : 'unattempted';
     
     return `
       <div class="exam-container ${examStatus}">
@@ -532,10 +563,23 @@ updateActiveNav() {
         ${examStatus === 'unattempted' ? `
           <div class="exam-instructions">
             <p>${exam.description}</p>
-            <p>Complete all modules in this level to unlock the exam.</p>
-            <button class="btn btn-primary start-exam" 
-                    ${levelCompleted ? '' : 'disabled'}>
-              ${levelCompleted ? 'Start Exam' : 'Complete Modules First'}
+            ${levelCompleted ? `
+              <p>You've completed all required modules!</p>
+              <button class="btn btn-primary start-exam">
+                Start Exam
+              </button>
+            ` : `
+              <p>Complete all modules in this level to unlock the exam.</p>
+              <button class="btn" disabled>
+                Complete Modules First
+              </button>
+            `}
+          </div>
+        ` : examStatus === 'failed' ? `
+          <div class="exam-instructions">
+            <p>Your score: ${examTaken.score}% (Required: ${exam.passingScore}%)</p>
+            <button class="btn btn-primary start-exam">
+              Retake Exam
             </button>
           </div>
         ` : ''}
@@ -918,13 +962,27 @@ generateCertificate(certTitle) {
     // Check if this is the first module in its level
     const isFirstModule = this.isFirstModuleInLevel(moduleTitle);
     
+    // Check if module is explicitly marked as in progress
+    const isMarkedInProgress = this.state.user.progress.inProgressCourses.includes(moduleTitle);
+    
     // Module should be available if:
-    // 1. It's the first module in its level, OR
-    // 2. Any lessons are completed, OR
-    // 3. It's explicitly marked as in progress
-    if (isFirstModule || 
-        hasCompletedLessons || 
-        this.state.user.progress.inProgressCourses.includes(moduleTitle)) {
+    if (isFirstModule || hasCompletedLessons || isMarkedInProgress) {
+        // Auto-expand the module if it's marked as in progress
+        if (isMarkedInProgress) {
+            setTimeout(() => {
+                const moduleEl = document.querySelector(`[data-module="${this.slugify(moduleTitle)}"]`);
+                if (moduleEl) {
+                    const content = document.getElementById(`module-${this.slugify(moduleTitle)}`);
+                    if (content) {
+                        content.style.display = 'block';
+                        const chevron = moduleEl.querySelector('.fa-chevron-down');
+                        if (chevron) {
+                            chevron.style.transform = 'rotate(180deg)';
+                        }
+                    }
+                }
+            }, 100);
+        }
         return 'in-progress';
     }
     

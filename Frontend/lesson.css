@@ -197,6 +197,26 @@ body {
   transition: var(--transition);
 }
 
+.module-header {
+  transition: all 0.2s ease;
+}
+
+.module-header:not([style*="cursor: not-allowed"]):hover {
+  background-color: rgba(108, 99, 255, 0.1);
+}
+
+.module-content {
+  display: none;
+}
+
+.module.active .module-content {
+  display: block;
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 /* Header Styles */
 .content-header {
   display: flex;
@@ -616,42 +636,30 @@ body {
   overflow: hidden;
 }
 
-.module-header {
-  padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.02);
+..module-header {
+  padding: 1rem;
+  transition: background-color 0.2s ease;
 }
 
-.module-header h4 {
-  font-size: 1rem;
-}
-
-.module-status {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--gray-color);
-}
-
-.module-status i {
-  transition: var(--transition);
-}
-
-.module.active .module-header i.fa-chevron-down {
-  transform: rotate(180deg);
+.module-header[style*="cursor: pointer"]:hover {
+  background-color: rgba(108, 99, 255, 0.1);
 }
 
 .module-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
+  padding: 0 1rem 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
-.module.active .module-content {
-  max-height: 1000px;
+.module.locked {
+  opacity: 0.7;
+}
+
+.module.locked .module-header {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.fa-chevron-down {
+  transition: transform 0.2s ease;
 }
 
 .lesson-list {
