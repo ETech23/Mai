@@ -31,7 +31,7 @@ class LearningPlatform {
 
   async loadCourseData() {
     try {
-      const response = await fetch('data/courses.json');
+      const response = await fetch('data.json');
       this.courses = await response.json();
     } catch (error) {
       console.error("Failed to load course data:", error);
