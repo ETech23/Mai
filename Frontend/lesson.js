@@ -6,7 +6,7 @@ class LearningPlatform {
         name: "Guest User",
         progress: JSON.parse(localStorage.getItem('userProgress')) || {
           completedCourses: [],
-          inProgressCourses: [],
+          inProgressCourses: ['Introduction to AI'], // Start with first module in progress
           completedLessons: {},
           quizScores: {},
           examResults: {},
@@ -17,9 +17,9 @@ class LearningPlatform {
       },
       courses: null,
       currentSection: 'dashboard'
-    };
-
-    this.init();
+    };  
+    
+    this.init();  // Now properly after closing the state object
   }
 
   async init() {
@@ -412,23 +412,27 @@ updateActiveNav() {
 
   renderModule(module, courseId) {
     const moduleStatus = this.getModuleStatus(module.title);
+    const isLocked = moduleStatus === 'locked';
     
     return `
       <div class="module ${moduleStatus}">
-        <div class="module-header" data-toggle="module-${this.slugify(module.title)}">
+        <div class="module-header" data-module="${this.slugify(module.title)}" 
+             ${isLocked ? 'style="cursor: not-allowed; opacity: 0.7;"' : ''}>
           <h4>${module.title}</h4>
           <div class="module-status">
             <span><i class="fas ${this.getStatusIcon(moduleStatus)}"></i> ${this.formatStatus(moduleStatus)}</span>
-            <i class="fas fa-chevron-down"></i>
+            ${!isLocked ? '<i class="fas fa-chevron-down"></i>' : ''}
           </div>
         </div>
-        <div class="module-content" id="module-${this.slugify(module.title)}">
-          ${this.renderLessons(module.lessons, courseId, module.title)}
-          ${module.quiz ? this.renderQuiz(module.quiz, module.title) : ''}
-        </div>
+        ${!isLocked ? `
+          <div class="module-content" id="module-${this.slugify(module.title)}">
+            ${this.renderLessons(module.lessons, courseId, module.title)}
+            ${module.quiz ? this.renderQuiz(module.quiz, module.title) : ''}
+          </div>
+        ` : ''}
       </div>
     `;
-  }
+}
 
   renderLessons(lessons, courseId, moduleTitle) {
     return `
@@ -506,9 +510,9 @@ updateActiveNav() {
     `;
   }
 
-  renderExam(exam, levelName) {
-    const examStatus = this.state.user.progress.examResults[levelName] ? 
-      (this.state.user.progress.examResults[levelName].passed ? 'passed' : 'failed') : 'unattempted';
+ renderExam(exam, levelName) {
+    const levelCompleted = this.isLevelCompleted(levelName);
+    const examStatus = levelCompleted ? 'passed' : 'unattempted';
     
     return `
       <div class="exam-container ${examStatus}">
@@ -528,22 +532,34 @@ updateActiveNav() {
         ${examStatus === 'unattempted' ? `
           <div class="exam-instructions">
             <p>${exam.description}</p>
-            <p>This exam requires a passing score of ${exam.passingScore}%.</p>
-            <button class="btn btn-primary start-exam">
-              Start Exam
-            </button>
-          </div>
-        ` : examStatus === 'failed' ? `
-          <div class="exam-result">
-            <p>Your score: ${this.state.user.progress.examResults[levelName].score}% (Required: ${exam.passingScore}%)</p>
-            <button class="btn btn-primary retake-exam">
-              Retake Exam
+            <p>Complete all modules in this level to unlock the exam.</p>
+            <button class="btn btn-primary start-exam" 
+                    ${levelCompleted ? '' : 'disabled'}>
+              ${levelCompleted ? 'Start Exam' : 'Complete Modules First'}
             </button>
           </div>
         ` : ''}
       </div>
     `;
-  }
+}
+
+isLevelCompleted(levelName) {
+    // Find all modules in this level
+    let levelModules = [];
+    for (const course of Object.values(this.courses)) {
+        for (const level of course.levels) {
+            if (level.name === levelName) {
+                levelModules = level.modules.map(m => m.title);
+                break;
+            }
+        }
+    }
+    
+    // Check if all modules are completed
+    return levelModules.every(moduleTitle => 
+        this.state.user.progress.completedCourses.includes(moduleTitle)
+    );
+}
 
   renderLearningTrack(trackId) {
     const track = this.courses[trackId];
@@ -891,14 +907,40 @@ generateCertificate(certTitle) {
   }
 
   getModuleStatus(moduleTitle) {
+    // Check if module is completed
     if (this.state.user.progress.completedCourses.includes(moduleTitle)) {
-      return 'completed';
+        return 'completed';
     }
-    if (this.state.user.progress.inProgressCourses.includes(moduleTitle)) {
-      return 'in-progress';
+    
+    // Check if any lessons in this module are completed
+    const hasCompletedLessons = this.state.user.progress.completedLessons[moduleTitle]?.length > 0;
+    
+    // Check if this is the first module in its level
+    const isFirstModule = this.isFirstModuleInLevel(moduleTitle);
+    
+    // Module should be available if:
+    // 1. It's the first module in its level, OR
+    // 2. Any lessons are completed, OR
+    // 3. It's explicitly marked as in progress
+    if (isFirstModule || 
+        hasCompletedLessons || 
+        this.state.user.progress.inProgressCourses.includes(moduleTitle)) {
+        return 'in-progress';
     }
+    
     return 'locked';
-  }
+}
+
+isFirstModuleInLevel(moduleTitle) {
+    for (const course of Object.values(this.courses)) {
+        for (const level of course.levels) {
+            if (level.modules.length > 0 && level.modules[0].title === moduleTitle) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
   getLevelStatus(levelName, courseId) {
     // Simplified logic - in a real app, check prerequisites
