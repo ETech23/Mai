@@ -1,0 +1,73 @@
+{
+  "courses": {
+    "ai": {
+      "title": "Artificial Intelligence",
+      "levels": [
+        {
+          "name": "Beginner Level: AI Fundamentals",
+          "modules": [
+            {
+              "title": "Introduction to Artificial Intelligence",
+              "lessons": [
+                {
+                  "title": "What is Artificial Intelligence?",
+                  "type": "video",
+                  "content": [
+                    "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think like humans and mimic their actions.",
+                    "Key aspects of AI include:",
+                    "- Machine Learning",
+                    "- Natural Language Processing",
+                    "- Computer Vision",
+                    "- Robotics",
+                    "AI can be categorized as either weak AI (narrowly focused) or strong AI (generalized human-like intelligence)."
+                  ]
+                },
+                {
+                  "title": "History of AI Development",
+                  "type": "reading",
+                  "content": [
+                    "The concept of artificial beings with intelligence dates back to ancient times, but modern AI began in the 20th century.",
+                    "Key milestones:",
+                    "• 1950: Alan Turing proposes the Turing Test",
+                    "• 1956: The term 'Artificial Intelligence' is coined at Dartmouth Conference",
+                    "• 1997: IBM's Deep Blue defeats chess champion Garry Kasparov",
+                    "• 2011: IBM Watson wins Jeopardy!",
+                    "• 2016: AlphaGo defeats world champion Lee Sedol"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "crypto": {
+      "title": "Cryptocurrency",
+      "levels": [
+        {
+          "name": "Beginner Level: Crypto Fundamentals",
+          "modules": [
+            {
+              "title": "Introduction to Blockchain",
+              "lessons": [
+                {
+                  "title": "What is Blockchain Technology?",
+                  "type": "video",
+                  "content": [
+                    "Blockchain is a decentralized, distributed ledger technology that records transactions across many computers.",
+                    "Key characteristics:",
+                    "- Immutable records",
+                    "- Distributed across nodes",
+                    "- Cryptographic security",
+                    "- Consensus mechanisms",
+                    "Blockchain forms the foundation for cryptocurrencies like Bitcoin and Ethereum."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
