@@ -1,3 +1,5 @@
+
+
 /* Base Styles & Variables */
 :root {
   --primary-color: #6c63ff;
@@ -19,6 +21,30 @@
   --light-color: #1a202c;
   --gray-color: #4a5568;
 }
+
+/* All your existing CSS styles from previous implementation */
+/* [Include all the CSS from your previous implementation here] */
+/* Base Styles & Variables
+:root {
+  --primary-color: #6c63ff;
+  --primary-dark: #564fd8;
+  --secondary-color: #4dccc6;
+  --dark-color: #2d3748;
+  --light-color: #f7fafc;
+  --gray-color: #a0aec0;
+  --success-color: #48bb78;
+  --warning-color: #ed8936;
+  --danger-color: #f56565;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+[data-theme="dark"] {
+  --dark-color: #f7fafc;
+  --light-color: #1a202c;
+  --gray-color: #4a5568;
+} */
 
 * {
   margin: 0;

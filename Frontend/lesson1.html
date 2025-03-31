@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnAI & Crypto - Interactive Learning Platform</title>
+    <!-- Placeholder for CSS link -->
+     <link rel="stylesheet" href="lesson.css"> 
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Placeholder for favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+    <div id="theme-toggle"></div>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <h1>LearnAI & Crypto</h1>
+                </div>
+                <button id="sidebar-toggle" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <nav class="main-nav">
+                    <ul>
+                        <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li><a href="#ai-courses"><i class="fas fa-robot"></i> AI Courses</a></li>
+                        <li><a href="#crypto-courses"><i class="fas fa-coins"></i> Crypto Courses</a></li>
+                        <li><a href="#achievements"><i class="fas fa-award"></i> Achievements</a></li>
+                        <li><a href="#resources"><i class="fas fa-book"></i> Resources</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="sidebar-footer">
+                    <div class="theme-toggle">
+                        <span>Theme</span>
+                        <button id="theme-toggle" class="toggle-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="user-info">
+                        <span class="user-name">Guest User</span>
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header with search and settings -->
+            <header class="content-header">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search courses and lessons...">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="dashboard-section active-section">
+                <div class="section-header">
+                    <h2>Your Learning Dashboard</h2>
+                    <p>Track your progress and continue learning</p>
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Course Progress</h3>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: 45%;">45%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Completed</h3>
+                            <p>2 out of 6 courses</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Achievements</h3>
+                            <p>3 badges earned</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="continue-learning">
+                    <h3>Continue Learning</h3>
+                    <div class="course-cards">
+                        <div class="course-card">
+                            <div class="course-image ai-bg">
+                                <span class="course-level">Intermediate</span>
+                            </div>
+                            <div class="course-content">
+                                <h4>AI Neural Networks</h4>
+                                <p>Learn how neural networks process information</p>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 65%;">65%</div>
+                                </div>
+                                <button class="btn btn-primary">Continue</button>
+                            </div>
+                        </div>
+                        
+                        <div class="course-card">
+                            <div class="course-image crypto-bg">
+                                <span class="course-level">Beginner</span>
+                            </div>
+                            <div class="course-content">
+                                <h4>Blockchain Basics</h4>
+                                <p>Understanding distributed ledger technology</p>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 90%;">90%</div>
+                                </div>
+                                <button class="btn btn-primary">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="courses-overview">
+                    <div class="track-container">
+                        <div class="track-header">
+                            <h3><i class="fas fa-robot"></i> AI Learning Track</h3>
+                            <a href="#ai-courses" class="view-all">View All</a>
+                        </div>
+                        <div class="track-progress">
+                            <div class="level completed">
+                                <div class="level-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="level-details">
+                                    <h4>Beginner</h4>
+                                    <p>AI Fundamentals</p>
+                                </div>
+                                <button class="btn btn-small">Review</button>
+                            </div>
+                            <div class="level in-progress">
+                                <div class="level-icon"><i class="fas fa-spinner"></i></div>
+                                <div class="level-details">
+                                    <h4>Intermediate</h4>
+                                    <p>Neural Networks</p>
+                                </div>
+                                <button class="btn btn-small btn-primary">Continue</button>
+                            </div>
+                            <div class="level locked">
+                                <div class="level-icon"><i class="fas fa-lock"></i></div>
+                                <div class="level-details">
+                                    <h4>Advanced</h4>
+                                    <p>AI Projects</p>
+                                </div>
+                                <button class="btn btn-small" disabled>Locked</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="track-container">
+                        <div class="track-header">
+                            <h3><i class="fas fa-coins"></i> Crypto Learning Track</h3>
+                            <a href="#crypto-courses" class="view-all">View All</a>
+                        </div>
+                        <div class="track-progress">
+                            <div class="level completed">
+                                <div class="level-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="level-details">
+                                    <h4>Beginner</h4>
+                                    <p>Crypto Fundamentals</p>
+                                </div>
+                                <button class="btn btn-small">Review</button>
+                            </div>
+                            <div class="level locked">
+                                <div class="level-icon"><i class="fas fa-lock"></i></div>
+                                <div class="level-details">
+                                    <h4>Intermediate</h4>
+                                    <p>Smart Contracts</p>
+                                </div>
+                                <button class="btn btn-small" disabled>Locked</button>
+                            </div>
+                            <div class="level locked">
+                                <div class="level-icon"><i class="fas fa-lock"></i></div>
+                                <div class="level-details">
+                                    <h4>Advanced</h4>
+                                    <p>DeFi Projects</p>
+                                </div>
+                                <button class="btn btn-small" disabled>Locked</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Courses Section -->
+            <section id="ai-courses" class="course-section">
+                <div class="section-header">
+                    <h2>Artificial Intelligence Courses</h2>
+                    <p>Learn the fundamentals and advanced concepts of AI</p>
+                </div>
+                
+                <div class="course-levels">
+                    <div class="level-container">
+                        <div class="level-header">
+                            <h3>Beginner Level: AI Fundamentals</h3>
+                            <span class="status completed">Completed</span>
+                        </div>
+                        <div class="level-modules">
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-1">
+                                    <h4>Introduction to Artificial Intelligence</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Completed</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-1">
+                                    <div class="lesson-list">
+                                        <div class="lesson completed">
+                                            <span class="lesson-title">What is Artificial Intelligence?</span>
+                                            <span class="lesson-type video"><i class="fas fa-video"></i></span>
+                                        </div>
+                                        <div class="lesson completed">
+                                            <span class="lesson-title">History of AI Development</span>
+                                            <span class="lesson-type reading"><i class="fas fa-book-open"></i></span>
+                                        </div>
+                                        <div class="lesson completed">
+                                            <span class="lesson-title">Quiz: AI Basics</span>
+                                            <span class="lesson-type quiz"><i class="fas fa-question-circle"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-2">
+                                    <h4>Machine Learning Basics</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Completed</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-2">
+                                    <div class="lesson-list">
+                                        <div class="lesson completed">
+                                            <span class="lesson-title">Supervised vs Unsupervised Learning</span>
+                                            <span class="lesson-type reading"><i class="fas fa-book-open"></i></span>
+                                        </div>
+                                        <div class="lesson completed">
+                                            <span class="lesson-title">Classification and Regression</span>
+                                            <span class="lesson-type video"><i class="fas fa-video"></i></span>
+                                        </div>
+                                        <div class="lesson completed">
+                                            <span class="lesson-title">Interactive: Your First ML Model</span>
+                                            <span class="lesson-type interactive"><i class="fas fa-laptop-code"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-3">
+                                    <h4>Final Exam: AI Fundamentals</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Passed (85%)</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-3">
+                                    <div class="exam-overview">
+                                        <div class="exam-details">
+                                            <p><strong>Status:</strong> Passed</p>
+                                            <p><strong>Score:</strong> 85%</p>
+                                            <p><strong>Date Completed:</strong> Nov 12, 2023</p>
+                                        </div>
+                                        <button class="btn btn-secondary">Review Exam</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-container">
+                        <div class="level-header">
+                            <h3>Intermediate Level: Neural Networks</h3>
+                            <span class="status in-progress">In Progress</span>
+                        </div>
+                        <div class="level-modules">
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-4">
+                                    <h4>Neural Network Architecture</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Completed</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-4">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="module in-progress">
+                                <div class="module-header" data-toggle="module-content-5">
+                                    <h4>Backpropagation & Optimization</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-spinner"></i> In Progress (65%)</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-5">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="module locked">
+                                <div class="module-header" data-toggle="module-content-6">
+                                    <h4>Convolutional Neural Networks</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-lock"></i> Locked</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-6">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="module locked">
+                                <div class="module-header" data-toggle="module-content-7">
+                                    <h4>Final Exam: Neural Networks</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-lock"></i> Locked</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-7">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-container">
+                        <div class="level-header">
+                            <h3>Advanced Level: AI Projects</h3>
+                            <span class="status locked">Locked</span>
+                        </div>
+                        <div class="locked-message">
+                            <i class="fas fa-lock"></i>
+                            <p>Complete the Intermediate Level to unlock Advanced content</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Crypto Courses Section -->
+            <section id="crypto-courses" class="course-section">
+                <div class="section-header">
+                    <h2>Cryptocurrency Courses</h2>
+                    <p>Learn blockchain technology and cryptocurrency concepts</p>
+                </div>
+                
+                <div class="course-levels">
+                    <div class="level-container">
+                        <div class="level-header">
+                            <h3>Beginner Level: Crypto Fundamentals</h3>
+                            <span class="status completed">Completed</span>
+                        </div>
+                        <div class="level-modules">
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-8">
+                                    <h4>Introduction to Blockchain</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Completed</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-8">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-9">
+                                    <h4>Cryptocurrency Basics</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Completed</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-9">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-10">
+                                    <h4>Wallets and Transactions</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Completed</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-10">
+                                    <!-- Module content would go here -->
+                                </div>
+                            </div>
+                            
+                            <div class="module completed">
+                                <div class="module-header" data-toggle="module-content-11">
+                                    <h4>Final Exam: Crypto Fundamentals</h4>
+                                    <div class="module-status">
+                                        <span><i class="fas fa-check-circle"></i> Passed (92%)</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <div class="module-content" id="module-content-11">
+                                    <div class="exam-overview">
+                                        <div class="exam-details">
+                                            <p><strong>Status:</strong> Passed</p>
+                                            <p><strong>Score:</strong> 92%</p>
+                                            <p><strong>Date Completed:</strong> Dec 5, 2023</p>
+                                        </div>
+                                        <button class="btn btn-secondary">Review Exam</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="level-container">
+                        <div class="level-header">
+                            <h3>Intermediate Level: Smart Contracts</h3>
+                            <span class="status locked">Locked</span>
+                        </div>
+                        <div class="locked-message">
+                            <i class="fas fa-lock"></i>
+                            <p>Unlock this level by completing the Final Exam in Beginner Level</p>
+                        </div>
+                    </div>
+                    
+                    <div class="level-container">
+                        <div class="level-header">
+                            <h3>Advanced Level: DeFi Projects</h3>
+                            <span class="status locked">Locked</span>
+                        </div>
+                        <div class="locked-message">
+                            <i class="fas fa-lock"></i>
+                            <p>Complete the Intermediate Level to unlock Advanced content</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section id="achievements" class="achievements-section">
+                <div class="section-header">
+                    <h2>Your Achievements</h2>
+                    <p>Badges and certificates you've earned</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge-card earned">
+                        <div class="badge-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="badge-details">
+                            <h4>AI Fundamentals</h4>
+                            <p>Completed Beginner AI Course</p>
+                            <span class="badge-date">Earned: Nov 12, 2023</span>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-card earned">
+                        <div class="badge-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="badge-details">
+                            <h4>Blockchain Explorer</h4>
+                            <p>Completed Beginner Crypto Course</p>
+                            <span class="badge-date">Earned: Dec 5, 2023</span>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-card earned">
+                        <div class="badge-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="badge-details">
+                            <h4>Fast Learner</h4>
+                            <p>Completed 2 courses in under 30 days</p>
+                            <span class="badge-date">Earned: Dec 8, 2023</span>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-card locked">
+                        <div class="badge-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="badge-details">
+                            <h4>Neural Network Master</h4>
+                            <p>Complete Intermediate AI Course</p>
+                            <span class="badge-status">Locked</span>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-card locked">
+                        <div class="badge-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="badge-details">
+                            <h4>Smart Contract Developer</h4>
+                            <p>Complete Intermediate Crypto Course</p>
+                            <span class="badge-status">Locked</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="certificates-container">
+                    <h3>Your Certificates</h3>
+                    <div class="certificate-cards">
+                        <div class="certificate-card">
+                            <div class="certificate-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="certificate-details">
+                                <h4>AI Fundamentals Certificate</h4>
+                                <p>Successfully completed the AI Fundamentals course</p>
+                                <span class="certificate-date">Issued: Nov 15, 2023</span>
+                            </div>
+                            <div class="certificate-actions">
+                                <button class="btn btn-outline">Download</button>
+                                <button class="btn btn-outline">Share</button>
+                            </div>
+                        </div>
+                        
+                        <div class="certificate-card">
+                            <div class="certificate-icon">
+                                <i class="fas fa-certificate"></i>
+                            </div>
+                            <div class="certificate-details">
+                                <h4>Blockchain Fundamentals Certificate</h4>
+                                <p>Successfully completed the Crypto Fundamentals course</p>
+                                <span class="certificate-date">Issued: Dec 8, 2023</span>
+                            </div>
+                            <div class="certificate-actions">
+                                <button class="btn btn-outline">Download</button>
+                                <button class="btn btn-outline">Share</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resources Section -->
+            <section id="resources" class="resources-section">
+                <div class="section-header">
+                    <h2>Learning Resources</h2>
+                    <p>Additional materials to enhance your learning</p>
+                </div>
+                
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h4>AI Reading List</h4>
+                            <p>Curated books and articles on artificial intelligence</p>
+                            <button class="btn btn-outline">View Resources</button>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h4>Crypto Video Library</h4>
+                            <p>Expert interviews and tutorials on cryptocurrency</p>
+                            <button class="btn btn-outline">View Resources</button>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h4>Code Repositories</h4>
+                            <p>Sample projects and code examples</p>
+                            <button class="btn btn-outline">View Resources</button>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h4>Market Data</h4>
+                            <p>Real-time cryptocurrency market data</p>
+                            <button class="btn btn-outline">View Resources</button>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h4>Community Forums</h4>
+                            <p>Connect with other learners and experts</p>
+                            <button class="btn btn-outline">Join Forums</button>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h4>Upcoming Events</h4>
+                            <p>Webinars and virtual meetups</p>
+                            <button class="btn btn-outline">View Calendar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Course Module Template (will be hidden and used by JS) -->
+            <template id="module-template">
+                <div class="module">
+                    <div class="module-header" data-toggle="module-content-id">
+                        <h4>Module Title</h4>
+                        <div class="module-status">
+                            <span><i class="fas fa-status-icon"></i> Status</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="module-content" id="module-content-id">
+                        <div class="lesson-list">
+                            <!-- Lessons will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Lesson Template (will be hidden and used by JS) -->
+            <template id="lesson-template">
+                <div class="lesson">
+                    <span class="lesson-title">Lesson Title</span>
+                    <span class="lesson-type"><i class="fas fa-icon"></i></span>
+                </div>
+            </template>
+        </main>
+    </div>
+
+    <!-- Placeholder for JavaScript -->
+     <script src="lesson.js"></script> 
+</body>
+</html>

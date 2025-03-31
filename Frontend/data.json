@@ -1,73 +1,110 @@
 {
-  "courses": {
-    "ai": {
-      "title": "Artificial Intelligence",
-      "levels": [
-        {
-          "name": "Beginner Level: AI Fundamentals",
-          "modules": [
-            {
-              "title": "Introduction to Artificial Intelligence",
-              "lessons": [
+  "ai": {
+    "title": "Artificial Intelligence",
+    "description": "Master AI concepts from fundamentals to advanced implementations",
+    "levels": [
+      {
+        "name": "Beginner Level: AI Fundamentals",
+        "modules": [
+          {
+            "title": "Introduction to AI",
+            "description": "Learn the basics of artificial intelligence",
+            "lessons": [
+              {
+                "title": "What is AI?",
+                "type": "video",
+                "duration": "10 min",
+                "content": [
+                  "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines.",
+                  "Key concepts:",
+                  "- Machine Learning",
+                  "- Neural Networks",
+                  "- Natural Language Processing"
+                ]
+              },
+              {
+                "title": "History of AI",
+                "type": "reading",
+                "duration": "15 min",
+                "content": [
+                  "The concept of artificial beings with intelligence dates back to ancient times.",
+                  "Key milestones:",
+                  "- 1950: Turing Test proposed",
+                  "- 1956: Term 'AI' coined at Dartmouth",
+                  "- 1997: Deep Blue beats Kasparov"
+                ]
+              }
+            ],
+            "quiz": {
+              "questions": [
                 {
-                  "title": "What is Artificial Intelligence?",
-                  "type": "video",
-                  "content": [
-                    "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think like humans and mimic their actions.",
-                    "Key aspects of AI include:",
-                    "- Machine Learning",
-                    "- Natural Language Processing",
-                    "- Computer Vision",
-                    "- Robotics",
-                    "AI can be categorized as either weak AI (narrowly focused) or strong AI (generalized human-like intelligence)."
-                  ]
-                },
-                {
-                  "title": "History of AI Development",
-                  "type": "reading",
-                  "content": [
-                    "The concept of artificial beings with intelligence dates back to ancient times, but modern AI began in the 20th century.",
-                    "Key milestones:",
-                    "• 1950: Alan Turing proposes the Turing Test",
-                    "• 1956: The term 'Artificial Intelligence' is coined at Dartmouth Conference",
-                    "• 1997: IBM's Deep Blue defeats chess champion Garry Kasparov",
-                    "• 2011: IBM Watson wins Jeopardy!",
-                    "• 2016: AlphaGo defeats world champion Lee Sedol"
-                  ]
+                  "text": "Which is NOT an AI application?",
+                  "options": ["Chatbots", "Self-driving cars", "Spreadsheets"],
+                  "answer": 2
                 }
-              ]
+              ],
+              "passingScore": 70
             }
-          ]
+          }
+        ],
+        "exam": {
+          "title": "AI Fundamentals Exam",
+          "description": "Final assessment for beginner AI track",
+          "passingScore": 75,
+          "certificate": {
+            "title": "AI Fundamentals Certificate",
+            "description": "Awarded for completing the Beginner AI track"
+          }
         }
-      ]
-    },
-    "crypto": {
-      "title": "Cryptocurrency",
-      "levels": [
-        {
-          "name": "Beginner Level: Crypto Fundamentals",
-          "modules": [
-            {
-              "title": "Introduction to Blockchain",
-              "lessons": [
+      }
+    ]
+  },
+  "crypto": {
+    "title": "Cryptocurrency",
+    "description": "Learn blockchain technology and cryptocurrency concepts",
+    "levels": [
+      {
+        "name": "Beginner Level: Crypto Fundamentals",
+        "modules": [
+          {
+            "title": "Blockchain Basics",
+            "description": "Understanding distributed ledger technology",
+            "lessons": [
+              {
+                "title": "What is Blockchain?",
+                "type": "video",
+                "duration": "12 min",
+                "content": [
+                  "Blockchain is a decentralized, distributed ledger technology.",
+                  "Key characteristics:",
+                  "- Immutable records",
+                  "- Distributed across nodes",
+                  "- Cryptographic security"
+                ]
+              }
+            ],
+            "quiz": {
+              "questions": [
                 {
-                  "title": "What is Blockchain Technology?",
-                  "type": "video",
-                  "content": [
-                    "Blockchain is a decentralized, distributed ledger technology that records transactions across many computers.",
-                    "Key characteristics:",
-                    "- Immutable records",
-                    "- Distributed across nodes",
-                    "- Cryptographic security",
-                    "- Consensus mechanisms",
-                    "Blockchain forms the foundation for cryptocurrencies like Bitcoin and Ethereum."
-                  ]
+                  "text": "What makes blockchain secure?",
+                  "options": ["Central authority", "Cryptography", "Firewalls"],
+                  "answer": 1
                 }
-              ]
+              ],
+              "passingScore": 70
             }
-          ]
+          }
+        ],
+        "exam": {
+          "title": "Crypto Fundamentals Exam",
+          "description": "Final assessment for beginner crypto track",
+          "passingScore": 75,
+          "certificate": {
+            "title": "Blockchain Fundamentals Certificate",
+            "description": "Awarded for completing the Beginner Crypto track"
+          }
         }
-      ]
-    }
+      }
+    ]
   }
 }
