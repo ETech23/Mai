@@ -1,27 +1,39 @@
 class LearningPlatform {
   constructor() {
     this.state = {
-      currentTheme: localStorage.getItem('theme') || 'light',
-      user: {
-        name: "Guest User",
-        progress: JSON.parse(localStorage.getItem('userProgress')) || {
-          completedCourses: [],
-          inProgressCourses: ['Introduction to AI'], // Start with first module in progress
-          completedLessons: {},
-          quizScores: {},
-          examResults: {},
-          badges: [],
-          certificates: [],
-          timeSpent: {}
-        }
-      },
-      courses: null,
-      currentSection: 'dashboard'
-    };  
+        currentTheme: localStorage.getItem('theme') || 'light',
+        user: {
+            name: "Guest User",
+            progress: JSON.parse(localStorage.getItem('userProgress')) || {
+                completedCourses: [],
+                inProgressCourses: ['Introduction to AI', 'Blockchain Basics'], // Start with first modules
+                completedLessons: {},
+                quizScores: {},
+                examResults: {},
+                badges: [],
+                certificates: [],
+                timeSpent: {}
+            }
+        },
+        courses: null,
+        currentSection: 'dashboard'
+    };
     
-    this.init();  // Now properly after closing the state object
-  }
+    // Verify user is logged in
+    if (!this.isUserLoggedIn()) {
+        window.location.href = '/login.html';
+        return;
+    }
+    
+    this.init();
+}
 
+isUserLoggedIn() {
+    // Check authentication token or session
+    return localStorage.getItem('token') !== null;
+} 
+    
+    
   async init() {
     await this.loadCourseData();
     this.setupEventListeners();
@@ -163,6 +175,16 @@ document.querySelectorAll('.main-nav a').forEach(link => {
         });
       }
     });
+    
+    // Quiz form submission
+    document.querySelectorAll('.quiz-form').forEach(form => {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const moduleTitle = form.dataset.module;
+            this.submitQuiz(moduleTitle);
+        });
+    });
+
 
     // Handle lesson toggles
     document.querySelectorAll('.lesson-title').forEach(title => {
@@ -506,7 +528,7 @@ updateActiveNav() {
     
     return `
       <div class="quiz-container ${quizStatus}">
-        <h4>${quiz.title || 'Module Quiz'}</h4>
+        <h4>${quiz.title}</h4>
         
         ${quizStatus !== 'unattempted' ? `
           <div class="quiz-result">
@@ -515,14 +537,14 @@ updateActiveNav() {
           </div>
         ` : ''}
         
-        <div class="quiz-questions">
+        <form class="quiz-form" data-module="${moduleTitle}">
           ${quiz.questions.map((q, i) => `
             <div class="question">
               <p>${i+1}. ${q.text}</p>
               <div class="options">
                 ${q.options.map((opt, j) => `
                   <label class="quiz-option">
-                    <input type="radio" name="quiz-${this.slugify(moduleTitle)}" value="${j}" 
+                    <input type="radio" name="question-${i}" value="${j}" 
                       ${quizResult?.answers?.[i] === j ? 'checked' : ''}
                       ${quizStatus !== 'unattempted' ? 'disabled' : ''}>
                     <span class="option-text">${opt}</span>
@@ -538,21 +560,20 @@ updateActiveNav() {
               ` : ''}
             </div>
           `).join('')}
-        </div>
-        
-        ${quizStatus === 'unattempted' ? `
-          <button class="btn btn-primary submit-quiz" data-module="${moduleTitle}">
-            Submit Quiz
-          </button>
-        ` : `
-          <button class="btn btn-secondary retake-quiz" data-module="${moduleTitle}">
-            Retake Quiz
-          </button>
-        `}
+          
+          ${quizStatus === 'unattempted' ? `
+            <button type="submit" class="btn btn-primary submit-quiz">
+              Submit Quiz
+            </button>
+          ` : `
+            <button type="button" class="btn btn-secondary retake-quiz">
+              Retake Quiz
+            </button>
+          `}
+        </form>
       </div>
     `;
 }
-
 async submitQuiz(moduleTitle) {
     const quizContainer = document.querySelector(`.submit-quiz[data-module="${moduleTitle}"]`)?.closest('.quiz-container');
     if (!quizContainer) return;
@@ -948,10 +969,36 @@ isLevelCompleted(levelName) {
 }
 
 submitQuiz(moduleTitle) {
-    // Implementation for quiz submission
-    console.log(`Submitting quiz for ${moduleTitle}`);
-    // Add your quiz submission logic here
+    const form = document.querySelector(`.quiz-form[data-module="${moduleTitle}"]`);
+    if (!form) return;
+
+    const quiz = this.findQuizForModule(moduleTitle);
+    if (!quiz) return;
+
+    const formData = new FormData(form);
+    const userAnswers = [];
+    let correctAnswers = 0;
+
+    quiz.questions.forEach((q, i) => {
+        const answer = parseInt(formData.get(`question-${i}`));
+        userAnswers.push(answer);
+        if (answer === q.answer) {
+            correctAnswers++;
+        }
+    });
+
+    const score = Math.round((correctAnswers / quiz.questions.length) * 100);
+    
+    this.state.user.progress.quizScores[moduleTitle] = {
+        score,
+        answers: userAnswers,
+        passed: score >= quiz.passingScore
+    };
+    
+    this.saveProgress();
+    this.renderCourseByModule(moduleTitle);
 }
+
 
 startExam(levelName) {
     // Implementation for starting exam

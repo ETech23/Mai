@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let isInitialSync = true;
     
     // Constants for mining
-    const BASE_MINING_RATE = 0.0010; // Tokens per second
+    const BASE_MINING_RATE = 0.0005; // Tokens per second
     const REFERRAL_BONUS_RATE = 0.05; // 5% bonus per referral
     const MINING_DURATION = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
     const SYNC_INTERVAL = 30 * 1000; // Sync every 30 seconds
