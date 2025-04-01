@@ -64,6 +64,57 @@ body {
   transition: var(--transition);
 }
 
+/* Quiz Styles */
+.quiz-form {
+  margin-top: 1rem;
+}
+
+.question {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(0,0,0,0.03);
+  border-radius: var(--border-radius);
+}
+
+.options {
+  margin-top: 0.5rem;
+}
+
+.quiz-option {
+  display: block;
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  cursor: pointer;
+}
+
+.quiz-option:hover {
+  background: rgba(108, 99, 255, 0.1);
+}
+
+/* Navigation */
+.course-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.back-button {
+  padding: 0.5rem 1rem;
+}
+
+/* Module Accessibility */
+.module.in-progress .module-header {
+  cursor: pointer;
+  background: rgba(108, 99, 255, 0.05);
+}
+
+.module-content {
+  padding: 1rem;
+  background: rgba(0,0,0,0.02);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
 /* Layout Styles */
 .app-container {
   display: flex;

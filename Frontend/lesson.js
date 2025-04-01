@@ -1,5 +1,5 @@
 class LearningPlatform {
-  constructor() {
+constructor() {
     this.state = {
         currentTheme: localStorage.getItem('theme') || 'light',
         user: {
@@ -21,7 +21,7 @@ class LearningPlatform {
     
     // Verify user is logged in
     if (!this.isUserLoggedIn()) {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
     }
     
@@ -31,9 +31,47 @@ class LearningPlatform {
 isUserLoggedIn() {
     // Check authentication token or session
     return localStorage.getItem('token') !== null;
-} 
+}
+
+
+// Update module status check
+getModuleStatus(moduleTitle) {
+    // First module in each level is always available
+    if (this.isFirstModuleInLevel(moduleTitle)) {
+        return 'in-progress';
+    }
     
+    // Check if module is completed
+    if (this.state.user.progress.completedCourses.includes(moduleTitle)) {
+        return 'completed';
+    }
     
+    // Check if any lessons are completed
+    const hasCompletedLessons = this.state.user.progress.completedLessons[moduleTitle]?.length > 0;
+    
+    // Check if explicitly marked as in progress
+    const isInProgress = this.state.user.progress.inProgressCourses.includes(moduleTitle);
+    
+    return (hasCompletedLessons || isInProgress) ? 'in-progress' : 'locked';
+}
+
+    // Add back button functionality
+renderCourseSection(courseId) {
+    const course = this.courses[courseId];
+    return `
+      <div class="course-header">
+        <button class="btn btn-outline back-button">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+        <h2>${course.title} Courses</h2>
+      </div>
+      <div class="course-levels">
+        ${course.levels.map(level => this.renderLevel(level, courseId)).join('')}
+      </div>
+    `;
+}
+
+
   async init() {
     await this.loadCourseData();
     this.setupEventListeners();
@@ -184,6 +222,14 @@ document.querySelectorAll('.main-nav a').forEach(link => {
             this.submitQuiz(moduleTitle);
         });
     });
+    
+     // Back button
+    document.querySelectorAll('.back-button').forEach(button => {
+        button.addEventListener('click', () => {
+            this.navigateTo('dashboard');
+        });
+    });
+    
 
 
     // Handle lesson toggles
@@ -1078,6 +1124,8 @@ generateCertificate(certTitle) {
   isLessonCompleted(moduleTitle, lessonTitle) {
     return this.state.user.progress.completedLessons[moduleTitle]?.includes(lessonTitle) || false;
   }
+  
+  
 
   getModuleStatus(moduleTitle) {
     // Check if module is completed
