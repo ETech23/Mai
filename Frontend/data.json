@@ -36,11 +36,141 @@
               }
             ],
             "quiz": {
+              "title": "AI Fundamentals Quiz",
               "questions": [
                 {
                   "text": "Which is NOT an AI application?",
                   "options": ["Chatbots", "Self-driving cars", "Spreadsheets"],
-                  "answer": 2
+                  "answer": 2,
+                  "explanation": "Spreadsheets are general productivity tools, not specific AI applications"
+                },
+                {
+                  "text": "What is the Turing Test used for?",
+                  "options": [
+                    "Measuring computer processing speed",
+                    "Evaluating a machine's ability to exhibit intelligent behavior",
+                    "Testing network bandwidth"
+                  ],
+                  "answer": 1,
+                  "explanation": "The Turing Test evaluates if a machine can exhibit behavior indistinguishable from a human"
+                },
+                {
+                  "text": "Which of these is a subset of AI?",
+                  "options": [
+                    "Machine Learning",
+                    "Blockchain",
+                    "Quantum Computing"
+                  ],
+                  "answer": 0,
+                  "explanation": "Machine Learning is a core subset of AI focused on algorithms that improve automatically through experience"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Machine Learning Basics",
+            "description": "Introduction to ML concepts and algorithms",
+            "lessons": [
+              {
+                "title": "Supervised Learning",
+                "type": "video",
+                "duration": "18 min",
+                "content": [
+                  "Supervised learning uses labeled datasets to train algorithms.",
+                  "Key concepts:",
+                  "- Classification",
+                  "- Regression",
+                  "- Training/Test splits"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Machine Learning Quiz",
+              "questions": [
+                {
+                  "text": "What is the main characteristic of supervised learning?",
+                  "options": [
+                    "Uses unlabeled data",
+                    "Requires labeled training data",
+                    "Learns through rewards"
+                  ],
+                  "answer": 1,
+                  "explanation": "Supervised learning requires labeled input/output pairs for training"
+                },
+                {
+                  "text": "Which is an example of a classification problem?",
+                  "options": [
+                    "Predicting house prices",
+                    "Identifying spam emails",
+                    "Forecasting stock market trends"
+                  ],
+                  "answer": 1,
+                  "explanation": "Spam detection is a classic classification problem (spam/not spam)"
+                },
+                {
+                  "text": "What does a decision tree use to make predictions?",
+                  "options": [
+                    "Neural networks",
+                    "A series of if-else questions",
+                    "Genetic algorithms"
+                  ],
+                  "answer": 1,
+                  "explanation": "Decision trees use branching if-else conditions based on feature values"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Neural Networks",
+            "description": "Understanding artificial neural networks",
+            "lessons": [
+              {
+                "title": "Perceptrons",
+                "type": "interactive",
+                "duration": "25 min",
+                "content": [
+                  "Perceptrons are the building blocks of neural networks.",
+                  "Key concepts:",
+                  "- Weights and biases",
+                  "- Activation functions",
+                  "- Forward propagation"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Neural Networks Quiz",
+              "questions": [
+                {
+                  "text": "What is the purpose of an activation function?",
+                  "options": [
+                    "To introduce non-linearity",
+                    "To reduce computation time",
+                    "To visualize the network"
+                  ],
+                  "answer": 0,
+                  "explanation": "Activation functions introduce non-linear properties to the network"
+                },
+                {
+                  "text": "Which layer is typically the last in a classification network?",
+                  "options": [
+                    "Convolutional layer",
+                    "Softmax layer",
+                    "Pooling layer"
+                  ],
+                  "answer": 1,
+                  "explanation": "Softmax layers output probability distributions for classification"
+                },
+                {
+                  "text": "What does backpropagation calculate?",
+                  "options": [
+                    "Input data statistics",
+                    "Error gradients",
+                    "Network visualization"
+                  ],
+                  "answer": 1,
+                  "explanation": "Backpropagation calculates error gradients to update weights"
                 }
               ],
               "passingScore": 70
@@ -84,11 +214,141 @@
               }
             ],
             "quiz": {
+              "title": "Blockchain Basics Quiz",
               "questions": [
                 {
                   "text": "What makes blockchain secure?",
                   "options": ["Central authority", "Cryptography", "Firewalls"],
-                  "answer": 1
+                  "answer": 1,
+                  "explanation": "Blockchain uses cryptographic hashing to secure data"
+                },
+                {
+                  "text": "What is a block in blockchain?",
+                  "options": [
+                    "A unit of cryptocurrency",
+                    "A collection of verified transactions",
+                    "A mining computer"
+                  ],
+                  "answer": 1,
+                  "explanation": "Blocks contain batches of valid transactions"
+                },
+                {
+                  "text": "What is the purpose of mining?",
+                  "options": [
+                    "To create new coins",
+                    "To validate transactions and secure the network",
+                    "To store blockchain data"
+                  ],
+                  "answer": 1,
+                  "explanation": "Mining validates transactions and maintains network security"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Cryptocurrency Fundamentals",
+            "description": "Core concepts of digital currencies",
+            "lessons": [
+              {
+                "title": "Bitcoin Overview",
+                "type": "video",
+                "duration": "15 min",
+                "content": [
+                  "Bitcoin is the first decentralized cryptocurrency.",
+                  "Key aspects:",
+                  "- Limited supply (21 million)",
+                  "- Proof-of-work consensus",
+                  "- Pseudonymous transactions"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Cryptocurrency Quiz",
+              "questions": [
+                {
+                  "text": "Who created Bitcoin?",
+                  "options": [
+                    "Satoshi Nakamoto",
+                    "Vitalik Buterin",
+                    "The US Government"
+                  ],
+                  "answer": 0,
+                  "explanation": "Bitcoin was created by the pseudonymous Satoshi Nakamoto"
+                },
+                {
+                  "text": "What determines Bitcoin's supply?",
+                  "options": [
+                    "Miners vote on it",
+                    "It's hard-coded in the protocol",
+                    "The government regulates it"
+                  ],
+                  "answer": 1,
+                  "explanation": "Bitcoin's 21 million supply limit is protocol-enforced"
+                },
+                {
+                  "text": "What is a wallet address?",
+                  "options": [
+                    "A bank account number",
+                    "A cryptographic public key",
+                    "A mining reward address"
+                  ],
+                  "answer": 1,
+                  "explanation": "Wallet addresses are derived from public keys"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Smart Contracts",
+            "description": "Introduction to programmable contracts",
+            "lessons": [
+              {
+                "title": "Ethereum Basics",
+                "type": "interactive",
+                "duration": "20 min",
+                "content": [
+                  "Ethereum introduced smart contract functionality.",
+                  "Key concepts:",
+                  "- Turing-complete contracts",
+                  "- Gas fees",
+                  "- ERC standards"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Smart Contracts Quiz",
+              "questions": [
+                {
+                  "text": "What are smart contracts?",
+                  "options": [
+                    "Legally binding digital documents",
+                    "Self-executing code on blockchain",
+                    "AI-powered legal assistants"
+                  ],
+                  "answer": 1,
+                  "explanation": "Smart contracts are self-executing programs stored on blockchain"
+                },
+                {
+                  "text": "What is 'gas' in Ethereum?",
+                  "options": [
+                    "A cryptocurrency",
+                    "A measurement of computational effort",
+                    "A type of smart contract"
+                  ],
+                  "answer": 1,
+                  "explanation": "Gas measures the computational work needed for operations"
+                },
+                {
+                  "text": "Which language is commonly used for Ethereum smart contracts?",
+                  "options": [
+                    "Python",
+                    "Solidity",
+                    "JavaScript"
+                  ],
+                  "answer": 1,
+                  "explanation": "Solidity is the primary language for Ethereum contracts"
                 }
               ],
               "passingScore": 70

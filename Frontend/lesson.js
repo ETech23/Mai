@@ -506,7 +506,7 @@ updateActiveNav() {
     
     return `
       <div class="quiz-container ${quizStatus}">
-        <h4>Module Quiz</h4>
+        <h4>${quiz.title || 'Module Quiz'}</h4>
         
         ${quizStatus !== 'unattempted' ? `
           <div class="quiz-result">
@@ -521,23 +521,105 @@ updateActiveNav() {
               <p>${i+1}. ${q.text}</p>
               <div class="options">
                 ${q.options.map((opt, j) => `
-                  <label>
+                  <label class="quiz-option">
                     <input type="radio" name="quiz-${this.slugify(moduleTitle)}" value="${j}" 
-                      ${quizResult?.answers?.[i] === j ? 'checked' : ''}>
-                    ${opt}
+                      ${quizResult?.answers?.[i] === j ? 'checked' : ''}
+                      ${quizStatus !== 'unattempted' ? 'disabled' : ''}>
+                    <span class="option-text">${opt}</span>
+                    ${quizStatus !== 'unattempted' && q.answer === j ? 
+                      '<span class="correct-answer">✓ Correct</span>' : ''}
                   </label>
                 `).join('')}
               </div>
+              ${quizStatus !== 'unattempted' && q.explanation ? `
+                <div class="explanation">
+                  <p>${q.explanation}</p>
+                </div>
+              ` : ''}
             </div>
           `).join('')}
         </div>
         
-        <button class="btn ${quizStatus === 'passed' ? 'btn-secondary' : 'btn-primary'} submit-quiz">
-          ${quizStatus === 'unattempted' ? 'Submit Quiz' : 'Update Answers'}
-        </button>
+        ${quizStatus === 'unattempted' ? `
+          <button class="btn btn-primary submit-quiz" data-module="${moduleTitle}">
+            Submit Quiz
+          </button>
+        ` : `
+          <button class="btn btn-secondary retake-quiz" data-module="${moduleTitle}">
+            Retake Quiz
+          </button>
+        `}
       </div>
     `;
-  }
+}
+
+async submitQuiz(moduleTitle) {
+    const quizContainer = document.querySelector(`.submit-quiz[data-module="${moduleTitle}"]`)?.closest('.quiz-container');
+    if (!quizContainer) return;
+
+    const questions = quizContainer.querySelectorAll('.question');
+    let correctAnswers = 0;
+    const userAnswers = [];
+
+    // Find the quiz data
+    const quiz = this.findQuizForModule(moduleTitle);
+    if (!quiz) return;
+
+    questions.forEach((q, i) => {
+        const selectedOption = q.querySelector('input:checked');
+        if (selectedOption) {
+            const answerIndex = parseInt(selectedOption.value);
+            userAnswers.push(answerIndex);
+            if (answerIndex === quiz.questions[i].answer) {
+                correctAnswers++;
+            }
+        } else {
+            userAnswers.push(null);
+        }
+    });
+
+    const score = Math.round((correctAnswers / quiz.questions.length) * 100);
+    
+    // Update user progress
+    this.state.user.progress.quizScores[moduleTitle] = {
+        score,
+        answers: userAnswers,
+        passed: score >= quiz.passingScore
+    };
+    
+    // Award badge if passed
+    if (score >= quiz.passingScore) {
+        this.awardBadgeForModule(moduleTitle);
+    }
+
+    this.saveProgress();
+    this.renderCourseByModule(moduleTitle);
+}
+
+findQuizForModule(moduleTitle) {
+    for (const course of Object.values(this.courses)) {
+        for (const level of course.levels) {
+            for (const module of level.modules) {
+                if (module.title === moduleTitle && module.quiz) {
+                    return module.quiz;
+                }
+            }
+        }
+    }
+    return null;
+}
+
+awardBadgeForModule(moduleTitle) {
+    const badgeMap = {
+        'Introduction to AI': 'AI Fundamentals',
+        'Blockchain Basics': 'Blockchain Explorer'
+    };
+    
+    if (badgeMap[moduleTitle] && !this.state.user.progress.badges.includes(badgeMap[moduleTitle])) {
+        this.state.user.progress.badges.push(badgeMap[moduleTitle]);
+        this.saveProgress();
+    }
+}
 
  renderExam(exam, levelName) {
     const levelCompleted = this.isLevelCompleted(levelName);
