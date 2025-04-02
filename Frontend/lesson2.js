@@ -17,9 +17,10 @@ this.topNav.id = 'top-nav';
 document.body.prepend(this.topNav);
     document.getElementById('sidebar-toggle');
     this.themeToggleBtn = document.getElementById('theme-toggle-btn');
-    
+    this.sidebarToggle = document.getElementById('sidebar-toggle');
+        
     // Verify all critical elements exist
-    if (!this.mainContent || !this.sideNav || !this.topNav || 
+    if (!this.mainContent || !this.sideNav || !this.topNav || !this.sidebarToggle || 
         !this.themeToggleBtn) {
       console.error('Missing required DOM elements');
       this.showCriticalError();
@@ -30,7 +31,7 @@ document.body.prepend(this.topNav);
     try {
       // Safe event listener attachment
       this.sidebarToggle?.addEventListener('click', this.toggleSidebar.bind(this));
-      this.themeToggleBtn?.addEventListener('click', this.toggleTheme.bind(this));
+      this.themeToggleBtn?.addEventListeners('click', this.toggleTheme.bind(this));
       
       // Add other event listeners here
     } catch (error) {
@@ -64,7 +65,114 @@ document.body.prepend(this.topNav);
     // Push to history
     this.pushHistoryState({ view, trackId, levelId, moduleId, lessonId });
   }
+      
 
+  loadExam(trackId, levelIndex) {
+    // 1. Validate inputs and check if exam exists
+    if (!this.validateExamExists(trackId, levelIndex)) {
+      this.renderError("Exam not available for this level");
+      return;
+    }
+
+    // 2. Check if exam is unlocked
+    if (!this.isExamUnlocked(trackId, levelIndex)) {
+      this.renderError("Complete all modules to unlock this exam");
+      return;
+    }
+
+    // 3. Load exam content
+    const exam = this.coursesData[trackId].levels[levelIndex].exam;
+    this.mainContent.innerHTML = this.generateExamHTML(exam);
+
+    // 4. Set up exam event listeners
+    this.setupExamHandlers(trackId, levelIndex);
+  }
+
+  // Helper methods for exam functionality
+  validateExamExists(trackId, levelIndex) {
+    return !!this.coursesData?.[trackId]?.levels?.[levelIndex]?.exam;
+  }
+
+  isExamUnlocked(trackId, levelIndex) {
+    const level = this.coursesData[trackId].levels[levelIndex];
+    return level.modules.every((_, moduleIndex) => 
+      this.isModuleCompleted(trackId, levelIndex, moduleIndex)
+    );
+  }
+
+  generateExamHTML(exam) {
+    return `
+      <div class="exam-container">
+        <h2>${exam.title}</h2>
+        <p>${exam.description}</p>
+        <div class="questions-container">
+          ${exam.questions.map((q, i) => this.generateQuestionHTML(q, i)).join('')}
+        </div>
+        <button id="submit-exam">Submit Exam</button>
+      </div>
+    `;
+  }
+
+  generateQuestionHTML(question, index) {
+    return `
+      <div class="exam-question">
+        <h3>Question ${index + 1}</h3>
+        <p>${question.text}</p>
+        <div class="options">
+          ${question.options.map((opt, i) => `
+            <label>
+              <input type="radio" name="q${index}" value="${i}">
+              ${opt}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  setupExamHandlers(trackId, levelIndex) {
+    document.getElementById('submit-exam')?.addEventListener('click', () => {
+      this.submitExam(trackId, levelIndex);
+    });
+  }
+
+  submitExam(trackId, levelIndex) {
+    // Implement exam submission logic
+    const exam = this.coursesData[trackId].levels[levelIndex].exam;
+    const questions = exam.questions;
+    let score = 0;
+    
+    questions.forEach((question, index) => {
+      const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+      if (selectedOption?.value == question.answer) {
+        score++;
+      }
+    });
+    
+    const percentage = Math.round((score / questions.length) * 100);
+    this.displayExamResults(percentage, exam.passingScore);
+  }
+
+  displayExamResults(score, passingScore) {
+    const passed = score >= passingScore;
+    this.mainContent.innerHTML = `
+      <div class="exam-results ${passed ? 'passed' : 'failed'}">
+        <h2>Exam Results</h2>
+        <p>Your score: ${score}%</p>
+        <p>Passing score: ${passingScore}%</p>
+        <p>Status: ${passed ? 'PASSED' : 'FAILED'}</p>
+        <button id="exam-retry">${passed ? 'Continue' : 'Try Again'}</button>
+      </div>
+    `;
+
+    document.getElementById('exam-retry')?.addEventListener('click', () => {
+      if (passed) {
+        this.loadTrack(this.currentTrack);
+      } else {
+        this.loadExam(this.currentTrack, this.currentLevel);
+      }
+    });
+  }
 
   // Initialize the application
   async init() {
