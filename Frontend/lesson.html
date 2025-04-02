@@ -9,60 +9,88 @@
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
 </head>
 <body>
-    
     <div class="app-container">
-        <div id="theme-toggle"></div>
-        <div id="app"></div>
+        <!-- Top Navigation -->
+        <nav id="top-nav">
+            <button id="sidebar-toggle" class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="logo">Maichain Learning Hub</h1>
+        </nav>
+        
         <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <h1>LearnAI & Crypto</h1>
-                </div>
-                <button id="sidebar-toggle" class="sidebar-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-            
-            
-            
+        <aside id="side-nav" class="sidebar">
             <div class="sidebar-content">
                 <nav class="main-nav">
                     <ul>
                         <li class="active"><a href="#dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
                         <li><a href="#ai-courses"><i class="fas fa-robot"></i> AI Courses</a></li>
-                        <li><a href="#crypto-courses"><i class="fas fa-coins"></i> Crypto Courses</a></li>
-                        <li><a href="#achievements"><i class="fas fa-award"></i> Achievements</a></li>
-                        <li><a href="#resources"><i class="fas fa-book"></i> Resources</a></li>
+                        <li><a href="#crypto-courses"><i class="fas fa-coins "></i> Crypto Courses</a></li>
                     </ul>
                 </nav>
                 
                 <div class="sidebar-footer">
                     <div class="theme-toggle">
-                        <span>Theme</span>
-                        <button id="theme-toggle" class="toggle-btn">
+                        <button id="theme-toggle-btn" class="toggle-btn">
                             <i class="fas fa-moon"></i>
                         </button>
-                    </div>
-                    
-                    <div class="user-info">
-                        <span class="user-name">Guest User</span>
-                        <div class="user-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
                     </div>
                 </div>
             </div>
         </aside>
         
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay"></div>
         
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Content will be dynamically loaded here -->
+        <!-- Main Content -->
+        <main id="main-content">
+            <div class="loading-message">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading learning content...</p>
+            </div>
         </main>
     </div>
 
     <script src="lesson2.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Theme toggle
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            themeBtn.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            
+            themeBtn.addEventListener('click', () => {
+                const html = document.documentElement;
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                const newTheme = isDark ? 'light' : 'dark';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                themeBtn.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            });
+            
+            // Sidebar toggle
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('side-nav');
+            const overlay = document.querySelector('.mobile-overlay');
+            
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-visible');
+                overlay.style.display = sidebar.classList.contains('mobile-visible') ? 'block' : 'none';
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('mobile-visible');
+                overlay.style.display = 'none';
+            });
+            
+            // Initialize app
+            const app = new LearningApp();
+            app.init();
+        });
+    </script>
 </body>
 </html>

@@ -9,10 +9,12 @@ class LearningApp {
     this.userProgress = this.loadUserProgress();
     
     // DOM elements
-    this.appContainer = document.getElementById('app-container');
-    this.mainContent = document.getElementById('main-content');
-    this.sideNav = document.getElementById('side-nav');
-    this.topNav = document.getElementById('top-nav');
+    this.appContainer = document.querySelector('.app-container');
+this.mainContent = document.querySelector('.main-content'); // Changed from #main-content
+this.sideNav = document.querySelector('.sidebar'); // Changed from #side-nav
+this.topNav = document.createElement('nav'); // We'll add this dynamically
+this.topNav.id = 'top-nav';
+document.body.prepend(this.topNav);
   }
 
   // Initialize the application
@@ -25,6 +27,29 @@ class LearningApp {
       
       // Initialize UI components
       this.initUI();
+      
+      if (!this.coursesData) {
+  this.renderError("Course data not loaded - using sample data");
+  this.coursesData = {
+    "default-track": {
+      title: "Sample Track",
+      description: "Demo content",
+      levels: [{
+        name: "Level 1",
+        modules: [{
+          title: "Sample Module",
+          description: "Demo module",
+          lessons: [{
+            title: "Sample Lesson",
+            type: "reading",
+            duration: "5 min",
+            content: ["This is a placeholder lesson."]
+          }]
+        }]
+      }]
+    }
+  };
+}
       
       // Load the tracks overview by default
       this.renderTracksOverview();
@@ -199,6 +224,8 @@ class LearningApp {
       this.appContainer.classList.remove('mobile');
     }
   }
+  
+  
 
   // Render the tracks overview (home screen)
   renderTracksOverview() {
