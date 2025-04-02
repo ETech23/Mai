@@ -16,6 +16,22 @@ this.topNav = document.createElement('nav'); // We'll add this dynamically
 this.topNav.id = 'top-nav';
 document.body.prepend(this.topNav);
   }
+  
+  updateNavState(view, trackId = null, levelId = null, moduleId = null, lessonId = null) {
+    // Update current navigation state
+    this.currentView = view;
+    this.currentTrack = trackId;
+    this.currentLevel = levelId;
+    this.currentModule = moduleId;
+    this.currentLesson = lessonId;
+    
+    // Update active navigation UI
+    this.updateActiveNav();
+    
+    // Push to history
+    this.pushHistoryState({ view, trackId, levelId, moduleId, lessonId });
+  }
+
 
   // Initialize the application
   async init() {
@@ -50,6 +66,8 @@ document.body.prepend(this.topNav);
     }
   };
 }
+      
+
       
       // Load the tracks overview by default
       this.renderTracksOverview();
