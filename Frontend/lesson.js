@@ -370,7 +370,7 @@ updateActiveNav() {
   }
 }
 
-  renderDashboard() {
+  /**renderDashboard() {
     const totalCourses = this.calculateTotalCourses();
     const completedCourses = this.state.user.progress.completedCourses.length;
     const progressPercentage = Math.round((completedCourses / totalCourses) * 100);
@@ -451,7 +451,7 @@ updateActiveNav() {
       </section>
     `;
   }
-
+**/
   renderCourseSection(courseId) {
     const course = this.courses[courseId];
     if (!course) return '<div class="error">Course not available</div>';
@@ -620,6 +620,8 @@ updateActiveNav() {
       </div>
     `;
 }
+    
+    /**
 async submitQuiz(moduleTitle) {
     const quizContainer = document.querySelector(`.submit-quiz[data-module="${moduleTitle}"]`)?.closest('.quiz-container');
     if (!quizContainer) return;
@@ -661,7 +663,7 @@ async submitQuiz(moduleTitle) {
 
     this.saveProgress();
     this.renderCourseByModule(moduleTitle);
-}
+}**/
 
 findQuizForModule(moduleTitle) {
     for (const course of Object.values(this.courses)) {
@@ -799,7 +801,7 @@ isLevelCompleted(levelName) {
     `;
 }
 
-  renderCourseCard(courseTitle) {
+ /** renderCourseCard(courseTitle) {
     const progress = this.calculateCourseProgress(courseTitle);
     const courseType = courseTitle.includes('AI') ? 'ai' : 'crypto';
     const courseId = courseType;
@@ -823,7 +825,7 @@ isLevelCompleted(levelName) {
         </div>
       </div>
     `;
-}
+}**/
   
   setupCourseButtons() {
     document.querySelectorAll('.continue-course').forEach(button => {
@@ -1226,11 +1228,11 @@ isFirstModuleInLevel(moduleTitle) {
     return count;
   }
 
-  getCourseLevel(courseTitle) {
+ /** getCourseLevel(courseTitle) {
     if (courseTitle.includes('Fundamentals')) return 'Beginner';
     if (courseTitle.includes('Neural Networks') || courseTitle.includes('Smart Contracts')) return 'Intermediate';
     return 'Advanced';
-  }
+  }**/
 
   getCourseDescription(courseTitle) {
     if (courseTitle.includes('AI Fundamentals')) return 'Learn the basics of artificial intelligence';

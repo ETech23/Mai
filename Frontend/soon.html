@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maichain Learn - Coming Soon</title>
+    <style>
+        :root {
+          --primary-color: #6c63ff;
+          --primary-dark: #564fd8;
+          --secondary-color: #4dccc6;
+          --dark-color: #2d3748;
+          --light-color: #f7fafc;
+          --gray-color: #a0aec0;
+          --success-color: #48bb78;
+          --warning-color: #ed8936;
+          --danger-color: #f56565;
+          --border-radius: 8px;
+          --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+          --dark-color: #f7fafc;
+          --light-color: #1a202c;
+          --gray-color: #4a5568;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--gray-color);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            flex: 1 1 250px;
+            max-width: 350px;
+            border-top: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: auto;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="theme-toggle">🌓</button>
+    
+    <header>
+        <div class="logo">Maichain Learn</div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h1>Coming Soon</h1>
+            <p>The future of AI and blockchain education is on its way. Maichain Learn will provide comprehensive learning resources at the intersection of artificial intelligence and crypto technologies.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI Learning Path</h3>
+                    <p>Master artificial intelligence concepts from fundamentals to advanced applications in various industries.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⛓️</div>
+                    <h3>Blockchain & Crypto</h3>
+                    <p>Understand blockchain technology, cryptocurrencies, DeFi, and the future of decentralized systems.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Integration Skills</h3>
+                    <p>Learn how AI and blockchain converge to solve real-world problems and create new opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Maichain Learn</p>
+        <div class="social-links">
+            <a href="#" class="social-link">𝕏</a>
+            <a href="#" class="social-link">in</a>
+            <a href="#" class="social-link">𝓘</a>
+            <a href="#" class="social-link">ⓓ</a>
+        </div>
+    </footer>
+    
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeToggle.textContent = '🌓';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+            }
+        });
+    </script>
+</body>
+</html>
