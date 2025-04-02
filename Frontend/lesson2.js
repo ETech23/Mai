@@ -15,7 +15,40 @@ this.sideNav = document.querySelector('.side-nav'); // Changed from #side-nav
 this.topNav = document.createElement('nav'); // We'll add this dynamically
 this.topNav.id = 'top-nav';
 document.body.prepend(this.topNav);
+    document.getElementById('sidebar-toggle');
+    this.themeToggleBtn = document.getElementById('theme-toggle-btn');
+    
+    // Verify all critical elements exist
+    if (!this.mainContent || !this.sideNav || !this.topNav || 
+        !this.themeToggleBtn) {
+      console.error('Missing required DOM elements');
+      this.showCriticalError();
+      return;
+    }
   }
+      addEventListeners() {
+    try {
+      // Safe event listener attachment
+      this.sidebarToggle?.addEventListener('click', this.toggleSidebar.bind(this));
+      this.themeToggleBtn?.addEventListener('click', this.toggleTheme.bind(this));
+      
+      // Add other event listeners here
+    } catch (error) {
+      console.error('Failed to add event listeners:', error);
+    }
+  }
+
+  showCriticalError() {
+    document.body.innerHTML = `
+      <div style="padding:20px;color:red;">
+        <h2>Application Error</h2>
+        <p>Required elements missing. Please refresh.</p>
+        <button onclick="location.reload()">Reload</button>
+      </div>
+    `;
+  }
+
+
   
   updateNavState(view, trackId = null, levelId = null, moduleId = null, lessonId = null) {
     // Update current navigation state
@@ -40,6 +73,7 @@ document.body.prepend(this.topNav);
     if (!this.mainContent || !this.sideNav || !this.topNav) {
       throw new Error('Required DOM elements not found');
     }
+    
 
     // Fetch course data
     const response = await fetch('./data.json');
@@ -95,8 +129,29 @@ document.body.prepend(this.topNav);
     }
   }
 }
-  
       
+  isQuizUnlocked(trackId, levelIndex, moduleIndex) {
+    // 1. Verify we have valid course data
+    if (!this.coursesData?.[trackId]?.levels?.[levelIndex]?.modules?.[moduleIndex]) {
+      return false;
+    }
+
+    // 2. Check if quiz exists for this module
+    const module = this.coursesData[trackId].levels[levelIndex].modules[moduleIndex];
+    if (!module.quiz) return false;
+
+    // 3. Check if all lessons are completed
+    const allLessonsCompleted = module.lessons.every((_, lessonIndex) => 
+      this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)
+    );
+
+    return allLessonsCompleted;
+  }
+
+  isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex) {
+    return !!this.userProgress?.[trackId]?.[levelIndex]?.[moduleIndex]?.lessons?.[lessonIndex];
+  }
+     
 
   
   
