@@ -19,7 +19,7 @@
         </nav>
         
         <!-- Sidebar Navigation -->
-        <aside id="side-nav" class="sidebar">
+        <aside id="side-nav" class="side-nav">
             <div class="sidebar-content">
                 <nav class="main-nav">
                     <ul>
@@ -43,7 +43,7 @@
         <div class="mobile-overlay"></div>
         
         <!-- Main Content -->
-        <main id="main-content">
+        <main id="main-content" class="main-content">
             <div class="loading-message">
                 <i class="fas fa-spinner fa-spin"></i>
                 <p>Loading learning content...</p>
@@ -51,7 +51,10 @@
         </main>
     </div>
 
+<!-- Load lesson2.js FIRST -->
     <script src="lesson2.js"></script>
+    
+    <!-- Then initialize everything -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize theme
@@ -87,10 +90,18 @@
                 overlay.style.display = 'none';
             });
             
-            // Initialize app
+            // Initialize app - ONLY AFTER lesson2.js is loaded
             const app = new LearningApp();
             app.init();
         });
     </script>
+
+<script>
+  // Initialize the app after both DOM and script are loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const app = new LearningApp();
+    app.init();
+  });
+</script>
 </body>
 </html>

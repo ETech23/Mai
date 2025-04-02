@@ -11,7 +11,7 @@ class LearningApp {
     // DOM elements
     this.appContainer = document.querySelector('.app-container');
 this.mainContent = document.querySelector('.main-content'); // Changed from #main-content
-this.sideNav = document.querySelector('.sidebar'); // Changed from #side-nav
+this.sideNav = document.querySelector('.side-nav'); // Changed from #side-nav
 this.topNav = document.createElement('nav'); // We'll add this dynamically
 this.topNav.id = 'top-nav';
 document.body.prepend(this.topNav);
@@ -35,53 +35,71 @@ document.body.prepend(this.topNav);
 
   // Initialize the application
   async init() {
-    try {
-      // Fetch course data
-      const response = await fetch('./data.json');
-      if (!response.ok) throw new Error('Failed to fetch course data');
-      this.coursesData = await response.json();
-      
-      // Initialize UI components
-      this.initUI();
-      
-      if (!this.coursesData) {
-  this.renderError("Course data not loaded - using sample data");
-  this.coursesData = {
-    "default-track": {
-      title: "Sample Track",
-      description: "Demo content",
-      levels: [{
-        name: "Level 1",
-        modules: [{
-          title: "Sample Module",
-          description: "Demo module",
-          lessons: [{
-            title: "Sample Lesson",
-            type: "reading",
-            duration: "5 min",
-            content: ["This is a placeholder lesson."]
-          }]
-        }]
-      }]
+  try {
+    // First ensure DOM elements exist
+    if (!this.mainContent || !this.sideNav || !this.topNav) {
+      throw new Error('Required DOM elements not found');
     }
-  };
-}
-      
 
-      
-      // Load the tracks overview by default
+    // Fetch course data
+    const response = await fetch('./data.json');
+    if (!response.ok) throw new Error('Failed to fetch course data');
+    this.coursesData = await response.json();
+    
+    // Initialize UI only if elements exist
+    this.initUI();
+    
+    if (!this.coursesData) {
+      if (this.mainContent) {
+        this.mainContent.innerHTML = `
+          <div class="error-message">
+            <p>Course data not loaded - using sample data</p>
+          </div>`;
+      }
+      this.coursesData = {
+        "default-track": {
+          title: "Sample Track",
+          description: "Demo content",
+          levels: [{
+            name: "Level 1",
+            modules: [{
+              title: "Sample Module",
+              description: "Demo module",
+              lessons: [{
+                title: "Sample Lesson",
+                type: "reading",
+                duration: "5 min",
+                content: ["This is a placeholder lesson."]
+              }]
+            }]
+          }]
+        }
+      };
+    }
+
+    if (this.mainContent) {
       this.renderTracksOverview();
-      
-      // Add event listeners
       this.addEventListeners();
-      
-      // Check for deep linking
       this.handleDeepLinking();
-    } catch (error) {
-      console.error('Failed to initialize application:', error);
-      this.renderError('Failed to load course data. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Initialization error:', error);
+    if (this.mainContent) {
+      this.mainContent.innerHTML = `
+        <div class="error-message">
+          <p>Failed to load application: ${error.message}</p>
+          <button onclick="location.reload()">Retry</button>
+        </div>`;
+    } else {
+      document.body.innerHTML = '<p>Critical error: Missing required elements</p>';
     }
   }
+}
+  
+      
+
+  
+  
 
   // Initialize UI components
   initUI() {
@@ -142,7 +160,7 @@ document.body.prepend(this.topNav);
         <button id="settings-btn" class="nav-item">
           <i class="fa-solid fa-gear"></i>
           <span>Settings</span>
-        </button>
+6        </button>
         <button id="help-btn" class="nav-item">
           <i class="fa-solid fa-circle-question"></i>
           <span>Help</span>
