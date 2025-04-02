@@ -33,24 +33,34 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
         body {
             background-color: var(--light-color);
             color: var(--dark-color);
-            line-height: 1.6;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 1.5rem;
+        }
+        
         header {
-            padding: 2rem;
+            padding: 1rem 0;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         
         .logo {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-color);
         }
@@ -61,82 +71,78 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
             text-align: center;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            margin-bottom: 1rem;
             color: var(--primary-color);
         }
         
         p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
             color: var(--gray-color);
             max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
         
         .features {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
+            gap: 1rem;
+            width: 100%;
+            max-width: 900px;
         }
         
         .feature {
             background-color: var(--light-color);
             border-radius: var(--border-radius);
-            padding: 1.5rem;
+            padding: 1rem;
             box-shadow: var(--box-shadow);
-            flex: 1 1 250px;
-            max-width: 350px;
-            border-top: 4px solid var(--primary-color);
+            flex: 1;
+            border-top: 3px solid var(--primary-color);
             transition: var(--transition);
         }
         
         .feature:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
         }
         
         .feature h3 {
             color: var(--primary-dark);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .feature p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
         }
         
         .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
             color: var(--secondary-color);
         }
         
         footer {
             text-align: center;
-            padding: 2rem;
-            margin-top: auto;
+            padding: 1rem 0;
             color: var(--gray-color);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         
         .social-links {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 0.5rem;
         }
         
         .social-link {
             color: var(--primary-color);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             text-decoration: none;
             transition: var(--transition);
         }
@@ -152,67 +158,70 @@
             background: none;
             border: none;
             color: var(--gray-color);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: pointer;
         }
         
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
             .features {
                 flex-direction: column;
-                align-items: center;
             }
             
             .feature {
-                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            p {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" id="theme-toggle">🌓</button>
-    
-    <header>
-        <div class="logo">Maichain Learn</div>
-    </header>
-    
-    <main>
-        <div class="container">
+    <div class="app-container">
+        <button class="theme-toggle" id="theme-toggle">🌓</button>
+        
+        <header>
+            <div class="logo">Maichain Learn</div>
+        </header>
+        
+        <main>
             <h1>Coming Soon</h1>
-            <p>The future of AI and blockchain education is on its way. Maichain Learn will provide comprehensive learning resources at the intersection of artificial intelligence and crypto technologies.</p>
+            <p>The future of AI and blockchain education is on its way.</p>
             
             <div class="features">
                 <div class="feature">
                     <div class="feature-icon">🧠</div>
-                    <h3>AI Learning Path</h3>
-                    <p>Master artificial intelligence concepts from fundamentals to advanced applications in various industries.</p>
+                    <h3>AI Learning</h3>
+                    <p>Master AI from fundamentals to advanced applications.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">⛓️</div>
-                    <h3>Blockchain & Crypto</h3>
-                    <p>Understand blockchain technology, cryptocurrencies, DeFi, and the future of decentralized systems.</p>
+                    <h3>Blockchain</h3>
+                    <p>Understand crypto, DeFi, and decentralized systems.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">🔄</div>
-                    <h3>Integration Skills</h3>
-                    <p>Learn how AI and blockchain converge to solve real-world problems and create new opportunities.</p>
+                    <h3>Integration</h3>
+                    <p>Learn how AI and blockchain converge to solve problems.</p>
                 </div>
             </div>
-        </div>
-    </main>
-    
-    <footer>
-        <p>&copy; 2025 Maichain Learn</p>
-        <div class="social-links">
-            <a href="#" class="social-link">𝕏</a>
-            <a href="#" class="social-link">in</a>
-            <a href="#" class="social-link">𝓘</a>
-            <a href="#" class="social-link">ⓓ</a>
-        </div>
-    </footer>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Maichain Learn</p>
+            <div class="social-links">
+                <a href="#" class="social-link">𝕏</a>
+                <a href="#" class="social-link">in</a>
+                <a href="#" class="social-link">𝓘</a>
+                <a href="#" class="social-link">ⓓ</a>
+            </div>
+        </footer>
+    </div>
     
     <script>
         // Theme toggle functionality
