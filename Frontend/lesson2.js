@@ -283,13 +283,13 @@ document.body.prepend(this.topNav);
     if (!this.coursesData) return;
     
     let navContent = `
-      <div class="nav-header">
-        <button id="home-btn" class="nav-item active">
+      <div style="padding: 0 15px;" class="nav-header">
+        <button style="padding: 2px; margin: 5px;" id="home-btn" class="nav-item active">
           <i class="fa-solid fa-house"></i>
           <span>Home</span>
         </button>
       </div>
-      <div class="nav-tracks">
+      <div style="padding: 0 15px;"  class="nav-tracks">
     `;
     
     // Add tracks to navigation
@@ -297,7 +297,7 @@ document.body.prepend(this.topNav);
       const track = this.coursesData[trackId];
       const isUnlocked = this.isTrackUnlocked(trackId);
       navContent += `
-        <button class="nav-item track-item ${isUnlocked ? 'unlocked' : 'locked'}" 
+        <button style="padding: 2px; margin: 5px;" class="nav-item track-item ${isUnlocked ? 'unlocked' : 'locked'}" 
                 data-track="${trackId}" ${!isUnlocked ? 'disabled' : ''}>
           <i class="fa-solid ${this.getTrackIcon(trackId)}"></i>
           <span>${track.title}</span>
@@ -308,12 +308,12 @@ document.body.prepend(this.topNav);
     
     navContent += `
       </div>
-      <div class="nav-footer">
-        <button id="settings-btn" class="nav-item">
+      <div style="padding: 0 15px;"  class="nav-footer">
+        <button id="settings-btn" class="nav-item" style="padding: 2px; margin: 5px;">
           <i class="fa-solid fa-gear"></i>
           <span>Settings</span>
 6        </button>
-        <button id="help-btn" class="nav-item">
+        <button style="padding: 2px; margin: 5px;" id="help-btn" class="nav-item">
           <i class="fa-solid fa-circle-question"></i>
           <span>Help</span>
         </button>
@@ -1472,6 +1472,48 @@ document.body.prepend(this.topNav);
     );
   }
 
+generateExamHTML(exam) {
+  // Create question HTML for each question
+  const questionsHTML = exam.questions.map((question, index) => {
+    const optionsHTML = question.options.map((option, optionIndex) => `
+      <div class="exam-option">
+        <input type="radio" id="q${index}-opt${optionIndex}" name="q${index}" value="${optionIndex}">
+        <label for="q${index}-opt${optionIndex}">${option}</label>
+      </div>
+    `).join('');
+
+    return `
+      <div class="exam-question" data-module="${question.sourceModule || ''}">
+        <div class="question-text">
+          <span class="question-number">${index + 1}.</span>
+          ${question.text}
+        </div>
+        <div class="question-options">
+          ${optionsHTML}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="exam-container">
+      <div class="exam-header">
+        <h2>Level Exam</h2>
+        <div class="exam-progress">
+          <span id="answered-count">0</span> / ${exam.questions.length} answered
+        </div>
+      </div>
+      
+      <form id="exam-form">
+        ${questionsHTML}
+      </form>
+      
+      <div class="exam-footer">
+        <button id="submit-exam" class="primary-btn">Submit Exam</button>
+      </div>
+    </div>
+  `;
+}
 
   // =============================================
   // Exam Implementation

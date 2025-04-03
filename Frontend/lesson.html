@@ -16,6 +16,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <h1 class="logo">Maichain Learning Hub</h1>
+            <div id="nav-toggle"></div>
         </nav>
         
         <!-- Sidebar Navigation -->
@@ -27,6 +28,26 @@
                         <li><a href="#ai-courses"><i class="fas fa-robot"></i> AI Courses</a></li>
                         <li><a href="#crypto-courses"><i class="fas fa-coins "></i> Crypto Courses</a></li>
                     </ul>
+                    <ul style="list-style: none; padding-left: 0;"> <!-- Remove bullets globally -->
+  <li class="track-btn">
+    <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+      <i class="fas fa-project-diagram"></i>
+      <span>Track</span>
+    </a>
+  </li>
+</ul>
+                    <li class="module-btn" style="list-style: none; padding-left: 0;">
+  <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+    <i class="fas fa-cube"></i> <!-- Icon for "Module" -->
+    <span>Module</span>
+  </a>
+</li>
+                    <li class="lesson-btn" style="list-style: none; padding-left: 0;">
+  <a href="#" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+    <i class="fas fa-book-open"></i> <!-- Icon for "Lessons" -->
+    <span>Lessons</span>
+  </a>
+</li>
                 </nav>
                 
                 <div class="sidebar-footer">
@@ -34,6 +55,7 @@
                         <button id="theme-toggle-btn" class="toggle-btn">
                             <i class="fas fa-moon"></i>
                         </button>
+                        
                     </div>
                 </div>
             </div>
@@ -47,6 +69,7 @@
             <div class="loading-message">
                 <i class="fas fa-spinner fa-spin"></i>
                 <p>Loading learning content...</p>
+                <button id="retry-btn">Retry</button>
             </div>
         </main>
     </div>

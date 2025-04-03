@@ -219,6 +219,29 @@ body {
   }
 }
 
+.exam-container {
+     max-width: 800px;
+     margin: 0 auto;
+     padding: 20px;
+   }
+   
+   .exam-question {
+     margin-bottom: 30px;
+     padding: 15px;
+     border-radius: 5px;
+     background: #f8f9fa;
+   }
+   
+   .exam-option {
+     margin: 10px 0;
+     padding: 10px;
+     border-radius: 3px;
+   }
+   
+   .exam-option:hover {
+     background: #e9ecef;
+   }
+
 /* Utility Classes */
 .hidden {
   display: none !important;
