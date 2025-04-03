@@ -223,3 +223,20 @@ body {
 .hidden {
   display: none !important;
 }
+
+.exam-results {
+  padding: 20px;
+  border-radius: 8px;
+}
+.exam-results.passed { background: #e8f5e9; }
+.exam-results.failed { background: #ffebee; }
+.module-performance progress {
+  width: 100%;
+}
+.incorrect-answer {
+  background: #fff3e0;
+  padding: 10px;
+  margin: 10px 0;
+}
+.correct { color: #2e7d32; }
+.wrong { color: #c62828; }
