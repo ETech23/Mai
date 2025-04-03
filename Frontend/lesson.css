@@ -10,7 +10,7 @@
   --secondary-color: #3f37c9;
   --text-color: #2b2d42;
   --bg-color: #f8f9fa;
-  --sidebar-bg: #ffffff;
+  --sidebar-bg: #2C3539;
   --card-bg: #ffffff;
   --border-color: #e9ecef;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -21,12 +21,43 @@
   --secondary-color: #4361ee;
   --text-color: #f8f9fa;
   --bg-color: #121212;
-  --sidebar-bg: #1e1e1e;
+  --sidebar-bg: #2C3539;
   --card-bg: #2d2d2d;
   --border-color: #3d3d3d;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
+/* Base Themes */
+body.light-theme {
+  background-color: #ffffff;
+  color: #333333;
+}
 
+body.dark-theme {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+/* Button Effects */
+#theme-toggle-btn {
+  cursor: pointer;
+  background: transparent;
+  border: ;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+#theme-toggle-btn:hover i {
+  opacity: 0.8;
+}
+
+#theme-toggle-btn i {
+  transition: transform 0.3s ease;
+}
+
+/* Optional: Add icon animation on hover */
+#theme-toggle-btn:hover i {
+  transform: rotate(15deg);
+}
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text-color);
@@ -66,11 +97,13 @@ body {
   font-size: 1.5rem;
   cursor: pointer;
   display: block; /* Ensure it's always visible */
+  
 }
 
 /* ===== Sidebar Text Color ===== */
 .main-nav {
-  color: #2C3539; /* Your specified color for light mode */
+  color: white; /* Your specified color for light mode */
+  
 }
 
 .main-nav a {
@@ -105,7 +138,7 @@ body {
 }
 
 .main-nav {
-  color: #2C3539; /* Your specified color */
+  color: white; /* Your specified color */
   transition: color 0.3s ease; /* Smooth theme transition */
 }
 
@@ -149,7 +182,7 @@ body {
   top: 60px;
   left: 0;
   bottom: 0;
-  width: 250px;
+  width: 200px;
   background-color: var(--sidebar-bg);
   
   overflow-y: auto;

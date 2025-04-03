@@ -40,7 +40,7 @@ document.body.prepend(this.topNav);
 
   // Safe event listener attachment
   elements.sidebarToggle?.addEventListener('click', this.toggleSidebar.bind(this));
-  elements.themeToggleBtn?.addEventListener('click', this.toggleTheme.bind(this));
+  
   elements.retryBtn?.addEventListener('click', () => location.reload());
 
   // Dynamic content listeners
@@ -259,7 +259,7 @@ document.body.prepend(this.topNav);
     this.topNav.innerHTML = `
       <div class="logo">
         <img src="logo.svg" alt="Learning App Logo">
-        <h1>LearnHub</h1>
+        <h1>Maichain Learning Hub</h1>
       </div>
       <div class="user-menu">
         <div class="progress-summary">
@@ -319,8 +319,76 @@ document.body.prepend(this.topNav);
         </button>
       </div>
     `;
+        
+        navContent += `
+  <div style="padding: 0 15px;">
+    <button style="padding: 2px; margin: 5px;" id="theme-toggle-btn" class="nav-item active">
+      <i class="fas fa-moon"></i> <!-- Default: moon (light theme) -->
+      <span>Theme</span>
+    </button>
+  </div>`;
     
     this.sideNav.innerHTML = navContent;
+        
+        /**
+ * Theme Toggler - Plain Function Version
+ * Handles dark/light mode toggling with animations and localStorage
+ */
+
+// Theme toggle function (works immediately on click)
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('theme-toggle-btn');
+  const icon = btn?.querySelector('i');
+  
+  // Check current theme
+  const isDark = body.classList.contains('dark-theme');
+  
+  // Apply smooth transitions
+  body.style.transition = 'background-color 0.5s ease, color 0.3s ease';
+  if (btn) btn.style.transition = 'transform 0.2s ease';
+  
+  // Toggle theme classes
+  body.classList.toggle('dark-theme', !isDark);
+  body.classList.toggle('light-theme', isDark);
+  
+  // Update icon instantly (no delay needed)
+  if (icon) {
+    icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+  }
+  
+  // Save to localStorage
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  
+  // Button "press" animation
+  if (btn) {
+    btn.style.transform = 'scale(0.95)';
+    setTimeout(() => { btn.style.transform = 'scale(1)'; }, 200);
+  }
+}
+
+// Initialize theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  const body = document.body;
+  
+  // Apply saved theme
+  body.classList.add(savedTheme + '-theme');
+  
+  // Set correct icon if button exists
+  const icon = document.getElementById('theme-toggle-btn')?.querySelector('i');
+  if (icon) {
+    icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+  }
+});
+
+// Event listener (works for dynamically added buttons)
+document.addEventListener('click', function(e) {
+  if (e.target?.closest('#theme-toggle-btn')) {
+    toggleTheme();
+  }
+});
+
     
     // Add event listeners to nav items
     this.sideNav.querySelectorAll('.track-item').forEach(item => {
