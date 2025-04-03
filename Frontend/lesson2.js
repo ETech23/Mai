@@ -28,6 +28,46 @@ document.body.prepend(this.topNav);
     }
   }
       addEventListeners() {
+  // First verify all required elements exist
+  const elements = {
+    sidebarToggle: document.getElementById('sidebar-toggle'),
+    themeToggleBtn: document.getElementById('theme-toggle-btn'),
+    retryBtn: document.getElementById('retry-btn'),
+    trackButtons: document.querySelectorAll('.track-btn'),
+    moduleButtons: document.querySelectorAll('.module-btn'),
+    lessonButtons: document.querySelectorAll('.lesson-btn')
+  };
+
+  // Safe event listener attachment
+  elements.sidebarToggle?.addEventListener('click', this.toggleSidebar.bind(this));
+  elements.themeToggleBtn?.addEventListener('click', this.toggleTheme.bind(this));
+  elements.retryBtn?.addEventListener('click', () => location.reload());
+
+  // Dynamic content listeners
+  elements.trackButtons.forEach(btn => {
+    btn?.addEventListener('click', (e) => {
+      const trackId = e.currentTarget.dataset.track;
+      this.loadTrack(trackId);
+    });
+  });
+
+  // Add similar for modules and lessons
+  elements.moduleButtons.forEach(btn => {
+    btn?.addEventListener('click', (e) => {
+      const levelIndex = parseInt(e.currentTarget.dataset.level);
+      const moduleIndex = parseInt(e.currentTarget.dataset.module);
+      this.loadModule(this.currentTrack, levelIndex, moduleIndex);
+    });
+  });
+
+  elements.lessonButtons.forEach(btn => {
+    btn?.addEventListener('click', (e) => {
+      const lessonIndex = parseInt(e.currentTarget.dataset.lesson);
+      this.loadLesson(this.currentTrack, this.currentLevel, this.currentModule, lessonIndex);
+    });
+  });
+}
+     /** addEventListeners() {
   try {
     // 1. Verify elements exist before adding listeners
     const elements = {
@@ -84,7 +124,7 @@ document.body.prepend(this.topNav);
     console.error('Event listener error:', error);
     this.renderError('Interface interaction failed');
   }
-}
+}**/
 
   showCriticalError() {
     document.body.innerHTML = `
@@ -119,27 +159,38 @@ document.body.prepend(this.topNav);
   // Initialize the application
   async init() {
   try {
-    // First ensure DOM elements exist
-    if (!this.mainContent || !this.sideNav || !this.topNav) {
-      throw new Error('Required DOM elements not found');
-    }
+    // 1. Verify DOM elements exist first
+    this.mainContent = document.getElementById('main-content');
+    this.sideNav = document.getElementById('side-nav');
+    this.topNav = document.getElementById('top-nav');
     
+    if (!this.mainContent || !this.sideNav || !this.topNav) {
+      throw new Error('Required DOM elements missing');
+    }
 
-    // Fetch course data
+    // 2. Load course data
     const response = await fetch('./data.json');
     if (!response.ok) throw new Error('Failed to fetch course data');
     this.coursesData = await response.json();
     
-    // Initialize UI only if elements exist
+    // 3. Initialize UI
     this.initUI();
     
+    // 4. Set default view
+    this.renderTracksOverview();
+    
+    // 5. Add event listeners after content is rendered
+    this.addEventListeners();
+    
+    // 6. Handle any deep linking
+    this.handleDeepLinking();
+    
+  } catch (error) {
+    console.error('Initialization error:', error);
+    this.renderError(error.message || 'Failed to initialize application');
+    
+    // Fallback to sample data if needed
     if (!this.coursesData) {
-      if (this.mainContent) {
-        this.mainContent.innerHTML = `
-          <div class="error-message">
-            <p>Course data not loaded - using sample data</p>
-          </div>`;
-      }
       this.coursesData = {
         "default-track": {
           title: "Sample Track",
@@ -153,29 +204,13 @@ document.body.prepend(this.topNav);
                 title: "Sample Lesson",
                 type: "reading",
                 duration: "5 min",
-                content: ["This is a placeholder lesson."]
+                content: ["Placeholder content"]
               }]
             }]
           }]
         }
       };
-    }
-
-    if (this.mainContent) {
       this.renderTracksOverview();
-      this.addEventListeners();
-      this.handleDeepLinking();
-    }
-  } catch (error) {
-    console.error('Initialization error:', error);
-    if (this.mainContent) {
-      this.mainContent.innerHTML = `
-        <div class="error-message">
-          <p>Failed to load application: ${error.message}</p>
-          <button onclick="location.reload()">Retry</button>
-        </div>`;
-    } else {
-      document.body.innerHTML = '<p>Critical error: Missing required elements</p>';
     }
   }
 }
@@ -201,9 +236,21 @@ document.body.prepend(this.topNav);
   isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex) {
     return !!this.userProgress?.[trackId]?.[levelIndex]?.[moduleIndex]?.lessons?.[lessonIndex];
   }
-     
+      
 
-  
+  selectRandomQuestions(questions, count) {
+    // Make a copy of the array to avoid modifying the original
+    const shuffled = [...questions];
+    
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled.slice(0, Math.min(count, shuffled.length));
+  }
+
   
 
   // Initialize UI components
