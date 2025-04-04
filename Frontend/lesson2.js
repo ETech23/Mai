@@ -227,6 +227,288 @@ document.body.prepend(this.topNav);
   }
 }
       
+      /**
+ * Renders course data in an attractive, responsive HTML layout
+ * @param {Object} coursesData - The course data structure
+ * @param {HTMLElement} container - Where to render the content (default: this.mainContent)
+ */
+renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
+  try {
+    if (!coursesData || typeof coursesData !== 'object') {
+      throw new Error('Invalid course data provided');
+    }
+
+    container.innerHTML = `
+      <div class="course-container">
+        <header class="course-header">
+          <h1>Learning Paths</h1>
+          <p class="subtitle">Explore our available courses and tracks</p>
+        </header>
+        
+        <div class="tracks-grid">
+          ${Object.entries(coursesData).map(([trackId, track]) => `
+            <article class="track-card" data-track="${trackId}">
+              <div class="track-header">
+                <h2>${track.title || 'Untitled Track'}</h2>
+                ${track.description ? `<p class="track-description">${track.description}</p>` : ''}
+              </div>
+              
+              <div class="track-levels">
+                ${track.levels?.map((level, levelIndex) => `
+                  <details class="level-accordion" ${levelIndex === 0 ? 'open' : ''}>
+                    <summary>
+                      <span class="level-title">${level.name || `Level ${levelIndex + 1}`}</span>
+                      <div class="level-progress">
+                        <progress value="${this.getLevelProgress(trackId, levelIndex)}" max="100"></progress>
+                        <span>${this.getLevelProgress(trackId, levelIndex)}%</span>
+                      </div>
+                    </summary>
+                    
+                    <div class="modules-container">
+                      ${level.modules?.map((module, moduleIndex) => `
+                        <div class="module-card" data-module="${moduleIndex}">
+                          <h3 class="module-title">
+                            <i class="module-icon ${this.getModuleIcon(module)}"></i>
+                            ${module.title || `Module ${moduleIndex + 1}`}
+                          </h3>
+                          
+                          ${module.description ? `<p class="module-description">${module.description}</p>` : ''}
+                          
+                          <div class="module-stats">
+                            <span class="lessons-count">
+                              <i class="fas fa-book-open"></i>
+                              ${module.lessons?.length || 0} lessons
+                            </span>
+                            <span class="duration">
+                              <i class="fas fa-clock"></i>
+                              ${this.calculateModuleDuration(module)}
+                            </span>
+                          </div>
+                          
+                          <div class="module-actions">
+                            <button class="start-module" 
+                                    data-track="${trackId}"
+                                    data-level="${levelIndex}"
+                                    data-module="${moduleIndex}">
+                              ${this.isModuleCompleted(trackId, levelIndex, moduleIndex) ? 'Review' : 'Start'}
+                            </button>
+                          </div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </details>
+                `).join('')}
+              </div>
+            </article>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    
+    // Add the CSS if not already added
+    this.injectCourseStyles();
+    
+  } catch (error) {
+    console.error('Failed to render course data:', error);
+    container.innerHTML = `
+      <div class="error-message">
+        <h2>Display Error</h2>
+        <p>${error.message}</p>
+        <button onclick="location.reload()">Try Again</button>
+      </div>
+    `;
+  }
+}
+
+// Helper methods for the renderer
+injectCourseStyles() {
+  if (document.getElementById('course-styles')) return;
+  
+  const style = document.createElement('style');
+  style.id = 'course-styles';
+  style.textContent = `
+    .course-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      color: #333;
+    }
+    
+    .course-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .course-header h1 {
+      font-size: 2.5rem;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+    }
+    
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    
+    .track-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    
+    .track-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .track-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+      color: white;
+    }
+    
+    .track-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    .track-description {
+      margin: 0.5rem 0 0;
+      opacity: 0.9;
+    }
+    
+    .level-accordion {
+      border-bottom: 1px solid #eee;
+    }
+    
+    .level-accordion summary {
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+    
+    .level-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .level-progress progress {
+      width: 100px;
+      height: 8px;
+      border-radius: 4px;
+    }
+    
+    .modules-container {
+      padding: 0 1.5rem 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .module-card {
+      padding: 1rem;
+      border-radius: 8px;
+      background: #f9f9f9;
+      border-left: 4px solid #3498db;
+    }
+    
+    .module-title {
+      margin: 0 0 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .module-icon {
+      color: #3498db;
+    }
+    
+    .module-description {
+      margin: 0.5rem 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .module-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      margin: 0.5rem 0;
+    }
+    
+    .module-stats i {
+      margin-right: 0.3rem;
+    }
+    
+    .module-actions {
+      margin-top: 0.5rem;
+    }
+    
+    .start-module {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .start-module:hover {
+      background: #2980b9;
+    }
+    
+    @media (max-width: 768px) {
+      .tracks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+getLevelProgress(trackId, levelIndex) {
+  // Implement your actual progress calculation
+  return this.userProgress[trackId]?.[levelIndex]?.progress || 0;
+}
+
+getModuleIcon(module) {
+  const icons = {
+    quiz: 'fas fa-question-circle',
+    video: 'fas fa-video',
+    reading: 'fas fa-book',
+    project: 'fas fa-tasks',
+    default: 'fas fa-star'
+  };
+  return icons[module.type] || icons.default;
+}
+
+calculateModuleDuration(module) {
+  if (module.duration) return module.duration;
+  const totalMinutes = module.lessons?.reduce((sum, lesson) => {
+    const mins = parseInt(lesson.duration) || 0;
+    return sum + mins;
+  }, 0) || 0;
+  
+  return totalMinutes > 60 
+    ? `${Math.floor(totalMinutes/60)}h ${totalMinutes%60}m` 
+    : `${totalMinutes}m`;
+}
+      
+      
   isQuizUnlocked(trackId, levelIndex, moduleIndex) {
     // 1. Verify we have valid course data
     if (!this.coursesData?.[trackId]?.levels?.[levelIndex]?.modules?.[moduleIndex]) {
