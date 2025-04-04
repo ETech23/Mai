@@ -34,11 +34,11 @@
                 "- Rationality: Making optimal decisions given available information",
                 "- Cognitive Modeling: Attempting to replicate human thought processes",
                 "- The Chinese Room thought experiment and its implications"
-            ],
-            "quiz": {
-                "title": "Foundations of Artificial Intelligence Quiz",
-                "questions": [
-                {
+                    ],
+                    "quiz": {
+                    "title":   "Foundations of Artificial Intelligence Quiz",
+                    "questions": [
+                    {
                     "text": "Which event marked the official birth of AI as a field?",
                     "options": [
                     "Publication of Turing's paper",
@@ -48,69 +48,69 @@
                     ],
                     "answer": 1,
                     "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
-          },
-          {
-            "text": "What does the Chinese Room thought experiment challenge?",
-            "options": [
-              "The speed of AI systems",
-              "Whether AI can truly understand",
-              "The cost of developing AI",
-              "AI's mathematical capabilities"
+                    },
+                    {
+                    "text": "What does the Chinese Room thought experiment challenge?",
+                    "options": [
+                    "The speed of AI systems",
+                    "Whether AI can truly understand",
+                    "The cost of developing AI",
+                    "AI's mathematical capabilities"
+                    ],
+                    "answer": 1,
+                    "explanation": "John Searle's argument suggests that mere symbol manipulation doesn't constitute genuine understanding"
+                    },
+                    {
+                    "text": "Which of these is NOT a characteristic of intelligent agents?",
+                    "options": [
+                    "Perception of environment",
+                    "Ability to reproduce",
+                    "Decision-making capability",
+                    "Taking actions to achieve goals"
+                    ],
+                    "answer": 1,
+                    "explanation": "Reproduction isn't a requirement for artificial intelligent agents"
+                }
+                ],
+                "passingScore": 75
+            }
+            },
+            {
+            "title": "AI Technologies Deep Dive",
+            "type": "interactive",
+            "duration": "40 min",
+            "content": [
+                "1. Machine Learning Paradigms:",
+                "- Supervised Learning: Labeled data trains models (e.g., spam detection)",
+                "- Unsupervised Learning: Finds patterns in unlabeled data (e.g., customer segmentation)",
+                "- Reinforcement Learning: Learns through rewards/punishments (e.g., game AIs)",
+                "- Semi-supervised Learning: Combines labeled and unlabeled data",
+                "- Self-supervised Learning: Creates its own labels from data structure",
+                "",
+                "2. Neural Network Architectures:",
+                "- Feedforward Neural Networks: Basic information flow",
+                "- Convolutional Neural Networks (CNNs): For image processing",
+                "- Recurrent Neural Networks (RNNs): For sequential data",
+                "- Transformers: Attention-based models (e.g., GPT, BERT)",
+                "",
+                "3. Natural Language Processing Components:",
+                "- Tokenization: Breaking text into meaningful units",
+                "- Word Embeddings: Representing words numerically (Word2Vec, GloVe)",
+                "- Sequence Models: Handling context in language",
+                "- Attention Mechanisms: Focusing on relevant parts of input",
+                "",
+                "4. Computer Vision Techniques:",
+                "- Image Classification: Categorizing images",
+                "- Object Detection: Identifying and locating objects",
+                "- Semantic Segmentation: Pixel-level classification",
+                "- Image Generation: Creating new images (GANs, Diffusion Models)"
             ],
-            "answer": 1,
-            "explanation": "John Searle's argument suggests that mere symbol manipulation doesn't constitute genuine understanding"
-          },
-          {
-            "text": "Which of these is NOT a characteristic of intelligent agents?",
-            "options": [
-              "Perception of environment",
-              "Ability to reproduce",
-              "Decision-making capability",
-              "Taking actions to achieve goals"
-            ],
-            "answer": 1,
-            "explanation": "Reproduction isn't a requirement for artificial intelligent agents"
-          }
-        ],
-        "passingScore": 75
-      }
-    },
-    {
-      "title": "AI Technologies Deep Dive",
-      "type": "interactive",
-      "duration": "40 min",
-      "content": [
-        "1. Machine Learning Paradigms:",
-        "- Supervised Learning: Labeled data trains models (e.g., spam detection)",
-        "- Unsupervised Learning: Finds patterns in unlabeled data (e.g., customer segmentation)",
-        "- Reinforcement Learning: Learns through rewards/punishments (e.g., game AIs)",
-        "- Semi-supervised Learning: Combines labeled and unlabeled data",
-        "- Self-supervised Learning: Creates its own labels from data structure",
-        "",
-        "2. Neural Network Architectures:",
-        "- Feedforward Neural Networks: Basic information flow",
-        "- Convolutional Neural Networks (CNNs): For image processing",
-        "- Recurrent Neural Networks (RNNs): For sequential data",
-        "- Transformers: Attention-based models (e.g., GPT, BERT)",
-        "",
-        "3. Natural Language Processing Components:",
-        "- Tokenization: Breaking text into meaningful units",
-        "- Word Embeddings: Representing words numerically (Word2Vec, GloVe)",
-        "- Sequence Models: Handling context in language",
-        "- Attention Mechanisms: Focusing on relevant parts of input",
-        "",
-        "4. Computer Vision Techniques:",
-        "- Image Classification: Categorizing images",
-        "- Object Detection: Identifying and locating objects",
-        "- Semantic Segmentation: Pixel-level classification",
-        "- Image Generation: Creating new images (GANs, Diffusion Models)"
-      ],
-      "quiz": {
-        "title": "Foundations of Artificial Intelligence Quiz",
-        "questions": [
-          {
-            "text": "Which learning paradigm would be best for training a chess AI?",
-            "options": [
+            "quiz": {
+                "title": "Foundations of Artificial Intelligence Quiz",
+                "questions": [
+                {
+                    "text": "Which learning paradigm would be best for training a chess AI?",
+                    "options": [
               "Supervised Learning",
               "Unsupervised Learning",
               "Reinforcement Learning",
@@ -264,8 +264,10 @@
         "- Neuro-symbolic AI: Merging neural networks with symbolic reasoning",
         "- AI for Science: Accelerating scientific discoveries",
         "- Artificial General Intelligence: Pathways and timelines"
-      ],
-      "quiz": {
+      ]
+    }
+  ],
+   "quiz": {
         "title": "Foundations of Artificial Intelligence Quiz",
         "questions": [
           {
@@ -315,8 +317,6 @@
         ],
         "passingScore": 80
       }
-    }
-  ]
 },
           {
             "title": "Machine Learning Basics",
