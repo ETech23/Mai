@@ -30,6 +30,17 @@ document.body.prepend(this.topNav);
       this.showCriticalError();
       return;
     }
+    
+        // Initialize default settings
+    this.settings = {
+      defaultPassingScore: 75,
+      examQuestionCount: 20,
+      saveInterval: 30000 // Auto-save every 30 seconds
+    };
+    
+    // Set up auto-save
+    this.setupAutoSave();
+  
   }
       addEventListeners() {
   // First verify all required elements exist
@@ -1354,149 +1365,175 @@ document.addEventListener('click', function(e) {
   
   
 
+ 
+    
+
+
   // ======================
-  // Exam Initialization
+  // Core Exam Functions
   // ======================
 
+  /**
+   * Loads an exam for a specific track and level
+   * @param {string} trackId - The ID of the track
+   * @param {number} levelIndex - The index of the level
+   */
   loadExam(trackId, levelIndex) {
     try {
-      // Validate input data
+      // Validate input
       if (!this.validateTrackAndLevel(trackId, levelIndex)) {
-        throw new Error(`Invalid trackId (${trackId}) or levelIndex (${levelIndex})`);
+        throw new Error(`Invalid track or level: ${trackId}-${levelIndex}`);
       }
 
+      // Check if exam is unlocked
+      if (!this.isExamUnlocked(trackId, levelIndex)) {
+        throw new Error('Exam is not unlocked yet');
+      }
+
+      // Check if exam already passed
+      if (this.isExamPassed(trackId, levelIndex)) {
+        this.showMessage('You have already passed this exam');
+        return;
+      }
+
+      // Prepare exam questions
       const level = this.coursesData[trackId].levels[levelIndex];
-      const examQuestions = this.collectExamQuestions(level);
+      const examQuestions = this.prepareExamQuestions(level);
       
       if (examQuestions.length === 0) {
         throw new Error('No questions available for this exam');
       }
 
-      // Shuffle and select questions
-      const selectedQuestions = this.selectRandomQuestions(examQuestions, 20);
-      
+      // Create exam object
       this.currentExam = {
         trackId,
         levelIndex,
-        questions: selectedQuestions,
-        passingScore: level.passingScore || 75
+        questions: this.selectRandomQuestions(examQuestions, this.settings.examQuestionCount),
+        passingScore: level.passingScore || this.settings.defaultPassingScore,
+        timeStarted: Date.now(),
+        timeLimit: level.timeLimit || null // in minutes
       };
       
+      // Render the exam UI
       this.renderExam();
+      
+      // Start timer if time limit exists
+      if (this.currentExam.timeLimit) {
+        this.startExamTimer();
+      }
+      
     } catch (error) {
       console.error('Failed to load exam:', error);
       this.showError('Failed to load exam. Please try again later.');
     }
   }
 
-  validateTrackAndLevel(trackId, levelIndex) {
-    return this.coursesData[trackId]?.levels?.[levelIndex] !== undefined;
+  /**
+   * Submits the current exam and calculates results
+   */
+  submitExam() {
+    try {
+      if (!this.currentExam) {
+        throw new Error('No active exam to submit');
+      }
+
+      // Calculate score and results
+      const { score, moduleStats, incorrectAnswers } = this.calculateExamScore();
+      
+      // Store results
+      this.currentExamResults = {
+        trackId: this.currentExam.trackId,
+        levelIndex: this.currentExam.levelIndex,
+        score,
+        moduleStats,
+        incorrectAnswers,
+        timestamp: Date.now(),
+        timeSpent: Math.floor((Date.now() - this.currentExam.timeStarted) / 1000) // in seconds
+      };
+
+      // Display results
+      this.displayExamResults();
+      
+      // Save results and unlock next content
+      this.saveExamResults();
+      this.unlockNextContent();
+      
+      // Clear current exam
+      this.currentExam = null;
+      
+    } catch (error) {
+      console.error('Exam submission failed:', error);
+      this.showError('Failed to submit exam. Please try again.');
+    }
   }
 
-  collectExamQuestions(level) {
-    return level.modules.flatMap((module, moduleIndex) => {
+  // ======================
+  // Exam Status & Progress
+  // ======================
+
+  isExamUnlocked(trackId, levelIndex) {
+    if (!this.validateTrackAndLevel(trackId, levelIndex)) return false;
+    
+    const level = this.coursesData[trackId].levels[levelIndex];
+    
+    // If no exam exists for this level
+    if (!level.exam) return false;
+    
+    // Check if explicitly unlocked
+    if (this.userProgress[trackId]?.[levelIndex]?.exam?.unlocked) {
+      return true;
+    }
+    
+    // Default unlock condition: all modules completed
+    return level.modules.every((_, idx) => 
+      this.isModuleCompleted(trackId, levelIndex, idx)
+    );
+  }
+
+  isExamCompleted(trackId, levelIndex) {
+    return !!this.userProgress[trackId]?.[levelIndex]?.exam?.completed;
+  }
+
+  isExamPassed(trackId, levelIndex) {
+    const examProgress = this.userProgress[trackId]?.[levelIndex]?.exam;
+    if (!examProgress) return false;
+    
+    const passingScore = this.coursesData[trackId]?.levels[levelIndex]?.passingScore || 
+                       this.settings.defaultPassingScore;
+    return examProgress.score >= passingScore;
+  }
+
+  getExamScore(trackId, levelIndex) {
+    return this.userProgress[trackId]?.[levelIndex]?.exam?.score || 0;
+  }
+
+  // ======================
+  // Exam Content Helpers
+  // ======================
+
+  prepareExamQuestions(level) {
+    return level.modules.flatMap(module => {
       return module.quiz?.questions?.map(q => ({
         ...q,
-        sourceModule: module.title
+        sourceModule: module.title,
+        moduleId: module.id
       })) || [];
     });
   }
 
-  // ======================
-  // Exam Rendering
-  // ======================
-
-  renderExam() {
-    try {
-      if (!this.currentExam) {
-        throw new Error('No exam data available to render');
-      }
-
-      this.mainContent.innerHTML = this.generateExamHTML(this.currentExam);
-      this.setupExamHandlers();
-      this.setupAnswerTracking();
-    } catch (error) {
-      console.error('Failed to render exam:', error);
-      this.showError('Failed to display exam. Please try again.');
-    }
-  }
-
-  generateExamHTML(exam) {
-    return `
-      <div class="exam-container">
-        <div class="exam-header">
-          <h2>Level Exam</h2>
-          <div class="exam-progress">
-            <span id="answered-count">0</span> / ${exam.questions.length} answered
-          </div>
-        </div>
-        
-        <form id="exam-form">
-          ${this.generateQuestionsHTML(exam.questions)}
-        </form>
-        
-        <div class="exam-footer">
-          <button id="submit-exam" class="primary-btn">Submit Exam</button>
-        </div>
-      </div>
-    `;
-  }
-
-  generateQuestionsHTML(questions) {
-    return questions.map((question, index) => `
-      <div class="exam-question" data-module="${question.sourceModule || ''}">
-        <div class="question-text">
-          <span class="question-number">${index + 1}.</span>
-          ${question.text}
-        </div>
-        <div class="question-options">
-          ${this.generateOptionsHTML(question, index)}
-        </div>
-      </div>
-    `).join('');
-  }
-
-  generateOptionsHTML(question, questionIndex) {
-    return question.options.map((option, optionIndex) => `
-      <div class="exam-option">
-        <input type="radio" id="q${questionIndex}-opt${optionIndex}" 
-               name="q${questionIndex}" value="${optionIndex}"
-               ${this.isOptionSelected(questionIndex, optionIndex) ? 'checked' : ''}>
-        <label for="q${questionIndex}-opt${optionIndex}">${option}</label>
-      </div>
-    `).join('');
+  selectRandomQuestions(questions, count) {
+    // Make sure we don't select more questions than available
+    const questionCount = Math.min(count, questions.length);
+    
+    // Create a shuffled copy of the questions array
+    const shuffled = [...questions].sort(() => 0.5 - Math.random());
+    
+    return shuffled.slice(0, questionCount);
   }
 
   // ======================
-  // Exam Submission & Scoring
+  // Scoring & Analysis
   // ======================
-
-  setupExamHandlers() {
-    const submitBtn = document.getElementById('submit-exam');
-    if (!submitBtn) return;
-
-    submitBtn.addEventListener('click', () => {
-      try {
-        const { score, moduleStats, incorrectAnswers } = this.calculateExamScore();
-        
-        this.currentExamResults = {
-          trackId: this.currentExam.trackId,
-          levelIndex: this.currentExam.levelIndex,
-          score,
-          moduleStats,
-          incorrectAnswers,
-          timestamp: Date.now()
-        };
-
-        this.displayExamResults();
-        this.saveExamResults();
-        this.unlockNextContent();
-      } catch (error) {
-        console.error('Exam submission failed:', error);
-        this.showError('Failed to submit exam. Please try again.');
-      }
-    });
-  }
 
   calculateExamScore() {
     if (!this.currentExam) {
@@ -1530,24 +1567,177 @@ document.addEventListener('click', function(e) {
   createIncorrectAnswerItem(question, selected) {
     return {
       question: question.text,
+      questionId: question.id,
       selectedOption: selected?.value !== undefined ? question.options[selected.value] : "None",
+      selectedIndex: selected?.value !== undefined ? parseInt(selected.value) : null,
       correctOption: question.options[question.answer],
+      correctIndex: question.answer,
       explanation: question.explanation || "No explanation provided",
-      sourceModule: question.sourceModule
+      sourceModule: question.sourceModule,
+      moduleId: question.moduleId
     };
   }
 
   trackModulePerformance(stats, question, isCorrect) {
     if (question.sourceModule) {
-      stats[question.sourceModule] = stats[question.sourceModule] || { correct: 0, total: 0 };
+      // Initialize module stats if not exists
+      stats[question.sourceModule] = stats[question.sourceModule] || { 
+        correct: 0, 
+        total: 0,
+        moduleId: question.moduleId
+      };
+      
+      // Update stats
       stats[question.sourceModule].total++;
       if (isCorrect) stats[question.sourceModule].correct++;
     }
   }
 
   // ======================
-  // Results Display
+  // Progress Management
   // ======================
+
+  unlockNextContent() {
+    if (!this.currentExamResults) return;
+
+    const { trackId, levelIndex, score } = this.currentExamResults;
+    const track = this.coursesData[trackId];
+    const level = track.levels[levelIndex];
+    const passingScore = level.passingScore || this.settings.defaultPassingScore;
+    
+    // Only proceed if exam was passed
+    if (score < passingScore) return;
+
+    // Check if there's another level to unlock
+    if (levelIndex < track.levels.length - 1) {
+      this.ensureProgressStructure(trackId, levelIndex + 1);
+      this.userProgress[trackId][levelIndex + 1].unlocked = true;
+      this.showMessage('Next level unlocked!');
+    } else {
+      this.showMessage('Congratulations! You completed this track!');
+    }
+  }
+
+  saveExamResults() {
+    if (!this.currentExamResults) return;
+
+    const { trackId, levelIndex, score, moduleStats } = this.currentExamResults;
+    const passingScore = this.currentExam.passingScore;
+    
+    this.ensureProgressStructure(trackId, levelIndex);
+    
+    // Save exam results
+    this.userProgress[trackId][levelIndex].exam = {
+      completed: true,
+      passed: score >= passingScore,
+      score,
+      moduleStats,
+      timestamp: Date.now(),
+      timeSpent: this.currentExamResults.timeSpent
+    };
+    
+    // Update module proficiency based on exam performance
+    this.updateModuleProficiency(trackId, levelIndex, moduleStats);
+    
+    this.saveUserProgress();
+  }
+
+  updateModuleProficiency(trackId, levelIndex, moduleStats) {
+    Object.entries(moduleStats).forEach(([moduleName, stats]) => {
+      if (!stats.moduleId) return;
+      
+      // Ensure module progress structure exists
+      if (!this.userProgress[trackId][levelIndex][stats.moduleId]) {
+        this.userProgress[trackId][levelIndex][stats.moduleId] = {};
+      }
+      
+      // Update module proficiency score (0-100)
+      const proficiency = Math.round((stats.correct / stats.total) * 100);
+      this.userProgress[trackId][levelIndex][stats.moduleId].proficiency = proficiency;
+    });
+  }
+
+  // ======================
+  // UI Rendering
+  // ======================
+
+  renderExam() {
+    if (!this.currentExam) return;
+
+    this.mainContent.innerHTML = `
+      <div class="exam-container">
+        ${this.renderExamHeader()}
+        <form id="exam-form">
+          ${this.renderExamQuestions()}
+        </form>
+        ${this.renderExamFooter()}
+      </div>
+    `;
+
+    // Set up event handlers
+    this.setupExamEventHandlers();
+    
+    // Update answered questions count
+    this.updateAnsweredCount();
+  }
+
+  renderExamHeader() {
+    const timeLeft = this.currentExam.timeLimit 
+      ? `Time left: <span id="exam-time-left">${this.currentExam.timeLimit}:00</span>`
+      : '';
+    
+    return `
+      <div class="exam-header">
+        <h2>Level Exam</h2>
+        <div class="exam-meta">
+          <div class="exam-progress">
+            Answered: <span id="answered-count">0</span> / ${this.currentExam.questions.length}
+          </div>
+          <div class="exam-timer">
+            ${timeLeft}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderExamQuestions() {
+    return this.currentExam.questions.map((question, index) => `
+      <div class="exam-question" data-module="${question.sourceModule || ''}" data-module-id="${question.moduleId || ''}">
+        <div class="question-text">
+          <span class="question-number">${index + 1}.</span>
+          ${this.escapeHtml(question.text)}
+        </div>
+        <div class="question-options">
+          ${this.renderQuestionOptions(question, index)}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderQuestionOptions(question, questionIndex) {
+    return question.options.map((option, optionIndex) => `
+      <div class="exam-option">
+        <input type="radio" 
+               id="q${questionIndex}-opt${optionIndex}" 
+               name="q${questionIndex}" 
+               value="${optionIndex}"
+               ${this.isOptionSelected(questionIndex, optionIndex) ? 'checked' : ''}>
+        <label for="q${questionIndex}-opt${optionIndex}">
+          ${this.escapeHtml(option)}
+        </label>
+      </div>
+    `).join('');
+  }
+
+  renderExamFooter() {
+    return `
+      <div class="exam-footer">
+        <button id="submit-exam" class="primary-btn">Submit Exam</button>
+        <button id="save-exam" class="secondary-btn">Save Progress</button>
+      </div>
+    `;
+  }
 
   displayExamResults() {
     if (!this.currentExamResults) return;
@@ -1557,166 +1747,22 @@ document.addEventListener('click', function(e) {
     this.mainContent.innerHTML = `
       <div class="exam-results ${passed ? 'passed' : 'failed'}">
         <h2>Exam Results</h2>
-        ${this.generateResultsSummary(passed)}
-        ${this.generateModuleStats()}
-        ${!passed ? this.generateIncorrectAnswers() : ''}
-        ${this.generateActionButtons(passed)}
+        ${this.renderResultsSummary(passed)}
+        ${this.renderModulePerformance()}
+        ${!passed ? this.renderIncorrectAnswers() : ''}
+        ${this.renderExamActions(passed)}
       </div>
     `;
 
     this.setupResultsHandlers(passed);
   }
 
-  generateResultsSummary(passed) {
-    return `
-      <div class="summary">
-        <p>Your score: <strong>${this.currentExamResults.score}%</strong></p>
-        <p>Passing score: ${this.currentExam.passingScore}%</p>
-        <p class="status">Status: ${passed ? '✅ PASSED' : '❌ FAILED'}</p>
-      </div>
-    `;
-  }
-
-  generateModuleStats() {
-    if (!this.currentExamResults.moduleStats) return '';
-    
-    return `
-      <div class="module-performance">
-        <h3>Performance by Module</h3>
-        <ul>
-          ${Object.entries(this.currentExamResults.moduleStats).map(([module, stats]) => `
-            <li>
-              <span class="module-name">${module}</span>
-              <span class="module-score">
-                ${Math.round((stats.correct / stats.total) * 100)}%
-                (${stats.correct}/${stats.total})
-              </span>
-              <progress value="${stats.correct}" max="${stats.total}"></progress>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-    `;
-  }
-
-  generateIncorrectAnswers() {
-    if (!this.currentExamResults.incorrectAnswers?.length) return '';
-    
-    return `
-      <div class="incorrect-answers">
-        <h3>Questions to Review</h3>
-        ${this.currentExamResults.incorrectAnswers.map((item, i) => `
-          <div class="incorrect-answer">
-            <p><strong>Question:</strong> ${item.question}</p>
-            <p><strong>Your answer:</strong> <span class="wrong">${item.selectedOption}</span></p>
-            <p><strong>Correct answer:</strong> <span class="correct">${item.correctOption}</span></p>
-            ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
-            ${item.sourceModule ? `<p class="source">From module: ${item.sourceModule}</p>` : ''}
-          </div>
-        `).join('')}
-      </div>
-    `;
-  }
-
-  generateActionButtons(passed) {
-    return `
-      <div class="exam-actions">
-        <button id="exam-retry" class="${passed ? 'continue' : 'retry'}">
-          ${passed ? 'Continue Learning' : 'Retry Exam'}
-        </button>
-        <button id="exam-review" class="review-btn">
-          Review Answers
-        </button>
-      </div>
-    `;
-  }
-
   // ======================
-  // Results Handlers
+  // Utility Methods
   // ======================
 
-  setupResultsHandlers(passed) {
-    this.setupRetryHandler(passed);
-    this.setupReviewHandler();
-  }
-
-  setupRetryHandler(passed) {
-    const retryBtn = document.getElementById('exam-retry');
-    if (!retryBtn) return;
-
-    retryBtn.addEventListener('click', () => {
-      if (passed) {
-        this.loadTrack(this.currentExamResults.trackId);
-      } else {
-        this.loadExam(this.currentExamResults.trackId, this.currentExamResults.levelIndex);
-      }
-    });
-  }
-
-  setupReviewHandler() {
-    const reviewBtn = document.getElementById('exam-review');
-    if (!reviewBtn || !this.currentExamResults?.incorrectAnswers) return;
-
-    reviewBtn.addEventListener('click', () => {
-      this.showAnswerReview(this.currentExamResults.incorrectAnswers);
-    });
-  }
-
-  showAnswerReview(incorrectAnswers) {
-    if (!incorrectAnswers?.length) {
-      this.showMessage('No answers to review');
-      return;
-    }
-
-    const modal = document.createElement('div');
-    modal.className = 'answer-review-modal';
-    modal.innerHTML = this.generateReviewModalContent(incorrectAnswers);
-    document.body.appendChild(modal);
-
-    modal.querySelector('.close-review').addEventListener('click', () => {
-      document.body.removeChild(modal);
-    });
-  }
-
-  generateReviewModalContent(incorrectAnswers) {
-    return `
-      <div class="modal-content">
-        <h3>Answer Review</h3>
-        <div class="review-items">
-          ${incorrectAnswers.map(item => `
-            <div class="review-item">
-              <p class="question"><strong>Question:</strong> ${item.question}</p>
-              <p class="user-answer"><strong>Your answer:</strong> ${item.selectedOption}</p>
-              <p class="correct-answer"><strong>Correct answer:</strong> ${item.correctOption}</p>
-              ${item.explanation ? `<p class="explanation"><strong>Explanation:</strong> ${item.explanation}</p>` : ''}
-              ${item.sourceModule ? `<p class="source"><strong>Module:</strong> ${item.sourceModule}</p>` : ''}
-            </div>
-          `).join('')}
-        </div>
-        <button class="close-review">Close</button>
-      </div>
-    `;
-  }
-
-  // ======================
-  // Progress Management
-  // ======================
-
-  saveExamResults() {
-    if (!this.currentExamResults) return;
-
-    const { trackId, levelIndex, score } = this.currentExamResults;
-    
-    this.ensureProgressStructure(trackId, levelIndex);
-    
-    this.userProgress[trackId][levelIndex].exam = {
-      passed: score >= this.currentExam.passingScore,
-      score,
-      timestamp: Date.now(),
-      moduleStats: this.currentExamResults.moduleStats
-    };
-    
-    this.saveUserProgress();
+  validateTrackAndLevel(trackId, levelIndex) {
+    return this.coursesData[trackId]?.levels?.[levelIndex] !== undefined;
   }
 
   ensureProgressStructure(trackId, levelIndex) {
@@ -1724,66 +1770,256 @@ document.addEventListener('click', function(e) {
     if (!this.userProgress[trackId][levelIndex]) this.userProgress[trackId][levelIndex] = {};
   }
 
-  unlockNextContent() {
-    if (!this.currentExamResults) return;
+  escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
-    const { trackId, levelIndex } = this.currentExamResults;
-    const track = this.coursesData[trackId];
-    const level = track.levels[levelIndex];
+  // ======================
+  // Event Handlers
+  // ======================
+
+  setupExamEventHandlers() {
+    // Submit button
+    document.getElementById('submit-exam')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('Are you sure you want to submit your exam?')) {
+        this.submitExam();
+      }
+    });
     
-    // Check if exam was passed
-    if (this.currentExamResults.score < this.currentExam.passingScore) return;
-
-    // Check if there's another level to unlock
-    if (levelIndex < track.levels.length - 1) {
-      this.ensureProgressStructure(trackId, levelIndex + 1);
-      this.userProgress[trackId][levelIndex + 1].unlocked = true;
-      this.saveUserProgress();
-    }
-  }
-
-  // ======================
-  // Utility Methods
-  // ======================
-
-  selectRandomQuestions(questions, count) {
-    const shuffled = [...questions].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(count, shuffled.length));
-  }
-
-  isOptionSelected(questionIndex, optionIndex) {
-    // Implement if you need to preserve selected answers between renders
-    return false;
-  }
-
-  setupAnswerTracking() {
-    const form = document.getElementById('exam-form');
-    if (!form) return;
-
-    form.addEventListener('change', () => {
-      const answered = form.querySelectorAll('input[type="radio"]:checked').length;
-      const counter = document.getElementById('answered-count');
-      if (counter) counter.textContent = answered;
+    // Save progress button
+    document.getElementById('save-exam')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.saveExamProgress();
+      this.showMessage('Progress saved!');
+    });
+    
+    // Track answered questions
+    document.getElementById('exam-form')?.addEventListener('change', () => {
+      this.updateAnsweredCount();
     });
   }
 
-  showError(message) {
-    this.mainContent.innerHTML = `
-      <div class="error-message">
-        <p>${message}</p>
-        <button onclick="location.reload()">Try Again</button>
+  setupResultsHandlers(passed) {
+    // Retry/Continue button
+    document.getElementById('exam-retry')?.addEventListener('click', () => {
+      if (passed) {
+        this.loadTrack(this.currentExamResults.trackId);
+      } else {
+        this.loadExam(this.currentExamResults.trackId, this.currentExamResults.levelIndex);
+      }
+    });
+    
+    // Review answers button
+    document.getElementById('exam-review')?.addEventListener('click', () => {
+      this.showAnswerReview(this.currentExamResults.incorrectAnswers);
+    });
+  }
+
+  setupAutoSave() {
+    setInterval(() => {
+      if (this.currentExam) {
+        this.saveExamProgress();
+        console.log('Exam progress auto-saved');
+      }
+    }, this.settings.saveInterval);
+  }
+
+  // ======================
+  // Timer Functions
+  // ======================
+
+  startExamTimer() {
+    if (!this.currentExam?.timeLimit) return;
+    
+    let minutes = this.currentExam.timeLimit;
+    let seconds = 0;
+    
+    this.examTimerInterval = setInterval(() => {
+      if (seconds === 0) {
+        if (minutes === 0) {
+          // Time's up!
+          clearInterval(this.examTimerInterval);
+          this.showMessage('Time is up! Submitting your exam...');
+          this.submitExam();
+          return;
+        }
+        minutes--;
+        seconds = 59;
+      } else {
+        seconds--;
+      }
+      
+      // Update timer display
+      const timerElement = document.getElementById('exam-time-left');
+      if (timerElement) {
+        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+      }
+    }, 1000);
+  }
+
+  // ======================
+  // Additional Features
+  // ======================
+
+  saveExamProgress() {
+    if (!this.currentExam) return;
+    
+    // Collect current answers
+    const answers = [];
+    this.currentExam.questions.forEach((_, i) => {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      answers.push(selected ? parseInt(selected.value) : null);
+    });
+    
+    // Save to temporary progress
+    if (!this.userProgress[this.currentExam.trackId]) {
+      this.userProgress[this.currentExam.trackId] = {};
+    }
+    
+    if (!this.userProgress[this.currentExam.trackId][this.currentExam.levelIndex]) {
+      this.userProgress[this.currentExam.trackId][this.currentExam.levelIndex] = {};
+    }
+    
+    this.userProgress[this.currentExam.trackId][this.currentExam.levelIndex].tempExam = {
+      answers,
+      timestamp: Date.now()
+    };
+    
+    this.saveUserProgress();
+  }
+
+  loadSavedExamProgress() {
+    if (!this.currentExam) return;
+    
+    const savedProgress = this.userProgress[this.currentExam.trackId]?.[this.currentExam.levelIndex]?.tempExam;
+    if (!savedProgress) return;
+    
+    // Restore answers
+    savedProgress.answers.forEach((answer, i) => {
+      if (answer !== null) {
+        const input = document.querySelector(`input[name="q${i}"][value="${answer}"]`);
+        if (input) input.checked = true;
+      }
+    });
+    
+    this.updateAnsweredCount();
+  }
+
+  updateAnsweredCount() {
+    const form = document.getElementById('exam-form');
+    if (!form) return;
+    
+    const answered = form.querySelectorAll('input[type="radio"]:checked').length;
+    const counter = document.getElementById('answered-count');
+    if (counter) counter.textContent = answered;
+  }
+
+  // ======================
+  // UI Helper Methods
+  // ======================
+
+  showAnswerReview(incorrectAnswers) {
+    if (!incorrectAnswers?.length) {
+      this.showMessage('No incorrect answers to review');
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'answer-review-modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Answer Review</h3>
+        <div class="review-items">
+          ${incorrectAnswers.map(item => `
+            <div class="review-item">
+              <p class="question"><strong>Question:</strong> ${item.question}</p>
+              <p class="user-answer wrong"><strong>Your answer:</strong> ${item.selectedOption}</p>
+              <p class="correct-answer correct"><strong>Correct answer:</strong> ${item.correctOption}</p>
+              ${item.explanation ? `<p class="explanation"><strong>Explanation:</strong> ${item.explanation}</p>` : ''}
+              ${item.sourceModule ? `<p class="source"><strong>Module:</strong> ${item.sourceModule}</p>` : ''}
+              <button class="practice-btn" data-module-id="${item.moduleId}">Practice More from This Module</button>
+            </div>
+          `).join('')}
+        </div>
+        <button class="close-review">Close</button>
       </div>
     `;
     
-    this.saveUserProgress();
-
-  this.loadTrack(trackId);
-  this.updateProgressUI();
+    document.body.appendChild(modal);
+    
+    // Close button
+    modal.querySelector('.close-review').addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+    
+    // Practice buttons
+    modal.querySelectorAll('.practice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const moduleId = btn.dataset.moduleId;
+        this.loadModuleForPractice(this.currentExamResults.trackId, 
+                                this.currentExamResults.levelIndex, 
+                                moduleId);
+        document.body.removeChild(modal);
+      });
+    });
   }
 
   showMessage(message) {
-    alert(message); // Replace with a proper modal in production
+    const alert = document.createElement('div');
+    alert.className = 'alert-message';
+    alert.textContent = message;
+    document.body.appendChild(alert);
+    
+    setTimeout(() => {
+      document.body.removeChild(alert);
+    }, 3000);
   }
+
+  showError(message) {
+    const error = document.createElement('div');
+    error.className = 'error-message';
+    error.innerHTML = `
+      <p>${message}</p>
+      <button class="retry-btn">Try Again</button>
+    `;
+    
+    error.querySelector('.retry-btn').addEventListener('click', () => {
+      location.reload();
+    });
+    
+    this.mainContent.innerHTML = '';
+    this.mainContent.appendChild(error);
+    
+    this.loadTrack(trackId);
+    this.updateProgressUI();
+    this.isModuleCompleted(trackId, levelIndex, moduleIndex);
+        // This is a stub - replace with actual implementation
+    return this.userProgress[trackId]?.[levelIndex]?.[moduleIndex]?.completed || false;
+  }
+
+  // ======================
+  // Stub Methods (to be implemented)
+  // ======================
+
+  
+  loadModuleForPractice(trackId, levelIndex, moduleId) {
+    // Implement module practice loading
+    console.log('Loading module for practice:', {trackId, levelIndex, moduleId});
+  }
+
+
+  isOptionSelected(questionIndex, optionIndex) {
+    // Implement if you need to preserve selected answers between renders
+    // Check temp progress or other storage
+    return false;
+  }
+
 
   
   
