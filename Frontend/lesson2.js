@@ -235,69 +235,81 @@ document.body.prepend(this.topNav);
  */
 renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
   try {
-    if (!coursesData || typeof coursesData !== 'object') {
-      throw new Error('Invalid course data provided');
-    }
-
     container.innerHTML = `
       <div class="course-container">
         <header class="course-header">
-          <h1>Learning Paths</h1>
-          <p class="subtitle">Explore our available courses and tracks</p>
+          <h1>Learning Tracks</h1>
+          <p class="subtitle">Select a track to begin your learning journey</p>
         </header>
         
         <div class="tracks-grid">
           ${Object.entries(coursesData).map(([trackId, track]) => `
             <article class="track-card" data-track="${trackId}">
               <div class="track-header">
-                <h2>${track.title || 'Untitled Track'}</h2>
-                ${track.description ? `<p class="track-description">${track.description}</p>` : ''}
+                <h2>${track.title}</h2>
+                <p class="track-description">${track.description}</p>
+                <div class="track-progress">
+                  <progress value="${this.getTrackProgress(trackId)}" max="100"></progress>
+                  <span>${this.getTrackProgress(trackId)}% Complete</span>
+                </div>
               </div>
               
-              <div class="track-levels">
-                ${track.levels?.map((level, levelIndex) => `
-                  <details class="level-accordion" ${levelIndex === 0 ? 'open' : ''}>
-                    <summary>
-                      <span class="level-title">${level.name || `Level ${levelIndex + 1}`}</span>
-                      <div class="level-progress">
-                        <progress value="${this.getLevelProgress(trackId, levelIndex)}" max="100"></progress>
-                        <span>${this.getLevelProgress(trackId, levelIndex)}%</span>
-                      </div>
-                    </summary>
+              <div class="levels-container">
+                ${track.levels.map((level, levelIndex) => `
+                  <div class="level-card">
+                    <h3 class="level-title">
+                      <i class="fas fa-layer-group"></i>
+                      ${level.name}
+                    </h3>
                     
-                    <div class="modules-container">
-                      ${level.modules?.map((module, moduleIndex) => `
-                        <div class="module-card" data-module="${moduleIndex}">
-                          <h3 class="module-title">
-                            <i class="module-icon ${this.getModuleIcon(module)}"></i>
-                            ${module.title || `Module ${moduleIndex + 1}`}
-                          </h3>
-                          
-                          ${module.description ? `<p class="module-description">${module.description}</p>` : ''}
+                    <div class="modules-grid">
+                      ${level.modules.map((module, moduleIndex) => `
+                        <div class="module-card" 
+                             data-track="${trackId}"
+                             data-level="${levelIndex}"
+                             data-module="${moduleIndex}">
+                          <div class="module-header">
+                            <h4>${module.title}</h4>
+                            <p class="module-description">${module.description}</p>
+                          </div>
                           
                           <div class="module-stats">
-                            <span class="lessons-count">
-                              <i class="fas fa-book-open"></i>
-                              ${module.lessons?.length || 0} lessons
+                            <span class="stat-item">
+                              <i class="fas fa-book"></i>
+                              ${module.lessons.length} Lessons
                             </span>
-                            <span class="duration">
-                              <i class="fas fa-clock"></i>
-                              ${this.calculateModuleDuration(module)}
+                            <span class="stat-item">
+                              <i class="fas fa-question-circle"></i>
+                              ${module.quiz?.questions?.length || 0} Quiz Questions
                             </span>
                           </div>
                           
                           <div class="module-actions">
-                            <button class="start-module" 
-                                    data-track="${trackId}"
-                                    data-level="${levelIndex}"
-                                    data-module="${moduleIndex}">
-                              ${this.isModuleCompleted(trackId, levelIndex, moduleIndex) ? 'Review' : 'Start'}
+                            <button class="btn-start">
+                              ${this.isModuleCompleted(trackId, levelIndex, moduleIndex) ? 
+                                'Review' : 'Start'}
                             </button>
                           </div>
                         </div>
                       `).join('')}
                     </div>
-                  </details>
+                    
+                    ${level.exam ? `
+                      <div class="exam-card">
+                        <div class="exam-header">
+                          <h4><i class="fas fa-graduation-cap"></i> ${level.exam.title}</h4>
+                          <p>${level.exam.description}</p>
+                          <p class="exam-passing">Passing Score: ${level.exam.passingScore}%</p>
+                        </div>
+                        <button class="btn-exam" 
+                                data-track="${trackId}"
+                                data-level="${levelIndex}">
+                          ${this.isExamCompleted(trackId, levelIndex) ? 
+                            'Review Exam' : 'Take Exam'}
+                        </button>
+                      </div>
+                    ` : ''}
+                  </div>
                 `).join('')}
               </div>
             </article>
@@ -305,69 +317,57 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
         </div>
       </div>
     `;
-    
-    // Add the CSS if not already added
+
     this.injectCourseStyles();
+    this.setupCourseEventListeners();
     
   } catch (error) {
-    console.error('Failed to render course data:', error);
+    console.error('Course rendering error:', error);
     container.innerHTML = `
       <div class="error-message">
         <h2>Display Error</h2>
         <p>${error.message}</p>
-        <button onclick="location.reload()">Try Again</button>
       </div>
     `;
   }
 }
 
-// Helper methods for the renderer
+// Helper methods
 injectCourseStyles() {
-  if (document.getElementById('course-styles')) return;
-  
   const style = document.createElement('style');
-  style.id = 'course-styles';
   style.textContent = `
     .course-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 2rem 1rem;
       font-family: 'Segoe UI', Roboto, sans-serif;
-      color: #333;
     }
     
     .course-header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
     
     .course-header h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       color: #2c3e50;
-      margin-bottom: 0.5rem;
     }
     
     .subtitle {
-      font-size: 1.2rem;
       color: #7f8c8d;
+      font-size: 1.1rem;
     }
     
     .tracks-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 2rem;
     }
     
     .track-card {
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       overflow: hidden;
-      transition: transform 0.3s ease;
-    }
-    
-    .track-card:hover {
-      transform: translateY(-5px);
     }
     
     .track-header {
@@ -377,69 +377,72 @@ injectCourseStyles() {
     }
     
     .track-header h2 {
-      margin: 0;
+      margin: 0 0 0.5rem;
       font-size: 1.5rem;
     }
     
-    .track-description {
-      margin: 0.5rem 0 0;
-      opacity: 0.9;
-    }
-    
-    .level-accordion {
-      border-bottom: 1px solid #eee;
-    }
-    
-    .level-accordion summary {
-      padding: 1rem 1.5rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-    }
-    
-    .level-progress {
+    .track-progress {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      margin-top: 1rem;
     }
     
-    .level-progress progress {
-      width: 100px;
-      height: 8px;
-      border-radius: 4px;
+    .track-progress progress {
+      flex-grow: 1;
+      height: 6px;
+      border-radius: 3px;
     }
     
-    .modules-container {
-      padding: 0 1.5rem 1.5rem;
+    .track-progress span {
+      font-size: 0.9rem;
+    }
+    
+    .levels-container {
+      padding: 1rem;
+    }
+    
+    .level-card {
+      margin-bottom: 2rem;
+    }
+    
+    .level-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #2c3e50;
+      font-size: 1.2rem;
+      margin: 1rem 0;
+    }
+    
+    .modules-grid {
       display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
+      margin-bottom: 1.5rem;
     }
     
     .module-card {
+      background: #f8f9fa;
+      border-radius: 6px;
       padding: 1rem;
-      border-radius: 8px;
-      background: #f9f9f9;
       border-left: 4px solid #3498db;
+      transition: transform 0.2s;
     }
     
-    .module-title {
-      margin: 0 0 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.1rem;
+    .module-card:hover {
+      transform: translateY(-3px);
     }
     
-    .module-icon {
-      color: #3498db;
+    .module-header h4 {
+      margin: 0 0 0.3rem;
+      color: #2c3e50;
     }
     
     .module-description {
-      margin: 0.5rem 0;
       color: #666;
       font-size: 0.9rem;
+      margin: 0.3rem 0 0.8rem;
     }
     
     .module-stats {
@@ -447,7 +450,7 @@ injectCourseStyles() {
       gap: 1rem;
       font-size: 0.8rem;
       color: #7f8c8d;
-      margin: 0.5rem 0;
+      margin: 0.8rem 0;
     }
     
     .module-stats i {
@@ -458,22 +461,51 @@ injectCourseStyles() {
       margin-top: 0.5rem;
     }
     
-    .start-module {
+    .btn-start {
       background: #3498db;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
       border-radius: 4px;
       cursor: pointer;
-      transition: background 0.2s;
+      font-size: 0.9rem;
     }
     
-    .start-module:hover {
-      background: #2980b9;
+    .exam-card {
+      background: #f0f7ff;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-left: 4px solid #e74c3c;
+    }
+    
+    .exam-header h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 0 0.3rem;
+      color: #2c3e50;
+    }
+    
+    .exam-passing {
+      font-size: 0.9rem;
+      color: #e74c3c;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+    
+    .btn-exam {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
     }
     
     @media (max-width: 768px) {
-      .tracks-grid {
+      .modules-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -481,34 +513,46 @@ injectCourseStyles() {
   document.head.appendChild(style);
 }
 
-getLevelProgress(trackId, levelIndex) {
+getTrackProgress(trackId) {
   // Implement your actual progress calculation
-  return this.userProgress[trackId]?.[levelIndex]?.progress || 0;
-}
-
-getModuleIcon(module) {
-  const icons = {
-    quiz: 'fas fa-question-circle',
-    video: 'fas fa-video',
-    reading: 'fas fa-book',
-    project: 'fas fa-tasks',
-    default: 'fas fa-star'
-  };
-  return icons[module.type] || icons.default;
-}
-
-calculateModuleDuration(module) {
-  if (module.duration) return module.duration;
-  const totalMinutes = module.lessons?.reduce((sum, lesson) => {
-    const mins = parseInt(lesson.duration) || 0;
-    return sum + mins;
-  }, 0) || 0;
+  const track = this.coursesData[trackId];
+  if (!track) return 0;
   
-  return totalMinutes > 60 
-    ? `${Math.floor(totalMinutes/60)}h ${totalMinutes%60}m` 
-    : `${totalMinutes}m`;
+  let totalModules = 0;
+  let completedModules = 0;
+  
+  track.levels.forEach((level, levelIndex) => {
+    level.modules.forEach((_, moduleIndex) => {
+      totalModules++;
+      if (this.isModuleCompleted(trackId, levelIndex, moduleIndex)) {
+        completedModules++;
+      }
+    });
+  });
+  
+  return totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
 }
-      
+
+setupCourseEventListeners() {
+  // Module start buttons
+  document.querySelectorAll('.btn-start').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const trackId = btn.closest('.module-card').dataset.track;
+      const levelIndex = parseInt(btn.closest('.module-card').dataset.level);
+      const moduleIndex = parseInt(btn.closest('.module-card').dataset.module);
+      this.loadModule(trackId, levelIndex, moduleIndex);
+    });
+  });
+  
+  // Exam buttons
+  document.querySelectorAll('.btn-exam').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const trackId = btn.dataset.track;
+      const levelIndex = parseInt(btn.dataset.level);
+      this.loadExam(trackId, levelIndex);
+    });
+  });
+}
       
   isQuizUnlocked(trackId, levelIndex, moduleIndex) {
     // 1. Verify we have valid course data
