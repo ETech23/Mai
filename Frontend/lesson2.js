@@ -7,6 +7,10 @@ class LearningApp {
     this.currentModule = null;
     this.currentLesson = null;
     this.userProgress = this.loadUserProgress();
+    this.currentExam = null;
+    this.currentExamResults = null;
+  /**  this.mainContent = document.getElementById('main-content') || document.body;**/
+    
     
     // DOM elements
     this.appContainer = document.querySelector('.app-container');
@@ -1349,105 +1353,238 @@ document.addEventListener('click', function(e) {
   }
   
   
-  // Enhanced Exam Submission System
-  setupExamHandlers(trackId, levelIndex, exam) {
-    document.getElementById('submit-exam')?.addEventListener('click', () => {
-      const { score, moduleStats, incorrectAnswers } = this.calculateEnhancedExamScore(exam.questions);
+
+  // ======================
+  // Exam Initialization
+  // ======================
+
+  loadExam(trackId, levelIndex) {
+    try {
+      // Validate input data
+      if (!this.validateTrackAndLevel(trackId, levelIndex)) {
+        throw new Error(`Invalid trackId (${trackId}) or levelIndex (${levelIndex})`);
+      }
+
+      const level = this.coursesData[trackId].levels[levelIndex];
+      const examQuestions = this.collectExamQuestions(level);
       
-      // Store results before displaying
-      this.currentExamResults = {
+      if (examQuestions.length === 0) {
+        throw new Error('No questions available for this exam');
+      }
+
+      // Shuffle and select questions
+      const selectedQuestions = this.selectRandomQuestions(examQuestions, 20);
+      
+      this.currentExam = {
         trackId,
         levelIndex,
-        score,
-        moduleStats,
-        incorrectAnswers,
-        timestamp: Date.now()
+        questions: selectedQuestions,
+        passingScore: level.passingScore || 75
       };
+      
+      this.renderExam();
+    } catch (error) {
+      console.error('Failed to load exam:', error);
+      this.showError('Failed to load exam. Please try again later.');
+    }
+  }
 
-      this.displayEnhancedExamResults(score, exam.passingScore, trackId, levelIndex);
-      this.saveExamResults();
+  validateTrackAndLevel(trackId, levelIndex) {
+    return this.coursesData[trackId]?.levels?.[levelIndex] !== undefined;
+  }
+
+  collectExamQuestions(level) {
+    return level.modules.flatMap((module, moduleIndex) => {
+      return module.quiz?.questions?.map(q => ({
+        ...q,
+        sourceModule: module.title
+      })) || [];
     });
   }
 
-  calculateEnhancedExamScore(questions) {
+  // ======================
+  // Exam Rendering
+  // ======================
+
+  renderExam() {
+    try {
+      if (!this.currentExam) {
+        throw new Error('No exam data available to render');
+      }
+
+      this.mainContent.innerHTML = this.generateExamHTML(this.currentExam);
+      this.setupExamHandlers();
+      this.setupAnswerTracking();
+    } catch (error) {
+      console.error('Failed to render exam:', error);
+      this.showError('Failed to display exam. Please try again.');
+    }
+  }
+
+  generateExamHTML(exam) {
+    return `
+      <div class="exam-container">
+        <div class="exam-header">
+          <h2>Level Exam</h2>
+          <div class="exam-progress">
+            <span id="answered-count">0</span> / ${exam.questions.length} answered
+          </div>
+        </div>
+        
+        <form id="exam-form">
+          ${this.generateQuestionsHTML(exam.questions)}
+        </form>
+        
+        <div class="exam-footer">
+          <button id="submit-exam" class="primary-btn">Submit Exam</button>
+        </div>
+      </div>
+    `;
+  }
+
+  generateQuestionsHTML(questions) {
+    return questions.map((question, index) => `
+      <div class="exam-question" data-module="${question.sourceModule || ''}">
+        <div class="question-text">
+          <span class="question-number">${index + 1}.</span>
+          ${question.text}
+        </div>
+        <div class="question-options">
+          ${this.generateOptionsHTML(question, index)}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  generateOptionsHTML(question, questionIndex) {
+    return question.options.map((option, optionIndex) => `
+      <div class="exam-option">
+        <input type="radio" id="q${questionIndex}-opt${optionIndex}" 
+               name="q${questionIndex}" value="${optionIndex}"
+               ${this.isOptionSelected(questionIndex, optionIndex) ? 'checked' : ''}>
+        <label for="q${questionIndex}-opt${optionIndex}">${option}</label>
+      </div>
+    `).join('');
+  }
+
+  // ======================
+  // Exam Submission & Scoring
+  // ======================
+
+  setupExamHandlers() {
+    const submitBtn = document.getElementById('submit-exam');
+    if (!submitBtn) return;
+
+    submitBtn.addEventListener('click', () => {
+      try {
+        const { score, moduleStats, incorrectAnswers } = this.calculateExamScore();
+        
+        this.currentExamResults = {
+          trackId: this.currentExam.trackId,
+          levelIndex: this.currentExam.levelIndex,
+          score,
+          moduleStats,
+          incorrectAnswers,
+          timestamp: Date.now()
+        };
+
+        this.displayExamResults();
+        this.saveExamResults();
+        this.unlockNextContent();
+      } catch (error) {
+        console.error('Exam submission failed:', error);
+        this.showError('Failed to submit exam. Please try again.');
+      }
+    });
+  }
+
+  calculateExamScore() {
+    if (!this.currentExam) {
+      throw new Error('No active exam to calculate score for');
+    }
+
     const moduleStats = {};
     const incorrectAnswers = [];
     let correctCount = 0;
 
-    questions.forEach((q, i) => {
+    this.currentExam.questions.forEach((q, i) => {
       const selected = document.querySelector(`input[name="q${i}"]:checked`);
       const isCorrect = selected && parseInt(selected.value) === q.answer;
       
       if (isCorrect) {
         correctCount++;
       } else {
-        incorrectAnswers.push({
-          question: q.text,
-          selectedOption: selected?.value !== undefined ? q.options[selected.value] : "None",
-          correctOption: q.options[q.answer],
-          explanation: q.explanation || "No explanation provided",
-          sourceModule: q.sourceModule // Added during exam creation
-        });
+        incorrectAnswers.push(this.createIncorrectAnswerItem(q, selected));
       }
 
-      // Track module performance
-      if (q.sourceModule) {
-        moduleStats[q.sourceModule] = moduleStats[q.sourceModule] || { correct: 0, total: 0 };
-        moduleStats[q.sourceModule].total++;
-        if (isCorrect) moduleStats[q.sourceModule].correct++;
-      }
+      this.trackModulePerformance(moduleStats, q, isCorrect);
     });
 
     return {
-      score: Math.round((correctCount / questions.length) * 100),
+      score: Math.round((correctCount / this.currentExam.questions.length) * 100),
       moduleStats,
       incorrectAnswers
     };
   }
 
-  displayEnhancedExamResults(score, passingScore, trackId, levelIndex) {
-    const passed = score >= passingScore;
-    const moduleStatsHTML = this.generateModuleStatsHTML(this.currentExamResults.moduleStats);
-    const incorrectAnswersHTML = this.generateIncorrectAnswersHTML(this.currentExamResults.incorrectAnswers);
+  createIncorrectAnswerItem(question, selected) {
+    return {
+      question: question.text,
+      selectedOption: selected?.value !== undefined ? question.options[selected.value] : "None",
+      correctOption: question.options[question.answer],
+      explanation: question.explanation || "No explanation provided",
+      sourceModule: question.sourceModule
+    };
+  }
 
+  trackModulePerformance(stats, question, isCorrect) {
+    if (question.sourceModule) {
+      stats[question.sourceModule] = stats[question.sourceModule] || { correct: 0, total: 0 };
+      stats[question.sourceModule].total++;
+      if (isCorrect) stats[question.sourceModule].correct++;
+    }
+  }
+
+  // ======================
+  // Results Display
+  // ======================
+
+  displayExamResults() {
+    if (!this.currentExamResults) return;
+
+    const passed = this.currentExamResults.score >= this.currentExam.passingScore;
+    
     this.mainContent.innerHTML = `
       <div class="exam-results ${passed ? 'passed' : 'failed'}">
         <h2>Exam Results</h2>
-        <div class="summary">
-          <p>Your score: <strong>${score}%</strong></p>
-          <p>Passing score: ${passingScore}%</p>
-          <p class="status">Status: ${passed ? '✅ PASSED' : '❌ FAILED'}</p>
-        </div>
-        
-        ${moduleStatsHTML}
-        
-        ${!passed ? `
-          <div class="incorrect-answers">
-            <h3>Questions to Review</h3>
-            ${incorrectAnswersHTML}
-          </div>
-        ` : ''}
-        
-        <div class="exam-actions">
-          <button id="exam-retry" class="${passed ? 'continue' : 'retry'}">
-            ${passed ? 'Continue Learning' : 'Retry Exam'}
-          </button>
-          <button id="exam-review" class="review-btn">
-            Review Answers
-          </button>
-        </div>
+        ${this.generateResultsSummary(passed)}
+        ${this.generateModuleStats()}
+        ${!passed ? this.generateIncorrectAnswers() : ''}
+        ${this.generateActionButtons(passed)}
       </div>
     `;
 
-    this.setupResultsHandlers(trackId, levelIndex, passed);
+    this.setupResultsHandlers(passed);
   }
 
-  generateModuleStatsHTML(moduleStats) {
+  generateResultsSummary(passed) {
+    return `
+      <div class="summary">
+        <p>Your score: <strong>${this.currentExamResults.score}%</strong></p>
+        <p>Passing score: ${this.currentExam.passingScore}%</p>
+        <p class="status">Status: ${passed ? '✅ PASSED' : '❌ FAILED'}</p>
+      </div>
+    `;
+  }
+
+  generateModuleStats() {
+    if (!this.currentExamResults.moduleStats) return '';
+    
     return `
       <div class="module-performance">
         <h3>Performance by Module</h3>
         <ul>
-          ${Object.entries(moduleStats).map(([module, stats]) => `
+          ${Object.entries(this.currentExamResults.moduleStats).map(([module, stats]) => `
             <li>
               <span class="module-name">${module}</span>
               <span class="module-score">
@@ -1462,40 +1599,118 @@ document.addEventListener('click', function(e) {
     `;
   }
 
-  generateIncorrectAnswersHTML(incorrectAnswers) {
-    return incorrectAnswers.map((item, i) => `
-      <div class="incorrect-answer">
-        <p><strong>Question:</strong> ${item.question}</p>
-        <p><strong>Your answer:</strong> <span class="wrong">${item.selectedOption}</span></p>
-        <p><strong>Correct answer:</strong> <span class="correct">${item.correctOption}</span></p>
-        ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
-        ${item.sourceModule ? `<p class="source">From module: ${item.sourceModule}</p>` : ''}
+  generateIncorrectAnswers() {
+    if (!this.currentExamResults.incorrectAnswers?.length) return '';
+    
+    return `
+      <div class="incorrect-answers">
+        <h3>Questions to Review</h3>
+        ${this.currentExamResults.incorrectAnswers.map((item, i) => `
+          <div class="incorrect-answer">
+            <p><strong>Question:</strong> ${item.question}</p>
+            <p><strong>Your answer:</strong> <span class="wrong">${item.selectedOption}</span></p>
+            <p><strong>Correct answer:</strong> <span class="correct">${item.correctOption}</span></p>
+            ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
+            ${item.sourceModule ? `<p class="source">From module: ${item.sourceModule}</p>` : ''}
+          </div>
+        `).join('')}
       </div>
-    `).join('');
+    `;
   }
 
-  setupResultsHandlers(trackId, levelIndex, passed) {
-    document.getElementById('exam-retry')?.addEventListener('click', () => {
+  generateActionButtons(passed) {
+    return `
+      <div class="exam-actions">
+        <button id="exam-retry" class="${passed ? 'continue' : 'retry'}">
+          ${passed ? 'Continue Learning' : 'Retry Exam'}
+        </button>
+        <button id="exam-review" class="review-btn">
+          Review Answers
+        </button>
+      </div>
+    `;
+  }
+
+  // ======================
+  // Results Handlers
+  // ======================
+
+  setupResultsHandlers(passed) {
+    this.setupRetryHandler(passed);
+    this.setupReviewHandler();
+  }
+
+  setupRetryHandler(passed) {
+    const retryBtn = document.getElementById('exam-retry');
+    if (!retryBtn) return;
+
+    retryBtn.addEventListener('click', () => {
       if (passed) {
-        this.loadTrack(trackId);
+        this.loadTrack(this.currentExamResults.trackId);
       } else {
-        this.loadExam(trackId, levelIndex);
+        this.loadExam(this.currentExamResults.trackId, this.currentExamResults.levelIndex);
       }
     });
+  }
 
-    document.getElementById('exam-review')?.addEventListener('click', () => {
+  setupReviewHandler() {
+    const reviewBtn = document.getElementById('exam-review');
+    if (!reviewBtn || !this.currentExamResults?.incorrectAnswers) return;
+
+    reviewBtn.addEventListener('click', () => {
       this.showAnswerReview(this.currentExamResults.incorrectAnswers);
     });
   }
 
+  showAnswerReview(incorrectAnswers) {
+    if (!incorrectAnswers?.length) {
+      this.showMessage('No answers to review');
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'answer-review-modal';
+    modal.innerHTML = this.generateReviewModalContent(incorrectAnswers);
+    document.body.appendChild(modal);
+
+    modal.querySelector('.close-review').addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+  }
+
+  generateReviewModalContent(incorrectAnswers) {
+    return `
+      <div class="modal-content">
+        <h3>Answer Review</h3>
+        <div class="review-items">
+          ${incorrectAnswers.map(item => `
+            <div class="review-item">
+              <p class="question"><strong>Question:</strong> ${item.question}</p>
+              <p class="user-answer"><strong>Your answer:</strong> ${item.selectedOption}</p>
+              <p class="correct-answer"><strong>Correct answer:</strong> ${item.correctOption}</p>
+              ${item.explanation ? `<p class="explanation"><strong>Explanation:</strong> ${item.explanation}</p>` : ''}
+              ${item.sourceModule ? `<p class="source"><strong>Module:</strong> ${item.sourceModule}</p>` : ''}
+            </div>
+          `).join('')}
+        </div>
+        <button class="close-review">Close</button>
+      </div>
+    `;
+  }
+
+  // ======================
+  // Progress Management
+  // ======================
+
   saveExamResults() {
+    if (!this.currentExamResults) return;
+
     const { trackId, levelIndex, score } = this.currentExamResults;
     
-    if (!this.userProgress[trackId]) this.userProgress[trackId] = {};
-    if (!this.userProgress[trackId][levelIndex]) this.userProgress[trackId][levelIndex] = {};
+    this.ensureProgressStructure(trackId, levelIndex);
     
     this.userProgress[trackId][levelIndex].exam = {
-      passed: score >= this.getPassingScore(trackId, levelIndex),
+      passed: score >= this.currentExam.passingScore,
       score,
       timestamp: Date.now(),
       moduleStats: this.currentExamResults.moduleStats
@@ -1504,164 +1719,76 @@ document.addEventListener('click', function(e) {
     this.saveUserProgress();
   }
 
-  // Modified exam creation to include source modules
-  loadExam(trackId, levelIndex) {
-    const level = this.coursesData[trackId].levels[levelIndex];
-    const examQuestions = [];
-    
-    level.modules.forEach((module, moduleIndex) => {
-      if (module.quiz?.questions) {
-        examQuestions.push(...module.quiz.questions.map(q => ({
-          ...q,
-          sourceModule: module.title // Track which module each question came from
-        })));
-      }
-    });
-    
-    // Shuffle and select questions
-    const selectedQuestions = this.selectRandomQuestions(examQuestions, 20);
-    
-    this.currentExam = {
-      trackId,
-      levelIndex,
-      questions: selectedQuestions,
-      passingScore: level.passingScore || 75
-    };
-    
-    this.renderExam();
+  ensureProgressStructure(trackId, levelIndex) {
+    if (!this.userProgress[trackId]) this.userProgress[trackId] = {};
+    if (!this.userProgress[trackId][levelIndex]) this.userProgress[trackId][levelIndex] = {};
   }
 
-  renderExam() {
-    this.mainContent.innerHTML = this.generateExamHTML(this.currentExam);
-    this.setupExamHandlers(
-      this.currentExam.trackId,
-      this.currentExam.levelIndex,
-      this.currentExam
-    );
-  }
+  unlockNextContent() {
+    if (!this.currentExamResults) return;
 
-generateExamHTML(exam) {
-  // Create question HTML for each question
-  const questionsHTML = exam.questions.map((question, index) => {
-    const optionsHTML = question.options.map((option, optionIndex) => `
-      <div class="exam-option">
-        <input type="radio" id="q${index}-opt${optionIndex}" name="q${index}" value="${optionIndex}">
-        <label for="q${index}-opt${optionIndex}">${option}</label>
-      </div>
-    `).join('');
-
-    return `
-      <div class="exam-question" data-module="${question.sourceModule || ''}">
-        <div class="question-text">
-          <span class="question-number">${index + 1}.</span>
-          ${question.text}
-        </div>
-        <div class="question-options">
-          ${optionsHTML}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  return `
-    <div class="exam-container">
-      <div class="exam-header">
-        <h2>Level Exam</h2>
-        <div class="exam-progress">
-          <span id="answered-count">0</span> / ${exam.questions.length} answered
-        </div>
-      </div>
-      
-      <form id="exam-form">
-        ${questionsHTML}
-      </form>
-      
-      <div class="exam-footer">
-        <button id="submit-exam" class="primary-btn">Submit Exam</button>
-      </div>
-    </div>
-  `;
-}
-
-  // =============================================
-  // Exam Implementation
-  // =============================================
-
-  // Check if exam is unlocked
-  isExamUnlocked(trackId, levelIndex) {
+    const { trackId, levelIndex } = this.currentExamResults;
     const track = this.coursesData[trackId];
     const level = track.levels[levelIndex];
     
-    // Exam exists and all modules are completed
-    if (!level.exam) return false;
-    
-    // Check if explicitly unlocked in progress
-    if (this.userProgress[trackId]?.[levelIndex]?.exam?.unlocked) {
-      return true;
+    // Check if exam was passed
+    if (this.currentExamResults.score < this.currentExam.passingScore) return;
+
+    // Check if there's another level to unlock
+    if (levelIndex < track.levels.length - 1) {
+      this.ensureProgressStructure(trackId, levelIndex + 1);
+      this.userProgress[trackId][levelIndex + 1].unlocked = true;
+      this.saveUserProgress();
     }
-    
-    // Check if all modules are completed
-    return level.modules.every((_, moduleIndex) => 
-      this.isModuleCompleted(trackId, levelIndex, moduleIndex)
-    );
   }
 
-  // Check if exam is completed
-  isExamCompleted(trackId, levelIndex) {
-    return !!this.userProgress[trackId]?.[levelIndex]?.exam?.completed;
+  // ======================
+  // Utility Methods
+  // ======================
+
+  selectRandomQuestions(questions, count) {
+    const shuffled = [...questions].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(count, shuffled.length));
   }
 
-  // Get exam score
-  getExamScore(trackId, levelIndex) {
-    return this.userProgress[trackId]?.[levelIndex]?.exam?.score || 0;
+  isOptionSelected(questionIndex, optionIndex) {
+    // Implement if you need to preserve selected answers between renders
+    return false;
   }
 
-  // Save exam results
-  saveExamResults(trackId, levelIndex, userAnswers, score) {
-    if (!this.userProgress[trackId]) {
-      this.userProgress[trackId] = {};
-    }
-    if (!this.userProgress[trackId][levelIndex]) {
-      this.userProgress[trackId][levelIndex] = {};
-    }
-    
-    this.userProgress[trackId][levelIndex].exam = {
-      answers: userAnswers,
-      score: score,
-      completed: true,
-      timestamp: Date.now()
-    };
-    
-    // Unlock next level if passed
-    const level = this.coursesData[trackId].levels[levelIndex];
-    if (score >= level.exam.passingScore && levelIndex < this.coursesData[trackId].levels.length - 1) {
-      if (!this.userProgress[trackId][levelIndex + 1]) {
-        this.userProgress[trackId][levelIndex + 1] = { unlocked: true };
-      }
-    }
+  setupAnswerTracking() {
+    const form = document.getElementById('exam-form');
+    if (!form) return;
+
+    form.addEventListener('change', () => {
+      const answered = form.querySelectorAll('input[type="radio"]:checked').length;
+      const counter = document.getElementById('answered-count');
+      if (counter) counter.textContent = answered;
+    });
+  }
+
+  showError(message) {
+    this.mainContent.innerHTML = `
+      <div class="error-message">
+        <p>${message}</p>
+        <button onclick="location.reload()">Try Again</button>
+      </div>
+    `;
     
     this.saveUserProgress();
-    this.updateProgressUI();
+
+  this.loadTrack(trackId);
+  this.updateProgressUI();
   }
 
-  // Reset exam progress
-  resetExamProgress(trackId, levelIndex) {
-    if (this.userProgress[trackId]?.[levelIndex]?.exam) {
-      delete this.userProgress[trackId][levelIndex].exam;
-      this.saveUserProgress();
-      this.updateProgressUI();
-    }
+  showMessage(message) {
+    alert(message); // Replace with a proper modal in production
   }
 
-  // Get user's answer for a specific exam question
-  getUserExamAnswer(trackId, levelIndex, questionIndex) {
-    const examProgress = this.userProgress[trackId]?.[levelIndex]?.exam;
-    if (examProgress && examProgress.answers && examProgress.answers[questionIndex] !== undefined) {
-      return examProgress.answers[questionIndex];
-    }
-    return null;
-  }
+  
+  
 
+  
   // =============================================
   // Progress Tracking Methods
   // =============================================
