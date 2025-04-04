@@ -189,6 +189,7 @@ document.body.prepend(this.topNav);
     this.initUI();
     
     // 4. Set default view
+        this.renderCourseData();
     this.renderTracksOverview();
     
     // 5. Add event listeners after content is rendered
@@ -740,6 +741,7 @@ document.addEventListener('click', function(e) {
     });
     
     document.getElementById('home-btn').addEventListener('click', () => {
+          this.renderCourseData();
       this.renderTracksOverview();
     });
   }
@@ -759,7 +761,8 @@ document.addEventListener('click', function(e) {
       if (event.state) {
         this.handleStateNavigation(event.state);
       } else {
-        this.renderTracksOverview();
+        this.renderCourseData();
+            this.renderTracksOverview();
       }
     });
   }
@@ -784,6 +787,7 @@ document.addEventListener('click', function(e) {
     switch (view) {
       case 'tracks':
         this.renderTracksOverview();
+this.renderCourseData();
         break;
       case 'track':
         this.loadTrack(trackId);
@@ -805,6 +809,7 @@ document.addEventListener('click', function(e) {
         break;
       default:
         this.renderTracksOverview();
+this.renderCourseData();
     }
   }
 
@@ -1003,6 +1008,7 @@ document.addEventListener('click', function(e) {
     // Add event listeners
     document.getElementById('back-to-tracks').addEventListener('click', () => {
       this.renderTracksOverview();
+          this.renderCourseData();
     });
     
     this.mainContent.querySelectorAll('.module-btn').forEach(btn => {
