@@ -1597,6 +1597,17 @@ document.addEventListener('click', function(e) {
                        this.settings.defaultPassingScore;
     return examProgress.score >= passingScore;
   }
+  
+/**
+ * Gets the exam score for a specific track and level
+ * @param {string} trackId - The ID of the track
+ * @param {number} levelIndex - The index of the level
+ * @returns {number} The exam score (0-100) or 0 if no score exists
+ */
+getExamScore(trackId, levelIndex) {
+  // Safely access the nested progress data with optional chaining
+  return this.userProgress[trackId]?.[levelIndex]?.exam?.score || 0;
+}
 
   saveExamResults() {
     if (!this.currentExamResults) return;
