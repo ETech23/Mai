@@ -223,6 +223,7 @@ document.body.prepend(this.topNav);
         }
       };
       this.renderTracksOverview();
+          this.renderCourseData();
     }
   }
 }
