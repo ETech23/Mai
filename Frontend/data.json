@@ -7,48 +7,47 @@
         "name": "Beginner Level: AI Fundamentals",
         "modules": [
           {
-           {
-  "title": "Comprehensive Introduction to Artificial Intelligence",
-  "description": "An in-depth beginner's guide to AI concepts, technologies, applications, and ethical considerations",
-  "lessons": [
-    {
-      "title": "Foundations of Artificial Intelligence",
-      "type": "video",
-      "duration": "25 min",
-      "content": [
-        "1. Definition and Scope:",
-        "- AI as the simulation of human intelligence processes by machines",
-        "- Includes learning, reasoning, problem-solving, perception, and language understanding",
-        "- Combines computer science, psychology, philosophy, neuroscience, and linguistics",
-        "",
-        "2. Historical Evolution:",
-        "- 1943: McCulloch & Pitts propose first artificial neuron model",
-        "- 1950: Alan Turing's Computing Machinery and Intelligence paper",
-        "- 1956: Dartmouth Conference officially establishes AI as a field",
-        "- 1960s-70s: Early successes in problem-solving and game playing",
-        "- 1980s: Expert systems boom",
-        "- 1990s: Machine learning renaissance",
-        "- 2010s: Deep learning breakthroughs",
-        "",
-        "3. Key Concepts:",
-        "- Intelligent Agents: Systems that perceive and act on their environment",
-        "- Rationality: Making optimal decisions given available information",
-        "- Cognitive Modeling: Attempting to replicate human thought processes",
-        "- The Chinese Room thought experiment and its implications"
-      ],
-      "quiz": {
-        "title": "AI Foundations Quiz",
-        "questions": [
-          {
-            "text": "Which event marked the official birth of AI as a field?",
-            "options": [
-              "Publication of Turing's paper",
-              "Dartmouth Conference",
-              "Invention of the perceptron",
-              "Development of ELIZA"
+              "title": "Comprehensive Introduction to Artificial Intelligence",
+              "description": "An in-depth beginner's guide to AI concepts, technologies, applications, and ethical considerations",
+        "lessons": [
+            {
+            "title": "Foundations of Artificial Intelligence",
+            "type": "video",
+            "duration": "25 min",
+            "content": [
+                "1. Definition and Scope:",
+                "- AI as the simulation of human intelligence processes by machines",
+                "- Includes learning, reasoning, problem-solving, perception, and language understanding",
+                "- Combines computer science, psychology, philosophy, neuroscience, and linguistics",
+                "",
+                "2. Historical Evolution:",
+                "- 1943: McCulloch & Pitts propose first artificial neuron model",
+                "- 1950: Alan Turing's Computing Machinery and Intelligence paper",
+                "- 1956: Dartmouth Conference officially establishes AI as a field",
+                "- 1960s-70s: Early successes in problem-solving and game playing",
+                "- 1980s: Expert systems boom",
+                "- 1990s: Machine learning renaissance",
+                "- 2010s: Deep learning breakthroughs",
+                "",
+                "3. Key Concepts:",
+                "- Intelligent Agents: Systems that perceive and act on their environment",
+                "- Rationality: Making optimal decisions given available information",
+                "- Cognitive Modeling: Attempting to replicate human thought processes",
+                "- The Chinese Room thought experiment and its implications"
             ],
-            "answer": 1,
-            "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
+            "quiz": {
+                "title": "AI Foundations Quiz",
+                "questions": [
+                {
+                    "text": "Which event marked the official birth of AI as a field?",
+                    "options": [
+                    "Publication of Turing's paper",
+                    "Dartmouth Conference",
+                    "Invention of the perceptron",
+                    "Development of ELIZA"
+                    ],
+                    "answer": 1,
+                    "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
           },
           {
             "text": "What does the Chinese Room thought experiment challenge?",
