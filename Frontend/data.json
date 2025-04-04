@@ -36,7 +36,7 @@
                 "- The Chinese Room thought experiment and its implications"
             ],
             "quiz": {
-                "title": "AI Foundations Quiz",
+                "title": "Foundations of Artificial Intelligence Quiz",
                 "questions": [
                 {
                     "text": "Which event marked the official birth of AI as a field?",
@@ -106,7 +106,7 @@
         "- Image Generation: Creating new images (GANs, Diffusion Models)"
       ],
       "quiz": {
-        "title": "AI Technologies Quiz",
+        "title": "Foundations of Artificial Intelligence Quiz",
         "questions": [
           {
             "text": "Which learning paradigm would be best for training a chess AI?",
@@ -186,7 +186,7 @@
         "- Virtual Try-ons: AR applications for cosmetics and clothing"
       ],
       "quiz": {
-        "title": "AI Applications Quiz",
+        "title": "Foundations of Artificial Intelligence Quiz",
         "questions": [
           {
             "text": "Which healthcare application analyzes medical images?",
@@ -266,7 +266,7 @@
         "- Artificial General Intelligence: Pathways and timelines"
       ],
       "quiz": {
-        "title": "AI Ethics Quiz",
+        "title": "Foundations of Artificial Intelligence Quiz",
         "questions": [
           {
             "text": "Which regulation includes 'right to explanation' for AI decisions?",
