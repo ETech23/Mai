@@ -7,67 +7,318 @@
         "name": "Beginner Level: AI Fundamentals",
         "modules": [
           {
-            "title": "Introduction to AI",
-            "description": "Learn the basics of artificial intelligence",
-            "lessons": [
-              {
-                "title": "What is AI?",
-                "type": "video",
-                "duration": "10 min",
-                "content": [
-                  "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines.",
-                  "Key concepts:",
-                  "- Machine Learning",
-                  "- Neural Networks",
-                  "- Natural Language Processing"
-                ]
-              },
-              {
-                "title": "History of AI",
-                "type": "reading",
-                "duration": "15 min",
-                "content": [
-                  "The concept of artificial beings with intelligence dates back to ancient times.",
-                  "Key milestones:",
-                  "- 1950: Turing Test proposed",
-                  "- 1956: Term 'AI' coined at Dartmouth",
-                  "- 1997: Deep Blue beats Kasparov"
-                ]
-              }
+           {
+  "title": "Comprehensive Introduction to Artificial Intelligence",
+  "description": "An in-depth beginner's guide to AI concepts, technologies, applications, and ethical considerations",
+  "lessons": [
+    {
+      "title": "Foundations of Artificial Intelligence",
+      "type": "video",
+      "duration": "25 min",
+      "content": [
+        "1. Definition and Scope:",
+        "- AI as the simulation of human intelligence processes by machines",
+        "- Includes learning, reasoning, problem-solving, perception, and language understanding",
+        "- Combines computer science, psychology, philosophy, neuroscience, and linguistics",
+        "",
+        "2. Historical Evolution:",
+        "- 1943: McCulloch & Pitts propose first artificial neuron model",
+        "- 1950: Alan Turing's Computing Machinery and Intelligence paper",
+        "- 1956: Dartmouth Conference officially establishes AI as a field",
+        "- 1960s-70s: Early successes in problem-solving and game playing",
+        "- 1980s: Expert systems boom",
+        "- 1990s: Machine learning renaissance",
+        "- 2010s: Deep learning breakthroughs",
+        "",
+        "3. Key Concepts:",
+        "- Intelligent Agents: Systems that perceive and act on their environment",
+        "- Rationality: Making optimal decisions given available information",
+        "- Cognitive Modeling: Attempting to replicate human thought processes",
+        "- The Chinese Room thought experiment and its implications"
+      ],
+      "quiz": {
+        "title": "AI Foundations Quiz",
+        "questions": [
+          {
+            "text": "Which event marked the official birth of AI as a field?",
+            "options": [
+              "Publication of Turing's paper",
+              "Dartmouth Conference",
+              "Invention of the perceptron",
+              "Development of ELIZA"
             ],
-            "quiz": {
-              "title": "AI Fundamentals Quiz",
-              "questions": [
-                {
-                  "text": "Which is NOT an AI application?",
-                  "options": ["Chatbots", "Self-driving cars", "Spreadsheets"],
-                  "answer": 2,
-                  "explanation": "Spreadsheets are general productivity tools, not specific AI applications"
-                },
-                {
-                  "text": "What is the Turing Test used for?",
-                  "options": [
-                    "Measuring computer processing speed",
-                    "Evaluating a machine's ability to exhibit intelligent behavior",
-                    "Testing network bandwidth"
-                  ],
-                  "answer": 1,
-                  "explanation": "The Turing Test evaluates if a machine can exhibit behavior indistinguishable from a human"
-                },
-                {
-                  "text": "Which of these is a subset of AI?",
-                  "options": [
-                    "Machine Learning",
-                    "Blockchain",
-                    "Quantum Computing"
-                  ],
-                  "answer": 0,
-                  "explanation": "Machine Learning is a core subset of AI focused on algorithms that improve automatically through experience"
-                }
-              ],
-              "passingScore": 70
-            }
+            "answer": 1,
+            "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
           },
+          {
+            "text": "What does the Chinese Room thought experiment challenge?",
+            "options": [
+              "The speed of AI systems",
+              "Whether AI can truly understand",
+              "The cost of developing AI",
+              "AI's mathematical capabilities"
+            ],
+            "answer": 1,
+            "explanation": "John Searle's argument suggests that mere symbol manipulation doesn't constitute genuine understanding"
+          },
+          {
+            "text": "Which of these is NOT a characteristic of intelligent agents?",
+            "options": [
+              "Perception of environment",
+              "Ability to reproduce",
+              "Decision-making capability",
+              "Taking actions to achieve goals"
+            ],
+            "answer": 1,
+            "explanation": "Reproduction isn't a requirement for artificial intelligent agents"
+          }
+        ],
+        "passingScore": 75
+      }
+    },
+    {
+      "title": "AI Technologies Deep Dive",
+      "type": "interactive",
+      "duration": "40 min",
+      "content": [
+        "1. Machine Learning Paradigms:",
+        "- Supervised Learning: Labeled data trains models (e.g., spam detection)",
+        "- Unsupervised Learning: Finds patterns in unlabeled data (e.g., customer segmentation)",
+        "- Reinforcement Learning: Learns through rewards/punishments (e.g., game AIs)",
+        "- Semi-supervised Learning: Combines labeled and unlabeled data",
+        "- Self-supervised Learning: Creates its own labels from data structure",
+        "",
+        "2. Neural Network Architectures:",
+        "- Feedforward Neural Networks: Basic information flow",
+        "- Convolutional Neural Networks (CNNs): For image processing",
+        "- Recurrent Neural Networks (RNNs): For sequential data",
+        "- Transformers: Attention-based models (e.g., GPT, BERT)",
+        "",
+        "3. Natural Language Processing Components:",
+        "- Tokenization: Breaking text into meaningful units",
+        "- Word Embeddings: Representing words numerically (Word2Vec, GloVe)",
+        "- Sequence Models: Handling context in language",
+        "- Attention Mechanisms: Focusing on relevant parts of input",
+        "",
+        "4. Computer Vision Techniques:",
+        "- Image Classification: Categorizing images",
+        "- Object Detection: Identifying and locating objects",
+        "- Semantic Segmentation: Pixel-level classification",
+        "- Image Generation: Creating new images (GANs, Diffusion Models)"
+      ],
+      "quiz": {
+        "title": "AI Technologies Quiz",
+        "questions": [
+          {
+            "text": "Which learning paradigm would be best for training a chess AI?",
+            "options": [
+              "Supervised Learning",
+              "Unsupervised Learning",
+              "Reinforcement Learning",
+              "Self-supervised Learning"
+            ],
+            "answer": 2,
+            "explanation": "Reinforcement Learning is ideal for game AIs as they learn through winning/losing feedback"
+          },
+          {
+            "text": "What architecture is most suitable for processing medical images?",
+            "options": [
+              "Recurrent Neural Network",
+              "Convolutional Neural Network",
+              "Transformer",
+              "Radial Basis Function Network"
+            ],
+            "answer": 1,
+            "explanation": "CNNs are specifically designed for processing grid-like data such as images"
+          },
+          {
+            "text": "Which NLP technique converts 'cat' to [0.25, -0.1, 0.7]?",
+            "options": [
+              "Tokenization",
+              "Parsing",
+              "Word Embedding",
+              "Lemmatization"
+            ],
+            "answer": 2,
+            "explanation": "Word embeddings represent words as dense numerical vectors capturing semantic meaning"
+          },
+          {
+            "text": "What does GAN stand for in AI?",
+            "options": [
+              "Generalized Adversarial Network",
+              "Generative Adversarial Network",
+              "Graphical Analysis Network",
+              "Gradient Adjustment Node"
+            ],
+            "answer": 1,
+            "explanation": "GANs consist of generator and discriminator networks competing against each other"
+          }
+        ],
+        "passingScore": 80
+      }
+    },
+    {
+      "title": "AI Applications Across Industries",
+      "type": "case_study",
+      "duration": "35 min",
+      "content": [
+        "1. Healthcare Revolution:",
+        "- Diagnostic AI: Analyzing X-rays with >95% accuracy (e.g., Google's DeepMind)",
+        "- Drug Discovery: Reducing development time from years to months (e.g., Atomwise)",
+        "- Personalized Medicine: Tailoring treatments based on patient genetics",
+        "- Robot-assisted Surgery: da Vinci surgical system performing precise operations",
+        "",
+        "2. Financial Services Transformation:",
+        "- Algorithmic Trading: AI making microsecond trading decisions",
+        "- Fraud Detection: Identifying suspicious patterns in real-time",
+        "- Credit Scoring: Alternative credit assessment models",
+        "- Chatbot Advisors: 24/7 financial guidance (e.g., Erica by Bank of America)",
+        "",
+        "3. Smart Cities and Infrastructure:",
+        "- Traffic Management: Adaptive signal control reducing congestion by 25%",
+        "- Predictive Maintenance: Anticipating equipment failures",
+        "- Energy Optimization: Smart grids balancing supply and demand",
+        "- Public Safety: Gunshot detection systems",
+        "",
+        "4. Retail and E-commerce:",
+        "- Visual Search: Finding products using images (e.g., Pinterest Lens)",
+        "- Dynamic Pricing: Real-time price adjustments based on demand",
+        "- Inventory Forecasting: Predicting stock needs with 98% accuracy",
+        "- Virtual Try-ons: AR applications for cosmetics and clothing"
+      ],
+      "quiz": {
+        "title": "AI Applications Quiz",
+        "questions": [
+          {
+            "text": "Which healthcare application analyzes medical images?",
+            "options": [
+              "Robot-assisted Surgery",
+              "Diagnostic AI",
+              "Personalized Medicine",
+              "Drug Discovery"
+            ],
+            "answer": 1,
+            "explanation": "Diagnostic AI systems specialize in interpreting medical imaging like X-rays and MRIs"
+          },
+          {
+            "text": "What AI application helps balance electricity grids?",
+            "options": [
+              "Algorithmic Trading",
+              "Energy Optimization",
+              "Predictive Maintenance",
+              "Visual Search"
+            ],
+            "answer": 1,
+            "explanation": "AI-powered energy optimization systems manage smart grids efficiently"
+          },
+          {
+            "text": "Which technology enables virtual clothing try-ons?",
+            "options": [
+              "Blockchain",
+              "Augmented Reality",
+              "Internet of Things",
+              "Edge Computing"
+            ],
+            "answer": 1,
+            "explanation": "AR overlays digital clothing items on live video of customers"
+          },
+          {
+            "text": "What percentage accuracy do top inventory forecasting AIs achieve?",
+            "options": [
+              "75%",
+              "85%",
+              "98%",
+              "65%"
+            ],
+            "answer": 2,
+            "explanation": "Modern AI systems can predict inventory needs with up to 98% accuracy"
+          }
+        ],
+        "passingScore": 75
+      }
+    },
+    {
+      "title": "AI Ethics and Future Directions",
+      "type": "discussion",
+      "duration": "30 min",
+      "content": [
+        "1. Ethical Considerations:",
+        "- Bias and Fairness: Addressing dataset and algorithmic biases",
+        "- Transparency: Explainable AI vs. black box models",
+        "- Privacy: Data collection and usage concerns",
+        "- Accountability: Determining responsibility for AI decisions",
+        "",
+        "2. Societal Impact:",
+        "- Job Displacement vs. Creation: Net employment effects",
+        "- Economic Inequality: Concentration of AI benefits",
+        "- Digital Divide: Access to AI technologies",
+        "- Autonomous Weapons: Military applications debate",
+        "",
+        "3. Regulatory Landscape:",
+        "- GDPR and AI: Right to explanation",
+        "- AI Act (EU): Risk-based classification system",
+        "- US Approach: Sector-specific regulations",
+        "- Global Governance: International cooperation needs",
+        "",
+        "4. Future Trends:",
+        "- Multimodal AI: Combining vision, language, etc.",
+        "- Neuro-symbolic AI: Merging neural networks with symbolic reasoning",
+        "- AI for Science: Accelerating scientific discoveries",
+        "- Artificial General Intelligence: Pathways and timelines"
+      ],
+      "quiz": {
+        "title": "AI Ethics Quiz",
+        "questions": [
+          {
+            "text": "Which regulation includes 'right to explanation' for AI decisions?",
+            "options": [
+              "CCPA",
+              "GDPR",
+              "HIPAA",
+              "DMCA"
+            ],
+            "answer": 1,
+            "explanation": "The EU's General Data Protection Regulation includes provisions about explainability of automated decisions"
+          },
+          {
+            "text": "What is a main criticism of current AI systems?",
+            "options": [
+              "They're too expensive",
+              "They're often black boxes",
+              "They're too slow",
+              "They require too much electricity"
+            ],
+            "answer": 1,
+            "explanation": "Lack of explainability in complex models is a major ethical concern"
+          },
+          {
+            "text": "Which future trend combines different AI modalities?",
+            "options": [
+              "Multimodal AI",
+              "Quantum AI",
+              "Edge AI",
+              "TinyML"
+            ],
+            "answer": 0,
+            "explanation": "Multimodal AI integrates multiple data types (text, images, etc.) for richer understanding"
+          },
+          {
+            "text": "What percentage of jobs are estimated to be significantly impacted by AI?",
+            "options": [
+              "10-20%",
+              "30-40%",
+              "50-60%",
+              "70-80%"
+            ],
+            "answer": 1,
+            "explanation": "Most studies suggest about 30-40% of jobs will undergo major transformation due to AI"
+          }
+        ],
+        "passingScore": 80
+      }
+    }
+  ]
+},
           {
             "title": "Machine Learning Basics",
             "description": "Introduction to ML concepts and algorithms",
