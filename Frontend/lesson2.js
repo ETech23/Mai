@@ -2069,12 +2069,27 @@ getExamScore(trackId, levelIndex) {
   }
 
   showMessage(message) {
-    const alert = document.createElement('div');
-    alert.className = 'alert-message';
-    alert.textContent = message;
-    document.body.appendChild(alert);
-    setTimeout(() => document.body.removeChild(alert), 3000);
-  }
+  const alert = document.createElement('div');
+  alert.className = 'alert-message';
+  alert.innerHTML = `
+    <div class="alert-content">${message}</div>
+  `;
+  document.body.appendChild(alert);
+  
+  // Trigger reflow to enable animation
+  void alert.offsetWidth;
+  
+  alert.classList.add('show');
+  
+  setTimeout(() => {
+    alert.classList.remove('show');
+    setTimeout(() => {
+      if (document.body.contains(alert)) {
+        document.body.removeChild(alert);
+      }
+    }, 300); // Match this with the CSS transition time
+  }, 3000);
+}
 
   showError(message) {
     this.mainContent.innerHTML = `
