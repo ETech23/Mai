@@ -313,6 +313,105 @@
             ],
             "answer": 1,
             "explanation": "Most studies suggest about 30-40% of jobs will undergo major transformation due to AI"
+          },
+          {
+                "text": "Which event marked the official birth of AI as a field?",
+                    "options": [
+                    "Publication of Turing's paper",
+                    "Dartmouth Conference",
+                    "Invention of the perceptron",
+                    "Development of ELIZA"
+                    ],
+                    "answer": 1,
+                    "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
+                    },
+                    {
+                    "text": "What does the Chinese Room thought experiment challenge?",
+                    "options": [
+                    "The speed of AI systems",
+                    "Whether AI can truly understand",
+                    "The cost of developing AI",
+                    "AI's mathematical capabilities"
+                    ],
+                    "answer": 1,
+                    "explanation": "John Searle's argument suggests that mere symbol manipulation doesn't constitute genuine understanding"
+                    },
+                    {
+                    "text": "Which of these is NOT a characteristic of intelligent agents?",
+                    "options": [
+                    "Perception of environment",
+                    "Ability to reproduce",
+                    "Decision-making capability",
+                    "Taking actions to achieve goals"
+                    ],
+                    "answer": 1,
+                    "explanation": "Reproduction isn't a requirement for artificial intelligent agents"
+          },
+          {
+                    "text": "Which learning paradigm would be best for training a chess AI?",
+                    "options": [
+              "Supervised Learning",
+              "Unsupervised Learning",
+              "Reinforcement Learning",
+              "Self-supervised Learning"
+            ],
+            "answer": 2,
+            "explanation": "Reinforcement Learning is ideal for game AIs as they learn through winning/losing feedback"
+          },
+          {
+            "text": "What architecture is most suitable for processing medical images?",
+            "options": [
+              "Recurrent Neural Network",
+              "Convolutional Neural Network",
+              "Transformer",
+              "Radial Basis Function Network"
+            ],
+            "answer": 1,
+            "explanation": "CNNs are specifically designed for processing grid-like data such as images"
+          },
+           {
+            "text": "Which healthcare application analyzes medical images?",
+            "options": [
+              "Robot-assisted Surgery",
+              "Diagnostic AI",
+              "Personalized Medicine",
+              "Drug Discovery"
+            ],
+            "answer": 1,
+            "explanation": "Diagnostic AI systems specialize in interpreting medical imaging like X-rays and MRIs"
+          },
+          {
+            "text": "What AI application helps balance electricity grids?",
+            "options": [
+              "Algorithmic Trading",
+              "Energy Optimization",
+              "Predictive Maintenance",
+              "Visual Search"
+            ],
+            "answer": 1,
+            "explanation": "AI-powered energy optimization systems manage smart grids efficiently"
+          },
+          {
+            "text": "Which technology enables virtual clothing try-ons?",
+            "options": [
+              "Blockchain",
+              "Augmented Reality",
+              "Internet of Things",
+              "Edge Computing"
+            ],
+            "answer": 1,
+            "explanation": "AR overlays digital clothing items on live video of customers"
+          },
+          {
+            "text": "What percentage accuracy do top inventory forecasting AIs achieve?",
+            "options": [
+              "75%",
+              "85%",
+              "98%",
+              "65%"
+            ],
+            "answer": 2,
+            "explanation": "Modern AI systems can predict inventory needs with up to 98% accuracy"
           }
         ],
         "passingScore": 80
