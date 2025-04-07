@@ -9,7 +9,7 @@
           {
               "title": "Comprehensive Introduction to Artificial Intelligence",
               "description": "An in-depth beginner's guide to AI concepts, technologies, applications, and ethical considerations",
-        "lessons": [
+        "contents": [
             {
             "title": "Foundations of Artificial Intelligence",
             "type": "video",
@@ -420,7 +420,7 @@
         {
   "title": "Machine Learning Basics",
   "description": "Introduction to ML concepts and algorithms",
-  "lessons": [
+  "contents": [
     {
       "title": "Supervised Learning",
       "type": "interactive",
@@ -546,7 +546,7 @@
           {
             "title": "Neural Networks",
             "description": "Understanding artificial neural networks",
-            "lessons": [
+            "contents": [
               {
                 "title": "Perceptrons",
                 "type": "interactive",
@@ -620,7 +620,7 @@
           {
             "title": "Blockchain Basics",
             "description": "Understanding distributed ledger technology",
-            "lessons": [
+            "contents": [
               {
                 "title": "What is Blockchain?",
                 "type": "video",
@@ -670,7 +670,7 @@
           {
             "title": "Cryptocurrency Fundamentals",
             "description": "Core concepts of digital currencies",
-            "lessons": [
+            "contents": [
               {
                 "title": "Bitcoin Overview",
                 "type": "video",
@@ -724,7 +724,7 @@
           {
             "title": "Smart Contracts",
             "description": "Introduction to programmable contracts",
-            "lessons": [
+            "contents": [
               {
                 "title": "Ethereum Basics",
                 "type": "interactive",

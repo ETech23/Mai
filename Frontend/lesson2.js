@@ -1015,23 +1015,26 @@ this.renderCourseData();
   let content = `<div class="lesson-detail">`;
 
   // Check if current content is an ad
-  if (contentItem.type === 'ad') {
+   
+  // Handle regular text paragraphs
+  if (typeof item === "string") {
+    if (item.includes('- ')) {
+      const bullets = item.split('\n');
+      content += `<p>${bullets[0]}</p><ul>`;
+      for (let i = 1; i < bullets.length; i++) {
+        content += `<li>${bullets[i].replace('- ', '')}</li>`;
+      }
+      content += `</ul>`;
+    } else {
+      content += `<p>${item}</p>`;
+    }
+
+  // Handle ad content
+  } else if (typeof item === "object" && item.type === "ad") {
     content += `
-      <div class="lesson-detail-header">
-        <div class="back-button" id="back-to-module">
-          <i class="fa-solid fa-arrow-left"></i>
-        </div>
-        <div class="lesson-detail-info">
-          <h2>Sponsored Content</h2>
-          <p>This learning moment is brought to you by a sponsor.</p>
-        </div>
-      </div>
-      <div class="lesson-content">
-        <div class="ad-slot">
-          <div class="ad-placeholder">
-            Ad Slot: ${contentItem.ad_slot}
-          </div>
-        </div>
+      <div class="ad-slot" data-slot="${item.ad_slot}">
+        <p><em>Advertisement: ${item.ad_slot}</em></p>
+        <!-- Ad script or image can be loaded here dynamically -->
       </div>
     `;
   } else {
