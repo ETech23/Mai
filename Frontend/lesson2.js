@@ -2554,7 +2554,7 @@ getExamScore(trackId, levelIndex) {
     // Add active class to current item
     if (this.currentTrack) {
       const trackItem = this.sideNav.querySelector(`.track-item[data-track="${this.currentTrack}"]`);
-      if (trackItem) trackcontentItem.classList.add('active');
+      if (trackItem) trackItem.classList.add('active');
     } else {
       const homeBtn = document.getElementById('home-btn');
       if (homeBtn) homeBtn.classList.add('active');
