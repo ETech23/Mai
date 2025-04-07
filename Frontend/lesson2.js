@@ -89,6 +89,7 @@ document.body.prepend(this.topNav);
       </div>
     `;
   }
+      
 
 
   
@@ -139,6 +140,7 @@ document.body.prepend(this.topNav);
     
     // 6. Handle any deep linking
     this.handleDeepLinking();
+        
     
   } catch (error) {
     console.error('Initialization error:', error);
@@ -1094,21 +1096,27 @@ this.renderCourseData();
         break;
     }
 
-    // Textual content
-    content += `<div class="lesson-text">`;
-    contentItem.content.forEach(paragraph => {
-      if (paragraph.includes('- ')) {
-        const bullets = paragraph.split('\n');
-        content += `<p>${bullets[0]}</p><ul>`;
-        for (let i = 1; i < bullets.length; i++) {
-          content += `<li>${bullets[i].replace('- ', '')}</li>`;
-        }
-        content += `</ul>`;
-      } else {
-        content += `<p>${paragraph}</p>`;
+   // Textual content
+content += `<div class="lesson-text">`;
+
+if (Array.isArray(contentItem?.content)) {
+  contentItem.content.forEach(paragraph => {
+    if (paragraph.includes('- ')) {
+      const bullets = paragraph.split('\n');
+      content += `<p>${bullets[0]}</p><ul>`;
+      for (let i = 1; i < bullets.length; i++) {
+        content += `<li>${bullets[i].replace('- ', '')}</li>`;
       }
-    });
-    content += `</div>`;
+      content += `</ul>`;
+    } else {
+      content += `<p>${paragraph}</p>`;
+    }
+  });
+} else {
+  content += `<p class="error-text">No content available for this lesson.</p>`;
+}
+
+content += `</div>`;
   }
 
   // Navigation
