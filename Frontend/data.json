@@ -418,59 +418,176 @@
       }
 },
           {
-            "title": "Machine Learning Basics",
-            "description": "Introduction to ML concepts and algorithms",
-            "lessons": [
-              {
-                "title": "Supervised Learning",
-                "type": "video",
-                "duration": "18 min",
-                "content": [
-                  "Supervised learning uses labeled datasets to train algorithms.",
-                  "Key concepts:",
-                  "- Classification",
-                  "- Regression",
-                  "- Training/Test splits"
-                ]
-              }
-            ],
-            "quiz": {
-              "title": "Machine Learning Quiz",
-              "questions": [
-                {
-                  "text": "What is the main characteristic of supervised learning?",
-                  "options": [
-                    "Uses unlabeled data",
-                    "Requires labeled training data",
-                    "Learns through rewards"
-                  ],
-                  "answer": 1,
-                  "explanation": "Supervised learning requires labeled input/output pairs for training"
-                },
-                {
-                  "text": "Which is an example of a classification problem?",
-                  "options": [
-                    "Predicting house prices",
-                    "Identifying spam emails",
-                    "Forecasting stock market trends"
-                  ],
-                  "answer": 1,
-                  "explanation": "Spam detection is a classic classification problem (spam/not spam)"
-                },
-                {
-                  "text": "What does a decision tree use to make predictions?",
-                  "options": [
-                    "Neural networks",
-                    "A series of if-else questions",
-                    "Genetic algorithms"
-                  ],
-                  "answer": 1,
-                  "explanation": "Decision trees use branching if-else conditions based on feature values"
-                }
-              ],
-              "passingScore": 70
-            }
-          },
+  "title": "Machine Learning Basics",
+  "description": "Comprehensive foundation in machine learning, covering key learning types, model evaluation, and real-world use.",
+  "lessons": [
+    {
+      "title": "Supervised Learning",
+      "type": "interactive",
+      "duration": "20 min",
+      "content": [
+        "Supervised learning is a type of machine learning where the model is trained on labeled data — this means each input has a known output.",
+        "It’s commonly used in tasks like classification (spam detection, image recognition) and regression (predicting prices, temperatures).",
+        "The key idea is that the algorithm learns to map inputs to outputs by minimizing error during training using methods like gradient descent.",
+        "Important components include:",
+        "- **Training set**: Data used to train the model.",
+        "- **Test set**: Data used to evaluate how well the model generalizes.",
+        "- **Loss function**: Measures prediction error.",
+        "- **Evaluation metrics**: Accuracy, precision, recall, F1 score."
+      ]
+    },
+    {
+      "title": "Ad Slot - After Supervised Learning",
+      "type": "ad",
+      "ad_slot": "ml-lesson1-banner"
+    },
+    {
+      "title": "Unsupervised Learning",
+      "type": "interactive",
+      "duration": "20 min",
+      "content": [
+        "Unlike supervised learning, unsupervised learning works with data that has no labels. The goal is to find hidden patterns or groupings.",
+        "This is useful when you want to explore your data or identify unknown structures.",
+        "Two major types are:",
+        "- **Clustering**: Grouping data points based on similarity (e.g., K-means, DBSCAN).",
+        "- **Dimensionality Reduction**: Reducing number of input variables while preserving structure (e.g., PCA).",
+        "Real-world applications include customer segmentation, anomaly detection in network traffic, and market basket analysis."
+      ]
+    },
+    {
+      "title": "Ad Slot - After Unsupervised Learning",
+      "type": "ad",
+      "ad_slot": "ml-lesson2-banner"
+    },
+    {
+      "title": "Model Evaluation & Overfitting",
+      "type": "interactive",
+      "duration": "25 min",
+      "content": [
+        "Once a model is trained, it's important to evaluate how well it performs on unseen data — this tells us if the model has truly learned or just memorized.",
+        "**Overfitting** happens when the model learns the training data too well, including noise, leading to poor generalization.",
+        "**Underfitting** is when the model is too simple to capture patterns.",
+        "To evaluate models, we use techniques like:",
+        "- **Confusion matrix**: Shows true/false positives and negatives.",
+        "- **Precision & recall**: Measures quality of positive predictions.",
+        "- **F1 Score**: Harmonic mean of precision and recall.",
+        "- **ROC Curve & AUC**: Tradeoff between sensitivity and specificity.",
+        "We also use **cross-validation** to test models across multiple splits, and **regularization** (L1, L2) to avoid overfitting by penalizing complexity."
+      ]
+    },
+    {
+      "title": "Ad Slot - After Evaluation Techniques",
+      "type": "ad",
+      "ad_slot": "ml-lesson3-banner"
+    }
+  ],
+  "quiz": {
+    "title": "Machine Learning Quiz",
+    "questions": [
+      {
+        "text": "What is the main characteristic of supervised learning?",
+        "options": [
+          "Uses unlabeled data",
+          "Requires labeled training data",
+          "Learns through rewards"
+        ],
+        "answer": 1,
+        "explanation": "Supervised learning requires labeled input/output pairs for training."
+      },
+      {
+        "text": "Which is an example of a classification problem?",
+        "options": [
+          "Predicting house prices",
+          "Identifying spam emails",
+          "Forecasting stock trends"
+        ],
+        "answer": 1,
+        "explanation": "Spam detection is a classic classification problem — predicting a category."
+      },
+      {
+        "text": "What does a decision tree use to make predictions?",
+        "options": [
+          "Neural networks",
+          "A series of if-else questions",
+          "Genetic algorithms"
+        ],
+        "answer": 1,
+        "explanation": "Decision trees split data using if-else logic based on features."
+      },
+      {
+        "text": "Which method is common in unsupervised learning?",
+        "options": [
+          "Logistic regression",
+          "K-means clustering",
+          "Linear regression"
+        ],
+        "answer": 1,
+        "explanation": "K-means clustering groups data without predefined labels."
+      },
+      {
+        "text": "Which concept helps prevent overfitting?",
+        "options": [
+          "Increasing model depth",
+          "Regularization",
+          "Removing features"
+        ],
+        "answer": 1,
+        "explanation": "Regularization discourages overly complex models by adding a penalty."
+      },
+      {
+        "text": "Which metric is best for imbalanced classification?",
+        "options": [
+          "Accuracy",
+          "Recall",
+          "R-squared"
+        ],
+        "answer": 1,
+        "explanation": "Recall is especially important when missing positives is costly."
+      },
+      {
+        "text": "Which is NOT a supervised learning algorithm?",
+        "options": [
+          "K-means",
+          "Random Forest",
+          "Support Vector Machine"
+        ],
+        "answer": 0,
+        "explanation": "K-means is an unsupervised clustering algorithm."
+      },
+      {
+        "text": "What is cross-validation used for?",
+        "options": [
+          "To store models",
+          "To evaluate model performance on unseen data",
+          "To speed up training"
+        ],
+        "answer": 1,
+        "explanation": "Cross-validation tests a model's ability to generalize using different data splits."
+      },
+      {
+        "text": "Which describes overfitting?",
+        "options": [
+          "Model fits noise in the training data",
+          "Model performs well on new data",
+          "Model is too simple"
+        ],
+        "answer": 0,
+        "explanation": "Overfitting means your model memorized training data instead of learning."
+      },
+      {
+        "text": "What does PCA stand for?",
+        "options": [
+          "Principal Component Analysis",
+          "Predictive Cluster Algorithm",
+          "Partial Confidence Accuracy"
+        ],
+        "answer": 0,
+        "explanation": "PCA reduces data dimensionality by projecting it onto principal components."
+      }
+    ],
+    "passingScore": 70
+  }
+},
           {
             "title": "Neural Networks",
             "description": "Understanding artificial neural networks",
