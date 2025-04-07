@@ -235,7 +235,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                           <div class="module-stats">
                             <span class="stat-item">
                               <i class="fas fa-book"></i>
-                              ${module.lessons.length} Lessons
+                              ${module.contents.filter(item => item.type !== 'ad')} Lessons
                             </span>
                             <span class="stat-item">
                               <i class="fas fa-question-circle"></i>
@@ -524,9 +524,13 @@ setupCourseEventListeners() {
     if (!module.quiz) return false;
 
     // 3. Check if all lessons are completed
-    const allLessonsCompleted = module.lessons.every((_, lessonIndex) => 
-      this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)
-    );
+const lessons = module.contents
+  .map((item, index) => ({ ...item, index }))
+  .filter(item => item.type !== 'ad');
+
+const allLessonsCompleted = lessons.every(lesson =>
+  this.isLessonCompleted(trackId, levelIndex, moduleIndex, lesson.index)
+);
 
     return allLessonsCompleted;
   }
@@ -2266,8 +2270,8 @@ getExamScore(trackId, levelIndex) {
       const track = this.coursesData[trackId];
       track.levels.forEach((level, levelIndex) => {
         level.modules.forEach((module, moduleIndex) => {
-          totalLessons += module.lessons.length;
-          module.lessons.forEach((_, lessonIndex) => {
+          totalLessons += module.contents.filter(item => item.type !== 'ad');
+          module.contents.forEach((_, lessonIndex) => {
             if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
               completedLessons++;
             }
@@ -2280,12 +2284,42 @@ getExamScore(trackId, levelIndex) {
   }
 
   // Calculate track progress
-  calculateTrackProgress(trackId) {
+    calculateTrackProgress(trackId) {
+  const track = this.coursesData[trackId];
+  if (!track) return 0;
+  
+  let totalLessons = 0;
+  let completedLessons = 0;
+  
+  track.levels.forEach((level, levelIndex) => {
+    level.modules.forEach((module, moduleIndex) => {
+      // Filter out ad-type items
+      const lessons = module.contents.filter(item => item.type !== 'ad');
+
+      totalLessons += lessons.length;
+      
+      lessons.forEach((_, filteredIndex) => {
+        // Find the real index in the original contents array
+        const lessonIndex = module.contents.findIndex((item, i) =>
+          item.type !== 'ad' && module.contents.indexOf(item) === i &&
+          lessons.indexOf(item) === filteredIndex
+        );
+
+        if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
+          completedLessons++;
+        }
+      });
+    });
+  });
+
+  return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+}  
+  /**calculateTrackProgress(trackId) {
     const track = this.coursesData[trackId];
-    if (!track) return 0;
-    
-    let totalLessons = 0;
-    let completedLessons = 0;
+      if (!track) return 0;
+   
+      let totalLessons = 0;
+      let completedLessons = 0;
     
     track.levels.forEach((level, levelIndex) => {
       level.modules.forEach((module, moduleIndex) => {
@@ -2299,7 +2333,7 @@ getExamScore(trackId, levelIndex) {
     });
     
     return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-  }
+  }**/
 
   // Calculate level progress
   calculateLevelProgress(trackId, levelIndex) {
@@ -2310,8 +2344,8 @@ getExamScore(trackId, levelIndex) {
     let completedLessons = 0;
     
     level.modules.forEach((module, moduleIndex) => {
-      totalLessons += module.lessons.length;
-      module.lessons.forEach((_, lessonIndex) => {
+      totalLessons += module.contents.filter(item => item.type !== 'ad');
+      module.contents.forEach((_, lessonIndex) => {
         if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
           completedLessons++;
         }
@@ -2326,10 +2360,10 @@ getExamScore(trackId, levelIndex) {
     const module = this.coursesData[trackId].levels[levelIndex].modules[moduleIndex];
     if (!module) return 0;
     
-    let totalLessons = module.lessons.length;
+    let totalLessons = module.contents.filter(item => item.type !== 'ad');
     let completedLessons = 0;
     
-    module.lessons.forEach((_, lessonIndex) => {
+    module.contents.forEach((_, lessonIndex) => {
       if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
         completedLessons++;
       }
@@ -2427,7 +2461,7 @@ getExamScore(trackId, levelIndex) {
     const module = this.coursesData[trackId].levels[levelIndex].modules[moduleIndex];
     
     // All lessons completed and quiz passed if exists
-    const allLessonsCompleted = module.lessons.every((_, lessonIndex) => 
+    const allLessonsCompleted = module.contents.every((_, lessonIndex) => 
       this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)
     );
     
