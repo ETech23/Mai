@@ -235,7 +235,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                           <div class="module-stats">
                             <span class="stat-item">
                               <i class="fas fa-book"></i>
-                              ${module.contents.filter(item => item.type !== 'ad')} Lessons
+                              ${module.contents.filter(contentItem => contentItem.type !== 'ad')} Lessons
                             </span>
                             <span class="stat-item">
                               <i class="fas fa-question-circle"></i>
@@ -525,8 +525,8 @@ setupCourseEventListeners() {
 
     // 3. Check if all lessons are completed
 const lessons = module.contents
-  .map((item, index) => ({ ...item, index }))
-  .filter(item => item.type !== 'ad');
+  .map((contentItem, index) => ({ ...contentItem, index }))
+  .filter(contentItem => contentItem.type !== 'ad');
 
 const allLessonsCompleted = lessons.every(lesson =>
   this.isLessonCompleted(trackId, levelIndex, moduleIndex, lesson.index)
@@ -693,9 +693,9 @@ document.addEventListener('click', function(e) {
 
     
     // Add event listeners to nav items
-    this.sideNav.querySelectorAll('.track-item').forEach(item => {
-      if (!item.disabled) {
-        item.addEventListener('click', (e) => {
+    this.sideNav.querySelectorAll('.track-item').forEach(contentItem => {
+      if (!contentItem.disabled) {
+        contentItem.addEventListener('click', (e) => {
           const trackId = e.currentTarget.dataset.track;
           this.loadTrack(trackId);
         });
@@ -1014,6 +1014,11 @@ this.renderCourseData();
   const level = track.levels[levelIndex];
   const module = level.modules[moduleIndex];
   const contentItem = module.contents[lessonIndex];
+        if (!contentItem) {
+  console.error("Lesson not found:", { trackId, levelIndex, moduleIndex, lessonIndex });
+  this.mainContent.innerHTML = `<div class="lesson-error"><p>Lesson not found or unavailable.</p></div>`;
+  return;
+}
 
   this.updateNavState('lesson', trackId, levelIndex, moduleIndex, lessonIndex);
   this.updateActiveNav();
@@ -1023,26 +1028,25 @@ this.renderCourseData();
   // Check if current content is an ad
    
   // Handle regular text paragraphs
-  if (typeof item === "string") {
-    if (item.includes('- ')) {
-      const bullets = item.split('\n');
+  if (typeof contentItem === "string") {
+    if (contentItem.includes('- ')) {
+      const bullets = contentItem.split('\n');
       content += `<p>${bullets[0]}</p><ul>`;
       for (let i = 1; i < bullets.length; i++) {
         content += `<li>${bullets[i].replace('- ', '')}</li>`;
       }
       content += `</ul>`;
     } else {
-      content += `<p>${item}</p>`;
+      content += `<p>${contentItem}</p>`;
     }
 
   // Handle ad content
-  } else if (typeof item === "object" && item.type === "ad") {
-    content += `
-      <div class="ad-slot" data-slot="${item.ad_slot}">
-        <p><em>Advertisement: ${item.ad_slot}</em></p>
-        <!-- Ad script or image can be loaded here dynamically -->
-      </div>
-    `;
+  } else if (contentItem?.type === "ad") {
+  content += `
+    <div class="ad-slot" data-slot="${contentItem.ad_slot}">
+      <p><em>Advertisement: ${contentItem.ad_slot}</em></p>
+    </div>
+  `;
   } else {
     // Lesson header
     content += `
@@ -1979,13 +1983,13 @@ content += `</div>`;
     return `
       <div class="incorrect-answers">
         <h3>Questions to Review</h3>
-        ${this.currentExamResults.incorrectAnswers.map((item, i) => `
+        ${this.currentExamResults.incorrectAnswers.map((contentItem, i) => `
           <div class="incorrect-answer">
-            <p><strong>Question:</strong> ${item.question}</p>
-            <p><strong>Your answer:</strong> <span class="wrong">${item.selectedOption}</span></p>
-            <p><strong>Correct answer:</strong> <span class="correct">${item.correctOption}</span></p>
-            ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
-            ${item.sourceModule ? `<p class="source">From module: ${item.sourceModule}</p>` : ''}
+            <p><strong>Question:</strong> ${contentItem.question}</p>
+            <p><strong>Your answer:</strong> <span class="wrong">${contentItem.selectedOption}</span></p>
+            <p><strong>Correct answer:</strong> <span class="correct">${contentItem.correctOption}</span></p>
+            ${contentItem.explanation ? `<p class="explanation">${contentItem.explanation}</p>` : ''}
+            ${contentItem.sourceModule ? `<p class="source">From module: ${contentItem.sourceModule}</p>` : ''}
           </div>
         `).join('')}
       </div>
@@ -2194,12 +2198,12 @@ getExamScore(trackId, levelIndex) {
     modal.innerHTML = `
       <div class="modal-content">
         <h3>Answer Review</h3>
-        ${incorrectAnswers.map(item => `
+        ${incorrectAnswers.map(contentItem => `
           <div class="review-item">
-            <p><strong>Question:</strong> ${item.question}</p>
-            <p class="wrong"><strong>Your answer:</strong> ${item.selectedOption}</p>
-            <p class="correct"><strong>Correct answer:</strong> ${item.correctOption}</p>
-            ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
+            <p><strong>Question:</strong> ${contentItem.question}</p>
+            <p class="wrong"><strong>Your answer:</strong> ${contentItem.selectedOption}</p>
+            <p class="correct"><strong>Correct answer:</strong> ${contentItem.correctOption}</p>
+            ${contentItem.explanation ? `<p class="explanation">${contentItem.explanation}</p>` : ''}
           </div>
         `).join('')}
         <button class="close-review">Close</button>
@@ -2270,7 +2274,7 @@ getExamScore(trackId, levelIndex) {
       const track = this.coursesData[trackId];
       track.levels.forEach((level, levelIndex) => {
         level.modules.forEach((module, moduleIndex) => {
-          totalLessons += module.contents.filter(item => item.type !== 'ad');
+          totalLessons += module.contents.filter(contentItem => contentItem.type !== 'ad');
           module.contents.forEach((_, lessonIndex) => {
             if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
               completedLessons++;
@@ -2294,15 +2298,15 @@ getExamScore(trackId, levelIndex) {
   track.levels.forEach((level, levelIndex) => {
     level.modules.forEach((module, moduleIndex) => {
       // Filter out ad-type items
-      const lessons = module.contents.filter(item => item.type !== 'ad');
+      const lessons = module.contents.filter(contentItem => contentItem.type !== 'ad');
 
       totalLessons += lessons.length;
       
       lessons.forEach((_, filteredIndex) => {
         // Find the real index in the original contents array
-        const lessonIndex = module.contents.findIndex((item, i) =>
-          item.type !== 'ad' && module.contents.indexOf(item) === i &&
-          lessons.indexOf(item) === filteredIndex
+        const lessonIndex = module.contents.findIndex((contentItem, i) =>
+          contentItem.type !== 'ad' && module.contents.indexOf(contentItem) === i &&
+          lessons.indexOf(contentItem) === filteredIndex
         );
 
         if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
@@ -2344,7 +2348,7 @@ getExamScore(trackId, levelIndex) {
     let completedLessons = 0;
     
     level.modules.forEach((module, moduleIndex) => {
-      totalLessons += module.contents.filter(item => item.type !== 'ad');
+      totalLessons += module.contents.filter(contentItem => contentItem.type !== 'ad');
       module.contents.forEach((_, lessonIndex) => {
         if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
           completedLessons++;
@@ -2360,7 +2364,7 @@ getExamScore(trackId, levelIndex) {
     const module = this.coursesData[trackId].levels[levelIndex].modules[moduleIndex];
     if (!module) return 0;
     
-    let totalLessons = module.contents.filter(item => item.type !== 'ad');
+    let totalLessons = module.contents.filter(contentItem => contentItem.type !== 'ad');
     let completedLessons = 0;
     
     module.contents.forEach((_, lessonIndex) => {
@@ -2543,14 +2547,14 @@ getExamScore(trackId, levelIndex) {
   // Update active navigation item
   updateActiveNav() {
     // Remove active class from all nav items
-    this.sideNav.querySelectorAll('.nav-item').forEach(item => {
-      item.classList.remove('active');
+    this.sideNav.querySelectorAll('.nav-item').forEach(contentItem => {
+      contentItem.classList.remove('active');
     });
     
     // Add active class to current item
     if (this.currentTrack) {
       const trackItem = this.sideNav.querySelector(`.track-item[data-track="${this.currentTrack}"]`);
-      if (trackItem) trackItem.classList.add('active');
+      if (trackItem) trackcontentItem.classList.add('active');
     } else {
       const homeBtn = document.getElementById('home-btn');
       if (homeBtn) homeBtn.classList.add('active');
