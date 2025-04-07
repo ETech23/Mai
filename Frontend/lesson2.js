@@ -1001,8 +1001,8 @@ this.renderCourseData();
     this.pushHistoryState({ view: 'track', trackId }, `${track.title} - LearnHub`);
   }
 
-  // Load a specific module
-  loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
+  // Load a specific lesson (or content item) from a module
+loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
   if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) return;
 
   this.currentTrack = trackId;
@@ -1014,123 +1014,134 @@ this.renderCourseData();
   const level = track.levels[levelIndex];
   const module = level.modules[moduleIndex];
   const contentItem = module.contents[lessonIndex];
-        if (!contentItem) {
-  console.error("Lesson not found:", { trackId, levelIndex, moduleIndex, lessonIndex });
-  this.mainContent.innerHTML = `<div class="lesson-error"><p>Lesson not found or unavailable.</p></div>`;
-  return;
-}
+
+  // Guard: Ensure contentItem exists.
+  if (!contentItem) {
+    console.error("Lesson not found:", { trackId, levelIndex, moduleIndex, lessonIndex, contents: module.contents });
+    this.mainContent.innerHTML = `<div class="lesson-error"><p>Lesson not found or unavailable.</p></div>`;
+    return;
+  }
 
   this.updateNavState('lesson', trackId, levelIndex, moduleIndex, lessonIndex);
   this.updateActiveNav();
 
   let content = `<div class="lesson-detail">`;
 
-  // Check if current content is an ad
-   
-  // Handle regular text paragraphs
-  if (typeof contentItem === "string") {
-    if (contentItem.includes('- ')) {
-      const bullets = contentItem.split('\n');
-      content += `<p>${bullets[0]}</p><ul>`;
-      for (let i = 1; i < bullets.length; i++) {
-        content += `<li>${bullets[i].replace('- ', '')}</li>`;
-      }
-      content += `</ul>`;
-    } else {
-      content += `<p>${contentItem}</p>`;
-    }
-
-  // Handle ad content
-  } else if (contentItem?.type === "ad") {
-  content += `
-    <div class="ad-slot" data-slot="${contentItem.ad_slot}">
-      <p><em>Advertisement: ${contentItem.ad_slot}</em></p>
-    </div>
-  `;
-  } else {
-    // Lesson header
+  // If the content item is an ad, render the ad block and return early.
+  if (contentItem.type === "ad") {
     content += `
       <div class="lesson-detail-header">
         <div class="back-button" id="back-to-module">
           <i class="fa-solid fa-arrow-left"></i>
         </div>
         <div class="lesson-detail-info">
-          <h2>${contentItem.title}</h2>
-          <div class="lesson-meta">
-            <span class="lesson-type">
-              <i class="fa-solid ${this.getLessonTypeIcon(contentItem.type)}"></i>
-              ${contentItem.type}
-            </span>
-            <span class="lesson-duration">
-              <i class="fa-regular fa-clock"></i>
-              ${contentItem.duration}
-            </span>
-          </div>
-          <div class="breadcrumbs">
-            <span>${track.title}</span>
-            <i class="fa-solid fa-chevron-right"></i>
-            <span>${module.title}</span>
-            <i class="fa-solid fa-chevron-right"></i>
-            <span>${contentItem.title}</span>
-          </div>
+          <h2>Sponsored Content</h2>
         </div>
       </div>
       <div class="lesson-content">
+        <div class="ad-slot" data-slot="${contentItem.ad_slot}">
+          <p><em>Advertisement: ${contentItem.ad_slot}</em></p>
+          <!-- Insert ad script or image here -->
+        </div>
+      </div>
+      <div class="lesson-navigation">
+        <!-- Navigation buttons for ad content, if desired -->
+      </div>
     `;
-
-    // Handle lesson type
-    switch (contentItem.type.toLowerCase()) {
-      case 'video':
-        content += `
-          <div class="video-container">
-            <div class="video-player">
-              <div class="video-placeholder">
-                <i class="fa-solid fa-play"></i>
-                <span>Video Player</span>
-              </div>
-            </div>
-          </div>
-        `;
-        break;
-      case 'interactive':
-        content += `
-          <div class="interactive-container">
-            <div class="interactive-placeholder">
-              <i class="fa-solid fa-hand-pointer"></i>
-              <span>Interactive Content</span>
-            </div>
-          </div>
-        `;
-        break;
-    }
-
-   // Textual content
-content += `<div class="lesson-text">`;
-
-if (Array.isArray(contentItem?.content)) {
-  contentItem.content.forEach(paragraph => {
-    if (paragraph.includes('- ')) {
-      const bullets = paragraph.split('\n');
-      content += `<p>${bullets[0]}</p><ul>`;
-      for (let i = 1; i < bullets.length; i++) {
-        content += `<li>${bullets[i].replace('- ', '')}</li>`;
-      }
-      content += `</ul>`;
-    } else {
-      content += `<p>${paragraph}</p>`;
-    }
-  });
-} else {
-  content += `<p class="error-text">No content available for this lesson.</p>`;
-}
-
-content += `</div>`;
+    this.mainContent.innerHTML = content;
+    return;
   }
 
-  // Navigation
-  content += `<div class="lesson-navigation">`;
+  // Otherwise, render the lesson header and content.
+  content += `
+    <div class="lesson-detail-header">
+      <div class="back-button" id="back-to-module">
+        <i class="fa-solid fa-arrow-left"></i>
+      </div>
+      <div class="lesson-detail-info">
+        <h2>${contentItem.title}</h2>
+        <div class="lesson-meta">
+          <span class="lesson-type">
+            <i class="fa-solid ${this.getLessonTypeIcon(contentItem.type)}"></i>
+            ${contentItem.type}
+          </span>
+          <span class="lesson-duration">
+            <i class="fa-regular fa-clock"></i>
+            ${contentItem.duration}
+          </span>
+        </div>
+        <div class="breadcrumbs">
+          <span>${track.title}</span>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span>${module.title}</span>
+          <i class="fa-solid fa-chevron-right"></i>
+          <span>${contentItem.title}</span>
+        </div>
+      </div>
+    </div>
+    <div class="lesson-content">
+  `;
 
-  // Utility to find next/prev non-ad index
+  // Optionally render media based on lesson type.
+  switch (contentItem.type.toLowerCase()) {
+    case 'video':
+      content += `
+        <div class="video-container">
+          <div class="video-player">
+            <div class="video-placeholder">
+              <i class="fa-solid fa-play"></i>
+              <span>Video Player</span>
+            </div>
+          </div>
+        </div>
+      `;
+      break;
+    case 'interactive':
+      content += `
+        <div class="interactive-container">
+          <div class="interactive-placeholder">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <span>Interactive Content</span>
+          </div>
+        </div>
+      `;
+      break;
+    // Add other media types as needed.
+  }
+
+  // Render textual content.
+  content += `<div class="lesson-text">`;
+  if (Array.isArray(contentItem.content)) {
+    contentItem.content.forEach(paragraph => {
+      // Check if paragraph is a string.
+      if (typeof paragraph === "string") {
+        if (paragraph.includes('- ')) {
+          const bullets = paragraph.split('\n');
+          content += `<p>${bullets[0]}</p><ul>`;
+          for (let i = 1; i < bullets.length; i++) {
+            content += `<li>${bullets[i].replace('- ', '')}</li>`;
+          }
+          content += `</ul>`;
+        } else {
+          content += `<p>${paragraph}</p>`;
+        }
+      } else if (typeof paragraph === "object" && paragraph.type === "ad") {
+        // Render embedded ad within lesson text.
+        content += `
+          <div class="ad-slot" data-slot="${paragraph.ad_slot}">
+            <p><em>Advertisement: ${paragraph.ad_slot}</em></p>
+          </div>
+        `;
+      }
+    });
+  } else {
+    content += `<p class="error-text">No content available for this lesson.</p>`;
+  }
+  content += `</div>`; // Close lesson-text
+  content += `</div>`; // Close lesson-content
+
+  // Navigation: Compute previous/next lesson indices (skipping ads).
+  content += `<div class="lesson-navigation">`;
   const findNextIndex = (contents, start, direction) => {
     let i = start + direction;
     while (i >= 0 && i < contents.length) {
@@ -1139,55 +1150,44 @@ content += `</div>`;
     }
     return null;
   };
-
   const prevIndex = findNextIndex(module.contents, lessonIndex, -1);
   const nextIndex = findNextIndex(module.contents, lessonIndex, 1);
 
-  // Previous button
   if (prevIndex !== null) {
     content += `
       <button class="nav-btn prev-btn" data-lesson="${prevIndex}">
-        <i class="fa-solid fa-chevron-left"></i>
-        Previous
+        <i class="fa-solid fa-chevron-left"></i> Previous
       </button>
     `;
   }
-
-  // Complete button (only for lesson types)
-  if (contentItem.type !== 'ad') {
-    const isCompleted = this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex);
-    content += `
-      <button class="complete-btn ${isCompleted ? 'completed' : ''}" id="mark-complete">
-        ${isCompleted ? 'Completed' : 'Mark as Complete'}
-        ${isCompleted ? '<i class="fa-solid fa-check"></i>' : ''}
-      </button>
-    `;
-  }
-
-  // Next button
+  // Show complete button only for lessons.
+  const isCompleted = this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex);
+  content += `
+    <button class="complete-btn ${isCompleted ? 'completed' : ''}" id="mark-complete">
+      ${isCompleted ? 'Completed' : 'Mark as Complete'}
+      ${isCompleted ? '<i class="fa-solid fa-check"></i>' : ''}
+    </button>
+  `;
   if (nextIndex !== null) {
     content += `
       <button class="nav-btn next-btn" data-lesson="${nextIndex}">
-        Next
-        <i class="fa-solid fa-chevron-right"></i>
+        Next <i class="fa-solid fa-chevron-right"></i>
       </button>
     `;
-  } else if (contentItem.type !== 'ad' && module.quiz) {
+  } else if (module.quiz) {
     const isQuizUnlocked = this.isQuizUnlocked(trackId, levelIndex, moduleIndex);
     content += `
       <button class="nav-btn next-btn quiz-nav-btn" ${!isQuizUnlocked ? 'disabled' : ''}>
-        Take Quiz
-        <i class="fa-solid fa-chevron-right"></i>
+        Take Quiz <i class="fa-solid fa-chevron-right"></i>
       </button>
     `;
   }
+  content += `</div>`; // Close lesson-navigation
 
-  content += `
-      </div>
-    </div>
-  `;
+  content += `</div>`; // Close lesson-detail
 
   this.mainContent.innerHTML = content;
+
 
   
  /** loadModule(trackId, levelIndex, moduleIndex, lessonId = null) {
