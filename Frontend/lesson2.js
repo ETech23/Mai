@@ -142,7 +142,7 @@ document.body.prepend(this.topNav);
     
   } catch (error) {
     console.error('Initialization error:', error);
-    this.renderError(error.message || 'Failed to initialize application');
+    this.renderError(error.message || 'Failed to initialize application');  
     
     // Fallback to sample data if needed
     if (!this.coursesData) {

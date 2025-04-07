@@ -418,131 +418,139 @@
       }
 },
         {
-  "title": "Machine Learning Basics",
-  "description": "Introduction to ML concepts and algorithms",
-  "contents": [
-    {
-      "title": "Supervised Learning",
-      "type": "interactive",
-      "duration": "20 min",
-      "content": [
-        "Supervised learning is a type of machine learning where the model is trained using labeled data — each input is paired with the correct output.",
-        "Examples include classification tasks like spam detection, and regression tasks such as predicting housing prices.",
-        "The algorithm learns to predict the output from the input using mathematical functions and is evaluated based on how well it generalizes to unseen data.",
-        "Key concepts include:",
-        "- Training and test data split",
-        "- Loss function and optimization",
-        "- Evaluation metrics like accuracy, precision, recall",
-        { "ad_slot": "ml-supervised-banner", "type": "ad" }
-      ]
-    },
-    {
-      "title": "Unsupervised Learning",
-      "type": "interactive",
-      "duration": "18 min",
-      "content": [
-        "Unsupervised learning uses data without labeled outputs. The goal is to uncover hidden patterns or structures in the data.",
-        "Common applications include clustering (e.g., customer segmentation) and dimensionality reduction (e.g., PCA).",
-        "Algorithms in this category do not receive feedback on performance but group or transform data based on inherent characteristics.",
-        "- Popular algorithms: K-Means, DBSCAN, Hierarchical Clustering",
-        "- Dimensionality reduction: PCA, t-SNE",
-        { "ad_slot": "ml-unsupervised-banner", "type": "ad" }
-      ]
-    },
-    {
-      "title": "Reinforcement Learning",
-      "type": "interactive",
-      "duration": "22 min",
-      "content": [
-        "Reinforcement learning is based on agents taking actions in an environment to maximize a reward signal over time.",
-        "It is inspired by behavioral psychology and is widely used in robotics, games (like AlphaGo), and decision-making systems.",
-        "Key elements:",
-        "- Agent, Environment, Reward, Policy, Value Function",
-        "- Exploration vs. Exploitation dilemma",
-        { "ad_slot": "ml-reinforcement-banner", "type": "ad" }
-      ]
-    },
-    {
-      "title": "Types of ML Problems",
-      "type": "interactive",
-      "duration": "15 min",
-      "content": [
-        "Machine learning problems are typically categorized into classification, regression, clustering, and ranking problems.",
-        "- Classification: Predict discrete labels (e.g., spam or not)",
-        "- Regression: Predict continuous values (e.g., price prediction)",
-        "- Clustering: Group data based on similarity",
-        "- Ranking: Order items by relevance (e.g., search results)",
-        { "ad_slot": "ml-types-banner", "type": "ad" }
-      ]
-    }
-  ],
-  "quiz": {
-    "title": "Machine Learning Quiz",
-    "questions": [
-      {
-        "text": "What is the main characteristic of supervised learning?",
-        "options": ["Uses unlabeled data", "Requires labeled training data", "Learns through rewards"],
-        "answer": 1,
-        "explanation": "Supervised learning requires labeled input/output pairs for training"
-      },
-      {
-        "text": "Which is an example of a classification problem?",
-        "options": ["Predicting house prices", "Identifying spam emails", "Forecasting stock market trends"],
-        "answer": 1,
-        "explanation": "Spam detection is a classic classification problem"
-      },
-      {
-        "text": "What does a decision tree use to make predictions?",
-        "options": ["Neural networks", "A series of if-else questions", "Genetic algorithms"],
-        "answer": 1,
-        "explanation": "Decision trees use branching if-else conditions based on feature values"
-      },
-      {
-        "text": "Which ML category involves learning without labeled data?",
-        "options": ["Supervised", "Unsupervised", "Reinforcement"],
-        "answer": 1,
-        "explanation": "Unsupervised learning finds patterns without labeled outcomes"
-      },
-      {
-        "text": "What is the goal of reinforcement learning?",
-        "options": ["Classify inputs", "Maximize a cumulative reward", "Reduce dimensionality"],
-        "answer": 1,
-        "explanation": "Reinforcement learning aims to maximize long-term rewards"
-      },
-      {
-        "text": "Which algorithm is commonly used for clustering?",
-        "options": ["Logistic Regression", "K-Means", "Naive Bayes"],
-        "answer": 1,
-        "explanation": "K-Means is a widely used clustering algorithm"
-      },
-      {
-        "text": "What is overfitting in machine learning?",
-        "options": ["Underestimating data", "Performing well on training but poorly on unseen data", "Ignoring test data"],
-        "answer": 1,
-        "explanation": "Overfitting means the model memorized training data instead of generalizing"
-      },
-      {
-        "text": "Which of the following is a dimensionality reduction technique?",
-        "options": ["Decision Tree", "PCA", "Support Vector Machine"],
-        "answer": 1,
-        "explanation": "PCA reduces the number of input variables while preserving data structure"
-      },
-      {
-        "text": "In reinforcement learning, what defines the agent's behavior?",
-        "options": ["Reward", "Policy", "State"],
-        "answer": 1,
-        "explanation": "The policy dictates the agent's decisions in different states"
-      },
-      {
-        "text": "Which is NOT a typical ML task?",
-        "options": ["Speech Recognition", "Image Compression", "Machine Translation"],
-        "answer": 1,
-        "explanation": "Image compression is more of a signal processing task than core ML"
-      }
-    ],
-    "passingScore": 70
-  }
-},
+  {
+            "title": "Fundamentals of Machine Learning",
+            "description": "Learn the essential machine learning categories and how they apply to AI and blockchain.",
+            "contents": [
+              {
+                "type": "lesson",
+                "title": "Supervised Learning",
+                "duration": "20 min",
+                "lessonType": "interactive",
+                "content": [
+                  "Supervised learning is a type of machine learning where the model is trained using labeled data — each input is paired with the correct output.",
+                  "Examples include classification tasks like spam detection, and regression tasks such as predicting housing prices.",
+                  "The algorithm learns to predict the output from the input using mathematical functions and is evaluated based on how well it generalizes to unseen data.",
+                  "Key concepts include:",
+                  "- Training and test data split",
+                  "- Loss function and optimization",
+                  "- Evaluation metrics like accuracy, precision, recall",
+                  { "ad_slot": "ml-supervised-banner", "type": "ad" }
+                ]
+              },
+              {
+                "type": "lesson",
+                "title": "Unsupervised Learning",
+                "duration": "18 min",
+                "lessonType": "interactive",
+                "content": [
+                  "Unsupervised learning uses data without labeled outputs. The goal is to uncover hidden patterns or structures in the data.",
+                  "Common applications include clustering (e.g., customer segmentation) and dimensionality reduction (e.g., PCA).",
+                  "Algorithms in this category do not receive feedback on performance but group or transform data based on inherent characteristics.",
+                  "- Popular algorithms: K-Means, DBSCAN, Hierarchical Clustering",
+                  "- Dimensionality reduction: PCA, t-SNE",
+                  { "ad_slot": "ml-unsupervised-banner", "type": "ad" }
+                ]
+              },
+              {
+                "type": "lesson",
+                "title": "Reinforcement Learning",
+                "duration": "22 min",
+                "lessonType": "interactive",
+                "content": [
+                  "Reinforcement learning is based on agents taking actions in an environment to maximize a reward signal over time.",
+                  "It is inspired by behavioral psychology and is widely used in robotics, games (like AlphaGo), and decision-making systems.",
+                  "Key elements:",
+                  "- Agent, Environment, Reward, Policy, Value Function",
+                  "- Exploration vs. Exploitation dilemma",
+                  { "ad_slot": "ml-reinforcement-banner", "type": "ad" }
+                ]
+              },
+              {
+                "type": "lesson",
+                "title": "Types of ML Problems",
+                "duration": "15 min",
+                "lessonType": "interactive",
+                "content": [
+                  "Machine learning problems are typically categorized into classification, regression, clustering, and ranking problems.",
+                  "- Classification: Predict discrete labels (e.g., spam or not)",
+                  "- Regression: Predict continuous values (e.g., price prediction)",
+                  "- Clustering: Group data based on similarity",
+                  "- Ranking: Order items by relevance (e.g., search results)",
+                  { "ad_slot": "ml-types-banner", "type": "ad" }
+                ]
+              },
+              {
+                "type": "quiz",
+                "title": "Machine Learning Quiz",
+                "questions": [
+                  {
+                    "text": "What is the main characteristic of supervised learning?",
+                    "options": ["Uses unlabeled data", "Requires labeled training data", "Learns through rewards"],
+                    "answer": 1,
+                    "explanation": "Supervised learning requires labeled input/output pairs for training"
+                  },
+                  {
+                    "text": "Which is an example of a classification problem?",
+                    "options": ["Predicting house prices", "Identifying spam emails", "Forecasting stock market trends"],
+                    "answer": 1,
+                    "explanation": "Spam detection is a classic classification problem"
+                  },
+                  {
+                    "text": "What does a decision tree use to make predictions?",
+                    "options": ["Neural networks", "A series of if-else questions", "Genetic algorithms"],
+                    "answer": 1,
+                    "explanation": "Decision trees use branching if-else conditions based on feature values"
+                  },
+                  {
+                    "text": "Which ML category involves learning without labeled data?",
+                    "options": ["Supervised", "Unsupervised", "Reinforcement"],
+                    "answer": 1,
+                    "explanation": "Unsupervised learning finds patterns without labeled outcomes"
+                  },
+                  {
+                    "text": "What is the goal of reinforcement learning?",
+                    "options": ["Classify inputs", "Maximize a cumulative reward", "Reduce dimensionality"],
+                    "answer": 1,
+                    "explanation": "Reinforcement learning aims to maximize long-term rewards"
+                  },
+                  {
+                    "text": "Which algorithm is commonly used for clustering?",
+                    "options": ["Logistic Regression", "K-Means", "Naive Bayes"],
+                    "answer": 1,
+                    "explanation": "K-Means is a widely used clustering algorithm"
+                  },
+                  {
+                    "text": "What is overfitting in machine learning?",
+                    "options": ["Underestimating data", "Performing well on training but poorly on unseen data", "Ignoring test data"],
+                    "answer": 1,
+                    "explanation": "Overfitting means the model memorized training data instead of generalizing"
+                  },
+                  {
+                    "text": "Which of the following is a dimensionality reduction technique?",
+                    "options": ["Decision Tree", "PCA", "Support Vector Machine"],
+                    "answer": 1,
+                    "explanation": "PCA reduces the number of input variables while preserving data structure"
+                  },
+                  {
+                    "text": "In reinforcement learning, what defines the agent's behavior?",
+                    "options": ["Reward", "Policy", "State"],
+                    "answer": 1,
+                    "explanation": "The policy dictates the agent's decisions in different states"
+                  },
+                  {
+                    "text": "Which is NOT a typical ML task?",
+                    "options": ["Speech Recognition", "Image Compression", "Machine Translation"],
+                    "answer": 1,
+                    "explanation": "Image compression is more of a signal processing task than core ML"
+                  }
+                ],
+                "passingScore": 70
+              }
+            ]
+          }
+        ]
+        },
           {
             "title": "Neural Networks",
             "description": "Understanding artificial neural networks",
