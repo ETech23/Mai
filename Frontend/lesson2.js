@@ -68,7 +68,7 @@ document.body.prepend(this.topNav);
     btn?.addEventListener('click', (e) => {
       const levelIndex = parseInt(e.currentTarget.dataset.level);
       const moduleIndex = parseInt(e.currentTarget.dataset.module);
-      this.loadModule(this.currentTrack, levelIndex, moduleIndex);
+      this.loadLesson(this.currentTrack, levelIndex, moduleIndex);
     });
   });
 
@@ -79,64 +79,6 @@ document.body.prepend(this.topNav);
     });
   });
 }
-     /** addEventListeners() {
-  try {
-    // 1. Verify elements exist before adding listeners
-    const elements = {
-      sidebarToggle: document.getElementById('sidebar-toggle'),
-      themeToggleBtn: document.getElementById('theme-toggle-btn'),
-      retryBtn: document.getElementById('retry-btn'),
-      backButtons: document.querySelectorAll('.back-button'),
-      trackButtons: document.querySelectorAll('.track-btn'),
-      moduleButtons: document.querySelectorAll('.module-btn'),
-      lessonButtons: document.querySelectorAll('.lesson-btn')
-    };
-
-    // 2. Add event listeners with null checks
-    if (elements.sidebarToggle) {
-      elements.sidebarToggle.addEventListener('click', this.toggleSidebar.bind(this));
-    }
-
-    if (elements.themeToggleBtn) {
-      elements.themeToggleBtn.addEventListener('click', this.toggleTheme.bind(this));
-    }
-
-    if (elements.retryBtn) {
-      elements.retryBtn.addEventListener('click', () => location.reload());
-    }
-
-    // 3. Dynamic content listeners (added when content loads)
-    elements.backButtons.forEach(btn => {
-      btn?.addEventListener('click', this.handleBackButton.bind(this));
-    });
-
-    elements.trackButtons.forEach(btn => {
-      btn?.addEventListener('click', (e) => {
-        const trackId = e.currentTarget.dataset.track;
-        this.loadTrack(trackId);
-      });
-    });
-
-    elements.moduleButtons.forEach(btn => {
-      btn?.addEventListener('click', (e) => {
-        const levelIndex = parseInt(e.currentTarget.dataset.level);
-        const moduleIndex = parseInt(e.currentTarget.dataset.module);
-        this.loadModule(this.currentTrack, levelIndex, moduleIndex);
-      });
-    });
-
-    elements.lessonButtons.forEach(btn => {
-      btn?.addEventListener('click', (e) => {
-        const lessonIndex = parseInt(e.currentTarget.dataset.lesson);
-        this.loadLesson(this.currentTrack, this.currentLevel, this.currentModule, lessonIndex);
-      });
-    });
-
-  } catch (error) {
-    console.error('Event listener error:', error);
-    this.renderError('Interface interaction failed');
-  }
-}**/
 
   showCriticalError() {
     document.body.innerHTML = `
@@ -206,22 +148,36 @@ document.body.prepend(this.topNav);
     if (!this.coursesData) {
       this.coursesData = {
         "default-track": {
-          title: "Sample Track",
-          description: "Demo content",
-          levels: [{
-            name: "Level 1",
-            modules: [{
-              title: "Sample Module",
-              description: "Demo module",
-              lessons: [{
-                title: "Sample Lesson",
-                type: "reading",
-                duration: "5 min",
-                content: ["Placeholder content"]
-              }]
-            }]
-          }]
-        }
+    "title": "AI & Cryptocurrency Essentials",
+    "description": "Kickstart your journey into the world of Artificial Intelligence and Cryptocurrency.",
+    "levels": [
+      {
+        "name": "Level 1: Foundations",
+        "modules": [
+          {
+            "title": "Getting Started with AI & Crypto",
+            "description": "An introductory module blending key concepts from AI and blockchain technology.",
+            "contents": [
+              {
+                "title": "The Rise of Intelligent Systems and Digital Currency",
+                "type": "reading",
+                "duration": "8 min",
+                "content": [
+                  "Artificial Intelligence (AI) is revolutionizing industries by enabling machines to learn and make decisions.",
+                  "Meanwhile, Cryptocurrency is redefining finance with decentralized, peer-to-peer systems powered by blockchain.",
+                  "Understanding these technologies opens doors to innovation in automation, security, and financial freedom."
+                ]
+              },
+              {
+                "ad_slot": "ai_crypto_intro_banner",
+                "type": "ad"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
       };
       this.renderTracksOverview();
           this.renderCourseData();
@@ -541,7 +497,7 @@ setupCourseEventListeners() {
       const trackId = btn.closest('.module-card').dataset.track;
       const levelIndex = parseInt(btn.closest('.module-card').dataset.level);
       const moduleIndex = parseInt(btn.closest('.module-card').dataset.module);
-      this.loadModule(trackId, levelIndex, moduleIndex);
+      this.loadLesson(trackId, levelIndex, moduleIndex);
     });
   });
   
@@ -796,7 +752,7 @@ this.renderCourseData();
         this.loadLevel(trackId, levelId);
         break;
       case 'module':
-        this.loadModule(trackId, levelId, moduleId);
+        this.loadLesson(trackId, levelId, moduleId);
         break;
       case 'lesson':
         this.loadLesson(trackId, levelId, moduleId, lessonId);
@@ -1016,7 +972,7 @@ this.renderCourseData();
         btn.addEventListener('click', (e) => {
           const levelIndex = parseInt(e.currentTarget.dataset.level);
           const moduleIndex = parseInt(e.currentTarget.dataset.module);
-          this.loadModule(trackId, levelIndex, moduleIndex);
+          this.loadLesson(trackId, levelIndex, moduleIndex);
         });
       }
     });
@@ -1032,7 +988,7 @@ this.renderCourseData();
     
     // If specific module requested, load it
     if (levelId !== null && moduleId !== null) {
-      this.loadModule(trackId, parseInt(levelId), parseInt(moduleId), lessonId);
+      this.loadLesson(trackId, parseInt(levelId), parseInt(moduleId), lessonId);
     }
     
     // Push state to history
@@ -1040,7 +996,182 @@ this.renderCourseData();
   }
 
   // Load a specific module
-  loadModule(trackId, levelIndex, moduleIndex, lessonId = null) {
+  loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
+  if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) return;
+
+  this.currentTrack = trackId;
+  this.currentLevel = levelIndex;
+  this.currentModule = moduleIndex;
+  this.currentLesson = lessonIndex;
+
+  const track = this.coursesData[trackId];
+  const level = track.levels[levelIndex];
+  const module = level.modules[moduleIndex];
+  const contentItem = module.contents[lessonIndex];
+
+  this.updateNavState('lesson', trackId, levelIndex, moduleIndex, lessonIndex);
+  this.updateActiveNav();
+
+  let content = `<div class="lesson-detail">`;
+
+  // Check if current content is an ad
+  if (contentItem.type === 'ad') {
+    content += `
+      <div class="lesson-detail-header">
+        <div class="back-button" id="back-to-module">
+          <i class="fa-solid fa-arrow-left"></i>
+        </div>
+        <div class="lesson-detail-info">
+          <h2>Sponsored Content</h2>
+          <p>This learning moment is brought to you by a sponsor.</p>
+        </div>
+      </div>
+      <div class="lesson-content">
+        <div class="ad-slot">
+          <div class="ad-placeholder">
+            Ad Slot: ${contentItem.ad_slot}
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    // Lesson header
+    content += `
+      <div class="lesson-detail-header">
+        <div class="back-button" id="back-to-module">
+          <i class="fa-solid fa-arrow-left"></i>
+        </div>
+        <div class="lesson-detail-info">
+          <h2>${contentItem.title}</h2>
+          <div class="lesson-meta">
+            <span class="lesson-type">
+              <i class="fa-solid ${this.getLessonTypeIcon(contentItem.type)}"></i>
+              ${contentItem.type}
+            </span>
+            <span class="lesson-duration">
+              <i class="fa-regular fa-clock"></i>
+              ${contentItem.duration}
+            </span>
+          </div>
+          <div class="breadcrumbs">
+            <span>${track.title}</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>${module.title}</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>${contentItem.title}</span>
+          </div>
+        </div>
+      </div>
+      <div class="lesson-content">
+    `;
+
+    // Handle lesson type
+    switch (contentItem.type.toLowerCase()) {
+      case 'video':
+        content += `
+          <div class="video-container">
+            <div class="video-player">
+              <div class="video-placeholder">
+                <i class="fa-solid fa-play"></i>
+                <span>Video Player</span>
+              </div>
+            </div>
+          </div>
+        `;
+        break;
+      case 'interactive':
+        content += `
+          <div class="interactive-container">
+            <div class="interactive-placeholder">
+              <i class="fa-solid fa-hand-pointer"></i>
+              <span>Interactive Content</span>
+            </div>
+          </div>
+        `;
+        break;
+    }
+
+    // Textual content
+    content += `<div class="lesson-text">`;
+    contentItem.content.forEach(paragraph => {
+      if (paragraph.includes('- ')) {
+        const bullets = paragraph.split('\n');
+        content += `<p>${bullets[0]}</p><ul>`;
+        for (let i = 1; i < bullets.length; i++) {
+          content += `<li>${bullets[i].replace('- ', '')}</li>`;
+        }
+        content += `</ul>`;
+      } else {
+        content += `<p>${paragraph}</p>`;
+      }
+    });
+    content += `</div>`;
+  }
+
+  // Navigation
+  content += `<div class="lesson-navigation">`;
+
+  // Utility to find next/prev non-ad index
+  const findNextIndex = (contents, start, direction) => {
+    let i = start + direction;
+    while (i >= 0 && i < contents.length) {
+      if (contents[i].type !== 'ad') return i;
+      i += direction;
+    }
+    return null;
+  };
+
+  const prevIndex = findNextIndex(module.contents, lessonIndex, -1);
+  const nextIndex = findNextIndex(module.contents, lessonIndex, 1);
+
+  // Previous button
+  if (prevIndex !== null) {
+    content += `
+      <button class="nav-btn prev-btn" data-lesson="${prevIndex}">
+        <i class="fa-solid fa-chevron-left"></i>
+        Previous
+      </button>
+    `;
+  }
+
+  // Complete button (only for lesson types)
+  if (contentItem.type !== 'ad') {
+    const isCompleted = this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex);
+    content += `
+      <button class="complete-btn ${isCompleted ? 'completed' : ''}" id="mark-complete">
+        ${isCompleted ? 'Completed' : 'Mark as Complete'}
+        ${isCompleted ? '<i class="fa-solid fa-check"></i>' : ''}
+      </button>
+    `;
+  }
+
+  // Next button
+  if (nextIndex !== null) {
+    content += `
+      <button class="nav-btn next-btn" data-lesson="${nextIndex}">
+        Next
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    `;
+  } else if (contentItem.type !== 'ad' && module.quiz) {
+    const isQuizUnlocked = this.isQuizUnlocked(trackId, levelIndex, moduleIndex);
+    content += `
+      <button class="nav-btn next-btn quiz-nav-btn" ${!isQuizUnlocked ? 'disabled' : ''}>
+        Take Quiz
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    `;
+  }
+
+  content += `
+      </div>
+    </div>
+  `;
+
+  this.mainContent.innerHTML = content;
+
+  
+ /** loadModule(trackId, levelIndex, moduleIndex, lessonId = null) {
     if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) return;
     
     this.currentTrack = trackId;
@@ -1319,11 +1450,11 @@ this.renderCourseData();
       </div>
     `;
     
-    this.mainContent.innerHTML = content;
+    this.mainContent.innerHTML = content;**/
     
     // Add event listeners
     document.getElementById('back-to-module').addEventListener('click', () => {
-      this.loadModule(trackId, levelIndex, moduleIndex);
+      this.loadLesson(trackId, levelIndex, moduleIndex);
     });
     
     // Mark as complete button
@@ -1546,7 +1677,7 @@ this.renderCourseData();
   
   // Add event listeners
   document.getElementById('back-to-module').addEventListener('click', () => {
-    this.loadModule(trackId, levelIndex, moduleIndex);
+    this.loadLesson(trackId, levelIndex, moduleIndex);
   });
   
   if (isCompleted) {
@@ -1556,7 +1687,7 @@ this.renderCourseData();
     });
     
     document.getElementById('continue-after-quiz').addEventListener('click', () => {
-      this.loadModule(trackId, levelIndex, moduleIndex);
+      this.loadLesson(trackId, levelIndex, moduleIndex);
     });
   } else {
     const quizForm = document.getElementById('quiz-form');
