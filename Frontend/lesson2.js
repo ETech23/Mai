@@ -1612,7 +1612,120 @@ loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
   }, `${quiz.title} - LearnHub`);
 }
   
-  
+  loadTrack(trackId) {
+  const track = this.coursesData[trackId];
+  if (!track) {
+    console.error("Track not found:", trackId);
+    this.mainContent.innerHTML = `<div class="lesson-error"><p>Track not found.</p></div>`;
+    return;
+  }
+
+  this.currentTrack = trackId;
+  this.mainContent.innerHTML = `
+    <div class="track-overview">
+      <h2>${track.title}</h2>
+      <div class="levels-list"></div>
+    </div>
+  `;
+
+  const levelsContainer = this.mainContent.querySelector('.levels-list');
+
+  track.levels.forEach((level, levelIndex) => {
+    const levelBtn = document.createElement('button');
+    levelBtn.classList.add('level-btn');
+    levelBtn.textContent = `Level ${levelIndex + 1}: ${level.title}`;
+    levelBtn.dataset.level = levelIndex;
+
+    if (!this.isLevelUnlocked(trackId, levelIndex)) {
+      levelBtn.disabled = true;
+    }
+
+    levelBtn.addEventListener('click', () => {
+      this.loadLevel(trackId, levelIndex);
+    });
+
+    levelsContainer.appendChild(levelBtn);
+  });
+}
+      
+      loadLevel(trackId, levelIndex) {
+  const track = this.coursesData[trackId];
+  const level = track?.levels?.[levelIndex];
+
+  if (!level) {
+    console.error("Level not found:", { trackId, levelIndex });
+    this.mainContent.innerHTML = `<div class="lesson-error"><p>Level not found or unavailable.</p></div>`;
+    return;
+  }
+
+  this.currentLevel = levelIndex;
+
+  this.mainContent.innerHTML = `
+    <div class="level-overview">
+      <h2>${level.title}</h2>
+      <div class="modules-list"></div>
+    </div>
+  `;
+
+  const modulesContainer = this.mainContent.querySelector('.modules-list');
+
+  level.modules.forEach((module, moduleIndex) => {
+    const moduleBtn = document.createElement('button');
+    moduleBtn.classList.add('module-btn');
+    moduleBtn.textContent = `Module ${moduleIndex + 1}: ${module.title}`;
+    moduleBtn.dataset.module = moduleIndex;
+
+    if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) {
+      moduleBtn.disabled = true;
+    }
+
+    moduleBtn.addEventListener('click', () => {
+      this.loadModule(trackId, levelIndex, moduleIndex);
+    });
+
+    modulesContainer.appendChild(moduleBtn);
+  });
+}
+      
+      loadModule(trackId, levelIndex, moduleIndex) {
+  const track = this.coursesData[trackId];
+  const level = track?.levels?.[levelIndex];
+  const module = level?.modules?.[moduleIndex];
+
+  if (!module) {
+    console.error("Module not found:", { trackId, levelIndex, moduleIndex });
+    this.mainContent.innerHTML = `<div class="lesson-error"><p>Module not found or unavailable.</p></div>`;
+    return;
+  }
+
+  this.currentModule = moduleIndex;
+
+  this.mainContent.innerHTML = `
+    <div class="module-overview">
+      <h2>${module.title}</h2>
+      <div class="lessons-list"></div>
+    </div>
+  `;
+
+  const lessonsContainer = this.mainContent.querySelector('.lessons-list');
+
+  module.contents.forEach((item, lessonIndex) => {
+    const isAd = item?.type === 'ad';
+    const lessonBtn = document.createElement('button');
+    lessonBtn.classList.add('lesson-btn');
+    lessonBtn.textContent = isAd ? `Ad: ${item.ad_slot}` : item.title || `Lesson ${lessonIndex + 1}`;
+    lessonBtn.dataset.lesson = lessonIndex;
+    lessonBtn.disabled = isAd;
+
+    if (!isAd) {
+      lessonBtn.addEventListener('click', () => {
+        this.loadLesson(trackId, levelIndex, moduleIndex, lessonIndex);
+      });
+    }
+
+    lessonsContainer.appendChild(lessonBtn);
+  });
+}
 
   // =============================================
   // Quiz/Exam Related Methods
