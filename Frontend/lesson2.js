@@ -194,6 +194,8 @@ document.body.prepend(this.topNav);
  */
 renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
   try {
+    console.log("Rendering Courses Data:", coursesData); // Log the full data
+
     container.innerHTML = `
       <div class="course-container">
         <header class="course-header">
@@ -202,7 +204,11 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
         </header>
         
         <div class="tracks-grid">
-          ${Object.entries(coursesData).map(([trackId, track]) => `
+          ${Object.entries(coursesData).map(([trackId, track]) => {
+            // Log the entire track to check for the levels data
+            console.log(`Track Data (${trackId}):`, track);
+            
+            return `
             <article class="track-card" data-track="${trackId}">
               <div class="track-header">
                 <h2>${track.title}</h2>
@@ -214,15 +220,19 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
               </div>
               
               <div class="levels-container">
-                ${track.levels.map((level, levelIndex) => `
+                ${track.levels && Array.isArray(track.levels) && track.levels.length > 0 ? track.levels.map((level, levelIndex) => {
+                  // Log the individual level to check its structure
+                  console.log(`Level Data (${trackId}, Level ${levelIndex}):`, level);
+                  
+                  return `
                   <div class="level-card">
                     <h3 class="level-title">
                       <i class="fas fa-layer-group"></i>
-                      ${level.name}
+                      ${level.name || 'Unnamed Level'}  <!-- Fallback for undefined name -->
                     </h3>
                     
                     <div class="modules-grid">
-                      ${level.modules.map((module, moduleIndex) => `
+                      ${level.modules && Array.isArray(level.modules) && level.modules.length > 0 ? level.modules.map((module, moduleIndex) => `
                         <div class="module-card" 
                              data-track="${trackId}"
                              data-level="${levelIndex}"
@@ -235,7 +245,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                           <div class="module-stats">
                             <span class="stat-item">
                               <i class="fas fa-book"></i>
-                              ${module.contents.filter(contentItem => contentItem.type !== 'ad')} Lessons
+                              ${module.contents.filter(contentItem => contentItem.type !== 'ad').length} Lessons
                             </span>
                             <span class="stat-item">
                               <i class="fas fa-question-circle"></i>
@@ -250,7 +260,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                             </button>
                           </div>
                         </div>
-                      `).join('')}
+                      `).join('') : `<p>No modules available for this level</p>`}
                     </div>
                     
                     ${level.exam ? `
@@ -269,14 +279,17 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                       </div>
                     ` : ''}
                   </div>
-                `).join('')}
+                `}).join('') : `<p>No levels available for this track</p>`}
               </div>
             </article>
-          `).join('')}
+          `}).join('')}
         </div>
       </div>
     `;
 
+    // Log the final container to see if HTML is injected
+    console.log("Rendered HTML:", container.innerHTML);
+    
     this.injectCourseStyles();
     this.setupCourseEventListeners();
     
@@ -862,8 +875,16 @@ this.renderCourseData();
 
 // Load a specific lesson (or content item) from a module
 loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
-  if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) return;
+  if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) {
+    return;
+  }
 
+  if (typeof lessonIndex !== 'number') {
+    console.error("Missing or invalid lessonIndex in loadLesson");
+    return;
+  }
+
+  
   this.currentTrack = trackId;
   this.currentLevel = levelIndex;
   this.currentModule = moduleIndex;
@@ -1339,10 +1360,18 @@ console.log('Target content item:', contentItem);
     
     this.mainContent.innerHTML = content;**/
     
-    // Add event listeners
-    document.getElementById('back-to-module').addEventListener('click', () => {
-      this.loadLesson(trackId, levelIndex, moduleIndex);
-    });
+document.getElementById('back-to-module').addEventListener('click', () => {
+  // If the current content item is a lesson
+  if (this.currentLesson !== undefined) {
+    // If user is on a lesson, go back to the module/lessons list
+    this.loadModule(trackId, levelIndex, moduleIndex); 
+  }
+  // If the current content item is a quiz
+  else if (this.currentQuiz !== undefined) {
+    // If user is on a quiz, go back to the lessons list (or previous lesson)
+    this.loadModule(trackId, levelIndex, moduleIndex);
+  } 
+});
     
     // Mark as complete button
     document.getElementById('mark-complete').addEventListener('click', () => {
@@ -1564,7 +1593,16 @@ console.log('Target content item:', contentItem);
   
   // Add event listeners
   document.getElementById('back-to-module').addEventListener('click', () => {
-  this.loadLesson(trackId, levelIndex, moduleIndex, this.currentLesson || 0);
+  // If the current content item is a lesson
+  if (this.currentLesson !== undefined) {
+    // If user is on a lesson, go back to the module/lessons list
+    this.loadModule(trackId, levelIndex, moduleIndex); 
+  }
+  // If the current content item is a quiz
+  else if (this.currentQuiz !== undefined) {
+    // If user is on a quiz, go back to the lessons list (or previous lesson)
+    this.loadModule(trackId, levelIndex, moduleIndex);
+  } 
 });
   
   if (isCompleted) {
