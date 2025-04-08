@@ -1377,7 +1377,7 @@ loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
       levelId: levelIndex, 
       moduleId: moduleIndex,
       lessonId: lessonIndex
-    }, `${lesson.title} - LearnHub`);
+    }, `${contentItem.title || 'Lesson'} - LearnHub`);
   }
 
   // Load a module quiz
