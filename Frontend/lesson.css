@@ -63,12 +63,135 @@ body {
   color: var(--text-color);
   background-color: var(--bg-color);
 }
+.lesson-btn {
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding: 0.75rem 1rem !important;
+  margin-top: 0.1rem !important;
+  
+  background: #2C3539 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, background 0.3s ease !important;
+}
+.lesson-detail-header h2 {
+  font-size: 1.5rem !important;
+  color: #00695c;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+
+.lesson-btn:hover {
+  background: linear-gradient(to right, #b2ebf2, #b2dfdb)!important;
+  transform: translateY(-2px) !important;
+}
+
+
+.track-overview {
+  padding: 1.5rem !important;
+  background-color: #f8f9fa !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  text-align: center !important;
+  margin: 1rem !important;
+}
+
+.track-overview h2 {
+  font-size: 1.8rem !important;
+  margin-bottom: 1rem !important;
+  color: #333;
+}
+
+.levels-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem !important;
+  justify-content: center !important;
+}
+
+.level-btn {
+  padding: 0.9rem 1.2rem !important;
+  background: #2C3539 !important; 
+  border: none;
+  color: white;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border-radius: 0.75rem !important;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  flex: 1 1 100% !important; /* Full width on mobile */
+  max-width: 400px !important;
+}
+
+.level-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.level-btn:disabled {
+  background: #ccc !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+/* Responsive tweaks */
+@media (min-width: 480px) {
+  .level-btn {
+    flex: 1 1 45% !important; /* Two per row on small tablets */
+  }
+}
+
+@media (min-width: 768px) {
+  .track-overview {
+    padding: 2rem !important;
+  }
+
+  .level-btn {
+    flex: 1 1 30% !important; /* Three per row on larger screens */
+  }
+}
+.level-btn {
+  padding: 0.9rem 1.2rem !important;
+  background: #2C3539 !important; /* Baby blue to greenish-blue */
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem !important;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow);
+  flex: 1 1 100%;
+  max-width: 400px;
+}
+
+.level-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.95;
+}
+
+.level-btn:disabled {
+  background: linear-gradient(135deg, #cccccc, #aaaaaa);
+  cursor: not-allowed;
+  opacity: 0.6;
+  color: #555;
+}
+
+
 /* Track Overview Styling */
 .tracks-container {
   
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 2rem 1rem !important;
 }
 
 .section-title {
@@ -86,7 +209,7 @@ body {
 .track-card {
   
   background: white;
-  border-radius: 10px;
+  border-radius: 10px !important;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   overflow: hidden;
   transition: transform 0.2s ease;
@@ -127,6 +250,7 @@ body {
 }
 
 .track-info h3 {
+    
   margin: 0 0 0.5rem;
   color: #2c3e50;
 }
@@ -162,6 +286,7 @@ body {
   display: block;
   width: 100%;
   padding: 0.8rem;
+  border-radius: 6px;
   background: #3498db;
   color: white;
   border: none;
@@ -181,6 +306,7 @@ body {
 
 /* Track Detail Styling */
 .track-detail {
+    border-radius: 6px;
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
@@ -190,6 +316,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
+  border-radius: 6px !important;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #ecf0f1;
@@ -228,7 +355,7 @@ body {
 .level-card {
   margin-bottom: 2rem;
   border-radius: 8px;
-  background: white;
+  background: white !important;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -266,73 +393,101 @@ body {
 }
 
 .modules-container {
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+  padding: 1rem !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 1.2rem !important;
 }
 
 .module-card {
-  padding: 1rem;
-  border-radius: 6px;
-  background: #f8f9fa;
-  transition: transform 0.2s;
+  padding: 1.2rem !important;
+  border-radius: 1rem !important;
+  background: linear-gradient(to bottom right, #e0f7fa, #ffffff) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
 }
 
 .module-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
 .module-card.unlocked {
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #00bcd4 !important;
 }
 
 .module-card.locked {
-  border-left: 4px solid #bdc3c7;
-  opacity: 0.7;
+  border-left: 4px solid #cfd8dc !important;
+  opacity: 0.6 !important;
+  pointer-events: none !important;
 }
 
 .module-header h4 {
-  margin: 0 0 0.3rem;
-  color: #2c3e50;
+  margin: 0 0 0.4rem !important;
+  color: #00796b !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  text-align: center;
 }
 
 .module-header p {
-  margin: 0.3rem 0;
-  color: #7f8c8d;
-  font-size: 0.9rem;
+  margin: 0.3rem 0 !important;
+  color: #546e7a !important;
+  font-size: 0.9rem !important;
+  text-align: center;
 }
 
 .module-progress {
-  margin: 0.8rem 0;
+  margin: 1rem 0 !important;
+  height: 6px !important;
+  background: #e0e0e0 !important;
+  border-radius: 3px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.module-progress::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100% !important;
+  width: 50% !important; /* Adjust based on actual progress */
+  background: #00bcd4 !important;
+  border-radius: 3px !important;
+  transition: width 0.3s ease-in-out !important;
 }
 
 .module-btn {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s;
+  width: 100% !important;
+  padding: 0.6rem 1rem !important;
+  margin-top: 0.8rem !important;
+  background: #2C3539 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease !important;
 }
 
 .module-btn:hover {
-  background: #2980b9;
+  background: #0097a7 !important;
 }
 
 .module-btn:disabled {
-  background: #bdc3c7;
-  cursor: not-allowed;
+  background: #cfd8dc !important;
+  cursor: not-allowed !important;
 }
 
 .exam-card {
-  padding: 1rem;
-  margin-top: 1rem;
-  border-radius: 6px;
-  background: #f0f7ff;
+  padding: 1.2rem !important;
+  margin-top: 1rem !important;
+  border-radius: 1rem !important;
+  background: linear-gradient(to bottom right, #f1f8ff, #ffffff) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
 }
 
 .exam-card.unlocked {
@@ -568,7 +723,7 @@ body {
 
 .lesson-detail-header {
   display: flex;
-  gap: 1rem;
+  gap: 2px;
   margin-bottom: 1.5rem;
 }
 

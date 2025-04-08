@@ -287,8 +287,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
       </div>
     `;
 
-    // Log the final container to see if HTML is injected
-    console.log("Rendered HTML:", container.innerHTML);
+    // Log the final container to see if HTML is injectedconsole.log("Rendered HTML:", container.innerHTML);
     
     this.injectCourseStyles();
     this.setupCourseEventListeners();
@@ -308,133 +307,185 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
 injectCourseStyles() {
   const style = document.createElement('style');
   style.textContent = `
+    :root {
+      --primary-color: #2C3539;
+      --secondary-color: #56ccf2; /* baby blue */
+      --accent-color: #38b2ac; /* greenish-blue */
+      --text-color: #2b2d42;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --border-color: #e9ecef;
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
     .course-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 2rem 1rem;
+      padding: 1rem;
       font-family: 'Segoe UI', Roboto, sans-serif;
     }
-    
+
     .course-header {
       text-align: center;
       margin-bottom: 2rem;
     }
-    
+
     .course-header h1 {
-      font-size: 2.2rem;
-      color: #2c3e50;
+      font-size: 2rem;
+      color: var(--text-color);
     }
-    
+
     .subtitle {
       color: #7f8c8d;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
-    
+
     .tracks-grid {
       display: grid;
-      gap: 2rem;
+      gap: 1.5rem;
     }
-    
+
     .track-card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
-    
+
     .track-header {
-      padding: 1.5rem;
-      background: linear-gradient(135deg, #3498db, #2c3e50);
+      padding: 1.25rem;
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
       color: white;
     }
-    
+
     .track-header h2 {
-      margin: 0 0 0.5rem;
+      margin: 0;
       font-size: 1.5rem;
     }
-    
+
     .track-progress {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 1rem;
     }
-    
+
     .track-progress progress {
       flex-grow: 1;
       height: 6px;
       border-radius: 3px;
     }
-    
+
     .track-progress span {
       font-size: 0.9rem;
     }
-    
+
+    .track-overview {
+      padding: 2rem 1rem;
+      background: linear-gradient(135deg, #b2f7ef, #cfd9df);
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .track-overview h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+    }
+
+    .levels-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .level-btn {
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .level-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .level-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
     .levels-container {
       padding: 1rem;
     }
-    
-    .level-card {
-      margin-bottom: 2rem;
-    }
-    
+
     .level-title {
+      color: var(--text-color);
+      font-size: 1.25rem;
+      margin: 2rem 0 1rem;
+      font-weight: bold;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #2c3e50;
-      font-size: 1.2rem;
-      margin: 1rem 0;
     }
-    
+
     .modules-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
-    
+
     .module-card {
-      background: #f8f9fa;
-      border-radius: 6px;
+      background: linear-gradient(to bottom right, #ebfaff, #e6fffa);
+      border-left: 4px solid var(--accent-color);
       padding: 1rem;
-      border-left: 4px solid #3498db;
-      transition: transform 0.2s;
+      border-radius: 0.75rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: var(--shadow);
     }
-    
+
     .module-card:hover {
       transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.12);
     }
-    
+
     .module-header h4 {
       margin: 0 0 0.3rem;
-      color: #2c3e50;
+      color: var(--text-color);
+      font-size: 1.1rem;
     }
-    
+
     .module-description {
-      color: #666;
+      color: #555;
       font-size: 0.9rem;
-      margin: 0.3rem 0 0.8rem;
+      margin-bottom: 0.8rem;
     }
-    
+
     .module-stats {
       display: flex;
       gap: 1rem;
       font-size: 0.8rem;
       color: #7f8c8d;
-      margin: 0.8rem 0;
+      margin: 0.5rem 0;
     }
-    
-    .module-stats i {
-      margin-right: 0.3rem;
-    }
-    
+
     .module-actions {
       margin-top: 0.5rem;
     }
-    
+
     .btn-start {
-      background: #3498db;
+      background: var(--secondary-color);
       color: white;
       border: none;
       padding: 0.5rem 1rem;
@@ -442,7 +493,30 @@ injectCourseStyles() {
       cursor: pointer;
       font-size: 0.9rem;
     }
-    
+
+    .btn-start:hover {
+      background: var(--accent-color);
+    }
+
+    .lesson-list {
+      margin-top: 1rem;
+    }
+
+    .lesson-item {
+      background: white;
+      padding: 0.75rem 1rem;
+      border-left: 4px solid var(--secondary-color);
+      border-radius: 6px;
+      margin-bottom: 0.8rem;
+      box-shadow: var(--shadow);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .lesson-item:hover {
+      background: #eaf9ff;
+    }
+
     .exam-card {
       background: #f0f7ff;
       border-radius: 6px;
@@ -450,22 +524,20 @@ injectCourseStyles() {
       margin-top: 1rem;
       border-left: 4px solid #e74c3c;
     }
-    
+
     .exam-header h4 {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 0 0 0.3rem;
-      color: #2c3e50;
+      color: var(--text-color);
+      font-size: 1.1rem;
+      margin: 0;
     }
-    
+
     .exam-passing {
       font-size: 0.9rem;
       color: #e74c3c;
       font-weight: bold;
       margin: 0.5rem 0;
     }
-    
+
     .btn-exam {
       background: #e74c3c;
       color: white;
@@ -475,10 +547,25 @@ injectCourseStyles() {
       cursor: pointer;
       font-size: 0.9rem;
     }
-    
+
+    .btn-exam:hover {
+      background: #c0392b;
+    }
+
     @media (max-width: 768px) {
+      .tracks-grid,
       .modules-grid {
         grid-template-columns: 1fr;
+      }
+
+      .track-overview,
+      .track-card {
+        padding: 1rem;
+      }
+
+      .level-btn {
+        width: 100%;
+        text-align: center;
       }
     }
   `;
@@ -1697,7 +1784,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
   this.mainContent.innerHTML = `
     <div class="track-overview">
       <h2>${track.title}</h2>
-      <div class="levels-list"></div>
+      <div class="levels-list"> <h2></h2></div>
     </div>
   `;
 
@@ -1706,7 +1793,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
   track.levels.forEach((level, levelIndex) => {
     const levelBtn = document.createElement('button');
     levelBtn.classList.add('level-btn');
-    levelBtn.textContent = `Level ${levelIndex + 1}: ${level.title}`;
+    levelBtn.textContent = `Level ${levelIndex + 1}: ${level.name || 'Unnamed Level'}`;
     levelBtn.dataset.level = levelIndex;
 
     if (!this.isLevelUnlocked(trackId, levelIndex)) {
@@ -1735,7 +1822,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
 
   this.mainContent.innerHTML = `
     <div class="level-overview">
-      <h2>${level.title}</h2>
+      <h2>${level.name}</h2>
       <div class="modules-list"></div>
     </div>
   `;
@@ -1902,6 +1989,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
 
       if (!this.isExamUnlocked(trackId, levelIndex)) {
         throw new Error('Exam is not unlocked yet');
+            this.showMessage('Exam is not unlocked yet');
       }
 
       if (this.isExamPassed(trackId, levelIndex)) {
