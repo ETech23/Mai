@@ -1,12 +1,424 @@
 {
-  "ai-crypto-track": {
-    "title": "Machine Learning Basics",
-    "description": "Introduction to ML concepts and algorithms",
+  "ai": {
+    "title": "Artificial Intelligence",
+    "description": "Master AI concepts from fundamentals to advanced implementations",
     "levels": [
       {
-        "name": "Level 1: Core Concepts",
+        "name": "Beginner Level: AI Fundamentals",
         "modules": [
           {
+              "title": "Comprehensive Introduction to Artificial Intelligence",
+              "description": "An in-depth beginner's guide to AI concepts, technologies, applications, and ethical considerations",
+        "contents": [
+            {
+            "title": "Foundations of Artificial Intelligence",
+            "type": "video",
+            "duration": "25 min",
+            "content": [
+                "1. Definition and Scope:",
+                "- AI as the simulation of human intelligence processes by machines",
+                "- Includes learning, reasoning, problem-solving, perception, and language understanding",
+                "- Combines computer science, psychology, philosophy, neuroscience, and linguistics",
+                "",
+                "2. Historical Evolution:",
+                "- 1943: McCulloch & Pitts propose first artificial neuron model",
+                "- 1950: Alan Turing's Computing Machinery and Intelligence paper",
+                "- 1956: Dartmouth Conference officially establishes AI as a field",
+                "- 1960s-70s: Early successes in problem-solving and game playing",
+                "- 1980s: Expert systems boom",
+                "- 1990s: Machine learning renaissance",
+                "- 2010s: Deep learning breakthroughs",
+                "",
+                "3. Key Concepts:",
+                "- Intelligent Agents: Systems that perceive and act on their environment",
+                "- Rationality: Making optimal decisions given available information",
+                "- Cognitive Modeling: Attempting to replicate human thought processes",
+                "- The Chinese Room thought experiment and its implications"
+                    ],
+                    "quiz": {
+                    "title":   "Foundations of Artificial Intelligence Quiz",
+                    "questions": [
+                    {
+                    "text": "Which event marked the official birth of AI as a field?",
+                    "options": [
+                    "Publication of Turing's paper",
+                    "Dartmouth Conference",
+                    "Invention of the perceptron",
+                    "Development of ELIZA"
+                    ],
+                    "answer": 1,
+                    "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
+                    },
+                    {
+                    "text": "What does the Chinese Room thought experiment challenge?",
+                    "options": [
+                    "The speed of AI systems",
+                    "Whether AI can truly understand",
+                    "The cost of developing AI",
+                    "AI's mathematical capabilities"
+                    ],
+                    "answer": 1,
+                    "explanation": "John Searle's argument suggests that mere symbol manipulation doesn't constitute genuine understanding"
+                    },
+                    {
+                    "text": "Which of these is NOT a characteristic of intelligent agents?",
+                    "options": [
+                    "Perception of environment",
+                    "Ability to reproduce",
+                    "Decision-making capability",
+                    "Taking actions to achieve goals"
+                    ],
+                    "answer": 1,
+                    "explanation": "Reproduction isn't a requirement for artificial intelligent agents"
+                }
+                ],
+                "passingScore": 75
+            }
+            },
+            {
+            "title": "AI Technologies Deep Dive",
+            "type": "interactive",
+            "duration": "40 min",
+            "content": [
+                "1. Machine Learning Paradigms:",
+                "- Supervised Learning: Labeled data trains models (e.g., spam detection)",
+                "- Unsupervised Learning: Finds patterns in unlabeled data (e.g., customer segmentation)",
+                "- Reinforcement Learning: Learns through rewards/punishments (e.g., game AIs)",
+                "- Semi-supervised Learning: Combines labeled and unlabeled data",
+                "- Self-supervised Learning: Creates its own labels from data structure",
+                "",
+                "2. Neural Network Architectures:",
+                "- Feedforward Neural Networks: Basic information flow",
+                "- Convolutional Neural Networks (CNNs): For image processing",
+                "- Recurrent Neural Networks (RNNs): For sequential data",
+                "- Transformers: Attention-based models (e.g., GPT, BERT)",
+                "",
+                "3. Natural Language Processing Components:",
+                "- Tokenization: Breaking text into meaningful units",
+                "- Word Embeddings: Representing words numerically (Word2Vec, GloVe)",
+                "- Sequence Models: Handling context in language",
+                "- Attention Mechanisms: Focusing on relevant parts of input",
+                "",
+                "4. Computer Vision Techniques:",
+                "- Image Classification: Categorizing images",
+                "- Object Detection: Identifying and locating objects",
+                "- Semantic Segmentation: Pixel-level classification",
+                "- Image Generation: Creating new images (GANs, Diffusion Models)"
+            ],
+            "quiz": {
+                "title": "Foundations of Artificial Intelligence Quiz",
+                "questions": [
+                {
+                    "text": "Which learning paradigm would be best for training a chess AI?",
+                    "options": [
+              "Supervised Learning",
+              "Unsupervised Learning",
+              "Reinforcement Learning",
+              "Self-supervised Learning"
+            ],
+            "answer": 2,
+            "explanation": "Reinforcement Learning is ideal for game AIs as they learn through winning/losing feedback"
+          },
+          {
+            "text": "What architecture is most suitable for processing medical images?",
+            "options": [
+              "Recurrent Neural Network",
+              "Convolutional Neural Network",
+              "Transformer",
+              "Radial Basis Function Network"
+            ],
+            "answer": 1,
+            "explanation": "CNNs are specifically designed for processing grid-like data such as images"
+          },
+          {
+            "text": "Which NLP technique converts 'cat' to [0.25, -0.1, 0.7]?",
+            "options": [
+              "Tokenization",
+              "Parsing",
+              "Word Embedding",
+              "Lemmatization"
+            ],
+            "answer": 2,
+            "explanation": "Word embeddings represent words as dense numerical vectors capturing semantic meaning"
+          },
+          {
+            "text": "What does GAN stand for in AI?",
+            "options": [
+              "Generalized Adversarial Network",
+              "Generative Adversarial Network",
+              "Graphical Analysis Network",
+              "Gradient Adjustment Node"
+            ],
+            "answer": 1,
+            "explanation": "GANs consist of generator and discriminator networks competing against each other"
+          }
+        ],
+        "passingScore": 80
+      }
+    },
+    {
+      "title": "AI Applications Across Industries",
+      "type": "case_study",
+      "duration": "35 min",
+      "content": [
+        "1. Healthcare Revolution:",
+        "- Diagnostic AI: Analyzing X-rays with >95% accuracy (e.g., Google's DeepMind)",
+        "- Drug Discovery: Reducing development time from years to months (e.g., Atomwise)",
+        "- Personalized Medicine: Tailoring treatments based on patient genetics",
+        "- Robot-assisted Surgery: da Vinci surgical system performing precise operations",
+        "",
+        "2. Financial Services Transformation:",
+        "- Algorithmic Trading: AI making microsecond trading decisions",
+        "- Fraud Detection: Identifying suspicious patterns in real-time",
+        "- Credit Scoring: Alternative credit assessment models",
+        "- Chatbot Advisors: 24/7 financial guidance (e.g., Erica by Bank of America)",
+        "",
+        "3. Smart Cities and Infrastructure:",
+        "- Traffic Management: Adaptive signal control reducing congestion by 25%",
+        "- Predictive Maintenance: Anticipating equipment failures",
+        "- Energy Optimization: Smart grids balancing supply and demand",
+        "- Public Safety: Gunshot detection systems",
+        "",
+        "4. Retail and E-commerce:",
+        "- Visual Search: Finding products using images (e.g., Pinterest Lens)",
+        "- Dynamic Pricing: Real-time price adjustments based on demand",
+        "- Inventory Forecasting: Predicting stock needs with 98% accuracy",
+        "- Virtual Try-ons: AR applications for cosmetics and clothing"
+      ],
+      "quiz": {
+        "title": "Foundations of Artificial Intelligence Quiz",
+        "questions": [
+          {
+            "text": "Which healthcare application analyzes medical images?",
+            "options": [
+              "Robot-assisted Surgery",
+              "Diagnostic AI",
+              "Personalized Medicine",
+              "Drug Discovery"
+            ],
+            "answer": 1,
+            "explanation": "Diagnostic AI systems specialize in interpreting medical imaging like X-rays and MRIs"
+          },
+          {
+            "text": "What AI application helps balance electricity grids?",
+            "options": [
+              "Algorithmic Trading",
+              "Energy Optimization",
+              "Predictive Maintenance",
+              "Visual Search"
+            ],
+            "answer": 1,
+            "explanation": "AI-powered energy optimization systems manage smart grids efficiently"
+          },
+          {
+            "text": "Which technology enables virtual clothing try-ons?",
+            "options": [
+              "Blockchain",
+              "Augmented Reality",
+              "Internet of Things",
+              "Edge Computing"
+            ],
+            "answer": 1,
+            "explanation": "AR overlays digital clothing items on live video of customers"
+          },
+          {
+            "text": "What percentage accuracy do top inventory forecasting AIs achieve?",
+            "options": [
+              "75%",
+              "85%",
+              "98%",
+              "65%"
+            ],
+            "answer": 2,
+            "explanation": "Modern AI systems can predict inventory needs with up to 98% accuracy"
+          }
+        ],
+        "passingScore": 75
+      }
+    },
+    {
+      "title": "AI Ethics and Future Directions",
+      "type": "discussion",
+      "duration": "30 min",
+      "content": [
+        "1. Ethical Considerations:",
+        "- Bias and Fairness: Addressing dataset and algorithmic biases",
+        "- Transparency: Explainable AI vs. black box models",
+        "- Privacy: Data collection and usage concerns",
+        "- Accountability: Determining responsibility for AI decisions",
+        "",
+        "2. Societal Impact:",
+        "- Job Displacement vs. Creation: Net employment effects",
+        "- Economic Inequality: Concentration of AI benefits",
+        "- Digital Divide: Access to AI technologies",
+        "- Autonomous Weapons: Military applications debate",
+        "",
+        "3. Regulatory Landscape:",
+        "- GDPR and AI: Right to explanation",
+        "- AI Act (EU): Risk-based classification system",
+        "- US Approach: Sector-specific regulations",
+        "- Global Governance: International cooperation needs",
+        "",
+        "4. Future Trends:",
+        "- Multimodal AI: Combining vision, language, etc.",
+        "- Neuro-symbolic AI: Merging neural networks with symbolic reasoning",
+        "- AI for Science: Accelerating scientific discoveries",
+        "- Artificial General Intelligence: Pathways and timelines"
+      ]
+    }
+  ],
+   "quiz": {
+        "title": "Foundations of Artificial Intelligence Quiz",
+        "questions": [
+          {
+            "text": "Which regulation includes 'right to explanation' for AI decisions?",
+            "options": [
+              "CCPA",
+              "GDPR",
+              "HIPAA",
+              "DMCA"
+            ],
+            "answer": 1,
+            "explanation": "The EU's General Data Protection Regulation includes provisions about explainability of automated decisions"
+          },
+          {
+            "text": "What is a main criticism of current AI systems?",
+            "options": [
+              "They're too expensive",
+              "They're often black boxes",
+              "They're too slow",
+              "They require too much electricity"
+            ],
+            "answer": 1,
+            "explanation": "Lack of explainability in complex models is a major ethical concern"
+          },
+          {
+            "text": "Which future trend combines different AI modalities?",
+            "options": [
+              "Multimodal AI",
+              "Quantum AI",
+              "Edge AI",
+              "TinyML"
+            ],
+            "answer": 0,
+            "explanation": "Multimodal AI integrates multiple data types (text, images, etc.) for richer understanding"
+          },
+          {
+            "text": "What percentage of jobs are estimated to be significantly impacted by AI?",
+            "options": [
+              "10-20%",
+              "30-40%",
+              "50-60%",
+              "70-80%"
+            ],
+            "answer": 1,
+            "explanation": "Most studies suggest about 30-40% of jobs will undergo major transformation due to AI"
+          },
+          {
+                "text": "Which event marked the official birth of AI as a field?",
+                    "options": [
+                    "Publication of Turing's paper",
+                    "Dartmouth Conference",
+                    "Invention of the perceptron",
+                    "Development of ELIZA"
+                    ],
+                    "answer": 1,
+                    "explanation": "The 1956 Dartmouth Summer Research Project on Artificial Intelligence is considered the founding event of AI"
+                    },
+                    {
+                    "text": "What does the Chinese Room thought experiment challenge?",
+                    "options": [
+                    "The speed of AI systems",
+                    "Whether AI can truly understand",
+                    "The cost of developing AI",
+                    "AI's mathematical capabilities"
+                    ],
+                    "answer": 1,
+                    "explanation": "John Searle's argument suggests that mere symbol manipulation doesn't constitute genuine understanding"
+                    },
+                    {
+                    "text": "Which of these is NOT a characteristic of intelligent agents?",
+                    "options": [
+                    "Perception of environment",
+                    "Ability to reproduce",
+                    "Decision-making capability",
+                    "Taking actions to achieve goals"
+                    ],
+                    "answer": 1,
+                    "explanation": "Reproduction isn't a requirement for artificial intelligent agents"
+          },
+          {
+                    "text": "Which learning paradigm would be best for training a chess AI?",
+                    "options": [
+              "Supervised Learning",
+              "Unsupervised Learning",
+              "Reinforcement Learning",
+              "Self-supervised Learning"
+            ],
+            "answer": 2,
+            "explanation": "Reinforcement Learning is ideal for game AIs as they learn through winning/losing feedback"
+          },
+          {
+            "text": "What architecture is most suitable for processing medical images?",
+            "options": [
+              "Recurrent Neural Network",
+              "Convolutional Neural Network",
+              "Transformer",
+              "Radial Basis Function Network"
+            ],
+            "answer": 1,
+            "explanation": "CNNs are specifically designed for processing grid-like data such as images"
+          },
+           {
+            "text": "Which healthcare application analyzes medical images?",
+            "options": [
+              "Robot-assisted Surgery",
+              "Diagnostic AI",
+              "Personalized Medicine",
+              "Drug Discovery"
+            ],
+            "answer": 1,
+            "explanation": "Diagnostic AI systems specialize in interpreting medical imaging like X-rays and MRIs"
+          },
+          {
+            "text": "What AI application helps balance electricity grids?",
+            "options": [
+              "Algorithmic Trading",
+              "Energy Optimization",
+              "Predictive Maintenance",
+              "Visual Search"
+            ],
+            "answer": 1,
+            "explanation": "AI-powered energy optimization systems manage smart grids efficiently"
+          },
+          {
+            "text": "Which technology enables virtual clothing try-ons?",
+            "options": [
+              "Blockchain",
+              "Augmented Reality",
+              "Internet of Things",
+              "Edge Computing"
+            ],
+            "answer": 1,
+            "explanation": "AR overlays digital clothing items on live video of customers"
+          },
+          {
+            "text": "What percentage accuracy do top inventory forecasting AIs achieve?",
+            "options": [
+              "75%",
+              "85%",
+              "98%",
+              "65%"
+            ],
+            "answer": 2,
+            "explanation": "Modern AI systems can predict inventory needs with up to 98% accuracy"
+          }
+        ],
+        "passingScore": 80
+      }
+},
+        
+  {
             "title": "Fundamentals of Machine Learning",
             "description": "Learn the essential machine learning categories and how they apply to AI and blockchain.",
             "contents": [
@@ -136,8 +548,249 @@
                 "passingScore": 70
               }
             ]
+        },
+          {
+            "title": "Neural Networks",
+            "description": "Understanding artificial neural networks",
+            "contents": [
+              {
+                "title": "Perceptrons",
+                "type": "interactive",
+                "duration": "25 min",
+                "content": [
+                  "Perceptrons are the building blocks of neural networks.",
+                  "Key concepts:",
+                  "- Weights and biases",
+                  "- Activation functions",
+                  "- Forward propagation"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Neural Networks Quiz",
+              "questions": [
+                {
+                  "text": "What is the purpose of an activation function?",
+                  "options": [
+                    "To introduce non-linearity",
+                    "To reduce computation time",
+                    "To visualize the network"
+                  ],
+                  "answer": 0,
+                  "explanation": "Activation functions introduce non-linear properties to the network"
+                },
+                {
+                  "text": "Which layer is typically the last in a classification network?",
+                  "options": [
+                    "Convolutional layer",
+                    "Softmax layer",
+                    "Pooling layer"
+                  ],
+                  "answer": 1,
+                  "explanation": "Softmax layers output probability distributions for classification"
+                },
+                {
+                  "text": "What does backpropagation calculate?",
+                  "options": [
+                    "Input data statistics",
+                    "Error gradients",
+                    "Network visualization"
+                  ],
+                  "answer": 1,
+                  "explanation": "Backpropagation calculates error gradients to update weights"
+                }
+              ],
+              "passingScore": 70
+            }
           }
-        ]
+        ],
+        "exam": {
+          "title": "AI Fundamentals Exam",
+          "description": "Final assessment for beginner AI track",
+          "passingScore": 75,
+          "certificate": {
+            "title": "AI Fundamentals Certificate",
+            "description": "Awarded for completing the Beginner AI track"
+          }
+        }
+      }
+    ]
+  },
+  "crypto": {
+    "title": "Cryptocurrency",
+    "description": "Learn blockchain technology and cryptocurrency concepts",
+    "levels": [
+      {
+        "name": "Beginner Level: Crypto Fundamentals",
+        "modules": [
+          {
+            "title": "Blockchain Basics",
+            "description": "Understanding distributed ledger technology",
+            "contents": [
+              {
+                "title": "What is Blockchain?",
+                "type": "video",
+                "duration": "12 min",
+                "content": [
+                  "Blockchain is a decentralized, distributed ledger technology.",
+                  "Key characteristics:",
+                  "- Immutable records",
+                  "- Distributed across nodes",
+                  "- Cryptographic security"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Blockchain Basics Quiz",
+              "questions": [
+                {
+                  "text": "What makes blockchain secure?",
+                  "options": ["Central authority", "Cryptography", "Firewalls"],
+                  "answer": 1,
+                  "explanation": "Blockchain uses cryptographic hashing to secure data"
+                },
+                {
+                  "text": "What is a block in blockchain?",
+                  "options": [
+                    "A unit of cryptocurrency",
+                    "A collection of verified transactions",
+                    "A mining computer"
+                  ],
+                  "answer": 1,
+                  "explanation": "Blocks contain batches of valid transactions"
+                },
+                {
+                  "text": "What is the purpose of mining?",
+                  "options": [
+                    "To create new coins",
+                    "To validate transactions and secure the network",
+                    "To store blockchain data"
+                  ],
+                  "answer": 1,
+                  "explanation": "Mining validates transactions and maintains network security"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Cryptocurrency Fundamentals",
+            "description": "Core concepts of digital currencies",
+            "contents": [
+              {
+                "title": "Bitcoin Overview",
+                "type": "video",
+                "duration": "15 min",
+                "content": [
+                  "Bitcoin is the first decentralized cryptocurrency.",
+                  "Key aspects:",
+                  "- Limited supply (21 million)",
+                  "- Proof-of-work consensus",
+                  "- Pseudonymous transactions"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Cryptocurrency Quiz",
+              "questions": [
+                {
+                  "text": "Who created Bitcoin?",
+                  "options": [
+                    "Satoshi Nakamoto",
+                    "Vitalik Buterin",
+                    "The US Government"
+                  ],
+                  "answer": 0,
+                  "explanation": "Bitcoin was created by the pseudonymous Satoshi Nakamoto"
+                },
+                {
+                  "text": "What determines Bitcoin's supply?",
+                  "options": [
+                    "Miners vote on it",
+                    "It's hard-coded in the protocol",
+                    "The government regulates it"
+                  ],
+                  "answer": 1,
+                  "explanation": "Bitcoin's 21 million supply limit is protocol-enforced"
+                },
+                {
+                  "text": "What is a wallet address?",
+                  "options": [
+                    "A bank account number",
+                    "A cryptographic public key",
+                    "A mining reward address"
+                  ],
+                  "answer": 1,
+                  "explanation": "Wallet addresses are derived from public keys"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Smart Contracts",
+            "description": "Introduction to programmable contracts",
+            "contents": [
+              {
+                "title": "Ethereum Basics",
+                "type": "interactive",
+                "duration": "20 min",
+                "content": [
+                  "Ethereum introduced smart contract functionality.",
+                  "Key concepts:",
+                  "- Turing-complete contracts",
+                  "- Gas fees",
+                  "- ERC standards"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Smart Contracts Quiz",
+              "questions": [
+                {
+                  "text": "What are smart contracts?",
+                  "options": [
+                    "Legally binding digital documents",
+                    "Self-executing code on blockchain",
+                    "AI-powered legal assistants"
+                  ],
+                  "answer": 1,
+                  "explanation": "Smart contracts are self-executing programs stored on blockchain"
+                },
+                {
+                  "text": "What is 'gas' in Ethereum?",
+                  "options": [
+                    "A cryptocurrency",
+                    "A measurement of computational effort",
+                    "A type of smart contract"
+                  ],
+                  "answer": 1,
+                  "explanation": "Gas measures the computational work needed for operations"
+                },
+                {
+                  "text": "Which language is commonly used for Ethereum smart contracts?",
+                  "options": [
+                    "Python",
+                    "Solidity",
+                    "JavaScript"
+                  ],
+                  "answer": 1,
+                  "explanation": "Solidity is the primary language for Ethereum contracts"
+                }
+              ],
+              "passingScore": 70
+            }
+          }
+        ],
+        "exam": {
+          "title": "Crypto Fundamentals Exam",
+          "description": "Final assessment for beginner crypto track",
+          "passingScore": 75,
+          "certificate": {
+            "title": "Blockchain Fundamentals Certificate",
+            "description": "Awarded for completing the Beginner Crypto track"
+          }
+        }
       }
     ]
   }
