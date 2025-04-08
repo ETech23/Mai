@@ -869,10 +869,21 @@ loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
   this.currentModule = moduleIndex;
   this.currentLesson = lessonIndex;
 
-  const track = this.coursesData[trackId];
+ /** const track = this.coursesData[trackId];
   const level = track.levels[levelIndex];
   const module = level.modules[moduleIndex];
-  const contentItem = module.contents[lessonIndex];
+  const contentItem = module.contents[lessonIndex];**/
+  const track = this.coursesData[trackId];
+const level = track?.levels?.[levelIndex];
+const module = level?.modules?.[moduleIndex];
+const contentItem = module?.contents?.[lessonIndex];
+
+console.log('Track:', trackId);
+console.log('Level index:', levelIndex);
+console.log('Module index:', moduleIndex);
+console.log('Lesson index:', lessonIndex);
+console.log('Module contents:', module?.contents);
+console.log('Target content item:', contentItem);
 
   // Guard: Ensure contentItem exists.
   if (!contentItem) {
@@ -1553,8 +1564,8 @@ loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
   
   // Add event listeners
   document.getElementById('back-to-module').addEventListener('click', () => {
-    this.loadLesson(trackId, levelIndex, moduleIndex);
-  });
+  this.loadLesson(trackId, levelIndex, moduleIndex, this.currentLesson || 0);
+});
   
   if (isCompleted) {
     document.getElementById('retake-quiz').addEventListener('click', () => {
@@ -1563,8 +1574,31 @@ loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
     });
     
     document.getElementById('continue-after-quiz').addEventListener('click', () => {
+  const track = this.coursesData[trackId];
+  const level = track.levels[levelIndex];
+  const currentModule = level.modules[moduleIndex];
   const nextLessonIndex = this.currentLesson + 1;
-  this.loadLesson(trackId, levelIndex, moduleIndex, nextLessonIndex);
+
+  // Step 1: Try to load next content item in current module
+  if (currentModule.contents[nextLessonIndex]) {
+    this.loadLesson(trackId, levelIndex, moduleIndex, nextLessonIndex);
+    return;
+  }
+
+  // Step 2: Try to move to the next module
+  const nextModuleIndex = moduleIndex + 1;
+  if (level.modules[nextModuleIndex]) {
+    const firstContent = level.modules[nextModuleIndex].contents?.[0];
+    if (firstContent?.type === "lesson") {
+      this.loadLesson(trackId, levelIndex, nextModuleIndex, 0);
+    } else if (firstContent?.type === "quiz") {
+      this.loadQuiz(trackId, levelIndex, nextModuleIndex);
+    }
+    return;
+  }
+
+  // Step 3: Load exam for the level (you mentioned you already generate exams from quizzes)
+  this.loadExam(trackId, levelIndex);
 });
   } else {
     const quizForm = document.getElementById('quiz-form');
