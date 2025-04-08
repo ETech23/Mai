@@ -1563,8 +1563,9 @@ loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
     });
     
     document.getElementById('continue-after-quiz').addEventListener('click', () => {
-      this.loadLesson(trackId, levelIndex, moduleIndex);
-    });
+  const nextLessonIndex = this.currentLesson + 1;
+  this.loadLesson(trackId, levelIndex, moduleIndex, nextLessonIndex);
+});
   } else {
     const quizForm = document.getElementById('quiz-form');
     quizForm.addEventListener('submit', (e) => {
