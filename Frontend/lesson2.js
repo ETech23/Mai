@@ -1663,6 +1663,8 @@ this.renderCourseData();
     };
     
     this.loadUserProgress();
+    this.saveUserProgress();
+    this.updateProgressUI();
     
     // Update progress in UI
     this.updateProgressUI();
@@ -1674,6 +1676,7 @@ this.renderCourseData();
       delete this.userProgress[trackId][levelIndex][moduleIndex].quiz;
       this.loadUserProgress();
       this.updateProgressUI();
+      this.saveUserProgress();
     }
   }
 
@@ -1723,6 +1726,7 @@ this.renderCourseData();
     
     this.loadUserProgress();
     this.updateProgressUI();
+    this.saveUserProgress();
   }
   
 
@@ -1991,6 +1995,8 @@ getExamScore(trackId, levelIndex) {
     };
     
     this.loadUserProgress();
+    this.saveUserProgress();
+    this.updateProgressUI();
   }
 
   unlockNextContent() {
@@ -2005,6 +2011,8 @@ getExamScore(trackId, levelIndex) {
       if (!this.userProgress[trackId][levelIndex + 1]) {
         this.userProgress[trackId][levelIndex + 1] = { unlocked: true };
         this.loadUserProgress();
+        this.saveUserProgress();
+        this.updateProgressUI();
       }
     }
   }
@@ -2098,6 +2106,7 @@ getExamScore(trackId, levelIndex) {
     });
     this.loadUserProgress();
     this.updateProgressUI();
+    this.saveUserProgress();
   }
 
   showMessage(message) {
@@ -2366,6 +2375,7 @@ getExamScore(trackId, levelIndex) {
     
     this.loadUserProgress();
     this.updateProgressUI();
+    this.saveUserProgress();
   }
 
   // =============================================
