@@ -895,13 +895,13 @@ this.renderCourseData();
             <p>${track.description}</p>
             <div class="track-progress">
               <div class="progress-bar">
-                <div class="progress-fill" style="width: ${userProgressManager.progress}%"></div>
+                <div class="progress-fill" style="width: ${progress}%"></div>
               </div>
-              <span>${userProgressManager.progress}% Complete</span>
+              <span>${progress}% Complete</span>
             </div>
           </div>
           <button class="track-btn" data-track="${trackId}" ${!isUnlocked ? 'disabled' : ''}>
-            ${userProgressManager.progress > 0 ? 'Continue' : 'Start Learning'}
+            ${progress > 0 ? 'Continue' : 'Start Learning'}
           </button>
         </div>
       `;
@@ -1662,7 +1662,7 @@ this.renderCourseData();
       timestamp: Date.now()
     };
     
-    this.updateUserProgress(trackId, updateUserProgress.progress, completed = false)();
+    this.loadUserProgress();
     
     // Update progress in UI
     this.updateProgressUI();
@@ -1672,7 +1672,7 @@ this.renderCourseData();
   resetQuizProgress(trackId, levelIndex, moduleIndex) {
     if (this.userProgress[trackId]?.[levelIndex]?.[moduleIndex]?.quiz) {
       delete this.userProgress[trackId][levelIndex][moduleIndex].quiz;
-      this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
+      this.loadUserProgress();
       this.updateProgressUI();
     }
   }
@@ -1721,7 +1721,7 @@ this.renderCourseData();
       }
     }
     
-    this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
+    this.loadUserProgress();
     this.updateProgressUI();
   }
   
@@ -1990,7 +1990,7 @@ getExamScore(trackId, levelIndex) {
       timestamp: Date.now()
     };
     
-    this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
+    this.loadUserProgress();
   }
 
   unlockNextContent() {
@@ -2004,7 +2004,7 @@ getExamScore(trackId, levelIndex) {
     if (levelIndex < track.levels.length - 1) {
       if (!this.userProgress[trackId][levelIndex + 1]) {
         this.userProgress[trackId][levelIndex + 1] = { unlocked: true };
-        this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
+        this.loadUserProgress();
       }
     }
   }
@@ -2096,7 +2096,7 @@ getExamScore(trackId, levelIndex) {
     modal.querySelector('.close-review').addEventListener('click', () => {
       document.body.removeChild(modal);
     });
-    this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
+    this.loadUserProgress();
     this.updateProgressUI();
   }
 
@@ -2364,7 +2364,7 @@ getExamScore(trackId, levelIndex) {
       timestamp: Date.now()
     };
     
-    this.updateUserProgress(trackId, userProgressManager.progress, userProgressManager.completed = false)();
+    this.loadUserProgress();
     this.updateProgressUI();
   }
 
@@ -2463,22 +2463,7 @@ getExamScore(trackId, levelIndex) {
   }
 
 
-  // WITH this method:
-  async loadUserProgress() {
-    // Use the external userProgressManager instead
-    await userProgressManager.initialize();
-    return userProgressManager.progress;
-  }
-  
-  // Add other methods to interact with the progress manager:
-  async updateUserProgress(trackId, progress, completed = false) {
-    return await userProgressManager.saveProgressToBackend(trackId, userProgressManager.progress, completed);
-  }
-  
-  getUserProgressForTrack(trackId) {
-    return userProgressManager.getProgressForTrack(trackId);
-  }
- /** loadUserProgress() {
+  loadUserProgress() {
     try {
       const progress = localStorage.getItem('learnhub-user-progress');
       return progress ? JSON.parse(progress) : {};
@@ -2495,7 +2480,7 @@ getExamScore(trackId, levelIndex) {
     } catch (e) {
       console.error('Failed to save user progress:', e);
     }
-  }**/
+  }
 
   // Render error message
   renderError(message) {
@@ -2512,320 +2497,4 @@ getExamScore(trackId, levelIndex) {
       this.init();
     });
   }
-}
-
-// First, define the UserProgressManager class separately (not nested in another class)
-class UserProgressManager {
-  constructor() {
-    this.progress = {};
-    this.badges = [];
-    this.isAuthenticated = !!localStorage.getItem('token');
-  }
-
-  // Initialize by loading progress from backend or localStorage as fallback
-  async initialize() {
-    if (this.isAuthenticated) {
-      try {
-        await this.loadProgressFromBackend();
-      } catch (error) {
-        console.error('Failed to load progress from backend:', error);
-        this.loadProgressFromLocalStorage();
-      }
-    } else {
-      this.loadProgressFromLocalStorage();
-    }
-    
-    // Also load badges if authenticated
-    if (this.isAuthenticated) {
-      try {
-        await this.loadBadgesFromBackend();
-      } catch (error) {
-        console.error('Failed to load badges from backend:', error);
-      }
-    }
-    
-    return this.progress;
-  }
-  
-  // Load user progress from localStorage (fallback method)
-  loadProgressFromLocalStorage() {
-    try {
-      const progress = localStorage.getItem('learnhub-user-progress');
-      this.progress = progress ? JSON.parse(progress) : {};
-      return this.progress;
-    } catch (e) {
-      console.error('Failed to load user progress from localStorage:', e);
-      this.progress = {};
-      return this.progress;
-    }
-  }
-  
-  // Save user progress to localStorage (fallback method)
-  saveProgressToLocalStorage() {
-    try {
-      localStorage.setItem('learnhub-user-progress', JSON.stringify(this.progress));
-      return true;
-    } catch (e) {
-      console.error('Failed to save user progress to localStorage:', e);
-      return false;
-    }
-  }
-  
-  // Load user progress from backend
-  async loadProgressFromBackend() {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      throw new Error('User not authenticated');
-    }
-    
-    const response = await fetch('/api/user-progress/progress', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': token
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    this.progress = await response.json();
-    return this.progress;
-  }
-  
-  // Save user progress to backend
-  async saveProgressToBackend(trackId, progress, completed = false) {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      // Fall back to localStorage if not authenticated
-      this.updateProgress(trackId, progress, completed);
-      this.saveProgressToLocalStorage();
-      return this.progress;
-    }
-    
-    const response = await fetch('/api/user-progress/progress', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': token
-      },
-      body: JSON.stringify({
-        trackId,
-        progress,
-        completed
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    this.progress = data.progress;
-    this.badges = data.badges;
-    
-    // Also update localStorage as a backup
-    this.saveProgressToLocalStorage();
-    
-    return {
-      progress: this.progress,
-      badges: this.badges
-    };
-  }
-  
-  // Load user badges from backend
-  async loadBadgesFromBackend() {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      throw new Error('User not authenticated');
-    }
-    
-    const response = await fetch('/api/user-progress/badges', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': token
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    this.badges = await response.json();
-    return this.badges;
-  }
-  
-  // Update progress in local object
-  updateProgress(trackId, progress, completed = false) {
-    if (!this.progress[trackId]) {
-      this.progress[trackId] = {
-        trackId,
-        progress: 0,
-        completed: false,
-        lastUpdated: new Date()
-      };
-    }
-    
-    this.progress[trackId].progress = progress;
-    this.progress[trackId].completed = completed;
-    this.progress[trackId].lastUpdated = new Date();
-    
-    return this.progress;
-  }
-  
-  // Get progress for a specific track
-  getProgressForTrack(trackId) {
-    return this.progress[trackId] || {
-      trackId,
-      progress: 0,
-      completed: false
-    };
-  }
-  
-  // Complete a track and get badge
-  async completeTrack(trackId) {
-    return await this.saveProgressToBackend(trackId, 100, true);
-  }
-  
-  // Get all earned badges
-  getBadges() {
-    return this.badges;
-  }
-}
-
-// Create a global instance
-const userProgressManager = new UserProgressManager();
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', async () => {
-  await userProgressManager.initialize();
-  
-  // Update UI if on the progress or badges page
-  if (document.getElementById('user-progress-container')) {
-    updateProgressUI();
-  }
-  
-  if (document.getElementById('user-badges-container')) {
-    updateBadgesUI();
-  }
-});
-
-// Example of how to update a track's progress
-function updateTrackProgress(trackId, progress, completed = false) {
-  userProgressManager.saveProgressToBackend(trackId, progress, completed)
-    .then(() => {
-      // Update UI elements to reflect the new progress
-      updateProgressUI();
-      
-      if (completed) {
-        // Show badge earned notification
-        showBadgeNotification(trackId);
-      }
-    })
-    .catch(error => {
-      console.error('Failed to update progress:', error);
-    });
-}
-
-// Update the UI to show current progress
-function updateProgressUI() {
-  const progressContainer = document.getElementById('user-progress-container');
-  if (!progressContainer) return;
-  
-  // Clear the container
-  progressContainer.innerHTML = '';
-  
-  // Get all progress items
-  const progressItems = Object.values(userProgressManager.progress);
-  
-  if (progressItems.length === 0) {
-    progressContainer.innerHTML = '<p>No progress yet. Start a learning track to see your progress here!</p>';
-    return;
-  }
-  
-  // Create a progress element for each track
-  progressItems.forEach(item => {
-    const progressElement = document.createElement('div');
-    progressElement.className = 'progress-item';
-    progressElement.innerHTML = `
-      <h3>${item.trackId}</h3>
-      <div class="progress-bar-container">
-        <div class="progress-bar" style="width: ${item.progress}%"></div>
-      </div>
-      <p>${item.progress}% complete</p>
-      <p>Last updated: ${new Date(item.lastUpdated).toLocaleString()}</p>
-      ${item.completed ? '<span class="badge-earned">Badge Earned!</span>' : ''}
-    `;
-    
-    progressContainer.appendChild(progressElement);
-  });
-}
-
-// Update the UI to show earned badges
-function updateBadgesUI() {
-  const badgesContainer = document.getElementById('user-badges-container');
-  if (!badgesContainer) return;
-  
-  // Clear the container
-  badgesContainer.innerHTML = '';
-  
-  // Get all badges
-  const badges = userProgressManager.getBadges();
-  
-  if (badges.length === 0) {
-    badgesContainer.innerHTML = '<p>No badges earned yet. Complete a learning track to earn badges!</p>';
-    return;
-  }
-  
-  // Create a badge element for each earned badge
-  badges.forEach(badge => {
-    const badgeElement = document.createElement('div');
-    badgeElement.className = 'badge-item';
-    badgeElement.innerHTML = `
-      <img src="${badge.image}" alt="${badge.name}" class="badge-image">
-      <h3>${badge.name}</h3>
-      <p>${badge.description}</p>
-      <p>Earned on: ${new Date(badge.earnedAt).toLocaleDateString()}</p>
-    `;
-    
-    badgesContainer.appendChild(badgeElement);
-  });
-}
-
-// Show a notification when a badge is earned
-function showBadgeNotification(trackId) {
-  const badges = userProgressManager.getBadges();
-  const badge = badges.find(b => b.trackId === trackId);
-  
-  if (!badge) return;
-  
-  const notification = document.createElement('div');
-  notification.className = 'badge-notification';
-  notification.innerHTML = `
-    <div class="badge-notification-content">
-      <img src="${badge.image}" alt="${badge.name}" class="badge-notification-image">
-      <div class="badge-notification-text">
-        <h3>New Badge Earned!</h3>
-        <p>${badge.name}</p>
-        <p>${badge.description}</p>
-      </div>
-      <button class="badge-notification-close">&times;</button>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-  
-  // Add event listener to close button
-  notification.querySelector('.badge-notification-close').addEventListener('click', () => {
-    notification.remove();
-  });
-  
-  // Automatically remove after 5 seconds
-  setTimeout(() => {
-    if (document.body.contains(notification)) {
-      notification.remove();
-    }
-  }, 5000);
 }
