@@ -68,7 +68,7 @@ document.body.prepend(this.topNav);
     btn?.addEventListener('click', (e) => {
       const levelIndex = parseInt(e.currentTarget.dataset.level);
       const moduleIndex = parseInt(e.currentTarget.dataset.module);
-      this.loadLesson(this.currentTrack, levelIndex, moduleIndex);
+      this.loadModule(this.currentTrack, levelIndex, moduleIndex);
     });
   });
 
@@ -79,6 +79,64 @@ document.body.prepend(this.topNav);
     });
   });
 }
+     /** addEventListeners() {
+  try {
+    // 1. Verify elements exist before adding listeners
+    const elements = {
+      sidebarToggle: document.getElementById('sidebar-toggle'),
+      themeToggleBtn: document.getElementById('theme-toggle-btn'),
+      retryBtn: document.getElementById('retry-btn'),
+      backButtons: document.querySelectorAll('.back-button'),
+      trackButtons: document.querySelectorAll('.track-btn'),
+      moduleButtons: document.querySelectorAll('.module-btn'),
+      lessonButtons: document.querySelectorAll('.lesson-btn')
+    };
+
+    // 2. Add event listeners with null checks
+    if (elements.sidebarToggle) {
+      elements.sidebarToggle.addEventListener('click', this.toggleSidebar.bind(this));
+    }
+
+    if (elements.themeToggleBtn) {
+      elements.themeToggleBtn.addEventListener('click', this.toggleTheme.bind(this));
+    }
+
+    if (elements.retryBtn) {
+      elements.retryBtn.addEventListener('click', () => location.reload());
+    }
+
+    // 3. Dynamic content listeners (added when content loads)
+    elements.backButtons.forEach(btn => {
+      btn?.addEventListener('click', this.handleBackButton.bind(this));
+    });
+
+    elements.trackButtons.forEach(btn => {
+      btn?.addEventListener('click', (e) => {
+        const trackId = e.currentTarget.dataset.track;
+        this.loadTrack(trackId);
+      });
+    });
+
+    elements.moduleButtons.forEach(btn => {
+      btn?.addEventListener('click', (e) => {
+        const levelIndex = parseInt(e.currentTarget.dataset.level);
+        const moduleIndex = parseInt(e.currentTarget.dataset.module);
+        this.loadModule(this.currentTrack, levelIndex, moduleIndex);
+      });
+    });
+
+    elements.lessonButtons.forEach(btn => {
+      btn?.addEventListener('click', (e) => {
+        const lessonIndex = parseInt(e.currentTarget.dataset.lesson);
+        this.loadLesson(this.currentTrack, this.currentLevel, this.currentModule, lessonIndex);
+      });
+    });
+
+  } catch (error) {
+    console.error('Event listener error:', error);
+    this.renderError('Interface interaction failed');
+  }
+}**/
 
   showCriticalError() {
     document.body.innerHTML = `
@@ -89,7 +147,6 @@ document.body.prepend(this.topNav);
       </div>
     `;
   }
-      
 
 
   
@@ -140,39 +197,55 @@ document.body.prepend(this.topNav);
     
     // 6. Handle any deep linking
     this.handleDeepLinking();
-        
     
   } catch (error) {
     console.error('Initialization error:', error);
-    this.renderError(error.message || 'Failed to initialize application');  
+    this.renderError(error.message || 'Failed to initialize application');
     
     // Fallback to sample data if needed
     if (!this.coursesData) {
       this.coursesData = {
-        "default-track": {
-    "title": "AI & Cryptocurrency Essentials",
-    "description": "Kickstart your journey into the world of Artificial Intelligence and Cryptocurrency.",
+  "ai-crypto-track": {
+    "title": "Artificial Intelligence and Cryptocurrency Mastery",
+    "description": "Explore the intersection of AI and blockchain technology, from fundamentals to advanced applications.",
     "levels": [
       {
-        "name": "Level 1: Foundations",
+        "name": "Level 1",
         "modules": [
           {
-            "title": "Getting Started with AI & Crypto",
-            "description": "An introductory module blending key concepts from AI and blockchain technology.",
-            "contents": [
+            "title": "Foundations of AI and Crypto",
+            "description": "Understand the fundamental concepts that connect AI and cryptocurrency.",
+            "lessons": [
               {
-                "title": "The Rise of Intelligent Systems and Digital Currency",
+                "title": "Understanding the Intersection of AI and Cryptocurrency",
                 "type": "reading",
-                "duration": "8 min",
+                "duration": "15 min",
                 "content": [
-                  "Artificial Intelligence (AI) is revolutionizing industries by enabling machines to learn and make decisions.",
-                  "Meanwhile, Cryptocurrency is redefining finance with decentralized, peer-to-peer systems powered by blockchain.",
-                  "Understanding these technologies opens doors to innovation in automation, security, and financial freedom."
+                  "Artificial Intelligence (AI) and Cryptocurrency are two revolutionary technologies reshaping the digital landscape. When combined, they offer powerful tools for automation, optimization, and innovation across industries.",
+                  "",
+                  "What is AI?",
+                  "Artificial Intelligence refers to the ability of machines to mimic human intelligence—learning from data, recognizing patterns, making decisions, and improving over time without being explicitly programmed.",
+                  "",
+                  "What is Cryptocurrency?",
+                  "Cryptocurrency is a form of digital or virtual currency that relies on cryptographic techniques to secure transactions. It operates on blockchain technology—a decentralized ledger maintained by a network of computers (nodes).",
+                  "",
+                  "How AI and Crypto Converge",
+                  "1. Smart Contract Optimization: AI can analyze historical transaction data to identify optimal ways of structuring smart contracts, reducing gas fees, and improving execution efficiency.",
+                  "2. Fraud Detection: AI algorithms can detect fraudulent activities and anomalies in blockchain networks by learning from past behaviors and flagging suspicious patterns.",
+                  "3. Predictive Trading Bots: AI powers bots that analyze market sentiment, price trends, and historical data to execute automated trades with high precision and speed.",
+                  "4. Data Analysis in DeFi: Decentralized Finance (DeFi) generates massive amounts of transactional data. AI helps filter through this data to uncover insights, predict risks, and suggest investment strategies.",
+                  "",
+                  "Challenges at the Intersection",
+                  "Transparency: Blockchain values transparency, while AI models—especially deep learning—can be black boxes.",
+                  "Scalability: AI computations require high processing power, which may strain decentralized networks.",
+                  "Security: While AI can strengthen security, if misused, it can also create new attack vectors.",
+                  "",
+                  "Future Possibilities",
+                  "As both AI and blockchain technologies mature, we expect to see more sophisticated integrations, such as AI-governed DAOs (Decentralized Autonomous Organizations), personalized DeFi lending, and on-chain machine learning marketplaces.",
+                  "",
+                  "Conclusion",
+                  "The intersection of AI and cryptocurrency represents a frontier of innovation. Mastering both domains equips learners and developers to build secure, intelligent, and decentralized solutions for tomorrow’s digital economy."
                 ]
-              },
-              {
-                "ad_slot": "ai_crypto_intro_banner",
-                "type": "ad"
               }
             ]
           }
@@ -180,7 +253,8 @@ document.body.prepend(this.topNav);
       }
     ]
   }
-      };
+} 
+      ;
       this.renderTracksOverview();
           this.renderCourseData();
     }
@@ -194,8 +268,6 @@ document.body.prepend(this.topNav);
  */
 renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
   try {
-    console.log("Rendering Courses Data:", coursesData); // Log the full data
-
     container.innerHTML = `
       <div class="course-container">
         <header class="course-header">
@@ -204,11 +276,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
         </header>
         
         <div class="tracks-grid">
-          ${Object.entries(coursesData).map(([trackId, track]) => {
-            // Log the entire track to check for the levels data
-            console.log(`Track Data (${trackId}):`, track);
-            
-            return `
+          ${Object.entries(coursesData).map(([trackId, track]) => `
             <article class="track-card" data-track="${trackId}">
               <div class="track-header">
                 <h2>${track.title}</h2>
@@ -220,19 +288,15 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
               </div>
               
               <div class="levels-container">
-                ${track.levels && Array.isArray(track.levels) && track.levels.length > 0 ? track.levels.map((level, levelIndex) => {
-                  // Log the individual level to check its structure
-                  console.log(`Level Data (${trackId}, Level ${levelIndex}):`, level);
-                  
-                  return `
+                ${track.levels.map((level, levelIndex) => `
                   <div class="level-card">
                     <h3 class="level-title">
                       <i class="fas fa-layer-group"></i>
-                      ${level.name || 'Unnamed Level'}  <!-- Fallback for undefined name -->
+                      ${level.name}
                     </h3>
                     
                     <div class="modules-grid">
-                      ${level.modules && Array.isArray(level.modules) && level.modules.length > 0 ? level.modules.map((module, moduleIndex) => `
+                      ${level.modules.map((module, moduleIndex) => `
                         <div class="module-card" 
                              data-track="${trackId}"
                              data-level="${levelIndex}"
@@ -245,7 +309,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                           <div class="module-stats">
                             <span class="stat-item">
                               <i class="fas fa-book"></i>
-                              ${module.contents.filter(contentItem => contentItem.type !== 'ad').length} Lessons
+                              ${module.lessons.length} Lessons
                             </span>
                             <span class="stat-item">
                               <i class="fas fa-question-circle"></i>
@@ -260,7 +324,7 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                             </button>
                           </div>
                         </div>
-                      `).join('') : `<p>No modules available for this level</p>`}
+                      `).join('')}
                     </div>
                     
                     ${level.exam ? `
@@ -279,16 +343,14 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
                       </div>
                     ` : ''}
                   </div>
-                `}).join('') : `<p>No levels available for this track</p>`}
+                `).join('')}
               </div>
             </article>
-          `}).join('')}
+          `).join('')}
         </div>
       </div>
     `;
 
-    // Log the final container to see if HTML is injectedconsole.log("Rendered HTML:", container.innerHTML);
-    
     this.injectCourseStyles();
     this.setupCourseEventListeners();
     
@@ -307,185 +369,133 @@ renderCourseData(coursesData = this.coursesData, container = this.mainContent) {
 injectCourseStyles() {
   const style = document.createElement('style');
   style.textContent = `
-    :root {
-      --primary-color: #2C3539;
-      --secondary-color: #56ccf2; /* baby blue */
-      --accent-color: #38b2ac; /* greenish-blue */
-      --text-color: #2b2d42;
-      --bg-color: #f8f9fa;
-      --card-bg: #ffffff;
-      --border-color: #e9ecef;
-      --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
     .course-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 2rem 1rem;
       font-family: 'Segoe UI', Roboto, sans-serif;
     }
-
+    
     .course-header {
       text-align: center;
       margin-bottom: 2rem;
     }
-
+    
     .course-header h1 {
-      font-size: 2rem;
-      color: var(--text-color);
+      font-size: 2.2rem;
+      color: #2c3e50;
     }
-
+    
     .subtitle {
       color: #7f8c8d;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
-
+    
     .tracks-grid {
       display: grid;
-      gap: 1.5rem;
+      gap: 2rem;
     }
-
+    
     .track-card {
-      background: var(--card-bg);
-      border-radius: 1rem;
-      box-shadow: var(--shadow);
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       overflow: hidden;
     }
-
+    
     .track-header {
-      padding: 1.25rem;
-      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #3498db, #2c3e50);
       color: white;
     }
-
+    
     .track-header h2 {
-      margin: 0;
+      margin: 0 0 0.5rem;
       font-size: 1.5rem;
     }
-
+    
     .track-progress {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 1rem;
     }
-
+    
     .track-progress progress {
       flex-grow: 1;
       height: 6px;
       border-radius: 3px;
     }
-
+    
     .track-progress span {
       font-size: 0.9rem;
     }
-
-    .track-overview {
-      padding: 2rem 1rem;
-      background: linear-gradient(135deg, #b2f7ef, #cfd9df);
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      text-align: center;
-    }
-
-    .track-overview h2 {
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: var(--text-color);
-    }
-
-    .levels-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
-
-    .level-btn {
-      padding: 1rem 1.5rem;
-      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
-      border: none;
-      color: white;
-      font-weight: bold;
-      font-size: 1rem;
-      border-radius: 0.75rem;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .level-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .level-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
+    
     .levels-container {
       padding: 1rem;
     }
-
+    
+    .level-card {
+      margin-bottom: 2rem;
+    }
+    
     .level-title {
-      color: var(--text-color);
-      font-size: 1.25rem;
-      margin: 2rem 0 1rem;
-      font-weight: bold;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      color: #2c3e50;
+      font-size: 1.2rem;
+      margin: 1rem 0;
     }
-
+    
     .modules-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
-
+    
     .module-card {
-      background: linear-gradient(to bottom right, #ebfaff, #e6fffa);
-      border-left: 4px solid var(--accent-color);
+      background: #f8f9fa;
+      border-radius: 6px;
       padding: 1rem;
-      border-radius: 0.75rem;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: var(--shadow);
+      border-left: 4px solid #3498db;
+      transition: transform 0.2s;
     }
-
+    
     .module-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.12);
     }
-
+    
     .module-header h4 {
       margin: 0 0 0.3rem;
-      color: var(--text-color);
-      font-size: 1.1rem;
+      color: #2c3e50;
     }
-
+    
     .module-description {
-      color: #555;
+      color: #666;
       font-size: 0.9rem;
-      margin-bottom: 0.8rem;
+      margin: 0.3rem 0 0.8rem;
     }
-
+    
     .module-stats {
       display: flex;
       gap: 1rem;
       font-size: 0.8rem;
       color: #7f8c8d;
-      margin: 0.5rem 0;
+      margin: 0.8rem 0;
     }
-
+    
+    .module-stats i {
+      margin-right: 0.3rem;
+    }
+    
     .module-actions {
       margin-top: 0.5rem;
     }
-
+    
     .btn-start {
-      background: var(--secondary-color);
+      background: #3498db;
       color: white;
       border: none;
       padding: 0.5rem 1rem;
@@ -493,30 +503,7 @@ injectCourseStyles() {
       cursor: pointer;
       font-size: 0.9rem;
     }
-
-    .btn-start:hover {
-      background: var(--accent-color);
-    }
-
-    .lesson-list {
-      margin-top: 1rem;
-    }
-
-    .lesson-item {
-      background: white;
-      padding: 0.75rem 1rem;
-      border-left: 4px solid var(--secondary-color);
-      border-radius: 6px;
-      margin-bottom: 0.8rem;
-      box-shadow: var(--shadow);
-      transition: background 0.2s;
-      cursor: pointer;
-    }
-
-    .lesson-item:hover {
-      background: #eaf9ff;
-    }
-
+    
     .exam-card {
       background: #f0f7ff;
       border-radius: 6px;
@@ -524,20 +511,22 @@ injectCourseStyles() {
       margin-top: 1rem;
       border-left: 4px solid #e74c3c;
     }
-
+    
     .exam-header h4 {
-      color: var(--text-color);
-      font-size: 1.1rem;
-      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 0 0.3rem;
+      color: #2c3e50;
     }
-
+    
     .exam-passing {
       font-size: 0.9rem;
       color: #e74c3c;
       font-weight: bold;
       margin: 0.5rem 0;
     }
-
+    
     .btn-exam {
       background: #e74c3c;
       color: white;
@@ -547,25 +536,10 @@ injectCourseStyles() {
       cursor: pointer;
       font-size: 0.9rem;
     }
-
-    .btn-exam:hover {
-      background: #c0392b;
-    }
-
+    
     @media (max-width: 768px) {
-      .tracks-grid,
       .modules-grid {
         grid-template-columns: 1fr;
-      }
-
-      .track-overview,
-      .track-card {
-        padding: 1rem;
-      }
-
-      .level-btn {
-        width: 100%;
-        text-align: center;
       }
     }
   `;
@@ -599,7 +573,7 @@ setupCourseEventListeners() {
       const trackId = btn.closest('.module-card').dataset.track;
       const levelIndex = parseInt(btn.closest('.module-card').dataset.level);
       const moduleIndex = parseInt(btn.closest('.module-card').dataset.module);
-      this.loadLesson(trackId, levelIndex, moduleIndex);
+      this.loadModule(trackId, levelIndex, moduleIndex);
     });
   });
   
@@ -624,13 +598,9 @@ setupCourseEventListeners() {
     if (!module.quiz) return false;
 
     // 3. Check if all lessons are completed
-const lessons = module.contents
-  .map((contentItem, index) => ({ ...contentItem, index }))
-  .filter(contentItem => contentItem.type !== 'ad');
-
-const allLessonsCompleted = lessons.every(lesson =>
-  this.isLessonCompleted(trackId, levelIndex, moduleIndex, lesson.index)
-);
+    const allLessonsCompleted = module.lessons.every((_, lessonIndex) => 
+      this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)
+    );
 
     return allLessonsCompleted;
   }
@@ -793,9 +763,9 @@ document.addEventListener('click', function(e) {
 
     
     // Add event listeners to nav items
-    this.sideNav.querySelectorAll('.track-item').forEach(contentItem => {
-      if (!contentItem.disabled) {
-        contentItem.addEventListener('click', (e) => {
+    this.sideNav.querySelectorAll('.track-item').forEach(item => {
+      if (!item.disabled) {
+        item.addEventListener('click', (e) => {
           const trackId = e.currentTarget.dataset.track;
           this.loadTrack(trackId);
         });
@@ -858,7 +828,7 @@ this.renderCourseData();
         this.loadLevel(trackId, levelId);
         break;
       case 'module':
-        this.loadLesson(trackId, levelId, moduleId);
+        this.loadModule(trackId, levelId, moduleId);
         break;
       case 'lesson':
         this.loadLesson(trackId, levelId, moduleId, lessonId);
@@ -925,13 +895,13 @@ this.renderCourseData();
             <p>${track.description}</p>
             <div class="track-progress">
               <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progress}%"></div>
+                <div class="progress-fill" style="width: ${userProgressManager.progress}%"></div>
               </div>
-              <span>${progress}% Complete</span>
+              <span>${userProgressManager.progress}% Complete</span>
             </div>
           </div>
           <button class="track-btn" data-track="${trackId}" ${!isUnlocked ? 'disabled' : ''}>
-            ${progress > 0 ? 'Continue' : 'Start Learning'}
+            ${userProgressManager.progress > 0 ? 'Continue' : 'Start Learning'}
           </button>
         </div>
       `;
@@ -960,213 +930,149 @@ this.renderCourseData();
         this.addEventListeners();
   }
 
-// Load a specific lesson (or content item) from a module
-loadLesson(trackId, levelIndex, moduleIndex, lessonIndex) {
-  if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) {
-    return;
-  }
-
-  if (typeof lessonIndex !== 'number') {
-    console.error("Missing or invalid lessonIndex in loadLesson");
-    return;
-  }
-
-  
-  this.currentTrack = trackId;
-  this.currentLevel = levelIndex;
-  this.currentModule = moduleIndex;
-  this.currentLesson = lessonIndex;
-
- /** const track = this.coursesData[trackId];
-  const level = track.levels[levelIndex];
-  const module = level.modules[moduleIndex];
-  const contentItem = module.contents[lessonIndex];**/
-  const track = this.coursesData[trackId];
-const level = track?.levels?.[levelIndex];
-const module = level?.modules?.[moduleIndex];
-const contentItem = module?.contents?.[lessonIndex];
-
-console.log('Track:', trackId);
-console.log('Level index:', levelIndex);
-console.log('Module index:', moduleIndex);
-console.log('Lesson index:', lessonIndex);
-console.log('Module contents:', module?.contents);
-console.log('Target content item:', contentItem);
-
-  // Guard: Ensure contentItem exists.
-  if (!contentItem) {
-    console.error("Lesson not found:", { trackId, levelIndex, moduleIndex, lessonIndex, contents: module.contents });
-    this.mainContent.innerHTML = `<div class="lesson-error"><p>Lesson not found or unavailable.</p></div>`;
-    return;
-  }
-
-  this.updateNavState('lesson', trackId, levelIndex, moduleIndex, lessonIndex);
-  this.updateActiveNav();
-
-  let content = `<div class="lesson-detail">`;
-
-  // If the content item is an ad, render the ad block and return early.
-  if (contentItem.type === "ad") {
-    content += `
-      <div class="lesson-detail-header">
-        <div class="back-button" id="back-to-module">
-          <i class="fa-solid fa-arrow-left"></i>
+  // Load a specific track
+  loadTrack(trackId, levelId = null, moduleId = null, lessonId = null) {
+    if (!this.isTrackUnlocked(trackId)) return;
+    
+    this.currentTrack = trackId;
+    const track = this.coursesData[trackId];
+    
+    // Update navigation state
+    this.updateNavState('track', trackId);
+    
+    // Update active navigation
+    this.updateActiveNav();
+    
+    let content = `
+      <div class="track-detail">
+        <div class="track-header">
+          <div class="back-button" id="back-to-tracks">
+            <i class="fa-solid fa-arrow-left"></i>
+          </div>
+          <div class="track-header-content">
+            <h2>${track.title}</h2>
+            <p>${track.description}</p>
+          </div>
         </div>
-        <div class="lesson-detail-info">
-          <h2>Sponsored Content</h2>
-        </div>
-      </div>
-      <div class="lesson-content">
-        <div class="ad-slot" data-slot="${contentItem.ad_slot}">
-          <p><em>Advertisement: ${contentItem.ad_slot}</em></p>
-          <!-- Insert ad script or image here -->
-        </div>
-      </div>
-      <div class="lesson-navigation">
-        <!-- Navigation buttons for ad content, if desired -->
-      </div>
+        <div class="levels-container">
     `;
-    this.mainContent.innerHTML = content;
-    return;
-  }
-
-  // Otherwise, render the lesson header and content.
-  content += `
-    <div class="lesson-detail-header">
-      <div class="back-button" id="back-to-module">
-        <i class="fa-solid fa-arrow-left"></i>
-      </div>
-      <div class="lesson-detail-info">
-        <h2>${contentItem.title}</h2>
-        <div class="lesson-meta">
-          <span class="lesson-type">
-            <i class="fa-solid ${this.getLessonTypeIcon(contentItem.type)}"></i>
-            ${contentItem.type}
-          </span>
-          <span class="lesson-duration">
-            <i class="fa-regular fa-clock"></i>
-            ${contentItem.duration}
-          </span>
-        </div>
-        <div class="breadcrumbs">
-          <span>${track.title}</span>
-          <i class="fa-solid fa-chevron-right"></i>
-          <span>${module.title}</span>
-          <i class="fa-solid fa-chevron-right"></i>
-          <span>${contentItem.title}</span>
-        </div>
-      </div>
-    </div>
-    <div class="lesson-content">
-  `;
-
-  // Optionally render media based on lesson type.
-  switch (contentItem.type.toLowerCase()) {
-    case 'video':
+    
+    // Generate levels
+    track.levels.forEach((level, levelIndex) => {
+      const isLevelUnlocked = this.isLevelUnlocked(trackId, levelIndex);
+      const levelProgress = this.calculateLevelProgress(trackId, levelIndex);
+      
       content += `
-        <div class="video-container">
-          <div class="video-player">
-            <div class="video-placeholder">
-              <i class="fa-solid fa-play"></i>
-              <span>Video Player</span>
+        <div class="level-card ${isLevelUnlocked ? 'unlocked' : 'locked'}">
+          <div class="level-header">
+            <h3>${level.name}</h3>
+            ${!isLevelUnlocked ? '<i class="fa-solid fa-lock lock-icon"></i>' : ''}
+            <div class="level-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${levelProgress}%"></div>
+              </div>
+              <span>${levelProgress}% Complete</span>
             </div>
           </div>
-        </div>
+          <div class="modules-container">
       `;
-      break;
-    case 'interactive':
-      content += `
-        <div class="interactive-container">
-          <div class="interactive-placeholder">
-            <i class="fa-solid fa-hand-pointer"></i>
-            <span>Interactive Content</span>
-          </div>
-        </div>
-      `;
-      break;
-    // Add other media types as needed.
-  }
-
-  // Render textual content.
-  content += `<div class="lesson-text">`;
-  if (Array.isArray(contentItem.content)) {
-    contentItem.content.forEach(paragraph => {
-      // Check if paragraph is a string.
-      if (typeof paragraph === "string") {
-        if (paragraph.includes('- ')) {
-          const bullets = paragraph.split('\n');
-          content += `<p>${bullets[0]}</p><ul>`;
-          for (let i = 1; i < bullets.length; i++) {
-            content += `<li>${bullets[i].replace('- ', '')}</li>`;
-          }
-          content += `</ul>`;
-        } else {
-          content += `<p>${paragraph}</p>`;
-        }
-      } else if (typeof paragraph === "object" && paragraph.type === "ad") {
-        // Render embedded ad within lesson text.
+      
+      // Generate modules
+      level.modules.forEach((module, moduleIndex) => {
+        const isModuleUnlocked = isLevelUnlocked && this.isModuleUnlocked(trackId, levelIndex, moduleIndex);
+        const moduleProgress = this.calculateModuleProgress(trackId, levelIndex, moduleIndex);
+        
         content += `
-          <div class="ad-slot" data-slot="${paragraph.ad_slot}">
-            <p><em>Advertisement: ${paragraph.ad_slot}</em></p>
+          <div class="module-card ${isModuleUnlocked ? 'unlocked' : 'locked'}">
+            <div class="module-header">
+              <h4>${module.title}</h4>
+              ${!isModuleUnlocked ? '<i class="fa-solid fa-lock lock-icon"></i>' : ''}
+              <p>${module.description}</p>
+              <div class="module-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: ${moduleProgress}%"></div>
+                </div>
+                <span>${moduleProgress}% Complete</span>
+              </div>
+            </div>
+            <button class="module-btn" data-level="${levelIndex}" data-module="${moduleIndex}" 
+                    ${!isModuleUnlocked ? 'disabled' : ''}>
+              View Module
+            </button>
+          </div>
+        `;
+      });
+      
+      // Add final exam section if available
+      if (level.exam) {
+        const isExamUnlocked = this.isExamUnlocked(trackId, levelIndex);
+        const examCompleted = this.isExamCompleted(trackId, levelIndex);
+        
+        content += `
+          <div class="exam-card ${isExamUnlocked ? 'unlocked' : 'locked'}">
+            <div class="exam-header">
+              <h4>${level.exam.title}</h4>
+              ${!isExamUnlocked ? '<i class="fa-solid fa-lock lock-icon"></i>' : ''}
+              <p>${level.exam.description}</p>
+              <p>Passing Score: ${level.exam.passingScore}%</p>
+            </div>
+            <button class="exam-btn" data-level="${levelIndex}" 
+                    ${!isExamUnlocked ? 'disabled' : ''}>
+              ${examCompleted ? 'Review Exam' : 'Take Final Exam'}
+            </button>
           </div>
         `;
       }
+      
+      content += `
+          </div>
+        </div>
+      `;
     });
-  } else {
-    content += `<p class="error-text">No content available for this lesson.</p>`;
-  }
-  content += `</div>`; // Close lesson-text
-  content += `</div>`; // Close lesson-content
-
-  // Navigation: Compute previous/next lesson indices (skipping ads).
-  content += `<div class="lesson-navigation">`;
-  const findNextIndex = (contents, start, direction) => {
-    let i = start + direction;
-    while (i >= 0 && i < contents.length) {
-      if (contents[i].type !== 'ad') return i;
-      i += direction;
+    
+    content += `
+        </div>
+      </div>
+    `;
+    
+    this.mainContent.innerHTML = content;
+    
+    // Add event listeners
+    document.getElementById('back-to-tracks').addEventListener('click', () => {
+      this.renderTracksOverview();
+          this.renderCourseData();
+    });
+    
+    this.mainContent.querySelectorAll('.module-btn').forEach(btn => {
+      if (!btn.disabled) {
+        btn.addEventListener('click', (e) => {
+          const levelIndex = parseInt(e.currentTarget.dataset.level);
+          const moduleIndex = parseInt(e.currentTarget.dataset.module);
+          this.loadModule(trackId, levelIndex, moduleIndex);
+        });
+      }
+    });
+    
+    this.mainContent.querySelectorAll('.exam-btn').forEach(btn => {
+      if (!btn.disabled) {
+        btn.addEventListener('click', (e) => {
+          const levelIndex = parseInt(e.currentTarget.dataset.level);
+          this.loadExam(trackId, levelIndex);
+        });
+      }
+    });
+    
+    // If specific module requested, load it
+    if (levelId !== null && moduleId !== null) {
+      this.loadModule(trackId, parseInt(levelId), parseInt(moduleId), lessonId);
     }
-    return null;
-  };
-  const prevIndex = findNextIndex(module.contents, lessonIndex, -1);
-  const nextIndex = findNextIndex(module.contents, lessonIndex, 1);
-
-  if (prevIndex !== null) {
-    content += `
-      <button class="nav-btn prev-btn" data-lesson="${prevIndex}">
-        <i class="fa-solid fa-chevron-left"></i> Previous
-      </button>
-    `;
+    
+    // Push state to history
+    this.pushHistoryState({ view: 'track', trackId }, `${track.title} - LearnHub`);
   }
-  // Show complete button only for lessons.
-  const isCompleted = this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex);
-  content += `
-    <button class="complete-btn ${isCompleted ? 'completed' : ''}" id="mark-complete">
-      ${isCompleted ? 'Completed' : 'Mark as Complete'}
-      ${isCompleted ? '<i class="fa-solid fa-check"></i>' : ''}
-    </button>
-  `;
-  if (nextIndex !== null) {
-    content += `
-      <button class="nav-btn next-btn" data-lesson="${nextIndex}">
-        Next <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    `;
-  } else if (module.quiz) {
-    const isQuizUnlocked = this.isQuizUnlocked(trackId, levelIndex, moduleIndex);
-    content += `
-      <button class="nav-btn next-btn quiz-nav-btn" ${!isQuizUnlocked ? 'disabled' : ''}>
-        Take Quiz <i class="fa-solid fa-chevron-right"></i>
-      </button>
-    `;
-  }
-  content += `</div>`; // Close lesson-navigation
 
-  content += `</div>`; // Close lesson-detail
-
-  this.mainContent.innerHTML = content;
-
- /** loadModule(trackId, levelIndex, moduleIndex, lessonId = null) {
+  // Load a specific module
+  loadModule(trackId, levelIndex, moduleIndex, lessonId = null) {
     if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) return;
     
     this.currentTrack = trackId;
@@ -1445,20 +1351,12 @@ console.log('Target content item:', contentItem);
       </div>
     `;
     
-    this.mainContent.innerHTML = content;**/
+    this.mainContent.innerHTML = content;
     
-document.getElementById('back-to-module').addEventListener('click', () => {
-  // If the current content item is a lesson
-  if (this.currentLesson !== undefined) {
-    // If user is on a lesson, go back to the module/lessons list
-    this.loadModule(trackId, levelIndex, moduleIndex); 
-  }
-  // If the current content item is a quiz
-  else if (this.currentQuiz !== undefined) {
-    // If user is on a quiz, go back to the lessons list (or previous lesson)
-    this.loadModule(trackId, levelIndex, moduleIndex);
-  } 
-});
+    // Add event listeners
+    document.getElementById('back-to-module').addEventListener('click', () => {
+      this.loadModule(trackId, levelIndex, moduleIndex);
+    });
     
     // Mark as complete button
     document.getElementById('mark-complete').addEventListener('click', () => {
@@ -1504,7 +1402,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
       levelId: levelIndex, 
       moduleId: moduleIndex,
       lessonId: lessonIndex
-    }, `${contentItem.title || 'Lesson'} - LearnHub`);
+    }, `${lesson.title} - LearnHub`);
   }
 
   // Load a module quiz
@@ -1680,17 +1578,8 @@ document.getElementById('back-to-module').addEventListener('click', () => {
   
   // Add event listeners
   document.getElementById('back-to-module').addEventListener('click', () => {
-  // If the current content item is a lesson
-  if (this.currentLesson !== undefined) {
-    // If user is on a lesson, go back to the module/lessons list
-    this.loadModule(trackId, levelIndex, moduleIndex); 
-  }
-  // If the current content item is a quiz
-  else if (this.currentQuiz !== undefined) {
-    // If user is on a quiz, go back to the lessons list (or previous lesson)
     this.loadModule(trackId, levelIndex, moduleIndex);
-  } 
-});
+  });
   
   if (isCompleted) {
     document.getElementById('retake-quiz').addEventListener('click', () => {
@@ -1699,32 +1588,8 @@ document.getElementById('back-to-module').addEventListener('click', () => {
     });
     
     document.getElementById('continue-after-quiz').addEventListener('click', () => {
-  const track = this.coursesData[trackId];
-  const level = track.levels[levelIndex];
-  const currentModule = level.modules[moduleIndex];
-  const nextLessonIndex = this.currentLesson + 1;
-
-  // Step 1: Try to load next content item in current module
-  if (currentModule.contents[nextLessonIndex]) {
-    this.loadLesson(trackId, levelIndex, moduleIndex, nextLessonIndex);
-    return;
-  }
-
-  // Step 2: Try to move to the next module
-  const nextModuleIndex = moduleIndex + 1;
-  if (level.modules[nextModuleIndex]) {
-    const firstContent = level.modules[nextModuleIndex].contents?.[0];
-    if (firstContent?.type === "lesson") {
-      this.loadLesson(trackId, levelIndex, nextModuleIndex, 0);
-    } else if (firstContent?.type === "quiz") {
-      this.loadQuiz(trackId, levelIndex, nextModuleIndex);
-    }
-    return;
-  }
-
-  // Step 3: Load exam for the level (you mentioned you already generate exams from quizzes)
-  this.loadExam(trackId, levelIndex);
-});
+      this.loadModule(trackId, levelIndex, moduleIndex);
+    });
   } else {
     const quizForm = document.getElementById('quiz-form');
     quizForm.addEventListener('submit', (e) => {
@@ -1772,120 +1637,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
   }, `${quiz.title} - LearnHub`);
 }
   
-  loadTrack(trackId) {
-  const track = this.coursesData[trackId];
-  if (!track) {
-    console.error("Track not found:", trackId);
-    this.mainContent.innerHTML = `<div class="lesson-error"><p>Track not found.</p></div>`;
-    return;
-  }
-
-  this.currentTrack = trackId;
-  this.mainContent.innerHTML = `
-    <div class="track-overview">
-      <h2>${track.title}</h2>
-      <div class="levels-list"> <h2></h2></div>
-    </div>
-  `;
-
-  const levelsContainer = this.mainContent.querySelector('.levels-list');
-
-  track.levels.forEach((level, levelIndex) => {
-    const levelBtn = document.createElement('button');
-    levelBtn.classList.add('level-btn');
-    levelBtn.textContent = `Level ${levelIndex + 1}: ${level.name || 'Unnamed Level'}`;
-    levelBtn.dataset.level = levelIndex;
-
-    if (!this.isLevelUnlocked(trackId, levelIndex)) {
-      levelBtn.disabled = true;
-    }
-
-    levelBtn.addEventListener('click', () => {
-      this.loadLevel(trackId, levelIndex);
-    });
-
-    levelsContainer.appendChild(levelBtn);
-  });
-}
-      
-      loadLevel(trackId, levelIndex) {
-  const track = this.coursesData[trackId];
-  const level = track?.levels?.[levelIndex];
-
-  if (!level) {
-    console.error("Level not found:", { trackId, levelIndex });
-    this.mainContent.innerHTML = `<div class="lesson-error"><p>Level not found or unavailable.</p></div>`;
-    return;
-  }
-
-  this.currentLevel = levelIndex;
-
-  this.mainContent.innerHTML = `
-    <div class="level-overview">
-      <h2>${level.name}</h2>
-      <div class="modules-list"></div>
-    </div>
-  `;
-
-  const modulesContainer = this.mainContent.querySelector('.modules-list');
-
-  level.modules.forEach((module, moduleIndex) => {
-    const moduleBtn = document.createElement('button');
-    moduleBtn.classList.add('module-btn');
-    moduleBtn.textContent = `Module ${moduleIndex + 1}: ${module.title}`;
-    moduleBtn.dataset.module = moduleIndex;
-
-    if (!this.isModuleUnlocked(trackId, levelIndex, moduleIndex)) {
-      moduleBtn.disabled = true;
-    }
-
-    moduleBtn.addEventListener('click', () => {
-      this.loadModule(trackId, levelIndex, moduleIndex);
-    });
-
-    modulesContainer.appendChild(moduleBtn);
-  });
-}
-      
-      loadModule(trackId, levelIndex, moduleIndex) {
-  const track = this.coursesData[trackId];
-  const level = track?.levels?.[levelIndex];
-  const module = level?.modules?.[moduleIndex];
-
-  if (!module) {
-    console.error("Module not found:", { trackId, levelIndex, moduleIndex });
-    this.mainContent.innerHTML = `<div class="lesson-error"><p>Module not found or unavailable.</p></div>`;
-    return;
-  }
-
-  this.currentModule = moduleIndex;
-
-  this.mainContent.innerHTML = `
-    <div class="module-overview">
-      <h2>${module.title}</h2>
-      <div class="lessons-list"></div>
-    </div>
-  `;
-
-  const lessonsContainer = this.mainContent.querySelector('.lessons-list');
-
-  module.contents.forEach((item, lessonIndex) => {
-    const isAd = item?.type === 'ad';
-    const lessonBtn = document.createElement('button');
-    lessonBtn.classList.add('lesson-btn');
-    lessonBtn.textContent = isAd ? `Ad: ${item.ad_slot}` : item.title || `Lesson ${lessonIndex + 1}`;
-    lessonBtn.dataset.lesson = lessonIndex;
-    lessonBtn.disabled = isAd;
-
-    if (!isAd) {
-      lessonBtn.addEventListener('click', () => {
-        this.loadLesson(trackId, levelIndex, moduleIndex, lessonIndex);
-      });
-    }
-
-    lessonsContainer.appendChild(lessonBtn);
-  });
-}
+  
 
   // =============================================
   // Quiz/Exam Related Methods
@@ -1910,7 +1662,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
       timestamp: Date.now()
     };
     
-    this.saveUserProgress();
+    this.updateUserProgress(trackId, updateUserProgress.progress, completed = false)();
     
     // Update progress in UI
     this.updateProgressUI();
@@ -1920,7 +1672,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
   resetQuizProgress(trackId, levelIndex, moduleIndex) {
     if (this.userProgress[trackId]?.[levelIndex]?.[moduleIndex]?.quiz) {
       delete this.userProgress[trackId][levelIndex][moduleIndex].quiz;
-      this.saveUserProgress();
+      this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
       this.updateProgressUI();
     }
   }
@@ -1969,7 +1721,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
       }
     }
     
-    this.saveUserProgress();
+    this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
     this.updateProgressUI();
   }
   
@@ -1989,7 +1741,6 @@ document.getElementById('back-to-module').addEventListener('click', () => {
 
       if (!this.isExamUnlocked(trackId, levelIndex)) {
         throw new Error('Exam is not unlocked yet');
-            this.showMessage('Exam is not unlocked yet');
       }
 
       if (this.isExamPassed(trackId, levelIndex)) {
@@ -2016,7 +1767,7 @@ document.getElementById('back-to-module').addEventListener('click', () => {
       
     } catch (error) {
       console.error('Failed to load exam:', error);
-      this.showError('Failed to load exam. Please try again later.');
+      this.showMessage('Exam is not yet unlocked. Complete all modules in the track and try again.');
     }
   }
 
@@ -2114,13 +1865,13 @@ document.getElementById('back-to-module').addEventListener('click', () => {
     return `
       <div class="incorrect-answers">
         <h3>Questions to Review</h3>
-        ${this.currentExamResults.incorrectAnswers.map((contentItem, i) => `
+        ${this.currentExamResults.incorrectAnswers.map((item, i) => `
           <div class="incorrect-answer">
-            <p><strong>Question:</strong> ${contentItem.question}</p>
-            <p><strong>Your answer:</strong> <span class="wrong">${contentItem.selectedOption}</span></p>
-            <p><strong>Correct answer:</strong> <span class="correct">${contentItem.correctOption}</span></p>
-            ${contentItem.explanation ? `<p class="explanation">${contentItem.explanation}</p>` : ''}
-            ${contentItem.sourceModule ? `<p class="source">From module: ${contentItem.sourceModule}</p>` : ''}
+            <p><strong>Question:</strong> ${item.question}</p>
+            <p><strong>Your answer:</strong> <span class="wrong">${item.selectedOption}</span></p>
+            <p><strong>Correct answer:</strong> <span class="correct">${item.correctOption}</span></p>
+            ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
+            ${item.sourceModule ? `<p class="source">From module: ${item.sourceModule}</p>` : ''}
           </div>
         `).join('')}
       </div>
@@ -2239,7 +1990,7 @@ getExamScore(trackId, levelIndex) {
       timestamp: Date.now()
     };
     
-    this.saveUserProgress();
+    this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
   }
 
   unlockNextContent() {
@@ -2253,7 +2004,7 @@ getExamScore(trackId, levelIndex) {
     if (levelIndex < track.levels.length - 1) {
       if (!this.userProgress[trackId][levelIndex + 1]) {
         this.userProgress[trackId][levelIndex + 1] = { unlocked: true };
-        this.saveUserProgress();
+        this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
       }
     }
   }
@@ -2329,12 +2080,12 @@ getExamScore(trackId, levelIndex) {
     modal.innerHTML = `
       <div class="modal-content">
         <h3>Answer Review</h3>
-        ${incorrectAnswers.map(contentItem => `
+        ${incorrectAnswers.map(item => `
           <div class="review-item">
-            <p><strong>Question:</strong> ${contentItem.question}</p>
-            <p class="wrong"><strong>Your answer:</strong> ${contentItem.selectedOption}</p>
-            <p class="correct"><strong>Correct answer:</strong> ${contentItem.correctOption}</p>
-            ${contentItem.explanation ? `<p class="explanation">${contentItem.explanation}</p>` : ''}
+            <p><strong>Question:</strong> ${item.question}</p>
+            <p class="wrong"><strong>Your answer:</strong> ${item.selectedOption}</p>
+            <p class="correct"><strong>Correct answer:</strong> ${item.correctOption}</p>
+            ${item.explanation ? `<p class="explanation">${item.explanation}</p>` : ''}
           </div>
         `).join('')}
         <button class="close-review">Close</button>
@@ -2345,7 +2096,7 @@ getExamScore(trackId, levelIndex) {
     modal.querySelector('.close-review').addEventListener('click', () => {
       document.body.removeChild(modal);
     });
-    this.saveUserProgress();
+    this.updateUserProgress(trackId, userProgressManager.progress, completed = false)();
     this.updateProgressUI();
   }
 
@@ -2405,8 +2156,8 @@ getExamScore(trackId, levelIndex) {
       const track = this.coursesData[trackId];
       track.levels.forEach((level, levelIndex) => {
         level.modules.forEach((module, moduleIndex) => {
-          totalLessons += module.contents.filter(contentItem => contentItem.type !== 'ad');
-          module.contents.forEach((_, lessonIndex) => {
+          totalLessons += module.lessons.length;
+          module.lessons.forEach((_, lessonIndex) => {
             if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
               completedLessons++;
             }
@@ -2419,42 +2170,12 @@ getExamScore(trackId, levelIndex) {
   }
 
   // Calculate track progress
-    calculateTrackProgress(trackId) {
-  const track = this.coursesData[trackId];
-  if (!track) return 0;
-  
-  let totalLessons = 0;
-  let completedLessons = 0;
-  
-  track.levels.forEach((level, levelIndex) => {
-    level.modules.forEach((module, moduleIndex) => {
-      // Filter out ad-type items
-      const lessons = module.contents.filter(contentItem => contentItem.type !== 'ad');
-
-      totalLessons += lessons.length;
-      
-      lessons.forEach((_, filteredIndex) => {
-        // Find the real index in the original contents array
-        const lessonIndex = module.contents.findIndex((contentItem, i) =>
-          contentItem.type !== 'ad' && module.contents.indexOf(contentItem) === i &&
-          lessons.indexOf(contentItem) === filteredIndex
-        );
-
-        if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
-          completedLessons++;
-        }
-      });
-    });
-  });
-
-  return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-}  
-  /**calculateTrackProgress(trackId) {
+  calculateTrackProgress(trackId) {
     const track = this.coursesData[trackId];
-      if (!track) return 0;
-   
-      let totalLessons = 0;
-      let completedLessons = 0;
+    if (!track) return 0;
+    
+    let totalLessons = 0;
+    let completedLessons = 0;
     
     track.levels.forEach((level, levelIndex) => {
       level.modules.forEach((module, moduleIndex) => {
@@ -2468,7 +2189,7 @@ getExamScore(trackId, levelIndex) {
     });
     
     return totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-  }**/
+  }
 
   // Calculate level progress
   calculateLevelProgress(trackId, levelIndex) {
@@ -2479,8 +2200,8 @@ getExamScore(trackId, levelIndex) {
     let completedLessons = 0;
     
     level.modules.forEach((module, moduleIndex) => {
-      totalLessons += module.contents.filter(contentItem => contentItem.type !== 'ad');
-      module.contents.forEach((_, lessonIndex) => {
+      totalLessons += module.lessons.length;
+      module.lessons.forEach((_, lessonIndex) => {
         if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
           completedLessons++;
         }
@@ -2495,10 +2216,10 @@ getExamScore(trackId, levelIndex) {
     const module = this.coursesData[trackId].levels[levelIndex].modules[moduleIndex];
     if (!module) return 0;
     
-    let totalLessons = module.contents.filter(contentItem => contentItem.type !== 'ad');
+    let totalLessons = module.lessons.length;
     let completedLessons = 0;
     
-    module.contents.forEach((_, lessonIndex) => {
+    module.lessons.forEach((_, lessonIndex) => {
       if (this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)) {
         completedLessons++;
       }
@@ -2596,7 +2317,7 @@ getExamScore(trackId, levelIndex) {
     const module = this.coursesData[trackId].levels[levelIndex].modules[moduleIndex];
     
     // All lessons completed and quiz passed if exists
-    const allLessonsCompleted = module.contents.every((_, lessonIndex) => 
+    const allLessonsCompleted = module.lessons.every((_, lessonIndex) => 
       this.isLessonCompleted(trackId, levelIndex, moduleIndex, lessonIndex)
     );
     
@@ -2643,7 +2364,7 @@ getExamScore(trackId, levelIndex) {
       timestamp: Date.now()
     };
     
-    this.saveUserProgress();
+    this.updateUserProgress(trackId, userProgressManager.progress, userProgressManager.completed = false)();
     this.updateProgressUI();
   }
 
@@ -2678,8 +2399,8 @@ getExamScore(trackId, levelIndex) {
   // Update active navigation item
   updateActiveNav() {
     // Remove active class from all nav items
-    this.sideNav.querySelectorAll('.nav-item').forEach(contentItem => {
-      contentItem.classList.remove('active');
+    this.sideNav.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
     });
     
     // Add active class to current item
@@ -2741,8 +2462,23 @@ getExamScore(trackId, levelIndex) {
     return url;
   }
 
-  // Load user progress from localStorage
-  loadUserProgress() {
+
+  // WITH this method:
+  async loadUserProgress() {
+    // Use the external userProgressManager instead
+    await userProgressManager.initialize();
+    return userProgressManager.progress;
+  }
+  
+  // Add other methods to interact with the progress manager:
+  async updateUserProgress(trackId, progress, completed = false) {
+    return await userProgressManager.saveProgressToBackend(trackId, userProgressManager.progress, completed);
+  }
+  
+  getUserProgressForTrack(trackId) {
+    return userProgressManager.getProgressForTrack(trackId);
+  }
+ /** loadUserProgress() {
     try {
       const progress = localStorage.getItem('learnhub-user-progress');
       return progress ? JSON.parse(progress) : {};
@@ -2759,7 +2495,7 @@ getExamScore(trackId, levelIndex) {
     } catch (e) {
       console.error('Failed to save user progress:', e);
     }
-  }
+  }**/
 
   // Render error message
   renderError(message) {
@@ -2776,4 +2512,320 @@ getExamScore(trackId, levelIndex) {
       this.init();
     });
   }
+}
+
+// First, define the UserProgressManager class separately (not nested in another class)
+class UserProgressManager {
+  constructor() {
+    this.progress = {};
+    this.badges = [];
+    this.isAuthenticated = !!localStorage.getItem('token');
+  }
+
+  // Initialize by loading progress from backend or localStorage as fallback
+  async initialize() {
+    if (this.isAuthenticated) {
+      try {
+        await this.loadProgressFromBackend();
+      } catch (error) {
+        console.error('Failed to load progress from backend:', error);
+        this.loadProgressFromLocalStorage();
+      }
+    } else {
+      this.loadProgressFromLocalStorage();
+    }
+    
+    // Also load badges if authenticated
+    if (this.isAuthenticated) {
+      try {
+        await this.loadBadgesFromBackend();
+      } catch (error) {
+        console.error('Failed to load badges from backend:', error);
+      }
+    }
+    
+    return this.progress;
+  }
+  
+  // Load user progress from localStorage (fallback method)
+  loadProgressFromLocalStorage() {
+    try {
+      const progress = localStorage.getItem('learnhub-user-progress');
+      this.progress = progress ? JSON.parse(progress) : {};
+      return this.progress;
+    } catch (e) {
+      console.error('Failed to load user progress from localStorage:', e);
+      this.progress = {};
+      return this.progress;
+    }
+  }
+  
+  // Save user progress to localStorage (fallback method)
+  saveProgressToLocalStorage() {
+    try {
+      localStorage.setItem('learnhub-user-progress', JSON.stringify(this.progress));
+      return true;
+    } catch (e) {
+      console.error('Failed to save user progress to localStorage:', e);
+      return false;
+    }
+  }
+  
+  // Load user progress from backend
+  async loadProgressFromBackend() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('User not authenticated');
+    }
+    
+    const response = await fetch('/api/user-progress/progress', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    this.progress = await response.json();
+    return this.progress;
+  }
+  
+  // Save user progress to backend
+  async saveProgressToBackend(trackId, progress, completed = false) {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      // Fall back to localStorage if not authenticated
+      this.updateProgress(trackId, progress, completed);
+      this.saveProgressToLocalStorage();
+      return this.progress;
+    }
+    
+    const response = await fetch('/api/user-progress/progress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token
+      },
+      body: JSON.stringify({
+        trackId,
+        progress,
+        completed
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    this.progress = data.progress;
+    this.badges = data.badges;
+    
+    // Also update localStorage as a backup
+    this.saveProgressToLocalStorage();
+    
+    return {
+      progress: this.progress,
+      badges: this.badges
+    };
+  }
+  
+  // Load user badges from backend
+  async loadBadgesFromBackend() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      throw new Error('User not authenticated');
+    }
+    
+    const response = await fetch('/api/user-progress/badges', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    this.badges = await response.json();
+    return this.badges;
+  }
+  
+  // Update progress in local object
+  updateProgress(trackId, progress, completed = false) {
+    if (!this.progress[trackId]) {
+      this.progress[trackId] = {
+        trackId,
+        progress: 0,
+        completed: false,
+        lastUpdated: new Date()
+      };
+    }
+    
+    this.progress[trackId].progress = progress;
+    this.progress[trackId].completed = completed;
+    this.progress[trackId].lastUpdated = new Date();
+    
+    return this.progress;
+  }
+  
+  // Get progress for a specific track
+  getProgressForTrack(trackId) {
+    return this.progress[trackId] || {
+      trackId,
+      progress: 0,
+      completed: false
+    };
+  }
+  
+  // Complete a track and get badge
+  async completeTrack(trackId) {
+    return await this.saveProgressToBackend(trackId, 100, true);
+  }
+  
+  // Get all earned badges
+  getBadges() {
+    return this.badges;
+  }
+}
+
+// Create a global instance
+const userProgressManager = new UserProgressManager();
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  await userProgressManager.initialize();
+  
+  // Update UI if on the progress or badges page
+  if (document.getElementById('user-progress-container')) {
+    updateProgressUI();
+  }
+  
+  if (document.getElementById('user-badges-container')) {
+    updateBadgesUI();
+  }
+});
+
+// Example of how to update a track's progress
+function updateTrackProgress(trackId, progress, completed = false) {
+  userProgressManager.saveProgressToBackend(trackId, progress, completed)
+    .then(() => {
+      // Update UI elements to reflect the new progress
+      updateProgressUI();
+      
+      if (completed) {
+        // Show badge earned notification
+        showBadgeNotification(trackId);
+      }
+    })
+    .catch(error => {
+      console.error('Failed to update progress:', error);
+    });
+}
+
+// Update the UI to show current progress
+function updateProgressUI() {
+  const progressContainer = document.getElementById('user-progress-container');
+  if (!progressContainer) return;
+  
+  // Clear the container
+  progressContainer.innerHTML = '';
+  
+  // Get all progress items
+  const progressItems = Object.values(userProgressManager.progress);
+  
+  if (progressItems.length === 0) {
+    progressContainer.innerHTML = '<p>No progress yet. Start a learning track to see your progress here!</p>';
+    return;
+  }
+  
+  // Create a progress element for each track
+  progressItems.forEach(item => {
+    const progressElement = document.createElement('div');
+    progressElement.className = 'progress-item';
+    progressElement.innerHTML = `
+      <h3>${item.trackId}</h3>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width: ${item.progress}%"></div>
+      </div>
+      <p>${item.progress}% complete</p>
+      <p>Last updated: ${new Date(item.lastUpdated).toLocaleString()}</p>
+      ${item.completed ? '<span class="badge-earned">Badge Earned!</span>' : ''}
+    `;
+    
+    progressContainer.appendChild(progressElement);
+  });
+}
+
+// Update the UI to show earned badges
+function updateBadgesUI() {
+  const badgesContainer = document.getElementById('user-badges-container');
+  if (!badgesContainer) return;
+  
+  // Clear the container
+  badgesContainer.innerHTML = '';
+  
+  // Get all badges
+  const badges = userProgressManager.getBadges();
+  
+  if (badges.length === 0) {
+    badgesContainer.innerHTML = '<p>No badges earned yet. Complete a learning track to earn badges!</p>';
+    return;
+  }
+  
+  // Create a badge element for each earned badge
+  badges.forEach(badge => {
+    const badgeElement = document.createElement('div');
+    badgeElement.className = 'badge-item';
+    badgeElement.innerHTML = `
+      <img src="${badge.image}" alt="${badge.name}" class="badge-image">
+      <h3>${badge.name}</h3>
+      <p>${badge.description}</p>
+      <p>Earned on: ${new Date(badge.earnedAt).toLocaleDateString()}</p>
+    `;
+    
+    badgesContainer.appendChild(badgeElement);
+  });
+}
+
+// Show a notification when a badge is earned
+function showBadgeNotification(trackId) {
+  const badges = userProgressManager.getBadges();
+  const badge = badges.find(b => b.trackId === trackId);
+  
+  if (!badge) return;
+  
+  const notification = document.createElement('div');
+  notification.className = 'badge-notification';
+  notification.innerHTML = `
+    <div class="badge-notification-content">
+      <img src="${badge.image}" alt="${badge.name}" class="badge-notification-image">
+      <div class="badge-notification-text">
+        <h3>New Badge Earned!</h3>
+        <p>${badge.name}</p>
+        <p>${badge.description}</p>
+      </div>
+      <button class="badge-notification-close">&times;</button>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Add event listener to close button
+  notification.querySelector('.badge-notification-close').addEventListener('click', () => {
+    notification.remove();
+  });
+  
+  // Automatically remove after 5 seconds
+  setTimeout(() => {
+    if (document.body.contains(notification)) {
+      notification.remove();
+    }
+  }, 5000);
 }

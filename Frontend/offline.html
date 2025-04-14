@@ -115,87 +115,112 @@
   </div>
 
   <script>
-  let cachedNews = {
-  lastUpdated: "Unknown",
-  items: [
-    { title: "System Maintenance Complete", content: "Recent upgrades have improved mining efficiency by 12%." },
-    { title: "Network Status", content: "All systems operational. Mining rewards are functioning normally." },
-    { title: "New Features Coming Soon", content: "We're working on exciting new features for the dashboard and integrating the Maichain learning platform!" }
-  ]
-};
-
-function loadOfflineNews(event) {
-  event.preventDefault();
-
-  const container = document.getElementById("main-content");
-  container.innerHTML = `
-    <div class="fade-in">
-      <h1>Latest Updates</h1>
-      <p class="last-updated">Last cached: ${cachedNews.lastUpdated}</p>
-      ${cachedNews.items.map(item => `<h3>${item.title}</h3><p>${item.content}</p>`).join('')}
-      <div class="button-group">
-        <a href="#" style="background-color: #2C3E20; border-radius: 5px; padding: 4px;" class="check-updates" onclick="goBack(event)">Back</a>
-      </div>
-    </div>
-  `;
-}
-
-function goBack(event) {
-  event.preventDefault();
-
-  // Restore the original offline message
-  const container = document.getElementById("main-content");
-  container.innerHTML = `
-    <h1>You're Offline</h1>
-    <p>No internet connection detected. Your mining session and balance remain intact.</p>
-    <div class="button-group">
-      <button style="background-color: #2C3E20; border-radius: 5px; padding: 4px;">
-        <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a>
-      </button>
-    </div>
-    <div class="reconnecting" id="network-status">Reconnecting...</div>
-  `;
-
-  // Check if internet is restored after returning
-  checkConnection();
-}
-
-function checkConnection() {
-  if (navigator.onLine) {
-    document.getElementById("network-status").innerText = "Reconnected! Redirecting...";
-    console.log("Internet connection restored. Redirecting to index.html...");
-
-    setTimeout(() => {
-      if (window.AndroidInterface) {
-        console.log("Redirecting via Android WebView...");
-        window.AndroidInterface.redirectToIndex();
-      } else {
-        console.log("Redirecting via window.location.replace...");
-        window.location.replace("index.html");
-      }
-    }, 3000);
+  // Store the previous page URL when this page loads
+  let previousPageUrl = "";
+  
+  // Try to get the referrer or previous page URL
+  if (document.referrer && document.referrer !== "") {
+    previousPageUrl = document.referrer;
   } else {
-    document.getElementById("network-status").innerText = "Reconnecting...";
-    console.log("Still offline...");
+    // If referrer is not available, try to get from sessionStorage
+    previousPageUrl = sessionStorage.getItem("lastPageUrl") || "index.html";
   }
-}
+  
+  // Store current URL before navigating away (for other pages to use)
+  window.addEventListener('beforeunload', function() {
+    if (window.location.pathname !== "/offline.html") {
+      sessionStorage.setItem("lastPageUrl", window.location.href);
+    }
+  });
+  
+  let cachedNews = {
+    lastUpdated: "Unknown",
+    items: [
+      { title: "System Maintenance Complete", content: "Recent upgrades have improved mining efficiency by 12%." },
+      { title: "Network Status", content: "All systems operational. Mining rewards are functioning normally." },
+      { title: "New Features Coming Soon", content: "We're working on exciting new features for the dashboard and integrating the Maichain learning platform!" }
+    ]
+  };
 
-// Periodically check connection status (fix for WebView)
-setInterval(() => {
-  if (navigator.onLine) {
+  function loadOfflineNews(event) {
+    event.preventDefault();
+
+    const container = document.getElementById("main-content");
+    container.innerHTML = `
+      <div class="fade-in">
+        <h1>Latest Updates</h1>
+        <p class="last-updated">Last cached: ${cachedNews.lastUpdated}</p>
+        ${cachedNews.items.map(item => `<h3>${item.title}</h3><p>${item.content}</p>`).join('')}
+        <div class="button-group">
+          <a href="#" style="background-color: #2C3E20; border-radius: 5px; padding: 4px;" class="check-updates" onclick="goBack(event)">Back</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function goBack(event) {
+    event.preventDefault();
+
+    // Restore the original offline message
+    const container = document.getElementById("main-content");
+    container.innerHTML = `
+      <h1>You're Offline</h1>
+      <p>No internet connection detected. Your session and balance remain intact.</p>
+      <div class="button-group">
+        <button style="background-color: #2C3E20; border-radius: 5px; padding: 4px;">
+          <a href="#" class="check-updates" onclick="loadOfflineNews(event)">Check Updates</a>
+        </button>
+      </div>
+      <div class="reconnecting" id="network-status">Reconnecting...</div>
+    `;
+
+    // Check if internet is restored after returning
     checkConnection();
   }
-}, 3000);
 
-// Listen for connection changes (browser support)
-window.addEventListener("online", checkConnection);
-window.addEventListener("offline", () => {
-  document.getElementById("network-status").innerText = "Still offline...";
-  console.log("User is offline.");
-});
+  function checkConnection() {
+    if (navigator.onLine) {
+      document.getElementById("network-status").innerText = "Reconnected! Redirecting...";
+      console.log("Internet connection restored. Redirecting to previous page...");
 
-// Set last updated time
-cachedNews.lastUpdated = new Date().toLocaleString();
+      setTimeout(() => {
+        if (window.AndroidInterface) {
+          console.log("Redirecting via Android WebView...");
+          if (previousPageUrl) {
+            window.AndroidInterface.loadUrl(previousPageUrl);
+          } else {
+            window.AndroidInterface.redirectToIndex();
+          }
+        } else {
+          console.log("Redirecting to: " + (previousPageUrl || "index.html"));
+          window.location.replace(previousPageUrl || "index.html");
+        }
+      }, 3000);
+    } else {
+      document.getElementById("network-status").innerText = "Reconnecting...";
+      console.log("Still offline...");
+    }
+  }
+
+  // Periodically check connection status (fix for WebView)
+  setInterval(() => {
+    if (navigator.onLine) {
+      checkConnection();
+    }
+  }, 3000);
+
+  // Listen for connection changes (browser support)
+  window.addEventListener("online", checkConnection);
+  window.addEventListener("offline", () => {
+    document.getElementById("network-status").innerText = "Still offline...";
+    console.log("User is offline.");
+  });
+
+  // Set last updated time
+  cachedNews.lastUpdated = new Date().toLocaleString();
+  
+  // Log the previous page for debugging
+  console.log("Previous page URL: " + previousPageUrl);
   </script>
 </body>
 </html>

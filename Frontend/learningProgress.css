@@ -1,0 +1,233 @@
+/* progress.css */
+
+/* Main container styles */
+.progress-section {
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Tab navigation */
+.progress-tabs {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  position: relative;
+}
+
+.tab-button.active {
+  color: #3366ff;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #3366ff;
+}
+
+.tab-button:hover {
+  color: #3366ff;
+}
+
+/* Tab content */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Loading indicator */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+}
+
+/* Progress items */
+.progress-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.progress-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.progress-item:hover {
+  transform: translateY(-5px);
+}
+
+.progress-item h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 12px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #3366ff;
+  border-radius: 6px;
+  transition: width 0.5s ease-in-out;
+}
+
+.badge-earned {
+  display: inline-block;
+  background-color: #4caf50;
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+/* Badges display */
+.badges-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 2rem;
+}
+
+.badge-item {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.badge-item:hover {
+  transform: translateY(-8px);
+}
+
+.badge-image {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1rem;
+  object-fit: contain;
+}
+
+.badge-item h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.badge-item p {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+/* Badge notification */
+.badge-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.badge-notification-content {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  max-width: 400px;
+}
+
+.badge-notification-image {
+  width: 60px;
+  height: 60px;
+  margin-right: 1rem;
+  object-fit: contain;
+}
+
+.badge-notification-text {
+  flex: 1;
+}
+
+.badge-notification-text h3 {
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.badge-notification-text p {
+  margin: 0.2rem 0;
+  color: #666;
+}
+
+.badge-notification-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+  padding: 0 0.5rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progress-container,
+  .badges-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .badge-notification {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+  
+  .badge-notification-content {
+    max-width: 100%;
+  }
+}
+

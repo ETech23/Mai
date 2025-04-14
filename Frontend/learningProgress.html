@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Learning Progress | LearnHub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="learningProgress.css">
+</head>
+<body>
+  <header>
+    <!-- Include your navigation here -->
+  </header>
+  
+  <main>
+    <section class="progress-section">
+      <div class="container">
+        <h1>My Learning Progress</h1>
+        <p>Track your learning journey and see your progress across different tracks.</p>
+        
+        <div class="progress-tabs">
+          <button class="tab-button active" data-tab="progress">Progress</button>
+          <button class="tab-button" data-tab="badges">Badges</button>
+        </div>
+        
+        <div class="tab-content">
+          <div id="progress-tab" class="tab-pane active">
+            <div id="user-progress-container" class="progress-container">
+              <!-- Progress items will be inserted here by JavaScript -->
+              <div class="loading">Loading your progress...</div>
+            </div>
+          </div>
+          
+          <div id="badges-tab" class="tab-pane">
+            <div id="user-badges-container" class="badges-container">
+              <!-- Badge items will be inserted here by JavaScript -->
+              <div class="loading">Loading your badges...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <!-- Include your footer here -->
+  </footer>
+  
+  <!-- JavaScript -->
+  <script src="/js/userProgress.js"></script>
+  <script>
+    // Tab switching functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabPanes = document.querySelectorAll('.tab-pane');
+      
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove active class from all buttons and panes
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabPanes.forEach(pane => pane.classList.remove('active'));
+          
+          // Add active class to clicked button and corresponding pane
+          button.classList.add('active');
+          const tabName = button.getAttribute('data-tab');
+          document.getElementById(`${tabName}-tab`).classList.add('active');
+          
+          // Update UI based on active tab
+          if (tabName === 'progress') {
+            updateProgressUI();
+          } else if (tabName === 'badges') {
+            updateBadgesUI();
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
