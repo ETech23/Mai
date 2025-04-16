@@ -2473,7 +2473,63 @@ getExamScore(trackId, levelIndex) {
   }
 
 
-  loadUserProgress() {
+async loadUserProgress() {
+  try {
+    // Try fetching from backend first
+    const response = await fetch('/api/user/progress', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.userToken}` // if using auth
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      this.userProgress = data;
+      return data;
+    } else {
+      throw new Error('Backend load failed, falling back to localStorage');
+    }
+  } catch (e) {
+    console.warn('Falling back to localStorage:', e);
+    try {
+      const progress = localStorage.getItem('learnhub-user-progress');
+      this.userProgress = progress ? JSON.parse(progress) : {};
+      return this.userProgress;
+    } catch (err) {
+      console.error('Failed to load user progress from localStorage:', err);
+      return {};
+    }
+  }
+}
+
+async saveUserProgress() {
+  try {
+    // Save to backend first
+    const response = await fetch('/api/user/progress', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.userToken}` // if using auth
+      },
+      body: JSON.stringify(this.userProgress)
+    });
+
+    if (!response.ok) {
+      throw new Error('Backend save failed');
+    }
+  } catch (e) {
+    console.warn('Saving to backend failed. Saving to localStorage instead.', e);
+    try {
+      localStorage.setItem('learnhub-user-progress', JSON.stringify(this.userProgress));
+    } catch (err) {
+      console.error('Failed to save user progress to localStorage:', err);
+    }
+  }
+}
+
+/**  loadUserProgress() {
     try {
       const progress = localStorage.getItem('learnhub-user-progress');
       return progress ? JSON.parse(progress) : {};
@@ -2490,7 +2546,7 @@ getExamScore(trackId, levelIndex) {
     } catch (e) {
       console.error('Failed to save user progress:', e);
     }
-  }
+  }**/
 
   // Render error message
   renderError(message) {
