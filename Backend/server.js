@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const userMessages = require("./routes/userMessages");
 const adminRoutes = require("./routes/admin");
 const bodyParser = require('body-parser');
+const userProgressRoutes = require("./routes/userProgress");
 
 // Load environment variables
 dotenv.config();
@@ -71,6 +72,8 @@ app.use("/api/admin", adminRoutes);
 // Import points route
 app.use('/api/points', require('./routes/points'));
 app.use('/api/mining', require('./routes/api/mining'));
+
+app.use("/api/user/progress", userProgressRoutes);
 
 // Catch-all Route for Unmatched Endpoints
 app.use((req, res) => {

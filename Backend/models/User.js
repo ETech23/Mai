@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
   points: { type: Number, default: 0 }, // User's accumulated points
   miningProgress: { type: Number, default: 0 }, // Mining progress in percentage
   miningEndTime: { type: Date, default: null }, // End time of the mining session
+  userProgress: {
+  type: Object,
+  default: {}
+},
 }, {
   timestamps: true // Automatically add `createdAt` and `updatedAt` fields
 });
