@@ -2568,6 +2568,7 @@ getExamScore(trackId, levelIndex) {
 
     
   async loadUserProgress() {
+      console.log("Token being sent:", this.token);
     try {
       const res = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
         method: 'GET',
@@ -2600,6 +2601,7 @@ getExamScore(trackId, levelIndex) {
   }
 
   async saveUserProgress() {
+      console.log("Token being sent:", this.token);
     try {
       const res = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
         method: 'POST',
