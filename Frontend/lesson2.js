@@ -9,6 +9,7 @@ class LearningApp {
     this.userProgress = this.loadUserProgress();
     this.currentExam = null;
     this.currentExamResults = null;
+    this.token = localStorage.getItem('token'); // set once
   /**  this.mainContent = document.getElementById('main-content') || document.body;**/
     
     
@@ -2565,61 +2566,63 @@ getExamScore(trackId, levelIndex) {
   }
 
 
-async loadUserProgress() {
-  try {
-    // Try fetching from backend first
-    const response = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}` // if using auth
-      }
-    });
+    
+  async loadUserProgress() {
+    try {
+      const res = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        }
+      });
 
-    if (response.ok) {
-      const data = await response.json();
+      if (!res.ok) throw new Error('Backend load failed');
+
+      const data = await res.json();
       this.userProgress = data;
+
+      // Keep localStorage in sync
+      localStorage.setItem('learnhub-user-progress', JSON.stringify(data));
+
       return data;
-    } else {
-      throw new Error('Backend load failed, falling back to localStorage');
-    }
-  } catch (e) {
-    console.warn('Falling back to localStorage:', e);
-    try {
-      const progress = localStorage.getItem('learnhub-user-progress');
-      this.userProgress = progress ? JSON.parse(progress) : {};
-      return this.userProgress;
-    } catch (err) {
-      console.error('Failed to load user progress from localStorage:', err);
-      return {};
+    } catch (e) {
+      console.warn('Falling back to localStorage:', e);
+      try {
+        const cached = localStorage.getItem('learnhub-user-progress');
+        this.userProgress = cached ? JSON.parse(cached) : {};
+        return this.userProgress;
+      } catch (err) {
+        console.error('Local fallback failed:', err);
+        return {};
+      }
     }
   }
-}
 
-async saveUserProgress() {
-  try {
-    // Save to backend first
-    const response = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}` // if using auth
-      },
-      body: JSON.stringify(this.userProgress)
-    });
-
-    if (!response.ok) {
-      throw new Error('Backend save failed');
-    }
-  } catch (e) {
-    console.warn('Saving to backend failed. Saving to localStorage instead.', e);
+  async saveUserProgress() {
     try {
+      const res = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: JSON.stringify(this.userProgress)
+      });
+
+      if (!res.ok) throw new Error('Backend save failed');
+
+      // Keep localStorage in sync
       localStorage.setItem('learnhub-user-progress', JSON.stringify(this.userProgress));
-    } catch (err) {
-      console.error('Failed to save user progress to localStorage:', err);
+    } catch (e) {
+      console.warn('Saving to backend failed. Saving to localStorage instead.', e);
+      try {
+        localStorage.setItem('learnhub-user-progress', JSON.stringify(this.userProgress));
+      } catch (err) {
+        console.error('Failed to save locally:', err);
+      }
     }
   }
-}
 
 /**  loadUserProgress() {
     try {
