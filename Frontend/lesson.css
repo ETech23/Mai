@@ -753,6 +753,57 @@ body {
   }
 }
 
+.badge-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  animation: pop 0.3s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.close-badge-modal {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.badge-preview {
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 15px;
+  background: #f0f8ff;
+}
+
+.badge-ai {
+  background: linear-gradient(to right, #8e2de2, #4a00e0);
+  color: white;
+}
+
+.badge-crypto {
+  background: linear-gradient(to right, #ffd700, #ffa500);
+  color: black;
+}
+
 /* ===== Layout Styles ===== */
 .app-container {
   display: flex;

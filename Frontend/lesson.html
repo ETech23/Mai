@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="lesson.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -72,6 +74,13 @@
                 <button id="retry-btn">Retry</button>
             </div>
         </main>
+        <div id="badgeModal" class="badge-modal hidden">
+  <div class="modal-content">
+    <span class="close-badge-modal">&times;</span>
+    <h2>Congratulations!</h2>
+    <div id="badgeContent"></div>
+  </div>
+</div>
     </div>
 
 <!-- Load lesson2.js FIRST -->

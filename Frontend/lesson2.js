@@ -1809,27 +1809,31 @@ this.renderCourseData();
   // ======================
 
   displayExamResults() {
-    if (!this.currentExamResults || !this.currentExam) return;
+  if (!this.currentExamResults || !this.currentExam) return;
 
-    const passed = this.currentExamResults.score >= this.currentExam.passingScore;
-    
-    this.mainContent.innerHTML = `
-      <div class="exam-results ${passed ? 'passed' : 'failed'}">
-        <h2>Exam Results</h2>
-        ${this.generateResultsSummary(passed)}
-        ${this.generateModuleStats()}
-        ${!passed ? this.generateIncorrectAnswers() : ''}
-        <div class="exam-actions">
-          <button id="exam-retry" class="${passed ? 'continue' : 'retry'}">
-            ${passed ? 'Continue Learning' : 'Retry Exam'}
-          </button>
-          ${!passed ? '<button id="exam-review" class="review-btn">Review Answers</button>' : ''}
-        </div>
-      </div>
-    `;
+  const passed = this.currentExamResults.score >= this.currentExam.passingScore;
 
-    this.setupResultsHandlers(passed);
+  if (passed) {
+    this.launchConfetti();
+    this.awardBadgeIfNotAlreadyGiven();
   }
+
+  this.mainContent.innerHTML = `
+    <div class="exam-results ${passed ? 'passed' : 'failed'}">
+      <h2>Exam Results</h2>
+      ${this.generateResultsSummary(passed)}
+      ${this.generateModuleStats()}
+      ${!passed ? this.generateIncorrectAnswers() : ''}
+      <div class="exam-actions">
+        <button id="exam-retry" class="${passed ? 'continue' : 'retry'}">
+          ${passed ? 'Continue Learning' : 'Retry Exam'}
+        </button>
+        ${!passed ? '<button id="exam-review" class="review-btn">Review Answers</button>' : ''}
+      </div>
+    </div>
+  `;
+  this.setupResultsHandlers(passed);
+}
 
   generateResultsSummary(passed) {
     return `
@@ -1881,6 +1885,94 @@ this.renderCourseData();
       </div>
     `;
   }
+  
+  launchConfetti() {
+  const duration = 2 * 1000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 }
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}
+
+awardBadgeIfNotAlreadyGiven() {
+  const { trackId, levelIndex } = this.currentExamResults;
+  const username = this.getCurrentUsername(); // Define this method to return logged-in user
+  const badgeId = `${trackId}-level${levelIndex}`;
+  const badges = this.userBadges || JSON.parse(localStorage.getItem("learnhub-user-badges") || "[]");
+
+  const alreadyAwarded = badges.some(b => b.id === badgeId && b.issuedTo === username);
+  if (!alreadyAwarded) {
+    const badge = this.generateBadge(badgeId, trackId, username);
+    badges.push(badge);
+    this.userBadges = badges;
+    localStorage.setItem("learnhub-user-badges", JSON.stringify(badges));
+    this.showBadgeModal(badge);
+  }
+}
+
+generateBadge(id, trackId, username) {
+  const trackName = this.coursesData[trackId].title || trackId;
+  return {
+    id,
+    issuedTo: username,
+    title: `Level Completed - ${trackName}`,
+    trackId,
+    dateIssued: new Date().toLocaleDateString(),
+    platform: "MAICHAIN",
+    design: `badge-${trackId}` // Used for different styles
+  };
+}
+
+showBadgeModal(badge) {
+  const modal = document.getElementById("badgeModal");
+  const content = document.getElementById("badgeContent");
+
+  content.innerHTML = `
+    <div class="badge-preview ${badge.design}">
+      <h3>${badge.title}</h3>
+      <p>Issued to: <strong>${badge.issuedTo}</strong></p>
+      <p>Date: ${badge.dateIssued}</p>
+      <p>Platform: ${badge.platform}</p>
+    </div>
+  `;
+
+  modal.classList.remove("hidden");
+  modal.style.display = "block";
+
+  const closeBtn = document.querySelector(".close-badge-modal");
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+    modal.style.display = "none";
+  };
+
+  window.onclick = (event) => {
+    if (event.target === modal) {
+      modal.classList.add("hidden");
+      modal.style.display = "none";
+    }
+  };
+}
+
+getCurrentUsername() {
+  // Replace with your actual logic
+  return localStorage.getItem("learnhub-username") || "Anonymous";
+}
 
   // ======================
   // Helper Methods
@@ -2476,11 +2568,11 @@ getExamScore(trackId, levelIndex) {
 async loadUserProgress() {
   try {
     // Try fetching from backend first
-    const response = await fetch('/api/user/progress', {
+    const response = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.userToken}` // if using auth
+        'Authorization': `Bearer ${this.token}` // if using auth
       }
     });
 
@@ -2507,11 +2599,11 @@ async loadUserProgress() {
 async saveUserProgress() {
   try {
     // Save to backend first
-    const response = await fetch('/api/user/progress', {
+    const response = await fetch('https://mai-vmox.onrender.com/api/user/progress', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.userToken}` // if using auth
+        'Authorization': `Bearer ${this.token}` // if using auth
       },
       body: JSON.stringify(this.userProgress)
     });
