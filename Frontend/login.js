@@ -113,7 +113,7 @@ authForm.addEventListener("submit", async (e) => {
     };
 
     try {
-        const response = await fetch(`https://maicoin-41vo.onrender.com/api/auth/${isRegistering ? "register" : "login"}`, {
+        const response = await fetch(`https://mai-vmox.onrender.com/api/auth/${isRegistering ? "register" : "login"}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

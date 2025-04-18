@@ -96,7 +96,7 @@ const startMining = async (userId, referrals) => {
   syncInterval = setInterval(async () => {
     try {
       console.log("Syncing balance with backend...");
-      const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
+      const response = await fetch("https://mai-vmox.onrender.com/api/mining/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

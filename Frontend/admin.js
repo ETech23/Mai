@@ -1,5 +1,5 @@
 // Base URL and Authentication
-const BASE_URL = "https://maicoin-41vo.onrender.com";
+const BASE_URL = "https://mai-vmox.onrender.com";
 const adminToken = localStorage.getItem("token");
 
 // Redirect if not authenticated

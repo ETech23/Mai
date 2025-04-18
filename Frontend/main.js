@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!token) return false;
         
         try {
-            const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
+            const response = await fetch("https://mai-vmox.onrender.com/api/auth/details", {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -555,7 +555,7 @@ async function syncBalanceWithBackend(balance, isPriority = false, retryCount = 
     console.log(`Attempting to sync balance for user ${userId}: ${balance.toFixed(4)} (Priority: ${isPriority}, Attempt: ${retryCount + 1}/${maxRetries + 1})`);
 
     try {
-        const response = await fetch("https://maicoin-41vo.onrender.com/api/mining/update", {
+        const response = await fetch("https://mai-vmox.onrender.com/api/mining/update", {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -642,7 +642,7 @@ async function getBackendBalance() {
     }
 
     try {
-        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
+        const response = await fetch("https://mai-vmox.onrender.com/api/auth/details", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -679,7 +679,7 @@ async function getBackendBalance() {
 // Refresh token if expired
 async function refreshAuthToken() {
     try {
-        const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/refresh", {
+        const response = await fetch("https://mai-vmox.onrender.com/api/auth/refresh", {
             method: "POST",
             credentials: "include"
         });
