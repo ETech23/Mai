@@ -22,10 +22,10 @@
     
     body {
       font-family: 'Inter', sans-serif;
-      background: #121212;
+      background: black !important;
       color: #fff;
       transition: all 0.3s ease;
-      
+      height: 100vh !important;
     }
     
     .mining-sphere {
@@ -189,6 +189,57 @@
   display: block;
 }
   
+
+  
+       .task-button {
+  position: fixed;
+  bottom: 30px;
+  right: 20px;
+  background: conic-gradient(
+    #28a745,
+    #232B3C,
+    #FFD700,
+    #0A101D,
+    #28a745
+  );
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 1000;
+  padding: 0;
+}
+
+.curved-text {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.text-animate {
+  animation: rotateText 5s linear infinite;
+}
+
+.text-animate.delay {
+  animation-delay: 1s;
+}
+
+@keyframes rotateText {
+  0% {
+    startOffset: 50%;
+  }
+  50% {
+    startOffset: 55%;
+  }
+  100% {
+    startOffset: 50%;
+  }
+} 
+  
+
+  /*
   .task-button{
   position: fixed;
   bottom: 30px;
@@ -201,14 +252,14 @@
     #0A101D,
     #28a745
   );
-  backgroundcolor: #28a745; /* Green background */
+  backgroundcolor: #28a745; /* Green background 
   color: white;
   border: none;
   border-radius: 50%;
   width: 60px;
   height: 60px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-  font-size: 14px;
+  font-size: 8px;
   font-weight: bold;
   cursor: pointer;
   z-index: 1000;
@@ -219,8 +270,8 @@
 }
 
 .task-button:hover {
-  background-color: #218838; /* Darker green */
-  transform: scale(1.1); /* Slight zoom effect */
+  background-color: #218838; /* Darker green 
+  transform: scale(1.1); /* Slight zoom effect 
 }
 
 .task-button:active {
@@ -525,7 +576,29 @@
             </p>
           </div>
       
-      <button id="task-button" class="task-button">Updates</button>
+      <button id="task-button" class="task-button">
+  <svg viewBox="0 0 100 100" class="curved-text">
+    <defs>
+      <!-- Top curve: Left to Right -->
+      <path id="topCurve" d="M20,50 A30,30 0 0,1 80,50" />
+      
+      <!-- Bottom curve: Left to Right (flipped) -->
+      <path id="bottomCurve" d="M20,75 A40,40 0 0,0 90,60" />
+    </defs>
+
+    <!-- Top Text -->
+    <text font-size="16" fill="white" font-weight="bold">
+      <textPath href="#topCurve" startOffset="50%" text-anchor="middle" class="text-animate">My</textPath>
+    </text>
+
+    <!-- Bottom Text (Now Left to Right) -->
+    <text font-size="14" fill="white" font-weight="bold">
+      <textPath href="#bottomCurve" startOffset="50%" text-anchor="middle" class="text-animate delay">Achievements</textPath>
+    </text>
+  </svg>
+</button>
+ 
+       
     </main>
   </div>
   <div class="form-container hidden" id="form-container"></div>
