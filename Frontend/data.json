@@ -539,6 +539,184 @@
     ]
   },
   "crypto": {
+    "title": "Cryptocurrency5",
+    "description": "Learn blockchain technology and cryptocurrency concepts",
+    "levels": [
+      {
+        "name": "Beginner Level: Crypto Fundamentals",
+        "modules": [
+          {
+            "title": "Blockchain Basics",
+            "description": "Understanding distributed ledger technology",
+            "lessons": [
+              {
+                "title": "What is Blockchain?",
+                "type": "video",
+                "duration": "12 min",
+                "content": [
+                  "Blockchain is a decentralized, distributed ledger technology.",
+                  "Key characteristics:",
+                  "- Immutable records",
+                  "- Distributed across nodes",
+                  "- Cryptographic security"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Blockchain Basics Quiz",
+              "questions": [
+                {
+                  "text": "What makes blockchain secure?",
+                  "options": ["Central authority", "Cryptography", "Firewalls"],
+                  "answer": 1,
+                  "explanation": "Blockchain uses cryptographic hashing to secure data"
+                },
+                {
+                  "text": "What is a block in blockchain?",
+                  "options": [
+                    "A unit of cryptocurrency",
+                    "A collection of verified transactions",
+                    "A mining computer"
+                  ],
+                  "answer": 1,
+                  "explanation": "Blocks contain batches of valid transactions"
+                },
+                {
+                  "text": "What is the purpose of mining?",
+                  "options": [
+                    "To create new coins",
+                    "To validate transactions and secure the network",
+                    "To store blockchain data"
+                  ],
+                  "answer": 1,
+                  "explanation": "Mining validates transactions and maintains network security"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Cryptocurrency Fundamentals",
+            "description": "Core concepts of digital currencies",
+            "lessons": [
+              {
+                "title": "Bitcoin Overview",
+                "type": "video",
+                "duration": "15 min",
+                "content": [
+                  "Bitcoin is the first decentralized cryptocurrency.",
+                  "Key aspects:",
+                  "- Limited supply (21 million)",
+                  "- Proof-of-work consensus",
+                  "- Pseudonymous transactions"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Cryptocurrency Quiz",
+              "questions": [
+                {
+                  "text": "Who created Bitcoin?",
+                  "options": [
+                    "Satoshi Nakamoto",
+                    "Vitalik Buterin",
+                    "The US Government"
+                  ],
+                  "answer": 0,
+                  "explanation": "Bitcoin was created by the pseudonymous Satoshi Nakamoto"
+                },
+                {
+                  "text": "What determines Bitcoin's supply?",
+                  "options": [
+                    "Miners vote on it",
+                    "It's hard-coded in the protocol",
+                    "The government regulates it"
+                  ],
+                  "answer": 1,
+                  "explanation": "Bitcoin's 21 million supply limit is protocol-enforced"
+                },
+                {
+                  "text": "What is a wallet address?",
+                  "options": [
+                    "A bank account number",
+                    "A cryptographic public key",
+                    "A mining reward address"
+                  ],
+                  "answer": 1,
+                  "explanation": "Wallet addresses are derived from public keys"
+                }
+              ],
+              "passingScore": 70
+            }
+          },
+          {
+            "title": "Smart Contracts",
+            "description": "Introduction to programmable contracts",
+            "lessons": [
+              {
+                "title": "Ethereum Basics",
+                "type": "interactive",
+                "duration": "20 min",
+                "content": [
+                  "Ethereum introduced smart contract functionality.",
+                  "Key concepts:",
+                  "- Turing-complete contracts",
+                  "- Gas fees",
+                  "- ERC standards"
+                ]
+              }
+            ],
+            "quiz": {
+              "title": "Smart Contracts Quiz",
+              "questions": [
+                {
+                  "text": "What are smart contracts?",
+                  "options": [
+                    "Legally binding digital documents",
+                    "Self-executing code on blockchain",
+                    "AI-powered legal assistants"
+                  ],
+                  "answer": 1,
+                  "explanation": "Smart contracts are self-executing programs stored on blockchain"
+                },
+                {
+                  "text": "What is 'gas' in Ethereum?",
+                  "options": [
+                    "A cryptocurrency",
+                    "A measurement of computational effort",
+                    "A type of smart contract"
+                  ],
+                  "answer": 1,
+                  "explanation": "Gas measures the computational work needed for operations"
+                },
+                {
+                  "text": "Which language is commonly used for Ethereum smart contracts?",
+                  "options": [
+                    "Python",
+                    "Solidity",
+                    "JavaScript"
+                  ],
+                  "answer": 1,
+                  "explanation": "Solidity is the primary language for Ethereum contracts"
+                }
+              ],
+              "passingScore": 70
+            }
+          }
+        ],
+        "exam": {
+          "title": "Crypto Fundamentals Exam",
+          "description": "Final assessment for beginner crypto track",
+          "passingScore": 75,
+          "certificate": {
+            "title": "Blockchain Fundamentals Certificate",
+            "description": "Awarded for completing the Beginner Crypto track"
+          }
+        }
+      }
+    ]
+  },
+  "crypto": {
     "title": "Cryptocurrency",
     "description": "Learn blockchain technology and cryptocurrency concepts",
     "levels": [
@@ -716,8 +894,8 @@
       }
     ]
   },
-  "webdev": {
-    "title": "Cryptocurrency2",
+  "web": {
+    "title": "Cryptocurrency4",
     "description": "Learn blockchain technology and cryptocurrency concepts",
     "levels": [
       {
@@ -894,4 +1072,5 @@
       }
     ]
   }
+  
 }

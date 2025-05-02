@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "https://mai-psi.vercel.app",
-  "https://www.maichain.site",
+  "https://demo.maichain.site",
 ];
 
 

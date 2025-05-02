@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maichain | Enterprise-Grade Web3 & AI Learning Platform</title>
+    <meta name="description" content="Maichain provides institutional-grade education in blockchain, AI, and Web3 technologies with gamified learning and verifiable credentials.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mai: {
+                primary: '#1a73e8',
+                secondary: '#34a853',
+                accent: '#fbbc05',
+                dark: '#202124',
+                light: '#f8f9fa'
+              }
+            },
+            fontFamily: {
+              sans: ['Google Sans', 'Roboto', 'Arial', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/32x32?text=MAI">
+  </head>
+  <body class="font-sans bg-mai-light text-mai-dark overflow-x-hidden">
+    
+    <!-- Navigation -->
+    
+    <nav class="bg-white shadow-sm sticky top-0 z-50 overflow-x-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 flex items-center">
+              <img class="h-8 w-auto" src="mailearn.png" alt="Maichain Logo">
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <a href="#features" class="border-mai-primary text-mai-dark inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Features</a>
+              <a href="#solutions" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Solutions</a>
+              <a href="#partners" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Partners</a>
+              <a href="#testimonials" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Testimonials</a>
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <a href="https://learn.maichain.site" class="bg-mai-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Login</a>
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-mai-primary" aria-controls="mobile-menu" aria-expanded="false">
+              <span class="sr-only">Open main menu</span>
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-r from-mai-primary to-mai-secondary text-white py-20 px-6 overflow-x-hidden">
+      <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')"></div>
+      <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div data-aos="fade-right">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Enterprise-Grade Web3 & AI Education Platform</h1>
+            <p class="text-xl mb-8 opacity-90">Maichain delivers institutional-quality blockchain, AI, and Web3 education with verifiable credentials and gamified learning experiences.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="https://learn.maichain.site" class="bg-white text-mai-primary font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-gray-50 transition duration-300 text-center">Start Learning</a>
+              <a href="https://demo.maichain.site" class="bg-transparent border-2 border-white text-white font-semibold py-3 px-6 rounded-lg hover:bg-white hover:text-mai-primary transition duration-300 text-center">Request Demo</a>
+            </div>
+            <div class="mt-8 flex items-center space-x-4">
+              <div class="flex -space-x-2">
+                <img class="h-10 w-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/women/1.jpg" alt="">
+                <img class="h-10 w-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                <img class="h-10 w-10 rounded-full border-2 border-white" src="https://randomuser.me/api/portraits/women/2.jpg" alt="">
+              </div>
+              <div>
+                <p class="text-sm opacity-80">Trusted by 50,000+ learners worldwide</p>
+                <div class="flex items-center">
+                  <div class="flex text-yellow-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                  </div>
+                  <span class="ml-2 text-sm">4.8/5 (2,400 reviews)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div data-aos="fade-left" class="relative">
+           <!-- <div class="relative rounded-xl shadow-2xl overflow-hidden">
+              <img src="https://via.placeholder.com/600x400?text=Platform+Dashboard" alt="Maichain Platform" class="w-full h-auto">
+              <div class="absolute -bottom-4 -right-4 bg-mai-accent text-mai-dark px-4 py-2 rounded-lg shadow-lg font-bold">
+                Live Demo
+              </div>
+            </div>-->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trusted By Section --
+    <section class="py-12 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-gray-500 mb-8">Trusted by innovative organizations worldwide</p>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center">
+          <img src="https://via.placeholder.com/160x60?text=Google" alt="Google" class="h-12 opacity-60 hover:opacity-100 transition mx-auto">
+          <img src="https://via.placeholder.com/160x60?text=Microsoft" alt="Microsoft" class="h-10 opacity-60 hover:opacity-100 transition mx-auto">
+          <img src="https://via.placeholder.com/160x60?text=IBM" alt="IBM" class="h-8 opacity-60 hover:opacity-100 transition mx-auto">
+          <img src="https://via.placeholder.com/160x60?text=Consensys" alt="Consensys" class="h-10 opacity-60 hover:opacity-100 transition mx-auto">
+          <img src="https://via.placeholder.com/160x60?text=UNICEF" alt="UNICEF" class="h-12 opacity-60 hover:opacity-100 transition mx-auto">
+        </div>
+      </div>
+    </section>-->
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-mai-light overflow-x-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="text-3xl font-bold mb-4">Comprehensive Web3 & AI Learning Ecosystem</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">Maichain combines structured education with hands-on simulations and verifiable credentials to create a complete learning journey.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="100">
+            <div class="bg-mai-primary bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
+              <i class="fas fa-graduation-cap text-mai-primary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Structured Curriculum</h3>
+            <p class="text-gray-600">Industry-vetted courses in Blockchain, AI, and Web3 development with progressive difficulty levels.</p>
+            <ul class="mt-4 space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>300+ interactive lessons</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Expert-reviewed content</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Multilingual support</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Feature 2 -->
+          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="200">
+            <div class="bg-mai-primary bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
+              <i class="fas fa-gamepad text-mai-primary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Gamified Learning</h3>
+            <p class="text-gray-600">Engage learners with points, badges, leaderboards, and NFT-based achievements.</p>
+            <ul class="mt-4 space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Skill-based challenges</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Community competitions</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Real-world rewards</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Feature 3 -->
+          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="300">
+            <div class="bg-mai-primary bg-opacity-10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
+              <i class="fas fa-certificate text-mai-primary text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Verifiable Credentials</h3>
+            <p class="text-gray-600">Blockchain-based certificates and badges that prove skill mastery to employers.</p>
+            <ul class="mt-4 space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Tamper-proof records</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Shareable credentials</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                <span>Skill verification</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mining Simulator Section -->
+    <section class="py-20 bg-white overflow-x-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div data-aos="fade-right">
+            <h2 class="text-3xl font-bold mb-6">Interactive Blockchain Simulations</h2>
+            <p class="text-xl text-gray-600 mb-6">Our virtual mining simulator provides hands-on experience with blockchain concepts in a risk-free environment.</p>
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-start">
+                <div class="bg-mai-secondary bg-opacity-10 p-2 rounded-full mr-4">
+                  <i class="fas fa-check text-mai-secondary"></i>
+                </div>
+                <span class="text-gray-700">Experience real mining operations without hardware investment</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-mai-secondary bg-opacity-10 p-2 rounded-full mr-4">
+                  <i class="fas fa-check text-mai-secondary"></i>
+                </div>
+                <span class="text-gray-700">Visualize blockchain transactions and consensus mechanisms</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-mai-secondary bg-opacity-10 p-2 rounded-full mr-4">
+                  <i class="fas fa-check text-mai-secondary"></i>
+                </div>
+                <span class="text-gray-700">Earn rewards for completing simulation challenges</span>
+              </li>
+            </ul>
+            <a href="https://demo.maichain.site" class="inline-flex items-center text-mai-primary font-semibold hover:text-mai-dark">
+              Explore Mining Simulator
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+          <div data-aos="fade-left">
+            <div class="relative rounded-xl overflow-hidden shadow-xl">
+              <img src="https://via.placeholder.com/600x400?text=Mining+Simulator" alt="Mining Simulator" class="w-full h-auto">
+              <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-30"></div>
+              <div class="absolute bottom-0 left-0 p-6 text-white">
+                <h3 class="text-xl font-bold mb-2">Live Demo Available</h3>
+                <p>Experience blockchain mining firsthand</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Learning Section -->
+    <section class="py-20 bg-mai-primary text-white overflow-x-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div data-aos="fade-right">
+            <div class="relative rounded-xl overflow-hidden shadow-xl">
+              <img src="https://via.placeholder.com/600x400?text=AI+Learning" alt="AI Learning" class="w-full h-auto">
+              <div class="absolute inset-0 bg-gradient-to-r from-mai-primary to-transparent opacity-30"></div>
+            </div>
+          </div>
+          <div data-aos="fade-left">
+            <h2 class="text-3xl font-bold mb-6">AI-Powered Learning Experience</h2>
+            <p class="text-xl opacity-90 mb-6">Our adaptive learning platform uses artificial intelligence to personalize your educational journey.</p>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div class="bg-white bg-opacity-10 p-6 rounded-lg">
+                <i class="fas fa-robot text-2xl mb-3 text-mai-accent"></i>
+                <h3 class="font-bold mb-2">Personalized Paths</h3>
+                <p class="text-sm opacity-80">AI recommends content based on your skill level and goals</p>
+              </div>
+              <div class="bg-white bg-opacity-10 p-6 rounded-lg">
+                <i class="fas fa-chart-line text-2xl mb-3 text-mai-accent"></i>
+                <h3 class="font-bold mb-2">Progress Analytics</h3>
+                <p class="text-sm opacity-80">Detailed insights into your learning patterns</p>
+              </div>
+              <div class="bg-white bg-opacity-10 p-6 rounded-lg">
+                <i class="fas fa-comments text-2xl mb-3 text-mai-accent"></i>
+                <h3 class="font-bold mb-2">Smart Tutoring</h3>
+                <p class="text-sm opacity-80">AI assistants answer questions 24/7</p>
+              </div>
+              <div class="bg-white bg-opacity-10 p-6 rounded-lg">
+                <i class="fas fa-project-diagram text-2xl mb-3 text-mai-accent"></i>
+                <h3 class="font-bold mb-2">Knowledge Mapping</h3>
+                <p class="text-sm opacity-80">Visualize your skill development</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Badges & Certifications -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="text-3xl font-bold mb-4">Recognized Achievements</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">Earn verifiable credentials that demonstrate your skills to employers and educational institutions.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8 mb-16">
+          <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+            <div class="bg-mai-light rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <i class="fas fa-award text-5xl text-mai-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Skill Badges</h3>
+            <p class="text-gray-600">Micro-credentials for specific competencies</p>
+          </div>
+          <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="bg-mai-light rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <i class="fas fa-certificate text-5xl text-mai-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Course Certificates</h3>
+            <p class="text-gray-600">Completion certificates for full courses</p>
+          </div>
+          <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+            <div class="bg-mai-light rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <i class="fas fa-medal text-5xl text-mai-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">NFT Achievements</h3>
+            <p class="text-gray-600">Collectible digital trophies for major milestones</p>
+          </div>
+        </div>
+        
+        <div class="bg-mai-light rounded-xl p-8" data-aos="fade-up">
+          <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 class="text-2xl font-bold mb-4">Blockchain-Verified Credentials</h3>
+              <p class="text-gray-700 mb-6">All Maichain certificates are issued on the blockchain, providing tamper-proof verification of your achievements that can be easily shared with employers and educational institutions.</p>
+              <a href="#" class="inline-flex items-center text-mai-primary font-semibold hover:text-mai-dark">
+                Learn about credential verification
+                <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+              <img src="https://via.placeholder.com/500x300?text=Credential+Verification" alt="Credential Verification" class="w-full h-auto rounded">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-20 bg-mai-light">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="text-3xl font-bold mb-4">Solutions for Every Need</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">Maichain serves individuals, educational institutions, and enterprises with tailored solutions.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Solution 1 -->
+          <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+            <div class="h-2 bg-mai-primary"></div>
+            <div class="p-8">
+              <div class="flex items-center mb-4">
+                <div class="bg-mai-primary bg-opacity-10 p-3 rounded-lg mr-4">
+                  <i class="fas fa-user-graduate text-mai-primary text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold">Individual Learners</h3>
+              </div>
+              <p class="text-gray-600 mb-6">Advance your career with in-demand tech skills and verifiable credentials.</p>
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                  <span>Self-paced courses</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                  <span>Skill assessments</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-secondary mt-1 mr-2"></i>
+                  <span>Career pathways</span>
+                </li>
+              </ul>
+              <a href="#" class="text-mai-primary font-semibold hover:text-mai-dark inline-flex items-center">
+                Learn more
+                <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Solution 2 -->
+          <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+            <div class="h-2 bg-mai-secondary"></div>
+            <div class="p-8">
+              <div class="flex items-center mb-4">
+                <div class="bg-mai-secondary bg-opacity-10 p-3 rounded-lg mr-4">
+                  <i class="fas fa-school text-mai-secondary text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold">Educational Institutions</h3>
+              </div>
+              <p class="text-gray-600 mb-6">Enhance your curriculum with cutting-edge Web3 and AI content.</p>
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-primary mt-1 mr-2"></i>
+                  <span>LMS integration</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-primary mt-1 mr-2"></i>
+                  <span>Classroom analytics</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-primary mt-1 mr-2"></i>
+                  <span>Co-branded certificates</span>
+                </li>
+              </ul>
+              <a href="#" class="text-mai-primary font-semibold hover:text-mai-dark inline-flex items-center">
+                Learn more
+                <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+          
+          <!-- Solution 3 -->
+          <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+            <div class="h-2 bg-mai-accent"></div>
+            <div class="p-8">
+              <div class="flex items-center mb-4">
+                <div class="bg-mai-accent bg-opacity-10 p-3 rounded-lg mr-4">
+                  <i class="fas fa-building text-mai-accent text-xl"></i>
+                </div>
+                <h3 class="text-xl font-bold">Enterprise</h3>
+              </div>
+              <p class="text-gray-600 mb-6">Upskill your workforce with customized training programs.</p>
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-primary mt-1 mr-2"></i>
+                  <span>Custom learning paths</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-primary mt-1 mr-2"></i>
+                  <span>Team analytics</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check text-mai-primary mt-1 mr-2"></i>
+                  <span>API integration</span>
+                </li>
+              </ul>
+              <a href="#" class="text-mai-primary font-semibold hover:text-mai-dark inline-flex items-center">
+                Learn more
+                <i class="fas fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section id="partners" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <!--<h2 class="text-3xl font-bold mb-4">Our Partners & Backers</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">Maichain is supported by leading organizations in tech and education.</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+          <div class="bg-gray-100 p-8 rounded-xl flex items-center justify-center h-32" data-aos="zoom-in">
+            <img src="https://via.placeholder.com/160x60?text=Google" alt="Google" class="max-h-12">
+          </div>
+          <div class="bg-gray-100 p-8 rounded-xl flex items-center justify-center h-32" data-aos="zoom-in" data-aos-delay="100">
+            <img src="https://via.placeholder.com/160x60?text=Microsoft" alt="Microsoft" class="max-h-10">
+          </div>
+          <div class="bg-gray-100 p-8 rounded-xl flex items-center justify-center h-32" data-aos="zoom-in" data-aos-delay="200">
+            <img src="https://via.placeholder.com/160x60?text=Ethereum" alt="Ethereum" class="max-h-12">
+          </div>
+          <div class="bg-gray-100 p-8 rounded-xl flex items-center justify-center h-32" data-aos="zoom-in" data-aos-delay="300">
+            <img src="https://via.placeholder.com/160x60?text=UNESCO" alt="UNESCO" class="max-h-12">
+          </div>
+        </div>
+        
+        <div class="bg-mai-primary text-white rounded-xl p-12 relative overflow-hidden">
+          <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')"></div>-->
+          <div class="relative z-10 text-center max-w-4xl mx-auto" data-aos="fade-up">
+            <h3 class="text-2xl font-bold mb-6">Become a Maichain Partner</h3>
+            <p class="text-lg opacity-90 mb-8">Join our network of educational institutions, technology partners, and corporate sponsors to help shape the future of Web3 and AI education.</p>
+            <a href="#" class="inline-flex items-center bg-white text-mai-primary font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
+              Partner With Us
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-mai-light">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="text-3xl font-bold mb-4">What Our Community Says</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">Hear from learners, educators, and partners about their Maichain experience.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Testimonial 1 -->
+          <div class="bg-white p-8 rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center mb-4">
+              <div class="flex text-yellow-400 mr-2">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+              <span class="text-sm text-gray-500">2 weeks ago</span>
+            </div>
+            <p class="text-gray-700 mb-6 italic">"The mining simulator helped me understand blockchain concepts that I'd struggled with for months. The gamified approach makes learning complex topics actually enjoyable."</p>
+            <div class="flex items-center">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah J." class="w-12 h-12 rounded-full mr-4">
+              <div>
+                <h4 class="font-bold">Sarah J.</h4>
+                <p class="text-sm text-gray-500">Blockchain Developer</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Testimonial 2 -->
+          <div class="bg-white p-8 rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center mb-4">
+              <div class="flex text-yellow-400 mr-2">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+              </div>
+              <span class="text-sm text-gray-500">1 month ago</span>
+            </div>
+            <p class="text-gray-700 mb-6 italic">"As a professor, I appreciate how Maichain bridges the gap between academic theory and practical Web3 skills. My students are more engaged than ever before."</p>
+            <div class="flex items-center">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. Michael T." class="w-12 h-12 rounded-full mr-4">
+              <div>
+                <h4 class="font-bold">Dr. Michael T.</h4>
+                <p class="text-sm text-gray-500">Computer Science Professor</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Testimonial 3 -->
+          <div class="bg-white p-8 rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex items-center mb-4">
+              <div class="flex text-yellow-400 mr-2">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+              </div>
+              <span class="text-sm text-gray-500">3 days ago</span>
+            </div>
+            <p class="text-gray-700 mb-6 italic">"Our engineering team's skills improved dramatically after completing Maichain's AI courses. The blockchain-verified certificates give us confidence in their abilities."</p>
+            <div class="flex items-center">
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Lisa R." class="w-12 h-12 rounded-full mr-4">
+              <div>
+                <h4 class="font-bold">Lisa R.</h4>
+                <p class="text-sm text-gray-500">CTO, Tech Startup</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 bg-gradient-to-r from-mai-primary to-mai-secondary text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8 text-center">
+          <div data-aos="fade-up" data-aos-delay="100">
+            <div class="text-4xl font-bold mb-2">50,000+</div>
+            <div class="text-lg opacity-90">Active Learners</div>
+          </div>
+          <div data-aos="fade-up" data-aos-delay="200">
+            <div class="text-4xl font-bold mb-2">300+</div>
+            <div class="text-lg opacity-90">Interactive Lessons</div>
+          </div>
+          <div data-aos="fade-up" data-aos-delay="300">
+            <div class="text-4xl font-bold mb-2">120+</div>
+            <div class="text-lg opacity-90">Countries</div>
+          </div>
+          <div data-aos="fade-up" data-aos-delay="400">
+            <div class="text-4xl font-bold mb-2">4.8/5</div>
+            <div class="text-lg opacity-90">Average Rating</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="demo" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-mai-light rounded-xl p-12 text-center" data-aos="zoom-in">
+          <h2 class="text-3xl font-bold mb-6">Ready to Transform Tech Education?</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">Join thousands of learners and organizations using Maichain to master Web3 and AI technologies.</p>
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="https://learn.maichain.site" class="bg-mai-primary text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
+              Start Learning Free
+            </a>
+            <a href="#" class="bg-white border-2 border-mai-primary text-mai-primary px-8 py-4 rounded-lg hover:bg-mai-light transition font-semibold text-lg">
+              Request Enterprise Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-mai-dark text-gray-300 pt-16 pb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-12 mb-12">
+          <div>
+            <img src="mailearn.png" alt="Maichain Logo" class="h-8 mb-4">
+            <p class="mb-4">Empowering the next generation of Web3 and AI innovators through immersive education.</p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-discord"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Platform</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="hover:text-white">Learning Hub</a></li>
+              <li><a href="#" class="hover:text-white">Mining Simulator</a></li>
+              <li><a href="#" class="hover:text-white">Badges & Credentials</a></li>
+              <li><a href="#" class="hover:text-white">Pricing</a></li>
+              <li><a href="#" class="hover:text-white">Roadmap</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Resources</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="hover:text-white">Documentation</a></li>
+              <li><a href="#" class="hover:text-white">Blog</a></li>
+              <li><a href="#" class="hover:text-white">Webinars</a></li>
+              <li><a href="#" class="hover:text-white">Help Center</a></li>
+              <li><a href="#" class="hover:text-white">API</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Company</h3>
+            <ul class="space-y-2">
+              <li><a href="#" class="hover:text-white">About Us</a></li>
+              <li><a href="#" class="hover:text-white">Careers</a></li>
+              <li><a href="#" class="hover:text-white">Press</a></li>
+              <li><a href="#" class="hover:text-white">Partners</a></li>
+              <li><a href="#" class="hover:text-white">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-500 mb-4 md:mb-0">© 2025 Maichain. All rights reserved.</p>
+          <div class="flex space-x-6">
+            <a href="#" class="text-gray-500 hover:text-white">Privacy Policy</a>
+            <a href="#" class="text-gray-500 hover:text-white">Terms of Service</a>
+            <a href="#" class="text-gray-500 hover:text-white">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- AOS Animation Init -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        once: true
+      });
+    </script>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get DOM elements
+  const mobileMenuButton = document.querySelector('[aria-controls="mobile-menu"]');
+  const mobileMenu = document.createElement('div');
+  
+  // Create mobile menu dropdown (matches your desktop links)
+  mobileMenu.id = 'mobile-menu';
+  mobileMenu.className = 'hidden sm:hidden bg-white pb-3';
+  mobileMenu.innerHTML = `
+    <div class="px-2 pt-2 space-y-1">
+      <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-100">Features</a>
+      <a href="#solutions" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100">Solutions</a>
+      <a href="#partners" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100">Partners</a>
+      <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100">Testimonials</a>
+      <a href="https://learn.maichain.site" class="block px-3 py-2 rounded-md text-base font-medium text-mai-primary hover:bg-blue-50">Login</a>
+    </div>
+  `;
+  
+  // Insert mobile menu after nav
+  mobileMenuButton.closest('nav').appendChild(mobileMenu);
+  
+  // Toggle menu function
+  mobileMenuButton.addEventListener('click', function() {
+    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+    
+    // Toggle menu
+    mobileMenu.classList.toggle('hidden');
+    
+    // Toggle icon
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-times');
+    
+    // Update aria attribute
+    this.setAttribute('aria-expanded', !isExpanded);
+  });
+});
+</script>
+  </body>
+</html>

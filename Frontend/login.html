@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="Mai AI Token" />
   <meta property="og:description" content="Join the project today and get rewarded with digital money; Mai Crypto Token." />
-  <meta property="og:image" content="https://www.maichain.site/social/MaiLogo175.png" />
-  <meta property="og:url" content="https://www.maichain.site" />
+  <meta property="og:image" content="https://demo.maichain.site/social/MaiLogo175.png" />
+  <meta property="og:url" content="https://demo.maichain.site" />
   <meta property="og:type" content="website" />
   <title>MAI AI and Token Mining Platform</title>
   <link href="output.css" rel="stylesheet">
@@ -15,9 +15,16 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="./social/MaiLogo175.png" type="image/png">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+body{
+  background-color: linear-gradient(to right, #0f2027, #203a43, #2c5364) !important;
+}
+</style>
 </head>
 
-<body class="bg-gray-900 text-white font-inter">
+
+
+<body class="bg-gray-600 text-white font-inter">
     <div class="hidden" id="dashboard"></div>
     <div id="username-display" class="hidden"></div>
     <div id="mined-balance" class="hidden"></div>
@@ -27,7 +34,7 @@
       
       
       
-        <form id="auth-form" class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md mx-auto mt-20 fade-in">
+        <form id="auth-form" style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364); margin-bottom: 80px;" class=" p-8 rounded-lg shadow-lg max-w-md mx-auto mt-20  fade-in">
           
 
           
@@ -68,6 +75,13 @@
                 <!-- Hidden Referral input -->
                 <input type="hidden" id="referral-input" name="referralCode">
             </div>
+          
+                    
+          <p style="font-size: 12px; text-align: center; color: grey;">
+  By continuing, you agree to our 
+  <a href="privacy.html" style="color: gold;">Privacy Policy</a> and 
+  <a href="disclaimer.html" style="color: gold;">Disclaimer</a>.
+</p>
 
             <button type="submit" id="auth-submit" class="w-full bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors">
                 Login
@@ -90,37 +104,43 @@
             </div>
 
             -->
+          <br>
+
         </form>
     </div>
   
-  <!-- About MAI Section -->
-  <section id="news" class="news-section hidd en bg-gray-900 p-3">
-    <h2 class="text-3xl font-bold text-yellow-400 mb-6 text-center">About MAI</h2>
-    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
-      <h3 class="text-2xl font-semibold text-yellow-400 mb-4">What is MAI?</h3>
-      <p class="text-gray-300">The Mai Project is a revolutionary platform merging artificial intelligence, blockchain, and a community-driven approach. Designed with user-friendliness in mind, Mai rewards early adopters while offering seamless access to an innovative AI system.</p>
+  <section style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color: #fff; padding: 40px 20px; font-family: 'Segoe UI', sans-serif; ">
+  <div style="max-width: 900px; margin: auto; text-align: center;">
+    <h2 style="font-size: 2.5em; margin-bottom: 10px;">Gamified Learning</h2>
+    <p style="font-size: 1.2em; margin-bottom: 30px;">
+      Engage with points, badges, leaderboards, and NFT-based achievements.
+    </p>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 40px;">
+      <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
+        <h3 style="margin-bottom: 10px;">Skill-Based Challenges</h3>
+        <p>Put your knowledge to the test through practical Web3 & AI missions.</p>
+      </div>
+      <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
+        <h3 style="margin-bottom: 10px;">Community Competitions</h3>
+        <p>Compete, learn, and grow with a vibrant learning community.</p>
+      </div>
+      <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
+        <h3 style="margin-bottom: 10px;">Real-World Rewards</h3>
+        <p>Earn verifiable NFTs and unlock opportunities across the Web3 ecosystem.</p>
+      </div>
     </div>
-    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
-      <h3 class="text-2xl font-semibold text-yellow-400 mb-4">How the Mining Phase Works</h3>
-      <p class="text-gray-300">Mai employs an AI-powered simulated mining system, allowing users to receive tokens seamlessly through participation, engagement, and collaboration. This innovative approach ensures both fairness and scalability, rewarding users based on their activity and community growth contributions.</p>
-    </div>
-    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
-      <!--    <h3 class="text-2xl font-semibold text-yellow-400 mb-4">Exclusive Rewards for Active Users</h3>
-      <p class="text-gray-300">Active users will be periodically rewarded with airdrops, even before the Token Generation Event (TGE). These airdrops are designed to incentivize engagement, loyalty, and consistent activity within the platform. Your eligibility for airdrops and the amount you’ll receive will be determined by the points you accumulate over time.</p>
-      <p class="text-gray-300 mt-2">Please note, these airdrops serve as incentives for active participation and are not the actual MAI token rewards.</p>
-    </div>
-    <div class="update bg-gray-800 p-6 rounded-lg shadow-lg mb-6 hover-scale">
-      <h4 class="text-xl font-semibold text-yellow-400 mb-4">Key Aspects of Mai’s Mining System</h4>
-      <ul class="list-disc list-inside text-gray-300">
-        <li class="mb-2"><b>Active Participation:</b> Users are rewarded for remaining active during mining sessions.</li>
-        <li class="mb-2"><b>Engagement with AI-Driven Activities:</b> Activities such as interacting with the AI chatbot, completing tasks, or providing feedback contribute to token accumulation.</li>
-        <li class="mb-2"><b>Collaboration via Referrals:</b> Referring others to join Mai not only grows the community but also enhances your mining rate.</li>
-      </ul>
-    </div>-->
-    <div class="update text-center bg-gray-800 p-4 items-center rounded-lg shadow-lg mb-1 hover-scale"><a href="index.html"><button >Get Started</a></button></div>
-      
-  </section>
-    <small class=" font-semibold text-yellow-400 mb-4 p-4">This is solely for educational purpose, no real token is earned</small>
+    <h2 style="font-size: 2em; margin-bottom: 10px;">A Complete Web3 & AI Learning Ecosystem</h2>
+    <p style="font-size: 1.1em; margin-bottom: 10px;">
+      Maichain blends structured lessons, hands-on simulations, and blockchain-based credentials for a powerful, immersive learning experience.
+    </p>
+    <p style="font-size: 0.95em; color: #ccc;">
+      The simulated mining platform at <strong>demo.maichain.site</strong> is a demo — the full experience lives at <a href="https://www.maichain.site" style="color: #00ffe0;">maichain.site</a>.
+    </p>
+  </div>
+</section>
+  
+  
+  
 
     <script src="login.js"></script>
 </body>

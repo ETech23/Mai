@@ -657,10 +657,10 @@ setupCourseEventListeners() {
     
     let navContent = `
       <div style="padding: 0 15px;" class="nav-header">
-        <button style="padding: 2px; margin: 5px;" id="home-btn" class="nav-item active">
-          <i class="fa-solid fa-house"></i>
-          <span>Home</span>
-        </button>
+        <button style="padding: 2px; margin: 5px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer;" id="home-btn" class="nav-item active" onclick="window.location.reload()">
+  <i class="fa-solid fa-house"></i>
+  <span>Home</span>
+</button>
       </div>
       <div style="padding: 0 15px;"  class="nav-tracks">
     `;

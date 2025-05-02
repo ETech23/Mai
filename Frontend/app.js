@@ -303,7 +303,7 @@ async function initializePoints() {
  * Increment Points Based on User Activity
  */
 let pointsIncrementInterval = setInterval(async () => {
-  if (isUserActive && (Date.now() - lastActiveTime) < 15000) {
+  if (isUserActive && (Date.now() - lastActiveTime) < 30000) {
     try {
       const newPoints = await updatePoints(0.1); // Increment backend points by 0.1
       currentPoints = newPoints; // Update local points
@@ -1339,7 +1339,7 @@ menuIcon.addEventListener("click", async () => {
 
     // Construct referral link
 
-const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://www.maichain.site/register?ref=${referralCode}`;
+const referralLink = `Mai is an AI language model. Early users who complete daily tasks are rewarded with Mai ai crypto token, join using my referral link: https://demo.maichain.site/register?ref=${referralCode}`;
     console.log("Referral link constructed:", referralLink);
 
   // Default mining rate

@@ -1,80 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Learning Progress | LearnHub</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="learningProgress.css">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Badge Gallery</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f4f8; }
+    h1 { text-align: center; }
+    .badge-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+    .badge-card {
+      background: white; padding: 15px; border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center;
+    }
+    .badge-img { width: 100%; height: auto; border-radius: 8px; }
+    .btn-group { margin-top: 10px; display: flex; justify-content: space-around; }
+    button {
+      padding: 5px 10px; border: none; border-radius: 5px;
+      cursor: pointer; font-size: 14px;
+    }
+    .download-btn { background: #4CAF50; color: white; }
+    .share-btn { background: #2196F3; color: white; }
+  </style>
 </head>
 <body>
-  <header>
-    <!-- Include your navigation here -->
-  </header>
-  
-  <main>
-    <section class="progress-section">
-      <div class="container">
-        <h1>My Learning Progress</h1>
-        <p>Track your learning journey and see your progress across different tracks.</p>
-        
-        <div class="progress-tabs">
-          <button class="tab-button active" data-tab="progress">Progress</button>
-          <button class="tab-button" data-tab="badges">Badges</button>
-        </div>
-        
-        <div class="tab-content">
-          <div id="progress-tab" class="tab-pane active">
-            <div id="user-progress-container" class="progress-container">
-              <!-- Progress items will be inserted here by JavaScript -->
-              <div class="loading">Loading your progress...</div>
-            </div>
-          </div>
-          
-          <div id="badges-tab" class="tab-pane">
-            <div id="user-badges-container" class="badges-container">
-              <!-- Badge items will be inserted here by JavaScript -->
-              <div class="loading">Loading your badges...</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-  
-  <footer>
-    <!-- Include your footer here -->
-  </footer>
-  
-  <!-- JavaScript -->
-  <script src="/js/userProgress.js"></script>
+  <h1>My Badge Gallery</h1>
+  <div class="badge-gallery" id="badgeGallery"></div>
+
   <script>
-    // Tab switching functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      const tabButtons = document.querySelectorAll('.tab-button');
-      const tabPanes = document.querySelectorAll('.tab-pane');
-      
-      tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          // Remove active class from all buttons and panes
-          tabButtons.forEach(btn => btn.classList.remove('active'));
-          tabPanes.forEach(pane => pane.classList.remove('active'));
-          
-          // Add active class to clicked button and corresponding pane
-          button.classList.add('active');
-          const tabName = button.getAttribute('data-tab');
-          document.getElementById(`${tabName}-tab`).classList.add('active');
-          
-          // Update UI based on active tab
-          if (tabName === 'progress') {
-            updateProgressUI();
-          } else if (tabName === 'badges') {
-            updateBadgesUI();
-          }
+    const API_URL = 'https://mai-vmox.onrender.com/api/user'; // change to your production URL
+    const token = localStorage.getItem("token"); // ensure this is correctly stored during login
+
+    async function fetchBadgesAndProgress() {
+      try {
+        const res = await fetch(`${API_URL}/badges`, {
+          headers: { 'Authorization': `Bearer ${token}` }
         });
+        if (!res.ok) throw new Error('Failed to fetch badges');
+        const data = await res.json();
+        renderBadges(data.badges || []);
+      } catch (err) {
+        console.error("Error loading badges:", err);
+      }
+    }
+
+    function renderBadges(badges) {
+      const gallery = document.getElementById('badgeGallery');
+      if (!badges.length) {
+        gallery.innerHTML = '<p>No badges earned yet.</p>';
+        return;
+      }
+
+      badges.forEach(badge => {
+        const card = document.createElement('div');
+        card.className = 'badge-card';
+        card.innerHTML = `
+          <img src="${badge.image}" class="badge-img" alt="Badge Image"/>
+          <h3>${badge.track} - ${badge.level}</h3>
+          <p>Earned on: ${new Date(badge.dateEarned).toLocaleDateString()}</p>
+          <div class="btn-group">
+            <button class="download-btn" onclick="downloadBadge('${badge.image}', '${badge.track}-${badge.level}')">Download</button>
+            <button class="share-btn" onclick="shareBadge('${badge._id}')">Share</button>
+          </div>
+        `;
+        gallery.appendChild(card);
       });
-    });
+    }
+
+    function downloadBadge(imageUrl, fileName) {
+      const a = document.createElement('a');
+      a.href = imageUrl;
+      a.download = `${fileName}-badge.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function shareBadge(badgeId) {
+      const shareUrl = `https://maichain.site/badges/${badgeId}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("Share link copied to clipboard!");
+      });
+    }
+
+    fetchBadgesAndProgress();
   </script>
 </body>
 </html>
