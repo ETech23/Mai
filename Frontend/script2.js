@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const token = localStorage.getItem('token');
       
       // Fetch user details from backend
-      const response = await fetch("https://maicoin-41vo.onrender.com/api/auth/details", {
+      const response = await fetch("https://mai-vmox.onrender.com/api/auth/details", {
         method: "GET",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });

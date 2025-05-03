@@ -23,8 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 // CORS Middleware
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  "https://mai-psi.vercel.app",
   "https://demo.maichain.site",
+  "https://mai-psi.vercel.app",
 ];
 
 

@@ -16,13 +16,31 @@
   <link rel="icon" href="./social/MaiLogo175.png" type="image/png">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-body{
-  background-color: linear-gradient(to right, #0f2027, #203a43, #2c5364) !important;
-}
-</style>
+    body {
+      background-color: linear-gradient(to right, #0f2027, #203a43, #2c5364) !important;
+    }
+    
+    /* Added styles for password input container */
+    .password-container {
+      position: relative;
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+    }
+    
+    .password-toggle:hover {
+      color: #fff;
+    }
+  </style>
 </head>
-
-
 
 <body class="bg-gray-600 text-white font-inter">
     <div class="hidden" id="dashboard"></div>
@@ -31,16 +49,10 @@ body{
 
     <!-- Login/Registration Form -->
     <div class="form-container" id="form-container">
-      
-      
-      
         <form id="auth-form" style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364); margin-bottom: 80px;" class=" p-8 rounded-lg shadow-lg max-w-md mx-auto mt-20  fade-in">
-          
-
-          
             <h2 id="form-title" class="text-2xl font-bold text-yellow-400 mb-6 text-center">Login</h2>
           
-                    <!-- Notification -->
+            <!-- Notification -->
             <div id="notification" class="notification hidden">
                 <span id="notification-message"></span>
             </div>
@@ -51,8 +63,12 @@ body{
                 <input type="text" id="identifier" name="identifier" class="w-full p-3 rounded bg-gray-700 text-white mb-4" placeholder="Enter your email or username" required>
 
                 <label for="password" class="block text-gray-400 mb-2">Password</label>
-                <input type="password" id="password" name="password" class="w-full p-3 rounded bg-gray-700 text-white mb-6" placeholder="Enter your password" required>
-              
+                <div class="password-container">
+                    <input type="password" id="password" name="password" class="w-full p-3 rounded bg-gray-700 text-white mb-6" placeholder="Enter your password" required>
+                    <button type="button" id="toggle-password-login" class="password-toggle" aria-label="Show password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Register Fields -->
@@ -67,32 +83,41 @@ body{
                 <input type="email" id="email" name="email" class="w-full p-3 rounded bg-gray-700 text-white mb-4" placeholder="Enter your email">
 
                 <label for="password-register" class="block text-gray-400 mb-2">Password</label>
-                <input type="password" id="password-register" name="password-register" class="w-full p-3 rounded bg-gray-700 text-white mb-4" placeholder="Enter your password">
+                <div class="password-container">
+                    <input type="password" id="password-register" name="password-register" class="w-full p-3 rounded bg-gray-700 text-white mb-4" placeholder="Enter your password">
+                    <button type="button" id="toggle-password-register" class="password-toggle" aria-label="Show password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
 
                 <label for="password-confirm" class="block text-gray-400 mb-2">Confirm Password</label>
-                <input type="password" id="password-confirm" name="password-confirm" class="w-full p-3 rounded bg-gray-700 text-white mb-6" placeholder="Confirm your password">
+                <div class="password-container">
+                    <input type="password" id="password-confirm" name="password-confirm" class="w-full p-3 rounded bg-gray-700 text-white mb-6" placeholder="Confirm your password">
+                    <button type="button" id="toggle-password-confirm" class="password-toggle" aria-label="Show password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
 
                 <!-- Hidden Referral input -->
                 <input type="hidden" id="referral-input" name="referralCode">
             </div>
           
-                    
-          <p style="font-size: 12px; text-align: center; color: grey;">
-  By continuing, you agree to our 
-  <a href="privacy.html" style="color: gold;">Privacy Policy</a> and 
-  <a href="disclaimer.html" style="color: gold;">Disclaimer</a>.
-</p>
+            <p style="font-size: 12px; text-align: center; color: grey;">
+                By continuing, you agree to our 
+                <a href="privacy.html" style="color: gold;">Privacy Policy</a> and 
+                <a href="disclaimer.html" style="color: gold;">Disclaimer</a>.
+            </p>
 
             <button type="submit" id="auth-submit" class="w-full bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors">
                 Login
             </button>
-          <p class="text-center text-gray-400 mt-4">
+            <p class="text-center text-gray-400 mt-4">
                 Forgot password? 
                 <a class="text-yellow-400 cursor-pointer hover:underline" href="forgot-password.html">Reset password.</a>
-              </p>
+            </p>
 
             <p id="toggle-form" class="text-center text-gray-400 mt-4">
-                Don’t have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Register here</span>
+                Don't have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Register here</span>
             </p>
 
             <!-- Google Sign-in --
@@ -102,45 +127,40 @@ body{
             </div>
             <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left" data-width="300">
             </div>
-
             -->
-          <br>
-
+            <br>
         </form>
     </div>
   
-  <section style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color: #fff; padding: 40px 20px; font-family: 'Segoe UI', sans-serif; ">
-  <div style="max-width: 900px; margin: auto; text-align: center;">
-    <h2 style="font-size: 2.5em; margin-bottom: 10px;">Gamified Learning</h2>
-    <p style="font-size: 1.2em; margin-bottom: 30px;">
-      Engage with points, badges, leaderboards, and NFT-based achievements.
-    </p>
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 40px;">
-      <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
-        <h3 style="margin-bottom: 10px;">Skill-Based Challenges</h3>
-        <p>Put your knowledge to the test through practical Web3 & AI missions.</p>
-      </div>
-      <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
-        <h3 style="margin-bottom: 10px;">Community Competitions</h3>
-        <p>Compete, learn, and grow with a vibrant learning community.</p>
-      </div>
-      <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
-        <h3 style="margin-bottom: 10px;">Real-World Rewards</h3>
-        <p>Earn verifiable NFTs and unlock opportunities across the Web3 ecosystem.</p>
-      </div>
-    </div>
-    <h2 style="font-size: 2em; margin-bottom: 10px;">A Complete Web3 & AI Learning Ecosystem</h2>
-    <p style="font-size: 1.1em; margin-bottom: 10px;">
-      Maichain blends structured lessons, hands-on simulations, and blockchain-based credentials for a powerful, immersive learning experience.
-    </p>
-    <p style="font-size: 0.95em; color: #ccc;">
-      The simulated mining platform at <strong>demo.maichain.site</strong> is a demo — the full experience lives at <a href="https://www.maichain.site" style="color: #00ffe0;">maichain.site</a>.
-    </p>
-  </div>
-</section>
-  
-  
-  
+    <section style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color: #fff; padding: 40px 20px; font-family: 'Segoe UI', sans-serif; ">
+        <div style="max-width: 900px; margin: auto; text-align: center;">
+            <h2 style="font-size: 2.5em; margin-bottom: 10px;">Gamified Learning</h2>
+            <p style="font-size: 1.2em; margin-bottom: 30px;">
+                Engage with points, badges, leaderboards, and NFT-based achievements.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 40px;">
+                <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
+                    <h3 style="margin-bottom: 10px;">Skill-Based Challenges</h3>
+                    <p>Put your knowledge to the test through practical Web3 & AI missions.</p>
+                </div>
+                <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
+                    <h3 style="margin-bottom: 10px;">Community Competitions</h3>
+                    <p>Compete, learn, and grow with a vibrant learning community.</p>
+                </div>
+                <div style="flex: 1 1 200px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px;">
+                    <h3 style="margin-bottom: 10px;">Real-World Rewards</h3>
+                    <p>Earn verifiable NFTs and unlock opportunities across the Web3 ecosystem.</p>
+                </div>
+            </div>
+            <h2 style="font-size: 2em; margin-bottom: 10px;">A Complete Web3 & AI Learning Ecosystem</h2>
+            <p style="font-size: 1.1em; margin-bottom: 10px;">
+                Maichain blends structured lessons, hands-on simulations, and blockchain-based credentials for a powerful, immersive learning experience.
+            </p>
+            <p style="font-size: 0.95em; color: #ccc;">
+                The simulated mining platform at <strong>demo.maichain.site</strong> is a demo — the full experience lives at <a href="https://www.maichain.site" style="color: #00ffe0;">maichain.site</a>.
+            </p>
+        </div>
+    </section>
 
     <script src="login.js"></script>
 </body>

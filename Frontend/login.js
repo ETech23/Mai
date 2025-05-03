@@ -4,24 +4,22 @@ document.addEventListener("DOMContentLoaded", function () {
     if (localStorage.getItem("token") && authForm) {
         authForm.classList.add("hidden");
     }
+    
+    // Initialize the form based on whether we have a referral code
+    initializeForm();
+    
+    // Setup password toggle functionality
+    setupPasswordToggles();
 });
 
 // Extract query parameters from the URL
 const urlParams = new URLSearchParams(window.location.search);
 const referralCode = urlParams.get('ref');
-const redirectToPlayStore = urlParams.get('redirect') === 'playstore';
 
 if (referralCode) {
-  // Save the referral code to local storage or send it to your backend
-  localStorage.setItem('referralCode', referralCode);
-  console.log("Referral code saved:", referralCode);
-
-  if (redirectToPlayStore) {
-    // Redirect to Google Play Store with the referral code
-    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.mai.app&referrer=${referralCode}`;
-    console.log("Redirecting to Play Store:", playStoreUrl);
-    window.location.href = playStoreUrl;
-  }
+    // Save the referral code to local storage
+    localStorage.setItem('referralCode', referralCode);
+    console.log("Referral code saved:", referralCode);
 }
 
 // DOM Elements
@@ -41,6 +39,24 @@ const identifierInput = document.getElementById("identifier");
 const passwordInput = document.getElementById("password");
 const notification = document.getElementById("notification");
 const notificationMessage = document.getElementById("notification-message");
+
+// Password toggle buttons
+const togglePasswordLogin = document.getElementById("toggle-password-login");
+const togglePasswordRegister = document.getElementById("toggle-password-register");
+const togglePasswordConfirm = document.getElementById("toggle-password-confirm");
+
+// Function to initialize the form based on query parameters
+function initializeForm() {
+    // If we have a referral code, switch to registration form and prefill the code
+    if (referralCode) {
+        switchForm(true); // Switch to registration form
+        
+        // Prefill the referral code if the input exists
+        if (referralInput) {
+            referralInput.value = referralCode;
+        }
+    }
+}
 
 // Function to show notification
 function showNotification(message, isSuccess) {
@@ -70,6 +86,12 @@ function switchForm(toRegister) {
         passwordInput.removeAttribute("required");
 
         toggleFormText.innerHTML = 'Already have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Login here</span>';
+        
+        // If there's a referral code in localStorage, fill it in
+        const storedReferralCode = localStorage.getItem('referralCode');
+        if (storedReferralCode && referralInput) {
+            referralInput.value = storedReferralCode;
+        }
     } else {
         formTitle.textContent = "Login";
         authSubmit.textContent = "Login";
@@ -84,10 +106,17 @@ function switchForm(toRegister) {
         passwordRegisterInput.removeAttribute("required");
         passwordConfirmInput.removeAttribute("required");
 
-        toggleFormText.innerHTML = 'Don’t have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Register here</span>';
+        toggleFormText.innerHTML = 'Don`t have an account? <span class="text-yellow-400 cursor-pointer hover:underline">Register here</span>';
     }
 
+    // Reset the form but don't clear referral value if switching to register
+    const referralValue = referralInput ? referralInput.value : '';
     authForm.reset();
+
+    // Re-apply referral code if switching to register
+    if (toRegister && referralInput && referralValue) {
+        referralInput.value = referralValue;
+    }
 }
 
 // Handle login & registration submission
@@ -129,7 +158,7 @@ authForm.addEventListener("submit", async (e) => {
             } else {
                 showNotification("Logged in successfully!", true);
 
-                // ✅ Save token properly
+                // Save token properly
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("username", data.username);
                 localStorage.setItem("email", data.email);
@@ -153,12 +182,39 @@ toggleFormText.addEventListener("click", () => {
     switchForm(formTitle.textContent === "Login");
 });
 
-/**
-// Auto-switch to registration if referral code exists
-const urlParams = new URLSearchParams(window.location.search);
-const referralCode = urlParams.get("ref");
+// Function to toggle password visibility
+function togglePasswordVisibility(passwordField, toggleButton) {
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>'; // Change to "hide" icon
+        toggleButton.setAttribute('aria-label', 'Hide password');
+    } else {
+        passwordField.type = "password";
+        toggleButton.innerHTML = '<i class="fas fa-eye"></i>'; // Change to "show" icon
+        toggleButton.setAttribute('aria-label', 'Show password');
+    }
+}
 
-if (referralCode) {
-    switchForm(true);
-    referralInput.value = referralCode;
-}**/
+// Setup password toggle functionality
+function setupPasswordToggles() {
+    // Login password toggle
+    if (togglePasswordLogin) {
+        togglePasswordLogin.addEventListener("click", function() {
+            togglePasswordVisibility(passwordInput, togglePasswordLogin);
+        });
+    }
+    
+    // Registration password toggle
+    if (togglePasswordRegister) {
+        togglePasswordRegister.addEventListener("click", function() {
+            togglePasswordVisibility(passwordRegisterInput, togglePasswordRegister);
+        });
+    }
+    
+    // Confirm password toggle
+    if (togglePasswordConfirm) {
+        togglePasswordConfirm.addEventListener("click", function() {
+            togglePasswordVisibility(passwordConfirmInput, togglePasswordConfirm);
+        });
+    }
+}
