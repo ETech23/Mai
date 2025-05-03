@@ -379,7 +379,7 @@
   <!-- Main Dashboard -->
   <div class="dashboard hid den w-full min-h-screen flex flex-col" id="dashboard">
     <!-- Header Section -->
-    <header class="bg-dark-100 border-b border-dark-300 p-4 shadow-md">
+    <header class="bg-dark-100 border-b border-dark-300 p-2 shadow-md">
       <div class="container mx-auto">
         <div class="flex justify-between items-center">
           <!-- Menu Icon -->
@@ -391,7 +391,7 @@
           <!-- Logo/Title -->
           <div class="text-center">
             <h1 class="text-2xl font-bold flex items-center justify-center">
-              <span class="bg-clip-text text-transparent bg-gradient-to-r from-gold to-copper">MAI Chain</span>
+              <span class="bg-clip-text text-transparent bg-gradient-to-r from-gold to-copper">Maichain</span>
             </h1>
           </div>
           
@@ -468,14 +468,14 @@
         <!-- Analytics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-0">
           <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300 ">
-            <h3 class="text-sm text-gray-400 mb-1">Average Daily Earnings</h3>
+            <h3 class="text-sm text-gray-400 mb-1" style="text-align: center;">A gamified platform to learn AI, Crypto currency and Blockchain techology with reward</h3>
             <div class="flex justify-between items-center">
   <p class="text-2xl font-bold text-white">
     11.45 <span class="text-gold text-lg">MAI</span>
   </p>
               <p class="text-xl font-bold animate-pulse">
   <a href="https://learn.maichain.site" class="gradient-text">
-    Get Trained
+    Learning Tracks
   </a>
 </p>
 
@@ -550,7 +550,7 @@
           
         </div>
         <p style="text-align: center; font-size: 10px">Learn AI and blockchain concepts through simulated mining.</p>
-        <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300">
+        <div class="bg-dark-100 rounded-xl shadow-lg p-2 border border-dark-300">
   <h3 class="text-sm text-gray-400 mb-1">Network status</h3>
   <p class="text-lg font-medium text-white flex items-center">
     <span class="w-3 h-3 rounded-full bg-mining-green mr-2 animate-pulse"></span>
@@ -644,11 +644,11 @@ toggleVisibility();**/
   <!-- Theme toggle functionality - isolated from your main JavaScript -->
   <script src="main.js"></script>
   <script>
-  const token = localStorage.getItem("token");
+/**  const token = localStorage.getItem("token");
 if (!token) {
   alert("Please log in to get started");
   window.location = "login.html";
-}
+}**/
     // Theme toggle functionality only - doesn't interfere with other elements
     document.getElementById('theme-toggle').addEventListener('click', function() {
       document.body.classList.toggle('light-theme');

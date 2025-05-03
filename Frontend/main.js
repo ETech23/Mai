@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userId = getUserId();
         if (!userId) {
             alert("Please log in to start mining.");
+            window.location.href="login.html";
             return;
         }
 
