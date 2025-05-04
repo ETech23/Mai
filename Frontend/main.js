@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Update UI
         if (activateMiningButton) {
-            activateMiningButton.textContent = "Activate Mining";
+            activateMiningButton.textContent = "Start";
             activateMiningButton.disabled = false;
         }
         
