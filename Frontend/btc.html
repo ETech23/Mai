@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Collector</title>
+    <link rel="stylesheet" href="btc.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="game-header">
+            <div class="wallet-display">
+                <i class="fab fa-bitcoin"></i>
+                <span id="wallet">0</span>
+                <span class="wallet-label">BTC</span>
+            </div>
+            <div class="game-title">BITCOIN COLLECTOR</div>
+          
+            <div class="settings-btn">
+                <i class="fas fa-cog"></i>
+            </div>
+          
+        </header>
+      <div class="  rounded-lg shadow-md border-l-4 border-yellow-500  hid den" style="background-color: #e5e7eb; width: 380px; height: 100px; align-items: center; align-content: center;" >
+          <iframe data-aa='2392974' src='//acceptable.a-ads.com/2392974' style='border:0px; padding:0; width:100%; height:100%; overflow:hidden; background-color: transparent;'></iframe>
+          </div>
+
+        <main class="game-area">
+            <div class="bitcoin-container" id="bitcoinContainer"></div>
+            <div class="particles-container" id="particles"></div>
+        </main>
+
+        <footer class="game-footer">
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="collected">0</span>
+                    <span class="stat-label">Collected</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="rate">0</span>
+                    <span class="stat-label">BTC/min</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="missed">0</span>
+                    <span class="stat-label">Missed</span>
+                </div>
+            </div>
+          
+            <button class="upgrade-btn" id="upgradeBtn">
+                <i class="fas fa-arrow-up"></i> Upgrade Miner
+            </button>
+          <div class="  rounded-lg shadow-md border-l-4 border-yellow-500  hid den" style="background-color: #e5e7eb; width: 335px; height: 70px; align-items: center; align-content: center;" >
+          <iframe data-aa='2392974' src='//acceptable.a-ads.com/2392974' style='border:0px; padding:0; width:100%; height:100%; overflow:hidden; background-color: transparent;'></iframe>
+          </div>
+        </footer>
+
+        <div class="modal" id="upgradeModal">
+            <div class="modal-content">
+                <h3>UPGRADE MINER</h3>
+                <div class="upgrade-option">
+                    <div class="upgrade-info">
+                        <h4>Hash Rate Boost</h4>
+                        <p>Increases Bitcoin spawn rate</p>
+                    </div>
+                    <button class="buy-btn" id="hashRateBtn">10 BTC</button>
+                </div>
+                <div class="upgrade-option">
+                    <div class="upgrade-info">
+                        <h4>Mining Efficiency</h4>
+                        <p>Bitcoins move slower</p>
+                    </div>
+                    <button class="buy-btn" id="efficiencyBtn">25 BTC</button>
+                </div>
+                <div class="upgrade-option">
+                    <div class="upgrade-info">
+                        <h4>Auto Miner</h4>
+                        <p>Automatically collects some BTC</p>
+                    </div>
+                    <button class="buy-btn" id="autoMinerBtn">50 BTC</button>
+                </div>
+                <button class="close-btn" id="closeModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="btc.js"></script>
+</body>
+</html>

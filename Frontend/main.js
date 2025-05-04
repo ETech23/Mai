@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize app
     initializeApp();
     
+    const fullscreenAd = document.getElementById("fullscreenAd");
     // Attach Click Event to Mining Button
     if (activateMiningButton) {
         activateMiningButton.addEventListener("click", startMining);
@@ -109,6 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
             startCountdown(MINING_DURATION);
             startMiningProcess(MINING_DURATION);
         });
+        // Show fullscreen ad
+    fullscreenAd.classList.remove("hidden");
+
+    // Optional: hide the ad after a few seconds
+    setTimeout(() => {
+        fullscreenAd.classList.add("hidden");
+    }, 10000); // 10 seconds
+
     }
 
     // Handle app visibility changes (switching tabs, minimizing)
