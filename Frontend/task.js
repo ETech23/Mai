@@ -1,4 +1,4 @@
-const BASE_URL = "https://maicoin-41vo.onrender.com"; // Backend URL
+const BASE_URL = "https://mai-vmox.onrender.com"; // Backend URL
 const token = localStorage.getItem("token");
 
 // DOM Elements
