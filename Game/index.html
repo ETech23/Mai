@@ -7,14 +7,18 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/points.css">
 </head>
 <body>
     <div class="app-container">
-        <header class="app-header">
+        <header class="app-header" style="margin-top: -30px;">
             <div class="logo-container">
                 <div class="logo-icon">⚡</div>
                 <h1>NeuroCrypto</h1>
-            </div>
+                
+            <div id="pointsCounter">Total Points: 0</div>
+    <div class="status" id="activityStatus">Last active: now</div></div>
+            
             <div class="user-stats">
                 <div class="stat-box">
                     <span class="stat-value" id="points">0</span>
@@ -27,8 +31,13 @@
                 <div class="stat-box">
                     <span class="stat-value" id="level">1</span>
                     <span class="stat-label">Level</span>
+                    
                 </div>
+                
             </div>
+            <div class="notice p-4 rounded-lg shadow-md border-l-4 border-yellow-500  hid den" style="background-color: #e5e7eb; width: 340px; height: 100px; margin-top: -20px;margin-bottom: -30px;">
+          <iframe data-aa='2392974' src='//acceptable.a-ads.com/2392974' style='border:0px; padding:0; width:100%; height:100%; overflow:hidden; background-color: transparent;'></iframe>
+          </div>
         </header>
         
         <nav class="section-nav" id="sectionNav">
@@ -59,10 +68,16 @@
             </div>
         </div>
         <button id="nextQuestion" class="mine-button">Continue</button>
+        
     </div>
+    
 </div>
+        <div class="notice p-4 rounded-lg shadow-md border-l-4 border-yellow-500  hid den" style="background-color: #e5e7eb; width: 340px; height: 90px; margin-top: -20px;margin-bottom: -30px;">
+          <iframe data-aa='2392974' src='//acceptable.a-ads.com/2392974' style='border:0px; padding:0; width:100%; height:100%; overflow:hidden; background-color: transparent;'></iframe>
+          </div>
     
     <script src="js/app.js"></script>
+        <script src="js/points.js"></script>
     <script src="js/quiz-engine.js"></script>
 </body>
 </html>

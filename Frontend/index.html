@@ -476,12 +476,35 @@
           <div class="bg-dark-100 rounded-xl shadow-lg p-4 border border-dark-300 ">
             <h3 class="text-sm text-gray-400 mb-1" style="text-align: center;">A gamified platform to learn AI, Crypto currency and Blockchain techology with reward</h3>
             <div class="flex justify-between items-center">
-  <p class="text-2xl font-bold text-white">
-    11.45 <span class="text-gold text-lg">MAI</span>
-  </p>
+  <style>
+  .glowing-blink {
+    animation: glow-blink 2s infinite;
+  }
+  
+  @keyframes glow-blink {
+    0% { 
+      opacity: 1;
+      text-shadow: 0 0 5px #FFD700;
+    }
+    50% { 
+      opacity: 0.5;
+      text-shadow: 0 0 20px #FFD700;
+    }
+    100% { 
+      opacity: 1;
+      text-shadow: 0 0 5px #FFD700;
+    }
+  }
+</style>
+
+<p class="text-2xl font-bold text-white">
+  <a href="https://learn.maichain.site" class="glowing-blink">
+    <span class="text-gold text-lg">Learning Tracks</span>
+  </a>
+</p>
               <p class="text-xl font-bold animate-pulse">
-  <a href="https://learn.maichain.site" class="gradient-text">
-    Learning Tracks
+  <a href="../Game/index.html" class="gradient-text">
+    PLAY
   </a>
 </p>
 

@@ -1,0 +1,46 @@
+.points-animation {
+            position: fixed;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            z-index: 1000;
+            animation: dropAndFade 2.5s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes dropAndFade {
+            0% {
+                top: -50px;
+                opacity: 0;
+                transform: translateX(-50%) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.2);
+            }
+            80% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1);
+            }
+            100% {
+                top: 30%;
+                opacity: 0;
+                transform: translateX(-50%) scale(0.8);
+            }
+        }
+        
+        .status {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
