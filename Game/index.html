@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroCrypto Challenge</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container">
+                <div class="logo-icon">⚡</div>
+                <h1>NeuroCrypto</h1>
+            </div>
+            <div class="user-stats">
+                <div class="stat-box">
+                    <span class="stat-value" id="points">0</span>
+                    <span class="stat-label">Knowledge</span>
+                </div>
+                <div class="stat-box streak">
+                    <span class="stat-value" id="streak">0</span>
+                    <span class="stat-label">Day Streak</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="level">1</span>
+                    <span class="stat-label">Level</span>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="section-nav" id="sectionNav">
+            <!-- Sections will be injected here -->
+        </nav>
+        
+        <main class="quiz-container" id="quizArea">
+            <div class="start-screen">
+                <div class="start-content">
+                    <h2>Decrypt the Future</h2>
+                    <p>Test your knowledge of crypto, blockchain and AI through daily challenges</p>
+                    <button id="startQuiz" class="mine-button pulse">Begin Mining</button>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Remove the feedback modal from initial HTML -->
+<!-- In your body, keep only one modal definition -->
+<div class="feedback-modal hidden" id="feedbackModal">
+    <div class="modal-content">
+        <div class="modal-icon" id="feedbackIcon"></div>
+        <h3 id="feedbackTitle"></h3>
+        <p id="feedbackText"></p>
+        <div class="modal-stats">
+            <div class="stat-change">
+                <span>+<span id="pointsEarned">0</span></span>
+                <small>Knowledge</small>
+            </div>
+        </div>
+        <button id="nextQuestion" class="mine-button">Continue</button>
+    </div>
+</div>
+    
+    <script src="js/app.js"></script>
+    <script src="js/quiz-engine.js"></script>
+</body>
+</html>

@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Update button state
         if (activateMiningButton) {
-            activateMiningButton.textContent = "Mining...";
+            activateMiningButton.textContent = "Working...";
             activateMiningButton.disabled = true;
         }
 
@@ -535,7 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Update the mining button state
         if (activateMiningButton && getUserMiningStatus(userId)) {
-            activateMiningButton.textContent = "Mining...";
+            activateMiningButton.textContent = "Working...";
             activateMiningButton.disabled = true;
         }
     }

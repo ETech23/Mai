@@ -1,0 +1,594 @@
+// Global state
+const appState = {
+    currentSection: null,
+    currentQuestionIndex: 0,
+    score: 0,
+    streak: 0,
+    level: 1,
+    lastPlayedDate: null,
+    questionsAnsweredToday: 0,
+    maxQuestionsPerDay: 15, // 5 per section × 3 sections
+    userPerformance: [],
+    questionBank: {},
+    usedQuestionIds: new Set()
+};
+
+// DOM Elements
+const elements = {
+    quizArea: document.getElementById('quizArea'),
+    sectionNav: document.getElementById('sectionNav'),
+    startButton: document.getElementById('startQuiz'),
+    pointsDisplay: document.getElementById('points'),
+    streakDisplay: document.getElementById('streak'),
+    levelDisplay: document.getElementById('level'),
+    feedbackModal: document.getElementById('feedbackModal'),
+    feedbackIcon: document.getElementById('feedbackIcon'),
+    feedbackTitle: document.getElementById('feedbackTitle'),
+    feedbackText: document.getElementById('feedbackText'),
+    pointsEarned: document.getElementById('pointsEarned'),
+    nextQuestionBtn: document.getElementById('nextQuestion')
+};
+
+// Initialize the app
+async function init() {
+    await loadQuestionBank();
+    checkStreak();
+    updateStatsDisplay();
+    renderSectionButtons();
+    
+    // Auto-select the first section by default
+    const firstSection = Object.keys(appState.questionBank)[0];
+    selectSection(firstSection);
+    
+    // Event listeners
+    elements.startButton.addEventListener('click', startQuiz);
+    elements.nextQuestionBtn.addEventListener('click', loadNextQuestion);
+}
+
+// Load question bank from JSON
+async function loadQuestionBank() {
+    try {
+        // In a real app, this would fetch from a JSON file or API
+        // For this example, we'll use a simulated response
+        const response = await simulateFetchQuestions();
+        appState.questionBank = response;
+    } catch (error) {
+        console.error("Failed to load questions:", error);
+        // Fallback to default questions
+        appState.questionBank = getDefaultQuestions();
+    }
+}
+
+function simulateFetchQuestions() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(getDefaultQuestions());
+        }, 500); // Simulate network delay
+    });
+}
+
+function getDefaultQuestions() {
+    return {
+        "section1": [
+            {
+                "id": "s1q1",
+                "text": "What is the primary purpose of a blockchain?",
+                "options": [
+                    "To store data in a centralized database",
+                    "To create a decentralized, immutable ledger",
+                    "To increase internet speed",
+                    "To replace traditional banking completely"
+                ],
+                "correctAnswer": 1,
+                "explanation": "Blockchain's primary purpose is to create a decentralized, immutable ledger that allows transactions to be recorded transparently and securely without a central authority.",
+                "difficulty": "easy"
+            },
+            {
+                "id": "s1q2",
+                "text": "Which cryptocurrency was the first to implement smart contracts?",
+                "options": [
+                    "Bitcoin",
+                    "Ethereum",
+                    "Ripple",
+                    "Litecoin"
+                ],
+                "correctAnswer": 1,
+                "explanation": "Ethereum was the first blockchain platform to implement smart contracts, which are self-executing contracts with the terms directly written into code.",
+                "difficulty": "easy"
+            },
+            {
+                "id": "s1q3",
+                "text": "What does 'HODL' mean in crypto slang?",
+                "options": [
+                    "Hold On for Dear Life",
+                    "High Output Digital Ledger",
+                    "Hash Of Digital Link",
+                    "Hold Only Digital Loot"
+                ],
+                "correctAnswer": 0,
+                "explanation": "HODL originated from a misspelling of 'hold' in a Bitcoin forum post and has come to mean 'Hold On for Dear Life' in crypto culture.",
+                "difficulty": "easy"
+            },
+            {
+                "id": "s1q4",
+                "text": "What consensus mechanism does Bitcoin use?",
+                "options": [
+                    "Proof of Stake (PoS)",
+                    "Delegated Proof of Stake (DPoS)",
+                    "Proof of Work (PoW)",
+                    "Proof of Authority (PoA)"
+                ],
+                "correctAnswer": 2,
+                "explanation": "Bitcoin uses Proof of Work (PoW), where miners compete to solve complex mathematical problems to validate transactions and create new blocks.",
+                "difficulty": "medium"
+            },
+            {
+                "id": "s1q5",
+                "text": "What is a '51% attack' in blockchain?",
+                "options": [
+                    "When 51% of nodes upgrade their software",
+                    "When a single entity controls 51% of the network's mining power",
+                    "When 51% of users vote to change a protocol",
+                    "When 51% of coins are held by one wallet"
+                ],
+                "correctAnswer": 1,
+                "explanation": "A 51% attack occurs when a single entity gains control of more than 50% of a blockchain's mining power, allowing them to manipulate the network.",
+                "difficulty": "medium"
+            }
+        ],
+        "section2": [
+            {
+                "id": "s2q1",
+                "text": "What is the purpose of a nonce in Bitcoin mining?",
+                "options": [
+                    "To prevent double spending",
+                    "To create a unique transaction ID",
+                    "To vary the input of the hash function",
+                    "To encrypt wallet private keys"
+                ],
+                "correctAnswer": 2,
+                "explanation": "A nonce is a random number miners change to vary the input of the hash function in order to find a valid block hash.",
+                "difficulty": "medium"
+            },
+            {
+                "id": "s2q2",
+                "text": "What does 'DeFi' stand for?",
+                "options": [
+                    "Decentralized Finance",
+                    "Digital Finance",
+                    "Distributed Finance",
+                    "Decrypted Finance"
+                ],
+                "correctAnswer": 0,
+                "explanation": "DeFi stands for Decentralized Finance, which refers to financial applications built on blockchain technologies that operate without central intermediaries.",
+                "difficulty": "easy"
+            },
+            {
+                "id": "s2q3",
+                "text": "What is an NFT?",
+                "options": [
+                    "A type of cryptocurrency",
+                    "A non-fungible token representing unique digital items",
+                    "A new file transfer protocol",
+                    "A node federation token"
+                ],
+                "correctAnswer": 1,
+                "explanation": "NFT stands for Non-Fungible Token, which represents ownership of unique digital items like art, collectibles, or virtual real estate.",
+                "difficulty": "easy"
+            },
+            {
+                "id": "s2q4",
+                "text": "What problem does the Byzantine Generals Problem describe?",
+                "options": [
+                    "The difficulty of reaching consensus in distributed systems",
+                    "The security risks of centralized exchanges",
+                    "The energy consumption of proof-of-work",
+                    "The scalability limitations of blockchains"
+                ],
+                "correctAnswer": 0,
+                "explanation": "The Byzantine Generals Problem describes the challenge of reaching consensus in distributed systems when some participants might be unreliable or malicious.",
+                "difficulty": "hard"
+            },
+            {
+                "id": "s2q5",
+                "text": "What is sharding in blockchain technology?",
+                "options": [
+                    "Breaking the database into smaller, faster pieces",
+                    "A type of cryptographic hash function",
+                    "The process of creating new blocks",
+                    "A method for securing private keys"
+                ],
+                "correctAnswer": 0,
+                "explanation": "Sharding is a scaling solution that breaks the blockchain into smaller partitions called shards, each capable of processing transactions independently.",
+                "difficulty": "hard"
+            }
+        ],
+        "section3": [
+            {
+                "id": "s3q1",
+                "text": "In AI, what does the term 'transformer' refer to?",
+                "options": [
+                    "A device that changes electrical voltage",
+                    "A type of neural network architecture using self-attention mechanisms",
+                    "A robot that can change its shape",
+                    "A data conversion tool"
+                ],
+                "correctAnswer": 1,
+                "explanation": "In AI, a transformer is a type of neural network architecture that uses self-attention mechanisms to process sequential data, making it particularly effective for natural language processing tasks.",
+                "difficulty": "hard"
+            },
+            {
+                "id": "s3q2",
+                "text": "What is the 'tokenomics' of a cryptocurrency?",
+                "options": [
+                    "The study of token shapes and designs",
+                    "The economic system and policies governing a token",
+                    "The process of creating new tokens",
+                    "The legal framework for token sales"
+                ],
+                "correctAnswer": 1,
+                "explanation": "Tokenomics refers to the economic system and policies that govern a cryptocurrency token, including its supply, distribution, and utility.",
+                "difficulty": "medium"
+            },
+            {
+                "id": "s3q3",
+                "text": "What is a DAO?",
+                "options": [
+                    "A type of Asian cryptocurrency",
+                    "A Decentralized Autonomous Organization",
+                    "A Digital Asset Operator",
+                    "A Distributed Algorithmic Oracle"
+                ],
+                "correctAnswer": 1,
+                "explanation": "A DAO (Decentralized Autonomous Organization) is an organization represented by rules encoded as a computer program that is transparent, controlled by organization members and not influenced by a central government.",
+                "difficulty": "medium"
+            },
+            {
+                "id": "s3q4",
+                "text": "What is the 'halving' in Bitcoin?",
+                "options": [
+                    "When transaction fees are reduced by half",
+                    "When the block reward for miners is cut in half",
+                    "When the blockchain is split into two chains",
+                    "When the total supply of Bitcoin is reduced by half"
+                ],
+                "correctAnswer": 1,
+                "explanation": "The Bitcoin halving is an event that occurs every 210,000 blocks where the block reward given to miners is cut in half, reducing the rate at which new Bitcoin is created.",
+                "difficulty": "medium"
+            },
+            {
+                "id": "s3q5",
+                "text": "What is zero-knowledge proof in cryptography?",
+                "options": [
+                    "A way to prove knowledge without revealing the information itself",
+                    "A method to verify transactions without a blockchain",
+                    "A technique to encrypt data with zero computational cost",
+                    "A protocol for anonymous mining"
+                ],
+                "correctAnswer": 0,
+                "explanation": "Zero-knowledge proof is a cryptographic method by which one party can prove to another that they know a value, without conveying any information apart from the fact that they know the value.",
+                "difficulty": "hard"
+            }
+        ]
+    };
+}
+
+function renderSectionButtons() {
+    elements.sectionNav.innerHTML = '';
+    
+    Object.keys(appState.questionBank).forEach((section, index) => {
+        const sectionBtn = document.createElement('button');
+        sectionBtn.className = 'section-btn';
+        sectionBtn.textContent = `Section ${index + 1}`;
+        sectionBtn.dataset.section = section;
+        sectionBtn.addEventListener('click', () => selectSection(section));
+        elements.sectionNav.appendChild(sectionBtn);
+    });
+}
+
+function selectSection(section) {
+    if (!appState.questionBank[section]) {
+        console.error("Invalid section selected:", section);
+        return;
+    }
+    
+    appState.currentSection = section;
+    appState.currentQuestionIndex = 0;
+    appState.usedQuestionIds.clear();
+    
+    // Update active button
+    document.querySelectorAll('.section-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.section === section);
+    });
+    
+    // Show section start screen
+    elements.quizArea.innerHTML = `
+        <div class="start-screen">
+            <div class="start-content">
+                <h2>Section ${section.charAt(section.length-1)} Challenge</h2>
+                <p>Test your knowledge with 5 questions about crypto, blockchain and AI</p>
+                <button id="startQuiz" class="mine-button pulse">Begin Section</button>
+            </div>
+        </div>
+    `;
+    
+    // Reattach event listener
+    document.getElementById('startQuiz').addEventListener('click', startQuiz);
+}
+
+// Check and update streak
+function checkStreak() {
+    const today = new Date().toDateString();
+    const lastPlayed = appState.lastPlayedDate;
+    
+    if (!lastPlayed) {
+        appState.streak = 0;
+    } else if (lastPlayed === today) {
+        // Already played today, do nothing
+    } else {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        if (lastPlayed === yesterday.toDateString()) {
+            appState.streak++;
+        } else {
+            appState.streak = 0; // Reset streak if broken
+        }
+    }
+}
+
+function updateStatsDisplay() {
+    elements.pointsDisplay.textContent = appState.score;
+    elements.streakDisplay.textContent = appState.streak;
+    elements.levelDisplay.textContent = appState.level;
+}
+
+function startQuiz() {
+    // Check if section is selected
+    if (!appState.currentSection) {
+        showSectionSelectionPrompt();
+        return;
+    }
+    
+    // Check if user can play more today
+    if (appState.questionsAnsweredToday >= appState.maxQuestionsPerDay) {
+        showDailyLimitReached();
+        return;
+    }
+    
+    // Load first question
+    loadQuestion();
+}
+
+function showSectionSelectionPrompt() {
+    elements.quizArea.innerHTML = `
+        <div class="start-screen">
+            <div class="start-content">
+                <h2>Select a Section</h2>
+                <p>Please choose a section to begin your challenge</p>
+                <div class="section-buttons">
+                    ${Object.keys(appState.questionBank).map((section, index) => `
+                        <button class="mine-button section-select-btn" data-section="${section}">
+                            Section ${index + 1}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add event listeners to section buttons
+    document.querySelectorAll('.section-select-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            selectSection(e.target.dataset.section);
+            startQuiz(); // Start quiz after selection
+        });
+    });
+}
+
+function loadQuestion() {
+    if (!appState.currentSection) {
+        console.error("No section selected");
+        return;
+    }
+    
+    const sectionQuestions = appState.questionBank[appState.currentSection];
+    
+    // Find a question that hasn't been used yet in this session
+    let question;
+    let questionIndex;
+    
+    const availableQuestions = sectionQuestions.filter(q => !appState.usedQuestionIds.has(q.id));
+    
+    if (availableQuestions.length === 0) {
+        // All questions have been used, reset for this session
+        appState.usedQuestionIds.clear();
+        question = sectionQuestions[0];
+        questionIndex = 0;
+    } else {
+        questionIndex = Math.floor(Math.random() * availableQuestions.length);
+        question = availableQuestions[questionIndex];
+    }
+    
+    appState.usedQuestionIds.add(question.id);
+    
+    const questionHTML = `
+        <div class="question-container">
+            <div class="question-header">
+                <span class="question-progress">Question ${appState.currentQuestionIndex + 1} of 5</span>
+                <span class="difficulty-badge" data-difficulty="${question.difficulty}">
+                    ${question.difficulty}
+                </span>
+            </div>
+            <h3 class="question-text">${question.text}</h3>
+            <div class="options-container">
+                ${question.options.map((opt, index) => 
+                    `<button class="option-btn" data-index="${index}">${opt}</button>`
+                ).join('')}
+            </div>
+        </div>
+    `;
+    
+    elements.quizArea.innerHTML = questionHTML;
+    
+    // Add event listeners to options
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const selectedIndex = parseInt(e.target.getAttribute('data-index'));
+            checkAnswer(selectedIndex, question);
+        });
+    });
+}
+
+function checkAnswer(selectedIndex, question) {
+    const isCorrect = selectedIndex === question.correctAnswer;
+    
+    // Update performance tracking
+    appState.userPerformance.push({
+        isCorrect,
+        difficulty: question.difficulty,
+        section: appState.currentSection
+    });
+    
+    // Update score if correct
+    const pointsEarned = isCorrect ? calculatePoints(question.difficulty) : 0;
+    
+    if (isCorrect) {
+        appState.score += pointsEarned;
+        appState.questionsAnsweredToday++;
+        checkLevelUp();
+    }
+    
+    // Visual feedback
+    const optionButtons = document.querySelectorAll('.option-btn');
+    optionButtons.forEach((btn, index) => {
+        if (index === question.correctAnswer) {
+            btn.classList.add('correct');
+        } else if (index === selectedIndex && !isCorrect) {
+            btn.classList.add('incorrect');
+        }
+        btn.disabled = true;
+    });
+    
+    // Show feedback
+    showFeedback(isCorrect, question.explanation, pointsEarned);
+    updateStatsDisplay();
+}
+
+function calculatePoints(difficulty) {
+    const points = {
+        easy: 10,
+        medium: 20,
+        hard: 30
+    };
+    return points[difficulty] || 10;
+}
+
+function checkLevelUp() {
+    const nextLevelThreshold = appState.level * 100;
+    if (appState.score >= nextLevelThreshold) {
+        appState.level++;
+        showLevelUpModal();
+    }
+}
+
+function showLevelUpModal() {
+    // In a full implementation, this would show a special level-up modal
+    console.log(`Level up! Now level ${appState.level}`);
+}
+
+function showFeedback(isCorrect, explanation, pointsEarned) {
+    elements.feedbackIcon.textContent = isCorrect ? '⚡' : '🛠️';
+    elements.feedbackIcon.style.color = isCorrect ? 'var(--success-color)' : 'var(--error-color)';
+    elements.feedbackTitle.textContent = isCorrect ? 'Correct! Knowledge Mined' : 'Needs More Processing';
+    elements.feedbackText.textContent = explanation;
+    elements.pointsEarned.textContent = isCorrect ? pointsEarned : '0';
+    elements.feedbackModal.classList.remove('hidden');
+}
+
+function loadNextQuestion() {
+    elements.feedbackModal.classList.add('hidden');
+    appState.currentQuestionIndex++;
+    
+    if (appState.currentQuestionIndex < 5) { // 5 questions per section
+        loadQuestion();
+    } else {
+        endSection();
+    }
+}
+
+function endSection() {
+    // Check for perfect section
+    const sectionPerformance = appState.userPerformance
+        .filter(perf => perf.section === appState.currentSection)
+        .slice(-5); // Last 5 answers (current section)
+    
+    const perfectSection = sectionPerformance.every(perf => perf.isCorrect);
+    
+    if (perfectSection) {
+        // Award bonus for perfect section
+        const bonusPoints = 50;
+        appState.score += bonusPoints;
+        elements.pointsEarned.textContent = bonusPoints;
+        elements.feedbackIcon.textContent = '🏆';
+        elements.feedbackIcon.style.color = 'var(--warning-color)';
+        elements.feedbackTitle.textContent = 'Perfect Section!';
+        elements.feedbackText.textContent = `You answered all questions correctly in this section and earned a ${bonusPoints} point bonus!`;
+        elements.nextQuestionBtn.textContent = 'Continue';
+        elements.feedbackModal.classList.remove('hidden');
+        updateStatsDisplay();
+        return;
+    }
+    
+    // Reset for next section
+    appState.currentQuestionIndex = 0;
+    appState.usedQuestionIds.clear();
+    
+    elements.quizArea.innerHTML = `
+        <div class="start-screen">
+            <div class="start-content">
+                <h2>Section Complete!</h2>
+                <p>You've finished this section. Your current knowledge: ${appState.score} points</p>
+                <div class="section-buttons">
+                    ${Object.keys(appState.questionBank).map((section, index) => `
+                        <button class="mine-button section-select-btn" data-section="${section}">
+                            Section ${index + 1}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add event listeners to section buttons
+    document.querySelectorAll('.section-select-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            selectSection(e.target.dataset.section);
+        });
+    });
+}
+
+function showDailyLimitReached() {
+    elements.quizArea.innerHTML = `
+        <div class="start-screen">
+            <div class="start-content">
+                <h2>Daily Limit Reached</h2>
+                <p>You've completed your daily challenges. Come back tomorrow to mine more knowledge!</p>
+                <p>Your current streak: ${appState.streak} days</p>
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-value">${appState.score}</span>
+                        <span class="stat-label">Total Knowledge</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${appState.level}</span>
+                        <span class="stat-label">Level</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
