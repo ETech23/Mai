@@ -18,31 +18,207 @@ document.addEventListener('DOMContentLoaded', function() {
         currentQuestionIndex: 0,
         score: 0,
         streak: 0,
+        lastPlayedDate: null,
+        cooldownUntil: null,
         level: 1,
         questionsAnsweredToday: 0,
         maxQuestionsPerDay: 15,
+        completedSectionsToday: 0,
+        maxSectionsPerDay: 3,
         usedQuestionIds: new Set(),
         userPerformance: [],
         questionBank: getQuestionBank(),
         sectionScores: {}
     };
-
-    // Initialize the app
-    init();
-
-    function init() {
-        initializeSectionScores();
-        renderSectionButtons();
-        setupEventListeners();
-        updateStatsDisplay();
-        hideModal();
-        
-        // Auto-select first section
-        const sections = Object.keys(state.questionBank);
-        if (sections.length > 0) {
-            selectSection(sections[0]);
+    
+    function initializeState() {
+    // Load persisted state from localStorage
+    const savedState = localStorage.getItem('quizState');
+    const savedStreak = localStorage.getItem('streak');
+    const savedLastPlayed = localStorage.getItem('lastPlayedDate');
+    const savedCooldown = localStorage.getItem('cooldownUntil');
+    
+    // Parse saved state if it exists
+    if (savedState) {
+        try {
+            const parsed = JSON.parse(savedState);
+            state.completedSectionsToday = parsed.completedSectionsToday || 0;
+            state.cooldownUntil = parsed.cooldownUntil ? new Date(parsed.cooldownUntil) : null;
+            
+            // Initialize section completion status
+            Object.keys(state.questionBank).forEach(section => {
+                state.sectionScores[section] = {
+                    completedToday: parsed.sectionScores?.[section]?.completedToday || false,
+                    lastScore: parsed.sectionScores?.[section]?.lastScore || 0,
+                    correct: 0,
+                    total: 0
+                };
+            });
+        } catch (e) {
+            console.error("Failed to parse saved state", e);
         }
     }
+    
+    // Initialize streak data
+    if (savedStreak) state.streak = parseInt(savedStreak);
+    if (savedLastPlayed) state.lastPlayedDate = new Date(savedLastPlayed);
+    if (savedCooldown) state.cooldownUntil = new Date(savedCooldown);
+    
+    // Check if we need to reset for a new day
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (state.lastPlayedDate) {
+        const lastPlayed = new Date(state.lastPlayedDate);
+        lastPlayed.setHours(0, 0, 0, 0);
+        
+        // Reset if it's a new day
+        if (lastPlayed.getTime() < today.getTime()) {
+            state.completedSectionsToday = 0;
+            state.questionsAnsweredToday = 0;
+            Object.keys(state.sectionScores).forEach(section => {
+                state.sectionScores[section].completedToday = false;
+            });
+            
+            // Clear cooldown if it was from previous day
+            if (state.cooldownUntil && new Date(state.cooldownUntil) < today) {
+                state.cooldownUntil = null;
+                localStorage.removeItem('cooldownUntil');
+            }
+        }
+    }
+    
+    // Initialize any remaining state that wasn't loaded
+    if (!state.sectionScores) {
+        state.sectionScores = {};
+        Object.keys(state.questionBank).forEach(section => {
+            state.sectionScores[section] = {
+                completedToday: false,
+                lastScore: 0,
+                correct: 0,
+                total: 0
+            };
+        });
+    }
+    
+    // Verify cooldown status
+    if (state.cooldownUntil && new Date() >= new Date(state.cooldownUntil)) {
+        state.cooldownUntil = null;
+        localStorage.removeItem('cooldownUntil');
+    }
+}
+    // Initialize or load streak from localStorage
+// Add to initialization
+function initializeStreak() {
+    const savedStreak = localStorage.getItem('streak');
+    const lastPlayed = localStorage.getItem('lastPlayedDate');
+    const cooldown = localStorage.getItem('cooldownUntil');
+    
+    if (savedStreak) state.streak = parseInt(savedStreak);
+    if (lastPlayed) state.lastPlayedDate = new Date(lastPlayed);
+    if (cooldown) state.cooldownUntil = new Date(cooldown);
+    
+    checkStreak();
+}
+
+// Add new function
+function checkStreak() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (!state.lastPlayedDate) return;
+    
+    const lastPlayed = new Date(state.lastPlayedDate);
+    lastPlayed.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (lastPlayed.getTime() === today.getTime()) return;
+    
+    if (lastPlayed.getTime() === yesterday.getTime()) {
+        state.streak++;
+    } else if (lastPlayed.getTime() < yesterday.getTime()) {
+        state.streak = 0;
+    }
+    
+    updateLastPlayed();
+}
+
+// Check and update streak status
+function checkStreak() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const lastPlayed = new Date(state.lastPlayedDate);
+    lastPlayed.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // If played today, do nothing
+    if (lastPlayed.getTime() === today.getTime()) return;
+    
+    // If played yesterday, increment streak
+    if (lastPlayed.getTime() === yesterday.getTime()) {
+        state.streak++;
+    } 
+    // Otherwise reset streak (missed a day)
+    else if (lastPlayed.getTime() < yesterday.getTime()) {
+        state.streak = 0;
+    }
+    
+    // Update last played date
+    updateLastPlayed();
+}
+
+// Update last played date and save to localStorage
+function updateLastPlayed() {
+    state.lastPlayedDate = new Date();
+    localStorage.setItem('lastPlayedDate', state.lastPlayedDate.toISOString());
+    localStorage.setItem('streak', state.streak.toString());
+    updateStatsDisplay();
+}
+    // Initialize the app
+    init();
+    
+    function init() {
+        initializeState();
+    initializeStreak();
+    initializeSectionScores();
+    renderSectionButtons();
+    setupEventListeners();
+    updateStatsDisplay();
+    hideModal();
+    
+    // Auto-select first available section (updated)
+    const availableSection = getNextAvailableSection();
+    if (availableSection) {
+        selectSection(availableSection);
+    } else {
+        showCooldownScreen();
+    }
+}
+    // FUNCTION TO ADD (for cooldown screen):
+function showCooldownScreen() {
+    quizArea.innerHTML = `
+        <div class="start-screen">
+            <div class="start-content">
+                <h2>Come Back Later</h2>
+                <p>Next section available in ${getTimeRemaining()}</p>
+                <div class="cooldown-timer" id="cooldownTimer"></div>
+            </div>
+        </div>
+    `;
+    
+    // Update timer every minute
+    const timerElement = document.getElementById('cooldownTimer');
+    if (timerElement) {
+        setInterval(() => {
+            timerElement.textContent = `Time remaining: ${getTimeRemaining()}`;
+        }, 60000);
+    }
+}
 
     function getQuestionBank() {
         return {
@@ -251,14 +427,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function initializeSectionScores() {
-        Object.keys(state.questionBank).forEach(section => {
-            state.sectionScores[section] = {
-                correct: 0,
-                total: 0,
-                lastScore: 0
-            };
-        });
-    }
+    Object.keys(state.questionBank).forEach(section => {
+        state.sectionScores[section] = {
+            completedToday: false,  // Add this
+            lastScore: 0,
+            correct: 0,
+            total: 0
+        };
+    });
+}
 
     function renderSectionButtons() {
         sectionNav.innerHTML = '';
@@ -432,37 +609,101 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function endSection() {
-        const section = state.currentSection;
-        const sessionAnswers = state.userPerformance
-            .filter(perf => perf.section === section)
-            .slice(-5);
-        
-        const correctCount = sessionAnswers.filter(perf => perf.isCorrect).length;
-        const isPerfect = correctCount === 5;
-        const sectionScore = sessionAnswers.reduce((sum, perf) => {
-            return sum + (perf.isCorrect ? calculatePoints(perf.difficulty) : 0);
-        }, 0);
-        
-        // Update section stats
-        state.sectionScores[section].lastScore = correctCount;
-        
-        // Show results
-        feedbackIcon.textContent = isPerfect ? '🏆' : '📊';
-        feedbackIcon.style.color = isPerfect ? 'var(--warning-color)' : 'var(--secondary-color)';
-        feedbackTitle.textContent = isPerfect ? 'Perfect Score!' : 'Section Complete';
-        feedbackText.textContent = `You answered ${correctCount} out of 5 correctly.`;
-        pointsEarned.textContent = sectionScore;
-        nextQuestionBtn.textContent = 'Back to Sections';
-        
-        // Update button behavior
+    const section = state.currentSection;
+    const sessionAnswers = state.userPerformance
+        .filter(perf => perf.section === section)
+        .slice(-5);
+    
+    const correctCount = sessionAnswers.filter(perf => perf.isCorrect).length;
+    const sectionScore = sessionAnswers.reduce((sum, perf) => {
+        return sum + (perf.isCorrect ? calculatePoints(perf.difficulty) : 0);
+    }, 0);
+
+    // Update section tracking
+    state.sectionScores[section].lastScore = correctCount;
+    state.sectionScores[section].completedToday = true;
+    state.completedSectionsToday++;
+    
+    // Update stats
+    updateLastPlayed();
+    setCooldown();
+
+    // Find next available section
+    const nextSection = getNextAvailableSection();
+    
+    // Show appropriate feedback
+    if (nextSection) {
+        showSectionCompleteFeedback(correctCount, sectionScore, true, nextSection);
+    } else {
+        if (shouldStartCooldown()) {
+            showSectionCompleteFeedback(correctCount, sectionScore, false);
+        } else {
+            // This shouldn't happen - means we have no next section but shouldn't be in cooldown
+            console.error("Unexpected state: No next section but cooldown not active");
+            const firstSection = Object.keys(state.questionBank)[0];
+            selectSection(firstSection);
+        }
+    }
+}
+    
+    function getNextAvailableSection() {
+    if (checkCooldown()) return null;
+
+    const sections = Object.keys(state.questionBank);
+    for (const section of sections) {
+        if (!state.sectionScores[section]?.completedToday) {
+            return section;
+        }
+    }
+    return null;
+}
+
+
+    function saveFullState() {
+    localStorage.setItem('quizState', JSON.stringify({
+        completedSectionsToday: state.completedSectionsToday,
+        cooldownUntil: state.cooldownUntil?.toISOString(),
+        sectionScores: state.sectionScores,
+        questionsAnsweredToday: state.questionsAnsweredToday
+    }));
+    
+    localStorage.setItem('streak', state.streak.toString());
+    localStorage.setItem('lastPlayedDate', state.lastPlayedDate?.toISOString());
+}
+function showSectionCompleteFeedback(correctCount, sectionScore, hasNextSection, nextSection) {
+    const isPerfect = correctCount === 5;
+    
+    feedbackIcon.textContent = isPerfect ? '🏆' : '📊';
+    feedbackIcon.style.color = isPerfect ? 'var(--warning-color)' : 'var(--secondary-color)';
+    feedbackTitle.textContent = isPerfect ? 'Perfect Score!' : 'Section Complete';
+    feedbackText.textContent = `You answered ${correctCount} out of 5 correctly.`;
+    pointsEarned.textContent = sectionScore;
+
+    if (hasNextSection) {
+        nextQuestionBtn.textContent = 'Continue to Next Section';
         nextQuestionBtn.onclick = () => {
             hideModal();
-            selectSection(section);
+            selectSection(nextSection);
         };
-        
-        showModal();
+    } else {
+        nextQuestionBtn.textContent = `Come back in ${getTimeRemaining()}`;
+        nextQuestionBtn.onclick = () => {
+            hideModal();
+            showDailyLimitReached();
+        };
     }
+    
+    showModal();
+}
 
+    // Helper function to format streak display
+function formatStreakDisplay(streak) {
+    if (streak === 0) return "No streak yet";
+    if (streak === 1) return "1 day";
+    return `${streak} days`;
+}
+
+    
     function calculatePoints(difficulty) {
         const points = { easy: 10, medium: 20, hard: 30 };
         return points[difficulty] || 10;
@@ -477,35 +718,136 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateStatsDisplay() {
-        pointsDisplay.textContent = state.score;
-        streakDisplay.textContent = state.streak;
-        levelDisplay.textContent = state.level;
+    pointsDisplay.textContent = state.score;
+    streakDisplay.textContent = formatStreakDisplay(state.streak); // Updated
+    levelDisplay.textContent = state.level;
+}
+
+    // COOLDOWN MANAGEMENT
+function shouldStartCooldown() {
+    // Only start cooldown after all sections are completed
+    return state.completedSectionsToday >= state.maxSectionsPerDay;
+}
+
+function setCooldown() {
+    if (shouldStartCooldown()) {
+        const now = new Date();
+        const cooldownEnd = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+        state.cooldownUntil = cooldownEnd;
+        localStorage.setItem('cooldownUntil', cooldownEnd.toISOString());
+    }
+}
+
+function checkCooldown() {
+    if (!state.cooldownUntil) return false;
+    return new Date() < new Date(state.cooldownUntil);
+}
+
+function getTimeRemaining() {
+    if (!state.cooldownUntil) return "0 minutes";
+    const now = new Date();
+    const end = new Date(state.cooldownUntil);
+    const diff = end - now;
+    
+    if (diff <= 0) return "0 minutes";
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return `${hours > 0 ? hours + ' hours ' : ''}${minutes} minutes`;
+}
+
+
+function showDailyLimitReached() {
+    // Check if cooldown is actually needed (all sections completed)
+    const allSectionsCompleted = Object.values(state.sectionScores)
+        .every(section => section.completedToday);
+    
+    // If not all sections are completed but we're in cooldown, clear it
+    if (!allSectionsCompleted && checkCooldown()) {
+        state.cooldownUntil = null;
+        localStorage.removeItem('cooldownUntil');
     }
 
-    function showDailyLimitReached() {
-        quizArea.innerHTML = `
-            <div class="start-screen">
-                <div class="start-content">
-                    <h2>Daily Limit Reached</h2>
-                    <p>Come back tomorrow for more challenges!</p>
-                    <div class="stats-summary">
-                        <div class="stat-item">
-                            <span class="stat-value">${state.score}</span>
-                            <span class="stat-label">Total Points</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">${state.streak}</span>
-                            <span class="stat-label">Day Streak</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">${state.level}</span>
-                            <span class="stat-label">Level</span>
-                        </div>
+    const now = new Date();
+    let message, showTimer = false;
+    
+    if (checkCooldown() && allSectionsCompleted) {
+        const cooldownEnd = new Date(state.cooldownUntil);
+        const timeRemaining = getTimeRemaining();
+        
+        // Format next available time (show tomorrow if after midnight)
+        let nextAvailableTime;
+        if (cooldownEnd.getDate() !== now.getDate()) {
+            nextAvailableTime = 'tomorrow';
+        } else {
+            nextAvailableTime = cooldownEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        message = `Come back in ${timeRemaining} (available ${nextAvailableTime})`;
+        showTimer = true;
+    } else {
+        // Regular daily limit message (not cooldown)
+        message = 'Come back tomorrow for more challenges!';
+    }
+
+    quizArea.innerHTML = `
+        <div class="start-screen">
+            <div class="start-content">
+                <h2>${allSectionsCompleted ? 'All Sections Completed!' : 'Daily Limit Reached'}</h2>
+                <p>${message}</p>
+                
+                ${showTimer ? `
+                <div class="cooldown-info">
+                    <p class="cooldown-message">Next challenge available at ${new Date(state.cooldownUntil).toLocaleTimeString()}</p>
+                    <div class="cooldown-timer">
+                        <span>Time remaining: ${getTimeRemaining()}</span>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <span class="stat-value">${state.score}</span>
+                        <span class="stat-label">Total Points</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${state.streak}</span>
+                        <span class="stat-label">Day Streak</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">${state.level}</span>
+                        <span class="stat-label">Level</span>
                     </div>
                 </div>
             </div>
-        `;
+        </div>
+    `;
+
+    // Update timer every minute if in cooldown
+    if (showTimer) {
+        const timerElement = document.querySelector('.cooldown-timer span');
+        const timerInterval = setInterval(() => {
+            const remaining = getTimeRemaining();
+            if (remaining === "0 minutes") {
+                clearInterval(timerInterval);
+                // Reset sections and cooldown
+                Object.keys(state.sectionScores).forEach(s => {
+                    state.sectionScores[s].completedToday = false;
+                });
+                state.completedSectionsToday = 0;
+                state.cooldownUntil = null;
+                localStorage.removeItem('cooldownUntil');
+                // Show first section again
+                const firstSection = Object.keys(state.questionBank)[0];
+                selectSection(firstSection);
+            } else {
+                timerElement.textContent = `Time remaining: ${remaining}`;
+            }
+        }, 60000);
     }
+}
+
 
     function showModal() {
         feedbackModal.classList.add('active');
