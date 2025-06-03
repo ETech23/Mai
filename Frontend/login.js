@@ -157,6 +157,9 @@ authForm.addEventListener("submit", async (e) => {
                 switchForm(false);
             } else {
                 showNotification("Logged in successfully!", true);
+                
+                // After successful login
+localStorage.setItem('userData', JSON.stringify(data));
 
                 // Save token properly
                 localStorage.setItem("token", data.token);
